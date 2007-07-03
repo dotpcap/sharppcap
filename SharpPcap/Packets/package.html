@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>Packets</title>
+<!--
+
+  $Id: package.html,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
+
+  @(#)package.html
+  Description of jpcap.net package contents.
+  Used by javadoc to generate package-level information.
+
+-->
+</head>
+<body bgcolor="white">
+
+Provides a hierarchical inheritance-based library of 
+network packet types and protocols.
+<p>
+On an ethernet network, data is nested and encapsulated in headers.
+For example, an ethernet link-level header might encapsulate an 
+IP or ARP header. An IP header can encapsulate a UDP datagram
+which contains a DNS protocol message.
+<p>
+In this package, the relationships between these packet types 
+are expressed via inheritance and the individual packet classes 
+encapsulate the details of each specific protocol.
+<p>
+The class PacketFactory converts raw byte data into packet instances.
+<p>
+Other utility classes in this package provide store the many port numbers,
+message types and codes associated with different protocols.
+
+</body>
+</html>

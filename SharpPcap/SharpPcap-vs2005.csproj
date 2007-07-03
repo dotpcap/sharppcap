@@ -1,0 +1,140 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{67DFA5F8-6D82-4F58-A23F-F56A6598ABA5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>SharpPcap-vs2005</AssemblyName>
+    <RootNamespace>SharpPcap_vs2005</RootNamespace>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Content Include="docs\SharpPcap.html" />
+    <Content Include="docs\SharpPcap\SharpPcap.png" />
+    <Content Include="Packets\package.html" />
+    <Content Include="Packets\Util\obj\Debug\util.dll" />
+    <Content Include="Packets\Util\obj\Debug\util.pdb" />
+    <Content Include="Packets\Util\obj\util.csproj.FileList.txt" />
+    <Content Include="Packets\Util\package.html" />
+    <Content Include="Packets\Util\util.csproj" />
+    <Content Include="Packets\Util\util.dll" />
+    <Content Include="Packets\Util\util.pdb" />
+    <Content Include="Packets\Util\util.xml" />
+    <Content Include="Packets\Util\_ConversionReport.htm" />
+    <Content Include="Packets\Util\_ConversionReport_Files\ConversionReport.css" />
+    <Content Include="Packets\Util\_ConversionReport_Files\ConversionReport_Blank.gif" />
+    <Content Include="Packets\Util\_ConversionReport_Files\ConversionReport_Minus.gif" />
+    <Content Include="Packets\Util\_ConversionReport_Files\ConversionReport_Plus.gif" />
+    <Content Include="SharpPcap.csproj.vspscc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IPAddress.cs" />
+    <Compile Include="IPHelper.cs" />
+    <Compile Include="NetworkDevice.cs" />
+    <Compile Include="NetworkDeviceList.cs" />
+    <Compile Include="Packets\ARPFields.cs" />
+    <Compile Include="Packets\ARPPacket.cs" />
+    <Compile Include="Packets\EthernetFields.cs" />
+    <Compile Include="Packets\EthernetPacket.cs" />
+    <Compile Include="Packets\EthernetPacketTest.cs" />
+    <Compile Include="Packets\EthernetProtocol.cs" />
+    <Compile Include="Packets\EthernetProtocols.cs" />
+    <Compile Include="Packets\ICMPFields.cs" />
+    <Compile Include="Packets\ICMPMessage.cs" />
+    <Compile Include="Packets\ICMPMessages.cs" />
+    <Compile Include="Packets\ICMPPacket.cs" />
+    <Compile Include="Packets\IGMPFields.cs" />
+    <Compile Include="Packets\IGMPMessage.cs" />
+    <Compile Include="Packets\IGMPMessages.cs" />
+    <Compile Include="Packets\IGMPPacket.cs" />
+    <Compile Include="Packets\IPAddress.cs" />
+    <Compile Include="Packets\IPFields.cs" />
+    <Compile Include="Packets\IPPacket.cs" />
+    <Compile Include="Packets\IPPacketTest.cs" />
+    <Compile Include="Packets\IPPort.cs" />
+    <Compile Include="Packets\IPPorts.cs" />
+    <Compile Include="Packets\IPProtocol.cs" />
+    <Compile Include="Packets\IPProtocols.cs" />
+    <Compile Include="Packets\IPVersions.cs" />
+    <Compile Include="Packets\LinkLayer.cs" />
+    <Compile Include="Packets\LinkLayers.cs" />
+    <Compile Include="Packets\MACAddress.cs" />
+    <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\PacketEncoding.cs" />
+    <Compile Include="Packets\PacketEncodingTest.cs" />
+    <Compile Include="Packets\PacketFactory.cs" />
+    <Compile Include="Packets\RawPacket.cs" />
+    <Compile Include="Packets\SupportClass.cs" />
+    <Compile Include="Packets\TCPFields.cs" />
+    <Compile Include="Packets\TCPPacket.cs" />
+    <Compile Include="Packets\TCPPacketTest.cs" />
+    <Compile Include="Packets\TestCase.cs" />
+    <Compile Include="Packets\TypesOfService.cs" />
+    <Compile Include="Packets\UDPFields.cs" />
+    <Compile Include="Packets\UDPPacket.cs" />
+    <Compile Include="Packets\Util\AnsiEscapeSequences.cs" />
+    <Compile Include="Packets\Util\ArrayHelper.cs" />
+    <Compile Include="Packets\Util\AsciiHelper.cs" />
+    <Compile Include="Packets\Util\FileUtility.cs" />
+    <Compile Include="Packets\Util\HexHelper.cs" />
+    <Compile Include="Packets\Util\PropertyHelper.cs" />
+    <Compile Include="Packets\Util\SupportClass.cs" />
+    <Compile Include="Packets\Util\TcpdumpWriter.cs" />
+    <Compile Include="Packets\Util\Timeval.cs" />
+    <Compile Include="PcapDevice.cs" />
+    <Compile Include="PcapDeviceList.cs" />
+    <Compile Include="PcapException.cs" />
+    <Compile Include="PcapHeader.cs" />
+    <Compile Include="PcapMode.cs" />
+    <Compile Include="PcapOfflineDevice.cs" />
+    <Compile Include="PcapPlatformUnix.cs" />
+    <Compile Include="PcapPlatformWin32.cs" />
+    <Compile Include="PcapSendQueue.cs" />
+    <Compile Include="PcapStatistics.cs" />
+    <Compile Include="SharpPcap.cs" />
+    <Compile Include="Util\Convert.cs" />
+    <Compile Include="Util\StringList.cs" />
+    <Compile Include="Version.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="docs\SharpPcap\vssver.scc" />
+    <None Include="docs\vssver.scc" />
+    <None Include="mssccprj.scc" />
+    <None Include="Packets\Util\CVS\Entries" />
+    <None Include="Packets\Util\CVS\Repository" />
+    <None Include="Packets\Util\CVS\Root" />
+    <None Include="Packets\Util\makefile" />
+    <None Include="Packets\Util\makefile-test" />
+    <None Include="Tamir.IPLib.SharpPcap" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Packets\Util\obj\Debug\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>

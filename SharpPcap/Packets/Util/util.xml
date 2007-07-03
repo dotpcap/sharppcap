@@ -1,0 +1,265 @@
+﻿<ConversionLog>
+    <Settings>
+        <Setting
+            Name = "LogFile"
+            Value = "util.xml"
+        />
+        <Setting
+            Name = "ProjectName"
+            Value = "util"
+        />
+        <Setting
+            Name = "StartTime"
+            Value = "Thursday, September 07, 2006 21:25:53"
+        />
+        <Setting
+            Name = "OutputDir"
+            Value = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util"
+        />
+        <Setting
+            Name = "ProjectPath"
+            Value = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util"
+        />
+    </Settings>
+    <Root>
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\AnsiEscapeSequences.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\AnsiEscapeSequences.cs"
+        />
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\ArrayHelper.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\ArrayHelper.cs"
+        />
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\AsciiHelper.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\AsciiHelper.cs"
+        />
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\FileUtility.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\FileUtility.cs"
+        >
+            <Class Name = "net.sourceforge.jpcap.util.FileUtility" >
+                <Section Name = "readFile(java.lang.String)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1092"
+                        Severity = "2"
+                    >The differences in the expected value  of parameters for constructor 'java.io.BufferedReader.BufferedReader'  may cause compilation errors. </Issue>
+                    <Issue
+                        Type = "Runtime"
+                        Number = "1181"
+                        Severity = "2"
+                    >At least one expression was used more than once in the target code.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        Severity = "2"
+                    >Constructor 'java.io.FileReader.FileReader' was converted to 'System.IO.StreamReader' which has a different behavior.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        Severity = "2"
+                    >Constructor 'java.io.FileReader.FileReader' was converted to 'System.IO.StreamReader' which has a different behavior.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioReaderread_char[]"
+                        Severity = "2"
+                    >Method 'java.io.Reader.read' was converted to 'System.IO.StreamReader.Read' which has a different behavior.</Issue>
+                </Section>
+                <Section Name = "writeFile(java.lang.String,java.lang.String,boolean)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioFileWriter"
+                        Severity = "2"
+                    >Class 'java.io.FileWriter' was converted to 'System.IO.StreamWriter' which has a different behavior.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioFileWriterFileWriter_javalangString_boolean"
+                        Severity = "2"
+                    >Constructor 'java.io.FileWriter.FileWriter' was converted to 'System.IO.StreamWriter' which has a different behavior.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioFileWriter"
+                        Severity = "2"
+                    >Class 'java.io.FileWriter' was converted to 'System.IO.StreamWriter' which has a different behavior.</Issue>
+                </Section>
+                <Section Name = "writeFile(byte[],java.lang.String,boolean)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioFileOutputStreamFileOutputStream_javalangString_boolean"
+                        Severity = "2"
+                    >Constructor 'java.io.FileOutputStream.FileOutputStream' was converted to 'System.IO.FileStream.FileStream' which has a different behavior.</Issue>
+                </Section>
+            </Class>
+        </File>
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\HexHelper.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\HexHelper.cs"
+        />
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\PropertyHelper.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\PropertyHelper.cs"
+        >
+            <Class Name = "net.sourceforge.jpcap.util.PropertyHelper" >
+                <Section Name = "getFloatProperty(java.util.Properties,java.lang.Object)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1043"
+                        Severity = "2"
+                    >The equivalent in .NET for method 'java.lang.Object.toString' may return a different value.</Issue>
+                </Section>
+                <Section Name = "getIntProperty(java.util.Properties,java.lang.Object)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1043"
+                        Severity = "2"
+                    >The equivalent in .NET for method 'java.lang.Object.toString' may return a different value.</Issue>
+                </Section>
+                <Section Name = "getColorProperty(java.util.Properties,java.lang.Object)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1043"
+                        Severity = "2"
+                    >The equivalent in .NET for method 'java.lang.Object.toString' may return a different value.</Issue>
+                </Section>
+                <Section Name = "getIpProperty(java.util.Properties,java.lang.Object)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1043"
+                        Severity = "2"
+                    >The equivalent in .NET for method 'java.lang.Object.toString' may return a different value.</Issue>
+                </Section>
+                <Section Name = "getBooleanProperty(java.util.Properties,java.lang.Object)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1043"
+                        Severity = "2"
+                    >The equivalent in .NET for method 'java.lang.Object.toString' may return a different value.</Issue>
+                </Section>
+                <Section Name = "refresh(java.lang.String,java.io.FileInputStream)" >
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1089"
+                        Severity = "2"
+                    >Format of property file may need to be changed.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javautilPropertiesload_javaioInputStream"
+                        Severity = "2"
+                    >Method 'java.util.Properties.load' was converted to 'System.Collections.Specialized.NameValueCollection' which has a different behavior.</Issue>
+                </Section>
+                <Section Name = "load(java.lang.String[],java.lang.String)" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javaioFileInputStreamFileInputStream_javaioFile"
+                        Severity = "2"
+                    >Constructor 'java.io.FileInputStream.FileInputStream' was converted to 'System.IO.FileStream.FileStream' which has a different behavior.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                </Section>
+                <Section Name = "Declarations" >
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                    <Issue
+                        Type = "Compile"
+                        Number = "1186"
+                        Severity = "2"
+                    >Class hierarchy differences between 'java.util.Properties' and 'System.Collections.Specialized.NameValueCollection' may cause compilation errors.</Issue>
+                </Section>
+            </Class>
+        </File>
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\TcpdumpWriter.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\TcpdumpWriter.cs"
+        >
+            <Class Name = "net.sourceforge.jpcap.util.TcpdumpWriter" >
+                <Section Name = "Declarations" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1262"
+                        Severity = "2"
+                    >The type 'net.sourceforge.jpcap.net.RawPacket' could not be found. If it was not included in the conversion, there may be compiler issues.</Issue>
+                </Section>
+            </Class>
+        </File>
+        <File
+            OldPath = "C:\Documents and Settings\tgal\My Documents\Docs\CVS\TGuard\jpcap-0.01.16-tamir-modified\net\sourceforge\jpcap\util\Timeval.java"
+            NewPath = "C:\Documents and Settings\tgal\My Documents\Visual Studio 2005\Projects\Packets\util\Timeval.cs"
+        >
+            <Class Name = "net.sourceforge.jpcap.util.Timeval" >
+                <Section Name = "getDate()" >
+                    <Issue
+                        Type = "ToDo"
+                        Number = "1073"
+                        LinkKeywordParam = "_javautilDateDate_long"
+                        Severity = "2"
+                    >Constructor 'java.util.Date.Date' was converted to 'System.DateTime.DateTime' which has a different behavior.</Issue>
+                </Section>
+            </Class>
+        </File>
+        <Issue
+            Type = "Global Warning"
+            Number = "1225"
+            Severity = "2"
+        >Type castings between primitive types may have different behavior.</Issue>
+        <Issue
+            Type = "Global Warning"
+            Number = "1274"
+            Severity = "2"
+        >Interaction between members of a class may differ because their execution sequence is different. </Issue>
+        <Issue
+            Type = "Global Warning"
+            Number = "1133"
+            Severity = "2"
+        >The equivalent of java.lang.Object.equals in Visual C# can return a different value if the two comparison methods differ.</Issue>
+    </Root>
+</ConversionLog>
+
