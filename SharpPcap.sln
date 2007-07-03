@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPcap", "SharpPcap\SharpPcap.csproj", "{24262E52-1304-4A25-8F73-A3B06E40592E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{24795AED-F26F-4EE7-BCA7-900F54FA5A53}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{24262E52-1304-4A25-8F73-A3B06E40592E}.Debug.ActiveCfg = Debug|.NET
+		{24262E52-1304-4A25-8F73-A3B06E40592E}.Debug.Build.0 = Debug|.NET
+		{24262E52-1304-4A25-8F73-A3B06E40592E}.Release.ActiveCfg = Release|.NET
+		{24262E52-1304-4A25-8F73-A3B06E40592E}.Release.Build.0 = Release|.NET
+		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Debug.ActiveCfg = Debug|.NET
+		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Debug.Build.0 = Debug|.NET
+		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release.ActiveCfg = Release|.NET
+		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
