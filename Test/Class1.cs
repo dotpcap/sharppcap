@@ -4,12 +4,12 @@ using Tamir.IPLib.Packets;
 using Tamir.IPLib.Util;
 using System.Collections;
 
-namespace Tamir.IPLib.Test.Example8
+namespace Test
 {
 	/// <summary>
 	/// Basic capture example
 	/// </summary>
-	public class DumpTCP
+	public class Class1
 	{
 		/// <summary>
 		/// Basic capture example
@@ -17,6 +17,7 @@ namespace Tamir.IPLib.Test.Example8
 		[STAThread]
 		public static void Main(string[] args)
 		{			
+			SendTcpSynExample.Main1(args);
 		}
 	}
 }
