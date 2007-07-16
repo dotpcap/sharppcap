@@ -35,6 +35,10 @@ namespace Tamir.IPLib
 	/// <summary>
 	/// Summary description for NetworkDeviceList.
 	/// </summary>
+	/// <author>Tamir Gal</author>
+	/// <version>  $Revision: 1.2 $ </version>
+	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:11:35 $ </lastModifiedAt>
 	public class NetworkDeviceList : CollectionBase
 	{
 		public NetworkDevice this[ int index ]  

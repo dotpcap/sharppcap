@@ -33,6 +33,10 @@ namespace Tamir.IPLib
 	/// <summary>
 	///  A wrapper class for libpcap's PCAP_PKTHDR structure
 	/// </summary>
+	/// <author>Tamir Gal</author>
+	/// <version>  $Revision: 1.2 $ </version>
+	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:11:35 $ </lastModifiedAt>
 	public class PcapHeader
 	{
 		/// <summary>
