@@ -17,9 +17,9 @@ namespace Tamir.IPLib.Util
 	/// Contains conversion support elements such as classes, interfaces and static methods.
 	/// </summary>
 	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.2 $ </version>
+	/// <version>  $Revision: 1.3 $ </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 08:11:41 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:15 $ </lastModifiedAt>
 	public class SupportClass
 	{
 		/// <summary>

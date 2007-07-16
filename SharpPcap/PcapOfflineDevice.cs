@@ -36,9 +36,9 @@ namespace Tamir.IPLib
 	/// Capture packets from an offline pcap file
 	/// </summary>
 	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.2 $ </version>
+	/// <version>  $Revision: 1.3 $ </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 08:11:35 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class PcapOfflineDevice : PcapDevice
 	{
 		private string m_pcapFile;

@@ -5,10 +5,11 @@ using System.Collections;
 namespace Tamir.IPLib.Util
 {
 	
+
 	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.2 $ </version>
+	/// <version>  $Revision: 1.3 $ </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 08:11:36 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:15 $ </lastModifiedAt>
 	public class IPAddressRange:NumberRange, IEnumerator, IEnumerable
 	{
 		virtual public System.String FisrtIPAddress
