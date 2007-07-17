@@ -1,30 +1,3 @@
-<H2>About SharpPcap</H2>
-<P>The purpose of <A href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">SharpPcap</A>
-	is to provide a framework for capturing, injecting and analyzing network 
-	packets for .NET applications based on the WinPcap packet capture driver. The 
-	following list illustrates the features currently supported by SharpPcap:</P>
-<UL>
-	<LI>
-	Enumerating and showing details about physical network interface on a Windows 
-	machine.
-	<LI>
-	Capturing low-level network packets going through a given interface.
-	<LI>
-		Analyzing and parsing the following protocols: <I>Ethernet</I>, <I>ARP</I>, <I>IP</I>,
-		<I>TCP</I>, <I>UDP</I>, <I>ICMP</I>, <I>IGMP</I>.
-	<LI>
-	Injecting low-level network packets on a given interface.
-	<LI>
-	Handling (reading and writing) offline packet capture files.
-	<LI>
-	Injecting packets using Send Queues.
-	<LI>
-		Collecting network statistics on a given network interface.
-	</LI>
-</UL>
-<P>
-	Please check <A href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">SharpPcap</A>'s 
-	homepage for the latest updates and bug fixes.</P>
 <H2>SharpPcap tutorial: a step by step guide to using SharpPcap</H2>
 <P>The text of this tutorial is taken directly from WinPcap's <A href="http://www.winpcap.org/docs/docs31/html/group__wpcap__tut.html">
 		official tutorial </A>but is modified to show the C# use of the SharpPcap 
@@ -57,7 +30,7 @@
 	<li>
 		<a href="#statistics">Gathering Statistics on the network traffic</a></li>
 </ol>
-<H3 id="ifList">Obtaining the device list
+<H3 id="ifList">1. Obtaining the device list
 </H3>
 <P>Typically, the first thing that a WinPcap-based application does is get a list 
 	of attached network adapters. SharpPcap provide the <CODE>GetAllDevices()</CODE>
@@ -116,7 +89,7 @@ The following devices are available on this machine:
         Loopback:               False
 
 Hit 'Enter' to exit...</PRE>
-<H3 id="ifListAdv">Obtaining advanced information about installed devices
+<H3 id="ifListAdv">2. Obtaining advanced information about installed devices
 </H3>
 <P>Previous section demonstrated how to get basic information about available 
 	adapters. Actually, for each <CODE>PcapDevice</CODE> in the list, SharpPcap 
@@ -198,7 +171,7 @@ The following devices are available on this machine:
         DHCP Lease Expires:     30-Nov-05 11:13:55
 
 Hit 'Enter' to exit...</PRE>
-<H3 id="basicCap">Opening an adapter and capturing packets</H3>
+<H3 id="basicCap">3. Opening an adapter and capturing packets</H3>
 <P>Now that we've seen how to obtain an adapter to play with, let's start the real 
 	job, opening an adapter and capturing some traffic. In this section we'll write 
 	a program that prints some information about each packet flowing through the 
@@ -307,7 +280,7 @@ private static void device_PcapOnPacketArrival(object sender, Packet packet)
 	approach (and to have more readable programs) is to use the <CODE>PcapGetNextPacket()</CODE>
 	function, which is presented in the next section.
 </P>
-<H3 id="basicCapNoCallback">Capturing packets without the event handler
+<H3 id="basicCapNoCallback">4. Capturing packets without the event handler
 </H3>
 <P>The example program in this section behaves exactly like the previous sample, 
 	but it uses <CODE>PcapGetNextPacket()</CODE> instead of registering an event 
@@ -349,7 +322,7 @@ while( (packet=device.PcapGetNextPacket()) != null )
 device.PcapClose();
 Console.WriteLine("-- Capture stopped, device closed.");</PRE>
 <P></P>
-<H3 id="filter">Filtering the traffic</H3>
+<H3 id="filter">5. Filtering the traffic</H3>
 <P>One of the most powerful features offered by libpcap and WinPcap is the 
 	filtering engine. It provides a very efficient way to receive subsets of the 
 	network traffic, and is (usually) integrated with the capture mechanism 
@@ -401,7 +374,7 @@ device.PcapCapture( SharpPcap.INFINITE );
 //(Note: this line will never be called since
 // we're capturing infinite number of packets
 device.PcapClose();</PRE>
-<H3 id="dumpTcp">Interpreting the packets</H3>
+<H3 id="dumpTcp">6. Interpreting the packets</H3>
 <P>Now that we are able to capture and filter network traffic, we want to put our 
 	knowledge to work with a simple "real world" application. In this lesson we 
 	will take the code from the previous sections and use these pieces to build a 
@@ -468,7 +441,7 @@ private static void device_PcapOnPacketArrival(object sender, Packet packet)
 1:18:17,675 Len=80 10.21.98.21:43501 -&gt; 66.102.7.147:80
 1:18:17,919 Len=54 66.102.7.147:80 -&gt; 10.21.98.21:43501</PRE>
 <P>Each of the final 3 lines represents a different packet.</P>
-<H3 id="offline">Handling offline dump files</H3>
+<H3 id="offline">7. Handling offline dump files</H3>
 <P>In this section we are going to learn how to handle packet capture to a file 
 	(dump to file). WinPcap offers built-in functions for saving network traffic to 
 	a file and to read the content of dumps -- this section will teach how to 
@@ -585,7 +558,7 @@ device.PcapCapture( SharpPcap.INFINITE );
 device.PcapClose();
 Console.WriteLine("-- End of file reached.");</PRE>
 <P></P>
-<H3 id="sendPackets">Sending Packets</H3>
+<H3 id="sendPackets">8. Sending Packets</H3>
 <P>One of the coolest things about WinPcap compared to libpcap is its ability to 
 	send raw packets out to the network.</P>
 <P><B>Sending a single packet with SharpPcap</B></P>
@@ -770,7 +743,7 @@ Console.WriteLine("-- Queue is disposed.");
 //Close the pcap device
 device.PcapClose();
 Console.WriteLine("-- Device closed.");</PRE>
-<H3 id="statistics">Gathering Statistics on the network traffic</H3>
+<H3 id="statistics">9. Gathering Statistics on the network traffic</H3>
 <P>This section shows another advanced feature of WinPcap: the ability to collect 
 	statistics about network traffic. WinPcap's statistical engine makes use of the 
 	kernel-level packet filter to efficiently classify the incoming packet. You can 
@@ -854,7 +827,10 @@ private static void device_PcapOnPcapStatistics(object sender, PcapStatistics st
 	Statistical mode requires the minimum amount of data copies and context 
 	switches and therefore the CPU is optimized. Moreover, a very small amount of 
 	memory is required.</P>
-<H2>References</H2>
+
+<hr>
+	
+<H4>References</H4>
 <UL>
 	<LI>
 		<A href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">SharpPcap</A>
@@ -866,14 +842,5 @@ private static void device_PcapOnPcapStatistics(object sender, PcapStatistics st
 		<A href="http://jpcap.sourceforge.net/">JPcap</A> - A Java wrapper for libpcap 
 		and WinPcap. All the packet parser classes of SharpPcap were translated from 
 		JPcap.
-	</LI>
-</UL>
-<H2>History</H2>
-<UL>
-	<LI>
-		2005-Nov-27
-		<UL>
-			<LI>
-				Initial version posted.</LI></UL>
 	</LI>
 </UL>

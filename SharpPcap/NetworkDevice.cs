@@ -37,6 +37,10 @@ namespace Tamir.IPLib
 	/// <summary>
 	/// Represents a physical Network Device on a Windows machine.
 	/// </summary>
+	/// <author>Tamir Gal</author>
+	/// <version>  $Revision: 1.3 $ </version>
+	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class NetworkDevice : PcapDevice
 	{
 		private IPAddressList m_ipAddressList;

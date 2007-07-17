@@ -1,4 +1,4 @@
-// $Id: TCPPacket.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
+// $Id: TCPPacket.cs,v 1.2 2007-07-08 13:27:27 tamirgal Exp $
 
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
@@ -23,10 +23,10 @@ namespace Tamir.IPLib.Packets
 	/// </summary>
 	/// <author>  Patrick Charles and Jonas Lehmann
 	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
+	/// <version>  $Revision: 1.2 $
 	/// </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-08 13:27:27 $ </lastModifiedAt>
 	[Serializable]
 	public class TCPPacket : IPPacket, TCPFields
 	{
@@ -419,6 +419,10 @@ namespace Tamir.IPLib.Packets
 				}
 				return _tcpDataBytes;
 			}
+			set
+			{
+				SetData(value);
+			}
 
 		}
 		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -566,11 +570,17 @@ namespace Tamir.IPLib.Packets
 		/// <summary> Sets the data section of this tcp packet</summary>
 		/// <param name="data">the data bytes
 		/// </param>
-		public virtual void setData(byte[] data)
+		public virtual void SetData(byte[] data)
 		{
-			byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength);
+			byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength+IpHeaderLength+EthernetHeaderLength);
 			byte[] newBytes = ArrayHelper.join(headers, data);
 			this._bytes = newBytes;
+			TCPHeaderLength = _bytes.Length-data.Length-IpHeaderLength-EthernetHeaderLength;
+		
+			//update ip total length length
+			IPTotalLength = IpHeaderLength + TcpHeaderLength + data.Length;
+			//update also offset and pcap header
+			OnOffsetChanged();
 		}
 
 		/// <summary> Convert this TCP packet to a readable string.</summary>

@@ -93,6 +93,8 @@ namespace Test
 			tcp.SequenceNumber = 1000;			
 			tcp.TCPHeaderLength = TCPFields_Fields.TCP_HEADER_LEN;			//Set the correct TCP header length
 
+			//tcp.SetData( System.Text.Encoding.ASCII.GetBytes("HELLO") );
+
 			//Calculate checksums
 			tcp.ComputeIPChecksum();
 			tcp.ComputeTCPChecksum();

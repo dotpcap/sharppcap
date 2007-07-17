@@ -1,4 +1,4 @@
-// $Id: EthernetPacket.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
+// $Id: EthernetPacket.cs,v 1.2 2007-07-08 13:27:27 tamirgal Exp $
 
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
@@ -30,10 +30,10 @@ namespace Tamir.IPLib.Packets
 	/// </summary>
 	/// <author>  Patrick Charles and Jonas Lehmann
 	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
+	/// <version>  $Revision: 1.2 $
 	/// </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-08 13:27:27 $ </lastModifiedAt>
 	[Serializable]
 	public class EthernetPacket : Packet, EthernetFields
 	{
@@ -98,6 +98,16 @@ namespace Tamir.IPLib.Packets
 			}
 
 		}
+
+		/// <summary>
+		///  should be overriden by upper classes
+		/// </summary>
+		public virtual void OnOffsetChanged()
+		{
+			if(PcapHeader!=null)
+				PcapHeader = new PcapHeader(PcapHeader.Seconds, PcapHeader.MicroSeconds, _bytes.Length, _bytes.Length);
+		}
+
 		/// <summary> Fetch the timeval containing the time the packet arrived on the 
 		/// device where it was captured.
 		/// </summary>

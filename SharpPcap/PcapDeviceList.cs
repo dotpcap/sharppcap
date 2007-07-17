@@ -35,6 +35,10 @@ namespace Tamir.IPLib
 	/// <summary>
 	/// Summary description for PcapDeviceList.
 	/// </summary>
+	/// <author>Tamir Gal</author>
+	/// <version>  $Revision: 1.3 $ </version>
+	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
+	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class PcapDeviceList : CollectionBase
 	{
 		public PcapDevice this[ int index ]  
