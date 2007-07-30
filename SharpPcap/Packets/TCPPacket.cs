@@ -1,4 +1,4 @@
-// $Id: TCPPacket.cs,v 1.2 2007-07-08 13:27:27 tamirgal Exp $
+// $Id: TCPPacket.cs,v 1.3 2007-07-30 09:26:03 tamirgal Exp $
 
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
@@ -23,10 +23,10 @@ namespace Tamir.IPLib.Packets
 	/// </summary>
 	/// <author>  Patrick Charles and Jonas Lehmann
 	/// </author>
-	/// <version>  $Revision: 1.2 $
+	/// <version>  $Revision: 1.3 $
 	/// </version>
 	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-08 13:27:27 $ </lastModifiedAt>
+	/// <lastModifiedAt>  $Date: 2007-07-30 09:26:03 $ </lastModifiedAt>
 	[Serializable]
 	public class TCPPacket : IPPacket, TCPFields
 	{
@@ -141,7 +141,7 @@ namespace Tamir.IPLib.Packets
 		{
 			get
 			{
-				return _bytes.Length - TCPHeaderLength - _ipOffset;
+				return (IPTotalLength - IPHeaderLength - TcpHeaderLength);
 			}
 
 		}
