@@ -108,11 +108,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Class1.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Int64RangeTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
