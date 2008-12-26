@@ -9,32 +9,23 @@
 using System;
 namespace Tamir.IPLib.Packets.Util
 {
-	
-	
-	/// <summary> POSIX.4 timeval for Java.
-	/// <p>
-	/// Container for java equivalent of c's struct timeval.
-	/// 
-	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
+	/// <summary> POSIX.4 timeval
 	[Serializable]
 	public class Timeval
 	{
-		/// <summary> Convert this timeval to a java Date.</summary>
+		/// <summary> Convert this timeval to a DateTime</summary>
 		virtual public System.DateTime Date
 		{
 			get
 			{
-				//UPGRADE_TODO: Constructor 'java.util.Date.Date' was converted to 'System.DateTime.DateTime' which has a different behavior. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1073_javautilDateDate_long'"
-				return new System.DateTime(seconds * 1000 + microseconds / 1000);
+                long ticksAtEpoch = new DateTime(1970, 1, 1).Ticks;
+                long microsecondsPerMillisecond = 1000;
+                long tickOffsetFromEpoch = (seconds * TimeSpan.TicksPerSecond) +
+                                           ((microseconds * TimeSpan.TicksPerMillisecond) / microsecondsPerMillisecond);
+                return new System.DateTime(ticksAtEpoch + tickOffsetFromEpoch);
 			}
-			
 		}
+
 		virtual public long Seconds
 		{
 			get
@@ -43,6 +34,7 @@ namespace Tamir.IPLib.Packets.Util
 			}
 			
 		}
+
 		virtual public int MicroSeconds
 		{
 			get
@@ -51,6 +43,7 @@ namespace Tamir.IPLib.Packets.Util
 			}
 			
 		}
+
 		public Timeval(long seconds, int microseconds)
 		{
 			this.seconds = seconds;
