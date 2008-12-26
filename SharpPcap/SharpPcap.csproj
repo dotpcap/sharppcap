@@ -1,490 +1,329 @@
-<VisualStudioProject>
-    <CSHARP
-        ProjectType = "Local"
-        ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{24262E52-1304-4A25-8F73-A3B06E40592E}"
-    >
-        <Build>
-            <Settings
-                ApplicationIcon = "App.ico"
-                AssemblyKeyContainerName = ""
-                AssemblyName = "Tamir.IPLib.SharpPcap"
-                AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
-                DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
-                RootNamespace = "Tamir.IPLib"
-                RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
-            >
-                <Config
-                    Name = "Debug"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "true"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "false"
-                    OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-                <Config
-                    Name = "Release"
-                    AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
-                    CheckForOverflowUnderflow = "false"
-                    ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
-                    DocumentationFile = ""
-                    DebugSymbols = "false"
-                    FileAlignment = "4096"
-                    IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
-                    Optimize = "true"
-                    OutputPath = "bin\Release\"
-                    RegisterForComInterop = "false"
-                    RemoveIntegerChecks = "false"
-                    TreatWarningsAsErrors = "false"
-                    WarningLevel = "4"
-                />
-            </Settings>
-            <References>
-                <Reference
-                    Name = "System"
-                    AssemblyName = "System"
-                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.dll"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
-                />
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IPAddress.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IPHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NetworkDevice.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NetworkDeviceList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapDevice.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapDeviceList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapHeader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapMode.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapOfflineDevice.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapSendQueue.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PcapStatistics.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SharpPcap.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Version.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "docs\SharpPcap.html"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "docs\SharpPcap\SharpPcap.png"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Packets\ARPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\ARPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\EthernetFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\EthernetPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\EthernetPacketTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\EthernetProtocol.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\EthernetProtocols.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\ICMPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\ICMPMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\ICMPMessages.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\ICMPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IGMPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IGMPMessage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IGMPMessages.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IGMPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPAddress.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPPacketTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPPort.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPPorts.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPProtocol.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPProtocols.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\IPVersions.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\LinkLayer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\LinkLayers.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\MACAddress.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\package.html"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Packets\Packet.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\PacketEncoding.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\PacketEncodingTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\PacketFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\RawPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\SupportClass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\TCPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\TCPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\TCPPacketTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\TestCase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\TypesOfService.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\UDPFields.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\UDPPacket.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\AnsiEscapeSequences.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\ArrayHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\AsciiHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\FileUtility.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\HexHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\package.html"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Packets\Util\PropertyHelper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\SupportClass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\TcpdumpWriter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Packets\Util\Timeval.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Protocols\ARP.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\Convert.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\Int64Range.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\IPAddressList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\IPAddressRange.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\IPSubnet.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\IPUtil.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\NumberRange.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\Random.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\StringList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Util\SupportClass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
-
+﻿<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{24262E52-1304-4A25-8F73-A3B06E40592E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Tamir.IPLib.SharpPcap</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Tamir.IPLib</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>0.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Content Include="docs\SharpPcap.html" />
+    <Content Include="docs\SharpPcap\SharpPcap.png" />
+    <Content Include="Packets\package.html" />
+    <Content Include="Packets\Util\package.html" />
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPAddress.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NetworkDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NetworkDeviceList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ARPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ARPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\EthernetFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\EthernetPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\EthernetPacketTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\EthernetProtocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\EthernetProtocols.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ICMPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ICMPMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ICMPMessages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\ICMPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IGMPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IGMPMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IGMPMessages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IGMPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPAddress.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPPacketTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPPort.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPPorts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPProtocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPProtocols.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\IPVersions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\LinkLayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\LinkLayers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\MACAddress.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Packet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\PacketEncoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\PacketEncodingTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\PacketFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\RawPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\SupportClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\TCPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\TCPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\TCPPacketTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\TestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\TypesOfService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\UDPFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\UDPPacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\AnsiEscapeSequences.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\ArrayHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\AsciiHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\FileUtility.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\HexHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\PropertyHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\SupportClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\TcpdumpWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Packets\Util\Timeval.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapDeviceList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapHeader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapOfflineDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapSendQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PcapStatistics.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Protocols\ARP.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SharpPcap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Convert.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Int64Range.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\IPAddressList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\IPAddressRange.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\IPSubnet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\IPUtil.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\NumberRange.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Random.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\StringList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\SupportClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
