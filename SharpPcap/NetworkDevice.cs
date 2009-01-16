@@ -30,9 +30,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using Tamir.IPLib.Util;
+using SharpPcap.Util;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Represents a physical Network Device on a Windows machine.
@@ -61,7 +61,7 @@ namespace Tamir.IPLib
 		/// <summary>
 		/// Constructs a new Network Device based on a PCAP_IF struct.
 		/// </summary>
-		internal NetworkDevice(SharpPcap.PCAP_IF pcapIf):base(pcapIf)
+		internal NetworkDevice(Pcap.PCAP_IF pcapIf):base(pcapIf)
 		{
 			Setup();
 		}

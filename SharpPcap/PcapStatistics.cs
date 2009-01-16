@@ -28,7 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Holds network statistics for a Pcap Devices
@@ -42,7 +42,7 @@ namespace Tamir.IPLib
 		/// <summary>
 		/// This holds time value
 		/// </summary>
-		private	SharpPcap.PCAP_PKTHDR	m_pktHdr;
+		private	Pcap.PCAP_PKTHDR	m_pktHdr;
 		/// <summary>
 		/// This holds byte received and packets received
 		/// </summary>
@@ -52,7 +52,7 @@ namespace Tamir.IPLib
 		/// </summary>
 		/// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
 		/// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-		internal PcapStatistics(SharpPcap.PCAP_PKTHDR pktHdr, SharpPcap.PCAP_PKTDATA pktData)
+		internal PcapStatistics(Pcap.PCAP_PKTHDR pktHdr, Pcap.PCAP_PKTDATA pktData)
 		{
 			this.m_pktHdr	= pktHdr;
 			this.m_pktData	= pktData.bytes;

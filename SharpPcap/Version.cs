@@ -28,7 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Represent the current version of SharpPcap.
@@ -46,7 +46,7 @@ namespace Tamir.IPLib
 		public static string GetVersionString()
 		{
 			System.Reflection.Assembly asm
-				= System.Reflection.Assembly.GetAssembly(typeof(Tamir.IPLib.Version));
+				= System.Reflection.Assembly.GetAssembly(typeof(SharpPcap.Version));
 			return asm.GetName().Version.ToString();
 		}
 	}

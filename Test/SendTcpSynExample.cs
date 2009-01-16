@@ -1,6 +1,6 @@
 using System;
-using Tamir.IPLib.Packets;
-using Tamir.IPLib;
+using SharpPcap.Packets;
+using SharpPcap;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
@@ -122,13 +122,13 @@ namespace Test
 
 		public static void Main1(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, SendTcpSynExample.cs", ver);
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			PcapDeviceList devices = Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

@@ -1,7 +1,7 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Protocols;
-using Tamir.IPLib.Util;
+using SharpPcap;
+using SharpPcap.Protocols;
+using SharpPcap.Util;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
@@ -42,13 +42,13 @@ namespace Test
 
 		public static void Main3(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, ArpTest.cs", ver);
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			PcapDeviceList devices = Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

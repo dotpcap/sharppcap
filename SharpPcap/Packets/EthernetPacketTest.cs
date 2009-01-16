@@ -9,9 +9,9 @@
 //using System;
 ////UPGRADE_TODO: The package 'junit.framework' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 //using junit.framework;
-////UPGRADE_TODO: The type 'Tamir.IPLib.Packets.simulator.PacketGenerator' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
-//using PacketGenerator = Tamir.IPLib.Packets.simulator.PacketGenerator;
-//namespace Tamir.IPLib.Packets
+////UPGRADE_TODO: The type 'SharpPcap.Packets.simulator.PacketGenerator' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
+//using PacketGenerator = SharpPcap.Packets.simulator.PacketGenerator;
+//namespace SharpPcap.Packets
 //{
 	
 //    public class EthernetPacketTest:TestCase
@@ -43,7 +43,7 @@
 		
 //        public virtual void  setUp()
 //        {
-//            int linkLayerLen = LinkLayer.getLinkLayerLength(Tamir.IPLib.Packets.LinkLayers_Fields.EN10MB);
+//            int linkLayerLen = LinkLayer.getLinkLayerLength(SharpPcap.Packets.LinkLayers_Fields.EN10MB);
 //            _goodie = new EthernetPacket(linkLayerLen, GOOD_PACKET);
 //            byte[] badBytes = new byte[GOOD_PACKET.Length];
 //            (new System.Random()).NextBytes(SupportClass.ToByteArray(badBytes));
@@ -76,8 +76,8 @@
 		
 //        public virtual void  testGoodPacketProtocol()
 //        {
-//            assertEquals(Tamir.IPLib.Packets.EthernetProtocols_Fields.IP, _goodie.EthernetProtocol);
-//            assertEquals(Tamir.IPLib.Packets.EthernetProtocols_Fields.IP, _goodie.EthernetProtocol);
+//            assertEquals(SharpPcap.Packets.EthernetProtocols_Fields.IP, _goodie.EthernetProtocol);
+//            assertEquals(SharpPcap.Packets.EthernetProtocols_Fields.IP, _goodie.EthernetProtocol);
 //        }
 		
 //        public virtual void  testBadPacketHeaderLengths()

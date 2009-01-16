@@ -10,7 +10,7 @@
 //
 
 using System;
-namespace Tamir.IPLib.Packets.Util
+namespace SharpPcap.Packets.Util
 {
 	/// <summary>
 	/// Contains conversion support elements such as classes, interfaces and static methods.

@@ -7,7 +7,7 @@
 /// *************************************************************************
 /// </summary>
 using System;
-namespace Tamir.IPLib.Packets
+namespace SharpPcap.Packets
 {
 	
 	

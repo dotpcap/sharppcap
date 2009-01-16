@@ -28,9 +28,9 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Runtime.InteropServices;
-using Tamir.IPLib.Packets;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Summary description for PcapSendQueue.
@@ -51,7 +51,7 @@ namespace Tamir.IPLib
 		/// to allocate for the queue</param>
 		public PcapSendQueue(int memSize)
 		{
-			m_queue = SharpPcap.pcap_sendqueue_alloc( memSize );
+			m_queue = Pcap.pcap_sendqueue_alloc( memSize );
 			if(m_queue==IntPtr.Zero)
 				throw new PcapException("Error creating PcapSendQueue");
 		}
@@ -62,7 +62,7 @@ namespace Tamir.IPLib
 		/// <param name="packet">The packet bytes to add</param>
 		/// <param name="pcapHdr">The pcap header of the packet</param>
 		/// <returns>True if success, else false</returns>
-		public bool Add( byte[] packet, SharpPcap.PCAP_PKTHDR pcapHdr )
+		public bool Add( byte[] packet, Pcap.PCAP_PKTHDR pcapHdr )
 		{
 			if(m_queue==IntPtr.Zero)
 			{
@@ -79,10 +79,10 @@ namespace Tamir.IPLib
 
 			//Marshal header
 			IntPtr hdrPtr;
-			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SharpPcap.PCAP_PKTHDR)));
+			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Pcap.PCAP_PKTHDR)));
 			Marshal.StructureToPtr(pcapHdr, hdrPtr, true);
 
-			int res = SharpPcap.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
+			int res = Pcap.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
 
 			Marshal.FreeHGlobal(pktPtr);
 			Marshal.FreeHGlobal(hdrPtr);	
@@ -106,7 +106,7 @@ namespace Tamir.IPLib
 		/// <returns>True if success, else false</returns>
 		public bool Add( byte[] packet )
 		{
-			SharpPcap.PCAP_PKTHDR hdr = new Tamir.IPLib.SharpPcap.PCAP_PKTHDR();
+			Pcap.PCAP_PKTHDR hdr = new SharpPcap.Pcap.PCAP_PKTHDR();
 			return this.Add( packet, hdr );
 		}
 		/// <summary>
@@ -127,7 +127,7 @@ namespace Tamir.IPLib
 		/// <returns>True if success, else false</returns>
 		public bool Add( byte[] packet, int seconds, int microseconds )
 		{
-			SharpPcap.PCAP_PKTHDR hdr = new Tamir.IPLib.SharpPcap.PCAP_PKTHDR();
+			Pcap.PCAP_PKTHDR hdr = new SharpPcap.Pcap.PCAP_PKTHDR();
 			hdr.tv_sec=seconds;
 			hdr.tv_usec=microseconds;
 			return this.Add( packet, hdr );
@@ -152,7 +152,7 @@ namespace Tamir.IPLib
 			}
 
 			int sync = synchronize ? 1 : 0;			
-			return SharpPcap.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
+			return Pcap.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
 		}
 
 		/// <summary>
@@ -162,7 +162,7 @@ namespace Tamir.IPLib
 		{
 			if(m_queue!=IntPtr.Zero)
 			{
-				SharpPcap.pcap_sendqueue_destroy( m_queue );
+				Pcap.pcap_sendqueue_destroy( m_queue );
 			}
 		}
 
@@ -177,9 +177,9 @@ namespace Tamir.IPLib
 				{
 					throw new PcapException("Can't perform operation, this queue is disposed");
 				}
-				SharpPcap.pcap_send_queue q =
-					(SharpPcap.pcap_send_queue)Marshal.PtrToStructure
-					(m_queue, typeof(SharpPcap.pcap_send_queue));
+				Pcap.pcap_send_queue q =
+					(Pcap.pcap_send_queue)Marshal.PtrToStructure
+					(m_queue, typeof(Pcap.pcap_send_queue));
 				return (int)q.len;
 			}
 		}

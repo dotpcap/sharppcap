@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
-using Tamir.IPLib.Protocols;
-using Tamir.IPLib.Util;
+using SharpPcap;
+using SharpPcap.Packets;
+using SharpPcap.Protocols;
+using SharpPcap.Util;
  
 namespace Test
 {
@@ -21,7 +21,7 @@ namespace Test
 			byte[] bytes = new byte[MIN_PKT_LEN + data.Length];
 			Array.Copy(data, 0, bytes, MIN_PKT_LEN, data.Length);
            
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			PcapDeviceList devices = Pcap.GetAllDevices();
 			PcapDevice device = devices[2];
 			NetworkDevice netdev=(NetworkDevice)device;
  

@@ -1,5 +1,5 @@
 using System;
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {	
 
 	/// <summary>

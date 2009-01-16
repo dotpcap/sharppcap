@@ -30,7 +30,7 @@ using System;
 using System.Text;
 using System.IO;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Capture packets from an offline pcap file
@@ -97,9 +97,9 @@ namespace Tamir.IPLib
 		public override void PcapOpen()
 		{
 			//holds errors
-			StringBuilder errbuf = new StringBuilder( SharpPcap.PCAP_ERRBUF_SIZE ); //will hold errors
+			StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 			//opens offline pcap file
-			IntPtr adapterHandle = SharpPcap.pcap_open_offline( this.PcapName, errbuf);
+			IntPtr adapterHandle = Pcap.pcap_open_offline( this.PcapName, errbuf);
 
 			//handle error
 			if ( adapterHandle == IntPtr.Zero)

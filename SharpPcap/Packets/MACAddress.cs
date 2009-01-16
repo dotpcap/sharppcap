@@ -7,11 +7,11 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'Tamir.IPLib.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
-using ArrayHelper = Tamir.IPLib.Packets.Util.ArrayHelper;
-//UPGRADE_TODO: The type 'Tamir.IPLib.Packets.Util.HexHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
-using HexHelper = Tamir.IPLib.Packets.Util.HexHelper;
-namespace Tamir.IPLib.Packets
+//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
+using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
+//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.HexHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
+using HexHelper = SharpPcap.Packets.Util.HexHelper;
+namespace SharpPcap.Packets
 {
 
 

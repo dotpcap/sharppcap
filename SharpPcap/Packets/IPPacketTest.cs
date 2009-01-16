@@ -9,7 +9,7 @@
 //using System;
 ////UPGRADE_TODO: The package 'junit.framework' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 //using junit.framework;
-//namespace Tamir.IPLib.Packets
+//namespace SharpPcap.Packets
 //{
 	
 //    public class IPPacketTest:TestCase
@@ -114,13 +114,13 @@
 		
 //        public virtual void  testSynAckPacketHeaderValues()
 //        {
-//            assertEquals(Tamir.IPLib.Packets.IPProtocols_Fields.TCP, _synAck.getIPProtocol());
-//            assertEquals(Tamir.IPLib.Packets.IPProtocols_Fields.TCP, _synAck.getIPProtocol());
+//            assertEquals(SharpPcap.Packets.IPProtocols_Fields.TCP, _synAck.getIPProtocol());
+//            assertEquals(SharpPcap.Packets.IPProtocols_Fields.TCP, _synAck.getIPProtocol());
 //            assertEquals("IP Checksum mismatch, should be 0x6c38, but is " + System.Convert.ToString(_synAck.IPChecksum, 16), 0x6c38, _synAck.IPChecksum);
 //            assertEquals("(IP) Checksum mismatch, should be 0x6c38, but is " + System.Convert.ToString(_synAck.getChecksum(), 16), 0x6c38, _synAck.getChecksum());
-//            IPPacket.TestProbe probe = new Tamir.IPLib.Packets.IPPacket.TestProbe(_synAck);
+//            IPPacket.TestProbe probe = new SharpPcap.Packets.IPPacket.TestProbe(_synAck);
 //            assertTrue("Computed IP checksum mismatch, should be " + System.Convert.ToString(_synAck.IPChecksum, 16) + ", but is " + System.Convert.ToString(probe.ComputedSenderIPChecksum, 16) + ", (" + System.Convert.ToString(probe.ComputedReceiverIPChecksum, 16) + ")", _synAck.ValidChecksum);
-//            assertEquals("Version mismatch, should be " + Tamir.IPLib.Packets.IPVersions_Fields.IPV4 + ", but is " + _synAck.Version, Tamir.IPLib.Packets.IPVersions_Fields.IPV4, _synAck.Version);
+//            assertEquals("Version mismatch, should be " + SharpPcap.Packets.IPVersions_Fields.IPV4 + ", but is " + _synAck.Version, SharpPcap.Packets.IPVersions_Fields.IPV4, _synAck.Version);
 //            assertEquals("TOS incorrect, should be 0, but is " + _synAck.getTypeOfService(), 0, _synAck.getTypeOfService());
 //            assertEquals("Length incorrect, should be 44, but is " + _synAck.getLength(), 44, _synAck.getLength());
 //            assertEquals("ID incorrect, should be 0x9383, but is " + _synAck.Id, 0x9383, _synAck.Id);
@@ -131,13 +131,13 @@
 		
 //        public virtual void  testPshAckPacketHeaderValues()
 //        {
-//            assertEquals(Tamir.IPLib.Packets.IPProtocols_Fields.TCP, _pshAck.getIPProtocol());
-//            assertEquals(Tamir.IPLib.Packets.IPProtocols_Fields.TCP, _pshAck.getIPProtocol());
+//            assertEquals(SharpPcap.Packets.IPProtocols_Fields.TCP, _pshAck.getIPProtocol());
+//            assertEquals(SharpPcap.Packets.IPProtocols_Fields.TCP, _pshAck.getIPProtocol());
 //            assertEquals("IP Checksum mismatch, should be 0x38a2, but is " + System.Convert.ToString(_pshAck.IPChecksum, 16), 0x38a2, _pshAck.IPChecksum);
 //            assertEquals("(IP) Checksum mismatch, should be 0x38a2, but is " + System.Convert.ToString(_pshAck.getChecksum(), 16), 0x38a2, _pshAck.getChecksum());
-//            IPPacket.TestProbe probe = new Tamir.IPLib.Packets.IPPacket.TestProbe(_pshAck);
+//            IPPacket.TestProbe probe = new SharpPcap.Packets.IPPacket.TestProbe(_pshAck);
 //            assertTrue("Computed IP checksum mismatch, should be " + System.Convert.ToString(_pshAck.IPChecksum, 16) + ", but is " + System.Convert.ToString(probe.ComputedSenderIPChecksum, 16) + ", (" + System.Convert.ToString(probe.ComputedReceiverIPChecksum, 16) + ")", _pshAck.ValidChecksum);
-//            assertEquals("Version mismatch, should be " + Tamir.IPLib.Packets.IPVersions_Fields.IPV4 + ", but is " + _pshAck.Version, Tamir.IPLib.Packets.IPVersions_Fields.IPV4, _pshAck.Version);
+//            assertEquals("Version mismatch, should be " + SharpPcap.Packets.IPVersions_Fields.IPV4 + ", but is " + _pshAck.Version, SharpPcap.Packets.IPVersions_Fields.IPV4, _pshAck.Version);
 //            assertEquals("TOS incorrect, should be 0, but is " + _pshAck.getTypeOfService(), 0, _pshAck.getTypeOfService());
 //            assertEquals("Length incorrect, should be 62, but is " + _pshAck.getLength(), 62, _pshAck.getLength());
 //            assertEquals("ID incorrect, should be 0x8708, but is " + _pshAck.Id, 0x8708, _pshAck.Id);

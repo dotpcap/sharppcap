@@ -416,7 +416,7 @@ private static void device_PcapOnPacketArrival(object sender, Packet packet)
 	common protocols (e.g. TCP, UDP, ICMP and others). All these analyzing classes 
 	are a direct C# translation from <A href="http://jpcap.sourceforge.net/">JPcap</A>
 	which is a Java wrapper for libpcap/WinPcap similar to SharpPcap. All these 
-	analyzing classes can be found under the <CODE>Tamir.IPLib.Packets</CODE> namespace.</P>
+	analyzing classes can be found under the <CODE>SharpPcap.Packets</CODE> namespace.</P>
 <P>As you can see, in our packet handler we first do a check to verify that the <CODE>Packet</CODE>
 	object received from the <CODE>PcapDevice</CODE> is of type <CODE>TCPPacet</CODE>, 
 	and only then we cast it to a <CODE>TCPPacet</CODE>. This check is not really 
@@ -759,7 +759,7 @@ Console.WriteLine("-- Device closed.");</PRE>
 	is a matter of few lines of code. The following sample shows how to do it.</P>
 <PRE>//Register our handler function to the 'pcap statistics' event
 device.PcapOnPcapStatistics += 
-    new Tamir.IPLib.SharpPcap.PcapStatisticsEvent( device_PcapOnPcapStatistics );
+    new SharpPcap.Pcap.PcapStatisticsEvent( device_PcapOnPcapStatistics );
 
 //Open the device for capturing
 //true -- means promiscuous mode

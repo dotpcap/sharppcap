@@ -29,7 +29,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Text;
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	/// <summary>
 	/// Summary description for Convert.

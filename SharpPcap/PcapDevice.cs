@@ -29,11 +29,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Text;
 using System.Threading;
-using Tamir.IPLib.Util;
-using Tamir.IPLib.Packets;
+using SharpPcap.Util;
+using SharpPcap.Packets;
 using System.Runtime.InteropServices;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Capture live packets from a network device
@@ -44,13 +44,13 @@ namespace Tamir.IPLib
 	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class PcapDevice
 	{
-		private SharpPcap.PCAP_IF m_pcapIf;
+		private Pcap.PCAP_IF m_pcapIf;
 
 		private IntPtr		m_pcapAdapterHandle = IntPtr.Zero;
 		private IntPtr		m_pcapDumpHandle	= IntPtr.Zero;
 		private bool		m_pcapStarted		= false;
 		private PcapMode	m_pcapMode			= PcapMode.Capture;
-		private int			m_pcapPacketCount	= SharpPcap.INFINITE;//Infinite
+		private int			m_pcapPacketCount	= Pcap.INFINITE;//Infinite
 		private int			m_ip	= 0;//just for fun
 		private int			m_mask	= 0;//for filter expression
 
@@ -63,7 +63,7 @@ namespace Tamir.IPLib
 		/// <param name="name">The name of a device.<br>
 		/// Can be either in pcap device format or windows network
 		/// device format</param>
-		internal PcapDevice(string name):this(SharpPcap.GetPcapDeviceStruct(name))
+		internal PcapDevice(string name):this(Pcap.GetPcapDeviceStruct(name))
 		{
 		}
 
@@ -73,18 +73,18 @@ namespace Tamir.IPLib
 		/// <param name="pcapIf">A 'pcapIf' struct representing
 		/// the pcap device
 		/// <summary>
-		internal PcapDevice( SharpPcap.PCAP_IF pcapIf )
+		internal PcapDevice( Pcap.PCAP_IF pcapIf )
 		{
 			m_pcapIf = pcapIf;
 
 			if(m_pcapIf.Addresses!=IntPtr.Zero)
 			{
-				SharpPcap.PCAP_ADDR pcap_addr = 
-					SharpPcap.GetPcap_Addr( m_pcapIf.Addresses );
+				Pcap.PCAP_ADDR pcap_addr = 
+					Pcap.GetPcap_Addr( m_pcapIf.Addresses );
 				if(pcap_addr.Addr!=IntPtr.Zero)
-					m_ip = System.Net.IPAddress.HostToNetworkOrder( SharpPcap.GetPcapAddress( pcap_addr.Addr ) );
+					m_ip = System.Net.IPAddress.HostToNetworkOrder( Pcap.GetPcapAddress( pcap_addr.Addr ) );
 				if(pcap_addr.Netmask!=IntPtr.Zero)
-					m_mask = System.Net.IPAddress.HostToNetworkOrder( SharpPcap.GetPcapAddress( pcap_addr.Netmask ));
+					m_mask = System.Net.IPAddress.HostToNetworkOrder( Pcap.GetPcapAddress( pcap_addr.Netmask ));
 			}
 		}
 
@@ -99,18 +99,18 @@ namespace Tamir.IPLib
 		/// Fires whenever a new packet is received on this Pcap Device.<br>
 		/// This event is invoked only when working in "PcapMode.Capture" mode.
 		/// </summary>
-		public event SharpPcap.PacketArrivalEvent PcapOnPacketArrival;
+		public event Pcap.PacketArrivalEvent PcapOnPacketArrival;
 
 		/// <summary>
 		/// Fires whenever a new pcap statistics is available for this Pcap Device.<br>
 		/// This event is invoked only when working in "PcapMode.Statistics" mode.
 		/// </summary>
-		public event SharpPcap.PcapStatisticsEvent PcapOnPcapStatistics;
+		public event Pcap.PcapStatisticsEvent PcapOnPcapStatistics;
 
 		/// <summary>
 		/// Fired when the capture process of this pcap device is stopped
 		/// </summary>
-		public event SharpPcap.PcapCaptureStoppedEvent PcapOnCaptureStopped;
+		public event Pcap.PcapCaptureStoppedEvent PcapOnCaptureStopped;
 		
 		/// <summary>
 		/// Gets the pcap name of this network device
@@ -135,7 +135,7 @@ namespace Tamir.IPLib
 
 		public virtual bool PcapLoopback
 		{
-			get{return (PcapFlags&SharpPcap.PCAP_IF_LOOPBACK)==1;}
+			get{return (PcapFlags&Pcap.PCAP_IF_LOOPBACK)==1;}
 		}
 
 		public virtual string PcapIpAddress
@@ -161,7 +161,7 @@ namespace Tamir.IPLib
 			{
 				if(!PcapOpened)
 					throw new InvalidOperationException("Cannot get datalink, the pcap device is not opened");
-				return SharpPcap.pcap_datalink(PcapHandle);
+				return Pcap.pcap_datalink(PcapHandle);
 			}
 		}
 
@@ -192,9 +192,9 @@ namespace Tamir.IPLib
 
 				m_pcapMode = value;
 				int mode = ( m_pcapMode==PcapMode.Capture ? 
-							 SharpPcap.MODE_CAPT : 
-							 SharpPcap.MODE_STAT);
-				SharpPcap.pcap_setmode(this.PcapHandle ,mode);
+							 Pcap.MODE_CAPT : 
+							 Pcap.MODE_STAT);
+				Pcap.pcap_setmode(this.PcapHandle ,mode);
 			}
 		}
 
@@ -232,11 +232,11 @@ namespace Tamir.IPLib
 
 			if ( !PcapOpened )
 			{
-				StringBuilder errbuf = new StringBuilder( SharpPcap.PCAP_ERRBUF_SIZE ); //will hold errors
+				StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
-				PcapHandle = SharpPcap.pcap_open_live
+				PcapHandle = Pcap.pcap_open_live
 					(	PcapName,			// name of the device
-						SharpPcap.MAX_PACKET_SIZE,	// portion of the packet to capture. 
+						Pcap.MAX_PACKET_SIZE,	// portion of the packet to capture. 
 											// MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
 						mode,				// promiscuous mode
 						(short)read_timeout,// read timeout												
@@ -278,7 +278,7 @@ namespace Tamir.IPLib
 		{
 			m_pcapPacketCount = packetCount;
 			PcapCaptureLoop();
-			m_pcapPacketCount = SharpPcap.INFINITE;;
+			m_pcapPacketCount = Pcap.INFINITE;;
 		}
 
 		/// <summary>
@@ -318,20 +318,20 @@ namespace Tamir.IPLib
 			{
 				PcapStopCapture();
 			}
-			SharpPcap.pcap_close(PcapHandle);
+			Pcap.pcap_close(PcapHandle);
 			PcapHandle = IntPtr.Zero;
 			
 			//Remove event handlers
 			if ( PcapOnPacketArrival != null)
 			{
-				foreach(SharpPcap.PacketArrivalEvent pa in PcapOnPacketArrival.GetInvocationList())
+				foreach(Pcap.PacketArrivalEvent pa in PcapOnPacketArrival.GetInvocationList())
 				{
 					PcapOnPacketArrival -= pa;
 				}
 			}
 			if ( PcapOnPcapStatistics != null)
 			{
-				foreach(SharpPcap.PcapStatisticsEvent pse in PcapOnPcapStatistics.GetInvocationList())
+				foreach(Pcap.PcapStatisticsEvent pse in PcapOnPcapStatistics.GetInvocationList())
 				{
 					PcapOnPcapStatistics -= pse;
 				}
@@ -365,7 +365,7 @@ namespace Tamir.IPLib
 			int res = 0;
 
 			//Get a packet from winpcap
-			res = SharpPcap.pcap_next_ex( PcapHandle, ref header, ref data);
+			res = Pcap.pcap_next_ex( PcapHandle, ref header, ref data);
 			p=null;
 
 			if(res>0)
@@ -373,7 +373,7 @@ namespace Tamir.IPLib
 				//Marshal the packet
 				if ( (header != IntPtr.Zero) && (data != IntPtr.Zero) )
 				{
-					SharpPcap.PCAP_PKTHDR pkt_header = (SharpPcap.PCAP_PKTHDR)Marshal.PtrToStructure( header, typeof(SharpPcap.PCAP_PKTHDR) );
+					Pcap.PCAP_PKTHDR pkt_header = (Pcap.PCAP_PKTHDR)Marshal.PtrToStructure( header, typeof(Pcap.PCAP_PKTHDR) );
 					//SharpPcap.PCAP_PKTDATA pkt_data = (SharpPcap.PCAP_PKTDATA)Marshal.PtrToStructure( data, typeof(SharpPcap.PCAP_PKTDATA) );
 					byte[] pkt_data = new byte[pkt_header.caplen];
 					Marshal.Copy(data, pkt_data, 0, pkt_header.caplen);
@@ -404,7 +404,7 @@ namespace Tamir.IPLib
 			{
 				try
 				{
-					if(m_pcapPacketCount != SharpPcap.INFINITE)
+					if(m_pcapPacketCount != Pcap.INFINITE)
 					{
 						//check for packet count limit
 						if (packetCount >= m_pcapPacketCount)
@@ -496,15 +496,15 @@ namespace Tamir.IPLib
 			//pointer to a bpf_program struct 
 			IntPtr program = IntPtr.Zero;
 			//Alocate an unmanaged buffer
-			program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(SharpPcap.bpf_program)));
+			program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(Pcap.bpf_program)));
 			//compile the expreesions
-			res = SharpPcap.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
+			res = Pcap.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
 			//watch for errors
 			if(res<0)
 			{
 				try
 				{
-					err_ptr = SharpPcap.pcap_geterr( PcapHandle );
+					err_ptr = Pcap.pcap_geterr( PcapHandle );
 					err = Marshal.PtrToStringAnsi( err_ptr );
 				}
 				catch{}
@@ -512,13 +512,13 @@ namespace Tamir.IPLib
 				throw new PcapException(err);
 			}
 			//associate the filter with this device
-			res = SharpPcap.pcap_setfilter( PcapHandle, program );
+			res = Pcap.pcap_setfilter( PcapHandle, program );
 			//watch for errors
 			if(res<0)
 			{
 				try
 				{
-					err_ptr = SharpPcap.pcap_geterr(PcapHandle);
+					err_ptr = Pcap.pcap_geterr(PcapHandle);
 					err = Marshal.PtrToStringAnsi(err_ptr);
 				}
 				catch{}
@@ -539,7 +539,7 @@ namespace Tamir.IPLib
 			{
 				throw new PcapException("A dump file is already opened");
 			}
-			m_pcapDumpHandle = SharpPcap.pcap_dump_open(PcapHandle, fileName);
+			m_pcapDumpHandle = Pcap.pcap_dump_open(PcapHandle, fileName);
 			if(!PcapDumpOpened)
 				throw new PcapException("Error openning dump file.");
 		}
@@ -552,7 +552,7 @@ namespace Tamir.IPLib
 		{
 			if(PcapDumpOpened)
 			{
-				SharpPcap.pcap_dump_close(m_pcapDumpHandle);
+				Pcap.pcap_dump_close(m_pcapDumpHandle);
 				m_pcapDumpHandle = IntPtr.Zero;
 			}
 		}
@@ -564,7 +564,7 @@ namespace Tamir.IPLib
 		public void PcapDumpFlush()
 		{
 			if(PcapDumpOpened)
-				SharpPcap.pcap_dump_flush(m_pcapDumpHandle);
+				Pcap.pcap_dump_flush(m_pcapDumpHandle);
 		}
 
 		/// <summary>
@@ -585,10 +585,10 @@ namespace Tamir.IPLib
 
 			//Marshal header
 			IntPtr hdrPtr;
-			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SharpPcap.PCAP_PKTHDR)));
+			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Pcap.PCAP_PKTHDR)));
 			Marshal.StructureToPtr(h.m_pcap_pkthdr, hdrPtr, true);
 
-			SharpPcap.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
+			Pcap.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
 
 			Marshal.FreeHGlobal(pktPtr);
 			Marshal.FreeHGlobal(hdrPtr);
@@ -664,16 +664,16 @@ namespace Tamir.IPLib
 					"\nArgument size is larger than the total size of the packet.");
 				}
 
-				if (p.Length > SharpPcap.MAX_PACKET_SIZE) 
+				if (p.Length > Pcap.MAX_PACKET_SIZE) 
 				{
-					throw new ArgumentException("Packet length can't be larger than "+SharpPcap.MAX_PACKET_SIZE);
+					throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
 				}
 
 				IntPtr p_packet = IntPtr.Zero;			
 				p_packet = Marshal.AllocHGlobal( size );
 				Marshal.Copy(p, 0, p_packet, size);		
 
-				int res = SharpPcap.pcap_sendpacket(PcapHandle, p_packet, size);
+				int res = Pcap.pcap_sendpacket(PcapHandle, p_packet, size);
 				Marshal.FreeHGlobal(p_packet);
 				if(res<0)
 					throw new PcapException("Can't send packet: "+PcapLastError);
@@ -700,7 +700,7 @@ namespace Tamir.IPLib
 		{
 			get
 			{
-				IntPtr err_ptr = SharpPcap.pcap_geterr( PcapHandle );
+				IntPtr err_ptr = Pcap.pcap_geterr( PcapHandle );
 				return Marshal.PtrToStringAnsi( err_ptr );
 			}
 		}

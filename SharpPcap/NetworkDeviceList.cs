@@ -30,7 +30,7 @@ using System;
 using System.Collections;
 
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Summary description for NetworkDeviceList.
@@ -96,7 +96,7 @@ namespace Tamir.IPLib
 
 		protected override void OnValidate( Object value )  
 		{
-			if ( value.GetType() != Type.GetType("Tamir.IPLib.NetworkDevice") )
+			if ( value.GetType() != Type.GetType("SharpPcap.NetworkDevice") )
 				throw new ArgumentException( "value must be of type NetworkDevice.", "value" );
 		}
 

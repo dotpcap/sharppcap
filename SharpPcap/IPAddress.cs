@@ -29,7 +29,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Collections;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	///Represent an IP Address and a Subnet Mask.
@@ -76,7 +76,6 @@ namespace Tamir.IPLib
 		{
 			return (Address+"/"+Util.Convert.MaskStringToBits(Mask));
 		}
-
 	}
 
 	/// <summary>
@@ -149,7 +148,7 @@ namespace Tamir.IPLib
 
 		protected override void OnValidate( Object value )  
 		{
-			if ( value.GetType() != Type.GetType("Tamir.IPLib.IPAddress") )
+			if ( value.GetType() != Type.GetType("SharpPcap.IPAddress") )
 				throw new ArgumentException( "value must be of type IPAddress.", "value" );
 		}
 	}

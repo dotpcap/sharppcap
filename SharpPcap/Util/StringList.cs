@@ -30,7 +30,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Collections;
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	///<author>Tamir Gal</author>
 	/// <version>  $Revision: 1.3 $ </version>

@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Tamir.IPLib.Util;
+using SharpPcap.Util;
 
 namespace Test
 {

@@ -30,7 +30,7 @@ using System;
 using System.Collections;
 
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	/// Summary description for PcapDeviceList.

@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	
 	[TestFixture]

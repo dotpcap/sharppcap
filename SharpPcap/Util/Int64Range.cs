@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	
 	

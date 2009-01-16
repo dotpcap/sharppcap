@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using Tamir.IPLib;
+using SharpPcap;
 
 namespace Test
 {

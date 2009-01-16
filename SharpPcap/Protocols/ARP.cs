@@ -1,7 +1,7 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
-using Tamir.IPLib.Util;
+using SharpPcap;
+using SharpPcap.Packets;
+using SharpPcap.Util;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
@@ -31,7 +31,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace Tamir.IPLib.Protocols
+namespace SharpPcap.Protocols
 {
 	/// <summary>
 	/// Resolves MAC addresses from IP addresses using the Address Resolution Protocol (ARP)

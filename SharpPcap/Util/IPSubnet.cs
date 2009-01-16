@@ -1,6 +1,6 @@
 /// <summary> </summary>
 using System;
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {	
 
 	/// <author>Tamir Gal</author>

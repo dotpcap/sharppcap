@@ -11,7 +11,7 @@
 
 using System;
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	/// <summary>
 	/// Contains conversion support elements such as classes, interfaces and static methods.

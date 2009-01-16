@@ -1,6 +1,6 @@
 using System;
-using Tamir.IPLib.Util;
-using Tamir.IPLib.Packets;
+using SharpPcap.Util;
+using SharpPcap.Packets;
 using NUnit.Framework;
 
 namespace Test

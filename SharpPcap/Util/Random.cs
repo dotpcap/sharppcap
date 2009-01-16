@@ -1,7 +1,7 @@
 /// <summary> </summary>
 using System;
 using System.Security.Cryptography;
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	
 

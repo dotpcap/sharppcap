@@ -9,7 +9,7 @@
 //using System;
 ////UPGRADE_TODO: The package 'junit.framework' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 //using junit.framework;
-//namespace Tamir.IPLib.Packets
+//namespace SharpPcap.Packets
 //{
 	
 //    /// <summary> </summary>

@@ -29,7 +29,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace Tamir.IPLib.Util
+namespace SharpPcap.Util
 {
 	
 
@@ -252,12 +252,12 @@ namespace Tamir.IPLib.Util
 
 		public static string MacToString(long mac)
 		{
-			return Tamir.IPLib.Packets.MACAddress.extract(mac);
+			return SharpPcap.Packets.MACAddress.extract(mac);
 		}
 
 		public static string MacToString(byte[] mac)
 		{
-			return Tamir.IPLib.Packets.MACAddress.extract(0, mac);
+			return SharpPcap.Packets.MACAddress.extract(0, mac);
 		}
 
 		public static string MacFormat(string mac)

@@ -28,7 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 
-namespace Tamir.IPLib
+namespace SharpPcap
 {
 	/// <summary>
 	///  A wrapper class for libpcap's PCAP_PKTHDR structure
@@ -42,19 +42,19 @@ namespace Tamir.IPLib
 		/// <summary>
 		/// The underlying PCAP_PKTHDR structure
 		/// </summary>
-		internal SharpPcap.PCAP_PKTHDR m_pcap_pkthdr;
+		internal Pcap.PCAP_PKTHDR m_pcap_pkthdr;
 		/// <summary>
 		/// Constructs a new PcapHeader
 		/// </summary>
 		public PcapHeader()
 		{
-			m_pcap_pkthdr=new SharpPcap.PCAP_PKTHDR();
+			m_pcap_pkthdr=new Pcap.PCAP_PKTHDR();
 		}
 		/// <summary>
 		/// Constructs a new PcapHeader
 		/// </summary>
 		/// <param name="m_pcap_pkthdr">The underlying PCAP_PKTHDR structure</param>
-		public PcapHeader( SharpPcap.PCAP_PKTHDR m_pcap_pkthdr )
+		public PcapHeader( Pcap.PCAP_PKTHDR m_pcap_pkthdr )
 		{
 			this.m_pcap_pkthdr=m_pcap_pkthdr;
 		}
