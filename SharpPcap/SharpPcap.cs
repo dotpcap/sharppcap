@@ -41,6 +41,13 @@ namespace Tamir.IPLib
 	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class SharpPcap
 	{
+        // NOTE: For mono users on non-windows platforms a .config file is used to map
+        //       the windows dll name to the unix/mac library name
+        //       This file is called $assembly_name.dll.config and is placed in the
+        //       same directory as the assembly
+        //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
+        private const string PCAP_DLL = "wpcap.dll";
+
 		/// <summary>A delegate for Packet Arrival events</summary>
 		public delegate void PacketArrivalEvent(object sender, Packets.Packet packet);
 
@@ -64,20 +71,20 @@ namespace Tamir.IPLib
 		private extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
 
 		/// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static int pcap_findalldevs_ex (string /*char **/source, IntPtr /*pcap_rmtauth **/auth, ref IntPtr /*pcap_if_t ** */alldevs, StringBuilder /*char * */errbuf);
 		
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static void	pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
 		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /* pcap_t* */ pcap_open_live(string dev, int packetLen, short mode, short timeout, StringBuilder errbuf);
 
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /* pcap_t* */ pcap_open_offline( string/*const char* */ fname, StringBuilder/* char* */ errbuf ); 
 
 		/// <summary>Open a file to write packets. </summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /*pcap_dumper_t * */ pcap_dump_open (IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname);
 		
 		/// <summary>
@@ -86,7 +93,7 @@ namespace Tamir.IPLib
 		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
 		internal extern static void  pcap_dump (IntPtr /*u_char * */user, IntPtr /*const struct pcap_pkthdr * */h, IntPtr /*const u_char * */sp) ;
 		
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /* pcap_t* */ pcap_open(string dev, int packetLen, short mode, short timeout,IntPtr auth, StringBuilder errbuf);
 
 		/// <summary> close the files associated with p and deallocates resources.</summary>
@@ -96,7 +103,7 @@ namespace Tamir.IPLib
 		/// <summary>
 		/// To avoid callback, this returns one packet at a time
 		/// </summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static int pcap_next_ex(IntPtr /* pcap_t* */ adaptHandle, ref IntPtr /* **pkt_header */ header , ref IntPtr  data);
 
 		/// <summary>
@@ -116,14 +123,14 @@ namespace Tamir.IPLib
 		/// </summary>
 		/// <param name="memsize">The size of the queue</param>
 		/// <returns>A pointer to the allocated buffer</returns>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /*pcap_send_queue * */pcap_sendqueue_alloc(int memsize) ;
 
 		/// <summary>
 		/// Destroy a send queue. 
 		/// </summary>
 		/// <param name="queue">A pointer to the queue start address</queue>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static void pcap_sendqueue_destroy(IntPtr /* pcap_send_queue * */queue) ;
 
 
@@ -149,7 +156,7 @@ namespace Tamir.IPLib
 		/// If it is smaller than the size parameter, an error occurred 
 		/// during the send. The error can be caused by a driver/adapter 
 		/// problem or by an inconsistent/bogus send queue.</returns>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static int pcap_sendqueue_transmit(IntPtr/*pcap_t * */p, IntPtr /* pcap_send_queue * */queue, int sync);
 
 		/// <summary>
@@ -158,13 +165,13 @@ namespace Tamir.IPLib
 		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
 		internal extern static int pcap_compile (IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp, string /*char * */str, int optimize, UInt32 netmask);
 
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static int  pcap_setfilter (IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp);
 
 		/// <summary>
 		/// return the error text pertaining to the last pcap library error.
 		/// </summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr pcap_geterr (IntPtr /*pcap_t * */ adaptHandle);
 
 		/// <summary>Returns a pointer to a string giving information about the version of the libpcap library being used; note that it contains more information than just a version number. </summary>
@@ -172,7 +179,7 @@ namespace Tamir.IPLib
 		internal extern static string /*const char **/  pcap_lib_version ();
 		
 		/// <summary>return the standard I/O stream of the 'savefile' opened by pcap_dump_open().</summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static IntPtr /*FILE **/  pcap_dump_file (IntPtr /*pcap_dumper_t **/p);
 		
 		/// <summary>Flushes the output buffer to the 'savefile', so that any packets 
@@ -182,7 +189,7 @@ namespace Tamir.IPLib
 		internal extern static int pcap_dump_flush (IntPtr /*pcap_dumper_t **/p);
 			
 		/// <summary>Closes a savefile. </summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static void  pcap_dump_close (IntPtr /*pcap_dumper_t **/p);
 				
 		/// <summary> Return the link layer of an adapter. </summary>
@@ -195,7 +202,7 @@ namespace Tamir.IPLib
 		///	and MODE_STAT (statistical mode). See the tutorial 
 		///	"\ref wpcap_tut9" for details about statistical mode. 
 		/// </summary>
-		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+		[DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
 		internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
 
 		/* interface is loopback */
