@@ -1,0 +1,6 @@
+﻿To use SharpPcap on Mono
+
+- Build the solution with Monodevelop or get the precompiled assembly.
+- Place the assembly, SharpPcap.dll, and the dll map file, SharpPcap.dll.config, in the same directory.
+- Make sure you have libpcap installed.
+- Add the assembly to your project like any other assembly and enjoy.
