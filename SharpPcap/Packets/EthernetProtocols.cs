@@ -1,5 +1,3 @@
-// $Id: EthernetProtocols.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,19 +7,11 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Code constants for well-defined ethernet protocols.
 	/// <p>
 	/// Taken from linux/if_ether.h and tcpdump/ethertype.h
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
 	public struct EthernetProtocols_Fields{
 		/// <summary> IP protocol.</summary>
 		public const int IP = 0x0800;

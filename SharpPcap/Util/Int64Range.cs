@@ -1,16 +1,8 @@
-/// <summary> </summary>
 using System;
 using System.Collections;
 
 namespace SharpPcap.Util
 {
-	
-	
-
-	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.3 $ </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:15 $ </lastModifiedAt>
 	public class Int64Range:NumberRange, IEnumerator, IEnumerable
 	{
 		//UPGRADE_ISSUE: The following fragment of code could not be parsed and was not converted. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1156'"

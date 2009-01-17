@@ -1,5 +1,3 @@
-// $Id: IPPorts.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,17 +7,9 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Code constants for ip ports.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public struct IPPorts_Fields{
 		public readonly static int NONE = - 1; // dummy value for protocols that don't use ports
 		public readonly static int RESERVED_0 = 0;

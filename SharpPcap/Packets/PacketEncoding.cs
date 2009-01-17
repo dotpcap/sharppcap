@@ -1,5 +1,3 @@
-// $Id: PacketEncoding.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,22 +7,13 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Packet encoding.
 	/// <p>
 	/// Contains utility methods for decoding generic packets.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public class PacketEncoding
-	{
-		
+	{		
 		// create an empty array to return whenever we need to return an, er,
 		// empty array. this should be okay, because how can you mutate a 
 		// 0-length array?

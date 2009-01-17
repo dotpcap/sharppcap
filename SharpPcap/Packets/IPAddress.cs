@@ -1,5 +1,3 @@
-// $Id: IPAddress.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,12 +5,9 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> IP address.
 	/// <p>
 	/// This class doesn't store IP addresses. There's a java class for that,
@@ -22,12 +17,6 @@ namespace SharpPcap.Packets
 	/// from a big-endian byte array.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
 	public class IPAddress
 	{
 		/// <summary> Convert an IP address stored in an int to its string representation.</summary>

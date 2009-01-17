@@ -1,5 +1,3 @@
-// $Id: Packet.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,12 +5,9 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.Timeval' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using Timeval = SharpPcap.Packets.Util.Timeval;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> A network packet.
 	/// <p>
 	/// This class currently contains no implementation because only ethernet 
@@ -25,12 +20,6 @@ namespace SharpPcap.Packets
 	/// from something other than ethernet.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	[Serializable]
 	public class Packet
 	{

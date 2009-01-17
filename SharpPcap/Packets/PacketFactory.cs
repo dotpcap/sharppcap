@@ -1,5 +1,3 @@
-// $Id: PacketFactory.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,29 +5,20 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.Timeval' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using Timeval = SharpPcap.Packets.Util.Timeval;
 namespace SharpPcap.Packets
 {
-
-
 	/// <summary> This factory constructs high-level packet objects from
 	/// captured data streams.
-	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public class PacketFactory
 	{
 		/// <summary> Convert captured packet data into an object.</summary>
 		public static Packet dataToPacket(int linkType, byte[] bytes)
 		{
+            return dataToPacket(linkType, bytes, new Timeval(0, 0));
+#if false
 			int ethProtocol;
 
 			// record the length of the headers associated with this link layer type.
@@ -40,15 +29,17 @@ namespace SharpPcap.Packets
 			// link-layer of the packet
 			int offset = LinkLayer.getProtoOffset(linkType);
 			if (offset == -1)
+            {
 				// if there is no embedded protocol, assume IP?
 				ethProtocol = EthernetProtocols_Fields.IP;
-			else
+            } else
+            {
 				ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
+            }
 
 			// try to recognize the ethernet type..
 			switch (ethProtocol)
 			{
-
 				// arp
 				case EthernetProtocols_Fields.ARP:
 					return new ARPPacket(lLen, bytes);
@@ -58,29 +49,19 @@ namespace SharpPcap.Packets
 					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
 					switch (ipProtocol)
 					{
-
-						// icmp
 						case IPProtocols_Fields.ICMP: return new ICMPPacket(lLen, bytes);
-						// igmp
-
 						case IPProtocols_Fields.IGMP: return new IGMPPacket(lLen, bytes);
-						// tcp
-
 						case IPProtocols_Fields.TCP: return new TCPPacket(lLen, bytes);
-						// udp
-
 						case IPProtocols_Fields.UDP: return new UDPPacket(lLen, bytes);
-						// unidentified ip..
 
+                        // unidentified ip..
 						default: return new IPPacket(lLen, bytes);
-
 					}
-					// ethernet level code not recognized, default to anonymous packet..
-					//goto default;
 
+    			// ethernet level code not recognized, default to anonymous packet..
 				default: return new EthernetPacket(lLen, bytes);
-
 			}
+#endif
 		}
 
 		/// <summary> Convert captured packet data into an object.</summary>
@@ -96,15 +77,17 @@ namespace SharpPcap.Packets
 			// link-layer of the packet
 			int offset = LinkLayer.getProtoOffset(linkType);
 			if (offset == -1)
+            {
 				// if there is no embedded protocol, assume IP?
 				ethProtocol = EthernetProtocols_Fields.IP;
-			else
+            } else
+            {
 				ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
+            }
 
 			// try to recognize the ethernet type..
 			switch (ethProtocol)
 			{
-
 				// arp
 				case EthernetProtocols_Fields.ARP:
 					return new ARPPacket(lLen, bytes, tv);
@@ -114,31 +97,19 @@ namespace SharpPcap.Packets
 					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
 					switch (ipProtocol)
 					{
-
-						// icmp
 						case IPProtocols_Fields.ICMP: return new ICMPPacket(lLen, bytes, tv);
-						// igmp
-
 						case IPProtocols_Fields.IGMP: return new IGMPPacket(lLen, bytes, tv);
-						// tcp
-
 						case IPProtocols_Fields.TCP: return new TCPPacket(lLen, bytes, tv);
-						// udp
+                        case IPProtocols_Fields.UDP: return new UDPPacket(lLen, bytes, tv);
 
-						case IPProtocols_Fields.UDP: return new UDPPacket(lLen, bytes, tv);
-						// unidentified ip..
-
+                        // unidentified ip..
 						default: return new IPPacket(lLen, bytes, tv);
-
 					}
-					// ethernet level code not recognized, default to anonymous packet..
-					//goto default;
 
+                // ethernet level code not recognized, default to anonymous packet..
 				default: return new EthernetPacket(lLen, bytes, tv);
-
 			}
 		}
-
 
 		/// <summary> Length in bytes of the link-level headers that this factory is 
 		/// decoding packets for.

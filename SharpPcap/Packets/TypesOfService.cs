@@ -1,5 +1,3 @@
-// $Id: TypesOfService.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,8 +7,6 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Type of service code constants for IP. Type of service describes 
 	/// how a packet should be handled.
 	/// <p>
@@ -23,12 +19,6 @@ namespace SharpPcap.Packets
 	/// Taken from TCP/IP Illustrated V1 by Richard Stevens, p34.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public struct TypesOfService_Fields{
 		public readonly static int MINIMIZE_DELAY = 0x10;
 		public readonly static int MAXIMIZE_THROUGHPUT = 0x08;

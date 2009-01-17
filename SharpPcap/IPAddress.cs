@@ -37,10 +37,6 @@ namespace SharpPcap
 	///address -  string of the IP Address
 	///mask - a string of the subnet mask
 	/// </summary>
-	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.2 $ </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 07:55:24 $ </lastModifiedAt>
 	public struct IPAddress
 	{
 		private string _address, _mask;

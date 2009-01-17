@@ -1,5 +1,3 @@
-// $Id: LinkLayers.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,8 +7,6 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Link-layer type codes.
 	/// <p>
 	/// Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
@@ -27,12 +23,6 @@ namespace SharpPcap.Packets
 	/// <p>
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public struct LinkLayers_Fields{
 		/// <summary> no link-layer encapsulation </summary>
 		public const int NULL = 0;

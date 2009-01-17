@@ -1,5 +1,3 @@
-// $Id: TCPPacket.cs,v 1.3 2007-07-30 09:26:03 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,26 +5,16 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.AnsiEscapeSequences_Fields' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.Timeval' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using Timeval = SharpPcap.Packets.Util.Timeval;
 namespace SharpPcap.Packets
 {
-
 	/// <summary> A TCP packet.
 	/// <p>
 	/// Extends an IP packet, adding a TCP header and TCP data payload.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.3 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-30 09:26:03 $ </lastModifiedAt>
 	[Serializable]
 	public class TCPPacket : IPPacket, TCPFields
 	{
@@ -42,7 +30,6 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
 			}
-
 		}
 		/// <summary> Fetches the port number on the destination host.</summary>
 		virtual public int DestinationPort

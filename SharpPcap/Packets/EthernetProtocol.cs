@@ -1,5 +1,3 @@
-// $Id: EthernetProtocol.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,17 +7,9 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Ethernet protocol utility class.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
 	public class EthernetProtocol : EthernetProtocols, EthernetFields
 	{
 		/// <summary> Extract the protocol type field from packet data.

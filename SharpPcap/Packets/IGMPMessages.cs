@@ -1,5 +1,3 @@
-// $Id: IGMPMessages.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,19 +7,11 @@
 using System;
 namespace SharpPcap.Packets
 {
-	
-	
 	/// <summary> Code constants for IGMP message types.
 	/// 
 	/// From RFC #2236.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
 	public struct IGMPMessages_Fields{
 		/// <summary> membership query.</summary>
 		public readonly static int QUERY = 0x11;

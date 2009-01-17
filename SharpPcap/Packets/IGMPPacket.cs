@@ -1,5 +1,3 @@
-// $Id: IGMPPacket.cs,v 1.1.1.1 2007-07-03 10:15:17 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,29 +5,18 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.AnsiEscapeSequences_Fields' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.Timeval' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using Timeval = SharpPcap.Packets.Util.Timeval;
 using SharpPcap.Packets.Util;
 
 namespace SharpPcap.Packets
 {
-
-
 	/// <summary> An IGMP packet.
 	/// <p>
 	/// Extends an IP packet, adding an IGMP header and IGMP data payload.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:17 $ </lastModifiedAt>
 	[Serializable]
 	public class IGMPPacket : IPPacket, IGMPFields
 	{
@@ -53,8 +40,8 @@ namespace SharpPcap.Packets
 			{
 				return IGMPHeader;
 			}
-
 		}
+
 		/// <summary> Fetch the IGMP data as a byte array.</summary>
 		virtual public byte[] IGMPData
 		{
@@ -93,8 +80,8 @@ namespace SharpPcap.Packets
 			{
 				return ArrayHelper.extractInteger(_bytes, _ipOffset + IGMPFields_Fields.IGMP_MRSP_POS, IGMPFields_Fields.IGMP_MRSP_LEN);
 			}
-
 		}
+
 		/// <summary> Fetch the IGMP header checksum.</summary>
 		virtual public int IGMPChecksum
 		{

@@ -1,5 +1,3 @@
-// $Id: MACAddress.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -7,26 +5,16 @@
 /// *************************************************************************
 /// </summary>
 using System;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.ArrayHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
-//UPGRADE_TODO: The type 'SharpPcap.Packets.Util.HexHelper' could not be found. If it was not included in the conversion, there may be compiler issues. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1262'"
 using HexHelper = SharpPcap.Packets.Util.HexHelper;
 namespace SharpPcap.Packets
 {
-
-
 	/// <summary> MAC address.
 	/// <p>
 	/// This class doesn't yet store MAC addresses. Only a utility method
 	/// to extract a MAC address from a big-endian byte array is implemented.
 	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public class MACAddress
 	{
 		/// <summary> Extract a MAC address from an array of bytes.</summary>

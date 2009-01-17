@@ -1,5 +1,3 @@
-// $Id: ArrayHelper.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
 /// <summary>************************************************************************
 /// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
 /// Distributed under the Mozilla Public License                            *
@@ -9,17 +7,8 @@
 using System;
 namespace SharpPcap.Packets.Util
 {
-	
-	
 	/// <summary> Utility functions for populating and manipulating arrays.
-	/// 
 	/// </summary>
-	/// <author>  Patrick Charles and Jonas Lehmann
-	/// </author>
-	/// <version>  $Revision: 1.1.1.1 $
-	/// </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-03 10:15:18 $ </lastModifiedAt>
 	public class ArrayHelper
 	{
 		/// <summary> Join two arrays.</summary>
@@ -49,7 +38,9 @@ namespace SharpPcap.Packets.Util
 			Array.Copy(from, start, to, 0, len);
 			return to;
 		}
-		
+
+        //FIXME: this routine is broken in the sense that it performs
+        //       implicit byte order conversion
 		/// <summary> Extract a long from a byte array.
 		/// 
 		/// </summary>

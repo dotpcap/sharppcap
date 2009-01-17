@@ -35,10 +35,6 @@ namespace SharpPcap
 	/// <summary>
 	/// Summary description for SharpPcap.
 	/// </summary>
-	/// <author>Tamir Gal</author>
-	/// <version>  $Revision: 1.3 $ </version>
-	/// <lastModifiedBy>  $Author: tamirgal $ </lastModifiedBy>
-	/// <lastModifiedAt>  $Date: 2007-07-16 08:49:14 $ </lastModifiedAt>
 	public class Pcap
 	{
         // NOTE: For mono users on non-windows platforms a .config file is used to map
