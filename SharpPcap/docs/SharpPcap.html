@@ -2,13 +2,14 @@
 <P>The text of this tutorial is taken directly from WinPcap's <A href="http://www.winpcap.org/docs/docs31/html/group__wpcap__tut.html">
 		official tutorial </A>but is modified to show the C# use of the SharpPcap 
 	library. All examples can be downloaded together with SharpPcap source code 
-	from <A href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">SharpPcap</A>
-	's homepage. The WinPcap library must be installed before attempting to run any 
+	from <A href="http://sharppcap.sourceforge.net">SharpPcap</A>
+	's homepage.</P>
+<P>For use on windows the WinPcap library must be installed before attempting to run any 
 	of these examples, so please download and install the latest version from <A href="http://www.winpcap.org/install/default.htm">
 		WinPcap's download page</A>.</P>
-<P>SharpPcap was written and tested using .NET v1.1 and Windows 2000/XP. I have no 
-	idea about other .NET and Windows versions. If you do try it, please report 
-	your results.</P>
+<P> For use on Linux the pcap library must be installed.</P>
+<P>SharpPcap was written and tested using .NET v1.1 and Windows 2000/XP and Mono 1.9.1 on Ubuntu 8.10.
+If you try it on another platform and have difficulties please submit a bug on the project webpage.
 <P>The following topics are covered in this tutorial:</P>
 <ol>
 	<li>
@@ -32,7 +33,7 @@
 </ol>
 <H3 id="ifList">1. Obtaining the device list
 </H3>
-<P>Typically, the first thing that a WinPcap-based application does is get a list 
+<P>Typically, the first thing that a Pcap-based application does is get a list 
 	of attached network adapters. SharpPcap provide the <CODE>GetAllDevices()</CODE>
 	function for this purpose: this function returns a list of <CODE>PcapDevice</CODE>
 	objects, each of which contains comprehensive information about an attached 
@@ -833,7 +834,7 @@ private static void device_PcapOnPcapStatistics(object sender, PcapStatistics st
 <H4>References</H4>
 <UL>
 	<LI>
-		<A href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">SharpPcap</A>
+		<A href="http://sharppcap.sourceforge.net">SharpPcap</A>
 	- the homepage of the SharpPcap library.
 	<LI>
 		<A href="http://www.winpcap.org/">WinPcap</A>
