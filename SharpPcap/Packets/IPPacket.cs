@@ -153,79 +153,66 @@ namespace SharpPcap.Packets
 			}
 
 		}
+
+        private System.Net.IPAddress GetIPAddress(int fieldOffset)
+        {
+            byte[] address;
+            if(IPVersion == 4)
+            {
+                address = new byte[4];
+            } else if(IPVersion == 6)
+            {
+                address = new byte[6];
+            } else
+            {
+                throw new System.InvalidOperationException("IPVersion " + IPVersion + " unknown");
+            }
+
+            System.Array.Copy(_bytes, fieldOffset,
+                              address, 0, address.Length);
+
+            return new System.Net.IPAddress(address);
+        }
+
 		/// <summary> Fetch the IP address of the host where the packet originated from.</summary>
-		virtual public System.String SourceAddress
+		virtual public System.Net.IPAddress SourceAddress
 		{
 			get
 			{
-				return IPAddress.extract(_ethOffset + IPFields_Fields.IP_SRC_POS, _bytes);
+                return GetIPAddress(_ethOffset + IPFields_Fields.IP_SRC_POS);
 			}
 			set
 			{
-				IPAddress.insert(_bytes, value, _ethOffset + IPFields_Fields.IP_SRC_POS);
-			}
-		}
-		/// <summary> Fetch the source address as a byte array.</summary>
-		virtual public byte[] SourceAddressbytes
-		{
-			get
-			{
-				byte[] _sourceAddresbytes = new byte[4];
-				Array.Copy(_bytes, _ethOffset + IPFields_Fields.IP_SRC_POS, _sourceAddresbytes, 0, 4);
-				return _sourceAddresbytes;
+                if(IPVersion != 4)
+                {
+                    throw new System.NotImplementedException("Only IPv4 supported at this time");
+                }
+
+                byte[] address = value.GetAddressBytes();
+                System.Array.Copy(address, 0, _bytes, _ethOffset + IPFields_Fields.IP_SRC_POS, address.Length);
 			}
 		}
 
 		/// <summary> Fetch the IP address of the host where the packet is destined.</summary>
-		virtual public System.String DestinationAddress
+		virtual public System.Net.IPAddress DestinationAddress
 		{
 			get
 			{
-				return IPAddress.extract(_ethOffset + IPFields_Fields.IP_DST_POS, _bytes);
+                return GetIPAddress(_ethOffset + IPFields_Fields.IP_SRC_POS);
 			}
 			set
 			{
-				IPAddress.insert(_bytes, value, _ethOffset + IPFields_Fields.IP_DST_POS);
+                if(IPVersion != 4)
+                {
+                    throw new System.NotImplementedException("Only IPv4 supported at this time");
+                }
+
+                byte[] address = value.GetAddressBytes();
+                System.Array.Copy(address, 0, _bytes, _ethOffset + IPFields_Fields.IP_DST_POS, address.Length);
 			}
 
 		}
 
-		public virtual long SourceAddressAsLong
-		{
-			get
-			{
-				return ArrayHelper.extractLong(_bytes, _ethOffset + IPFields_Fields.IP_SRC_POS, 4);
-			}
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ethOffset + IPFields_Fields.IP_SRC_POS, 4);
-			}
-		}
-
-		/// <summary> Fetch the destination address as a long.</summary>
-		public virtual long DestinationAddressAsLong
-		{
-			get
-			{
-				return ArrayHelper.extractLong(_bytes, _ethOffset + IPFields_Fields.IP_DST_POS, 4);
-			}
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ethOffset + IPFields_Fields.IP_DST_POS, 4);
-			}
-		}
-
-		/// <summary> Fetch the destination address as a byte array.</summary>
-		virtual public byte[] DestinationAddressbytes
-		{
-			get
-			{
-				byte[] _destinationAddresbytes = new byte[4];
-				Array.Copy(_bytes, _ethOffset + IPFields_Fields.IP_DST_POS, _destinationAddresbytes, 0, 4);
-				return _destinationAddresbytes;
-			}
-
-		}
 		/// <summary> Fetch the IP header a byte array.</summary>
 		virtual public byte[] IPHeader
 		{

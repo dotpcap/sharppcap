@@ -24,19 +24,18 @@ namespace Test
 			PcapDeviceList devices = Pcap.GetAllDevices();
 			PcapDevice device = devices[2];
 			NetworkDevice netdev=(NetworkDevice)device;
- 
+
 			UDPPacket packet = new UDPPacket(lLen, bytes);
- 
+
 			//Ethernet Fields 
 			packet.DestinationHwAddress = "001122334455";
 			packet.SourceHwAddress = netdev.MacAddress;
 			packet.EthernetProtocol = EthernetProtocols_Fields.IP;
- 
-         
+
 			//IP Fields
-			packet.DestinationAddress = "58.100.187.167";
-        
-			packet.SourceAddress = netdev.IpAddress;
+			packet.DestinationAddress = System.Net.IPAddress.Parse("58.100.187.167");
+
+			packet.SourceAddress = System.Net.IPAddress.Parse(netdev.IpAddress);
 			packet.IPProtocol = IPProtocols_Fields.UDP;
 			packet.TimeToLive = 20;
 			packet.Id = 100;

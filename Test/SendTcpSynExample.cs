@@ -45,7 +45,7 @@ namespace Test
 		/// <summary>
 		/// The IP address of the remote host, please change to your desired IP address
 		/// </summary>
-		static string destIP = "10.0.0.100";
+		static System.Net.IPAddress destIP = System.Net.IPAddress.Parse("10.0.0.100");
 		
 		/// <summary>
 		/// The MAC address of the next hop (e.g. gateway or a host on local LAN)
@@ -76,7 +76,7 @@ namespace Test
 
 			//IP fields
 			tcp.DestinationAddress = destIP;			//The IP of the destination host
-			tcp.SourceAddress = dev.IpAddress;			//The IP of the local device
+			tcp.SourceAddress = System.Net.IPAddress.Parse(dev.IpAddress);			//The IP of the local device
 			tcp.IPProtocol = IPProtocols_Fields.TCP;
 			tcp.TimeToLive = 20;
 			tcp.Id = 100;			

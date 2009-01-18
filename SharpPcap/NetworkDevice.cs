@@ -119,6 +119,7 @@ namespace SharpPcap
 		/// <summary>
 		/// Gets the main IP address of this network device
 		/// </summary>
+        	// TODO/FIXME: convert this to returning a System.Net.IPAddress
 		public string IpAddress
 		{
 			get
