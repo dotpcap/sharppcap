@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Packets;
 using SharpPcap.Protocols;
@@ -21,7 +22,7 @@ namespace Test
 			byte[] bytes = new byte[MIN_PKT_LEN + data.Length];
 			Array.Copy(data, 0, bytes, MIN_PKT_LEN, data.Length);
            
-			PcapDeviceList devices = Pcap.GetAllDevices();
+			List<PcapDevice> devices = Pcap.GetAllDevices();
 			PcapDevice device = devices[2];
 			NetworkDevice netdev=(NetworkDevice)device;
 

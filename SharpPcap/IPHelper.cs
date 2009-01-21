@@ -27,6 +27,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap
@@ -456,13 +457,13 @@ namespace SharpPcap
 		/// <summary>
 		/// Return all network devices available on this machine through the IPHelper API
 		/// </summary>
-		public static NetworkDeviceList GetAllDevices()
+		public static List<NetworkDevice> GetAllDevices()
 		{
 			int size = Marshal.SizeOf(typeof(IP_ADAPTER_INFO));
 			IntPtr buffer = Marshal.AllocHGlobal(size);
 			uint result = GetAdaptersInfo(buffer,ref size);
 
-			NetworkDeviceList deviceList = new NetworkDeviceList();
+			List<NetworkDevice> deviceList = new List<NetworkDevice>();
 
 			if (result == ERROR_BUFFER_OVERFLOW) 
 			{				

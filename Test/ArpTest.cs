@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Protocols;
 using SharpPcap.Util;
@@ -48,7 +49,7 @@ namespace Test
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = Pcap.GetAllDevices();
+			List<PcapDevice> devices = Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

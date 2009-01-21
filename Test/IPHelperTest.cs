@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SharpPcap;
 
@@ -10,7 +11,7 @@ namespace Test
 		[Test]
 		public void AdminStatusTest()
 		{
-			NetworkDeviceList devs = IPHelper.GetAllDevices();
+			List<NetworkDevice> devs = IPHelper.GetAllDevices();
 			NetworkDevice myDev = null;
 			foreach(NetworkDevice dev in devs)
 			{

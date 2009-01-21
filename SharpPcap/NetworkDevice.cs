@@ -30,6 +30,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
 using SharpPcap.Util;
 
 namespace SharpPcap
@@ -40,7 +41,7 @@ namespace SharpPcap
 	public class NetworkDevice : PcapDevice
 	{
 		private IPAddressList m_ipAddressList;
-		private StringList m_gatewaysList;
+        private List<String> m_gatewaysList;
 		private IPHelper.IP_ADAPTER_INFO m_adapterInfo;
 
 
@@ -169,7 +170,7 @@ namespace SharpPcap
 		/// <summary>
 		/// Gets a list of all default gateways on this network device
 		/// </summary>
-		public StringList DefaultGatewayList
+		public List<string> DefaultGatewayList
 		{
 			get{return m_gatewaysList;}
 		}
@@ -325,10 +326,10 @@ namespace SharpPcap
 			return ipList;
 		}
 
-		private StringList GetIpGateways(IPHelper.IP_ADDR_STRING addr)
+		private List<string> GetIpGateways(IPHelper.IP_ADDR_STRING addr)
 		{
 			
-			StringList result = new StringList();
+			List<string> result = new List<string>();
 			result.Add(addr.IpAddress.address);
 			while(addr.Next != 0)
 			{

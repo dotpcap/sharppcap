@@ -28,6 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Text;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap
@@ -345,13 +346,13 @@ namespace SharpPcap
 		/// <summary>
 		/// Returns all pcap network devices available on this machine.
 		/// </summary>
-		public static PcapDeviceList GetAllDevices()
+		public static List<PcapDevice> GetAllDevices()
 		{
 			IntPtr ptrDevs = IntPtr.Zero; // pointer to a PCAP_IF struct
 			IntPtr next = IntPtr.Zero;    // pointer to a PCAP_IF struct
 			PCAP_IF pcap_if;
 			StringBuilder errbuf = new StringBuilder( 256 ); //will hold errors
-			PcapDeviceList deviceList = new PcapDeviceList();
+			List<PcapDevice> deviceList = new List<PcapDevice>();
 
 			/* Retrieve the device list */
 			int res = pcap_findalldevs(ref ptrDevs, errbuf);

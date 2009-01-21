@@ -49,6 +49,10 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpPcap</AssemblyName>
+    <RootNamespace>SharpPcap</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -72,6 +76,10 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpPcap</AssemblyName>
+    <RootNamespace>SharpPcap</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
@@ -103,9 +111,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NetworkDevice.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NetworkDeviceList.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Packets\ARPFields.cs">
@@ -258,9 +263,6 @@
     <Compile Include="PcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapDeviceList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PcapException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -309,9 +311,6 @@
     <Compile Include="Util\Random.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Util\StringList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Util\SupportClass.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -325,5 +324,7 @@
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
+    <ProjectGuid>{24262E52-1304-4A25-8F73-A3B06E40592E}</ProjectGuid>
+    <RootNamespace>SharpPcap</RootNamespace>
   </PropertyGroup>
 </Project>
