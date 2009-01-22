@@ -97,7 +97,7 @@ namespace SharpPcap.Packets.Util
 			{
 				c = System.Drawing.Color.FromArgb(System.Int32.Parse(st.NextToken()), System.Int32.Parse(st.NextToken()), System.Int32.Parse(st.NextToken()));
 			}
-			catch (System.ArgumentOutOfRangeException e)
+			catch (System.ArgumentOutOfRangeException)
 			{
 				c = System.Drawing.Color.White;
 				System.Console.Error.WriteLine("WARN: invalid color spec '" + string_Renamed + "' in property file");
@@ -134,7 +134,7 @@ namespace SharpPcap.Packets.Util
 			{
 				address = System.Int32.Parse(st.NextToken()) << 24 | System.Int32.Parse(st.NextToken()) << 16 | System.Int32.Parse(st.NextToken()) << 8 | System.Int32.Parse(st.NextToken());
 			}
-			catch (System.ArgumentOutOfRangeException e)
+			catch (System.ArgumentOutOfRangeException)
 			{
 				address = 0;
 				System.Console.Error.WriteLine("WARN: invalid color spec '" + string_Renamed + "' in property file");
