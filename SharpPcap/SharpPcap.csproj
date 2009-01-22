@@ -100,7 +100,6 @@
     <Content Include="docs\SharpPcap.html" />
     <Content Include="docs\SharpPcap\SharpPcap.png" />
     <Content Include="Packets\package.html" />
-    <Content Include="Packets\Util\package.html" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -239,19 +238,7 @@
     <Compile Include="Packets\Util\ArrayHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\Util\AsciiHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\FileUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\Util\HexHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\SupportClass.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\TcpdumpWriter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Packets\Util\Timeval.cs">
@@ -306,9 +293,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Util\Random.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\SupportClass.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Version.cs">

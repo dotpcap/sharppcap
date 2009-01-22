@@ -21,7 +21,7 @@ namespace SharpPcap.Util
 			}
 			catch (System.Exception e)
 			{
-				SupportClass.WriteStackTrace(e, Console.Error);				
+				Console.Error.WriteLine(e.StackTrace);				
 				Assert.Fail(e.ToString());
 			}
 		}

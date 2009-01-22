@@ -143,9 +143,9 @@ namespace SharpPcap.Util
 		{
 			byte[] tmp = new byte[4];
 			long val = ip;
-			tmp[0] = (byte) (SupportClass.URShift(val, 24));
-			tmp[1] = (byte) (SupportClass.URShift(val, 16));
-			tmp[2] = (byte) (SupportClass.URShift(val, 8));
+			tmp[0] = (byte) (val >> 24);
+			tmp[1] = (byte) (val >> 16);
+			tmp[2] = (byte) (val >> 8);
 			tmp[3] = (byte) (val);
 			return tmp;
 		}

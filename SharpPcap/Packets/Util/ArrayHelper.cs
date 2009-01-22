@@ -191,17 +191,5 @@ namespace SharpPcap.Packets.Util
 			}
 			return true;
 		}
-		
-		public static int ntoh(int n)
-		{
-			byte[] buffer = new byte[4];
-			buffer[0] = (byte) ((n >> 24) & 0xff);
-			buffer[1] = (byte) ((n >> 16) & 0xff);
-			buffer[2] = (byte) ((n >> 8) & 0xff);
-			buffer[3] = (byte) ((n) & 0xff);
-			return extractInteger(buffer, 0, 4);
-		}
-		
-		internal const System.String _rcsid = "$Id: ArrayHelper.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $";
 	}
 }

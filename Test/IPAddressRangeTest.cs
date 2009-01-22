@@ -48,8 +48,7 @@ namespace SharpPcap.Util
 			catch (System.Exception e)
 			{
 				// TODO Auto-generated catch block
-				SupportClass.WriteStackTrace(e, Console.Error);
-				//UPGRADE_TODO: The equivalent in .NET for method 'java.lang.Throwable.toString' may return a different value. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1043'"
+				Console.Error.WriteLine(e.StackTrace);
 				Assert.Fail(e.ToString());
 			}
 		}
@@ -73,8 +72,7 @@ namespace SharpPcap.Util
 			catch (System.Exception e)
 			{
 				// TODO Auto-generated catch block
-				SupportClass.WriteStackTrace(e, Console.Error);
-				//UPGRADE_TODO: The equivalent in .NET for method 'java.lang.Throwable.toString' may return a different value. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1043'"
+				Console.Error.WriteLine(e.StackTrace);
 				Assert.Fail(e.ToString());
 			}
 		}
