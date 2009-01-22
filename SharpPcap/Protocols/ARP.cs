@@ -129,14 +129,20 @@ namespace SharpPcap.Protocols
 		{
 			string localMAC = LocalMAC;
 			string localIP = LocalIP;			
-			NetworkDevice device = new NetworkDevice(DeviceName);
+			//NetworkDevice device = new NetworkDevice(DeviceName);
+			PcapDevice device = Pcap.GetPcapDevice(DeviceName);
 
+			//FIXME: PcapDevices don't have IpAddress and MacAddress values
+			//       These were present under Windows specific network adapters
+			//       and may be present in pcap in the future with pcap-ng
+#if false
 			//if no local IP and MAC addresses specified, use the ones
 			//configured on the local device
 			if(localIP==null)
 				localIP	= device.IpAddress;
 			if(LocalMAC==null)
 				localMAC = device.MacAddress;
+#endif
 
 			//Build a new ARP request packet
 			ARPPacket request = BuildRequest(destIP, localMAC, localIP);
@@ -170,7 +176,6 @@ namespace SharpPcap.Protocols
 			//return the resolved MAC address
 			return reply.ARPSenderHwAddress;
 		}
-
 
 		private ARPPacket BuildRequest(string destIP, string localMAC, string localIP)
 		{

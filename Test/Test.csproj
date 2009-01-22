@@ -64,6 +64,10 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Test</AssemblyName>
+    <RootNamespace>Test</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -87,11 +91,16 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Test</AssemblyName>
+    <RootNamespace>Test</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
+    <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <Name>nunit.framework</Name>
       <HintPath>lib\nunit.framework.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -120,9 +129,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPAddressRangeTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IPHelperTest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPSubnetTest.cs">
@@ -177,5 +183,7 @@
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
+    <ProjectGuid>{24795AED-F26F-4EE7-BCA7-900F54FA5A53}</ProjectGuid>
+    <RootNamespace>Test</RootNamespace>
   </PropertyGroup>
 </Project>

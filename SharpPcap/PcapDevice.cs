@@ -700,5 +700,13 @@ namespace SharpPcap
 				return Marshal.PtrToStringAnsi( err_ptr );
 			}
 		}
+
+		public override string ToString ()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.AppendFormat("name: {0}\n", m_pcapIf.Name);
+			sb.AppendFormat("description: {0}\n", m_pcapIf.Description);
+			return sb.ToString();
+		}
 	}
 }

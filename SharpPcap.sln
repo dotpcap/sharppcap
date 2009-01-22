@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPcap", "SharpPcap\SharpPcap.csproj", "{24262E52-1304-4A25-8F73-A3B06E40592E}"
@@ -18,6 +19,8 @@ Global
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

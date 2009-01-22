@@ -367,22 +367,7 @@ namespace SharpPcap
 				while (next != IntPtr.Zero)
 				{
 					pcap_if = (PCAP_IF)Marshal.PtrToStructure(next, typeof(PCAP_IF)); //Marshal memory pointer into a struct
-					if(NetworkDevice.IsNetworkDevice( pcap_if.Name ))
-					{
-						try
-						{
-							deviceList.Add( new NetworkDevice(pcap_if) );
-						}
-						catch
-						{
-							deviceList.Add( new PcapDevice(pcap_if) );
-						}
-					}
-					else
-					{
-						deviceList.Add( new PcapDevice(pcap_if) );
-					}
-					
+					deviceList.Add(new PcapDevice(pcap_if));
 					next = pcap_if.Next;
 				}
 			}

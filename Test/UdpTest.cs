@@ -24,19 +24,22 @@ namespace Test
            
 			List<PcapDevice> devices = Pcap.GetAllDevices();
 			PcapDevice device = devices[2];
-			NetworkDevice netdev=(NetworkDevice)device;
 
 			UDPPacket packet = new UDPPacket(lLen, bytes);
 
 			//Ethernet Fields 
 			packet.DestinationHwAddress = "001122334455";
-			packet.SourceHwAddress = netdev.MacAddress;
+			// NOTE: the source hw address will be filled in by the network stack or the
+			//       network hardware
+//			packet.SourceHwAddress = device.MacAddress;
 			packet.EthernetProtocol = EthernetProtocols_Fields.IP;
 
 			//IP Fields
 			packet.DestinationAddress = System.Net.IPAddress.Parse("58.100.187.167");
 
-			packet.SourceAddress = System.Net.IPAddress.Parse(netdev.IpAddress);
+			// NOTE: the source address will be filled in by the network stack based on
+			//       the device used for sending
+//			packet.SourceAddress = System.Net.IPAddress.Parse(device.IpAddress);
 			packet.IPProtocol = IPProtocols_Fields.UDP;
 			packet.TimeToLive = 20;
 			packet.Id = 100;
@@ -53,7 +56,6 @@ namespace Test
 			device.PcapOpen();
 			device.PcapSendPacket(packet);
 			device.PcapClose();
- 
 		}
 	}
 }

@@ -106,12 +106,6 @@
     <Compile Include="IPAddress.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IPHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NetworkDevice.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\ARPFields.cs">
       <SubType>Code</SubType>
     </Compile>

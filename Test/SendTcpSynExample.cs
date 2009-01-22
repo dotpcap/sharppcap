@@ -64,20 +64,20 @@ namespace Test
 		static int sourcePort = 2222;
 		
 
-		public static void SendTcpSyn(NetworkDevice dev)
+		public static void SendTcpSyn(PcapDevice dev)
 		{
 			byte[] bytes = new byte[54];
 
 			TCPPacket tcp = new TCPPacket(lLen, bytes, true);
 
 			//Ethernet fields
-			tcp.SourceHwAddress = dev.MacAddress;			//Set the source mac of the local device
+//			tcp.SourceHwAddress = dev.MacAddress;			//Set the source mac of the local device
 			tcp.DestinationHwAddress = destMAC;		//Set the dest MAC of the gateway
 			tcp.EthernetProtocol = EthernetProtocols_Fields.IP;
 
 			//IP fields
 			tcp.DestinationAddress = destIP;			//The IP of the destination host
-			tcp.SourceAddress = System.Net.IPAddress.Parse(dev.IpAddress);			//The IP of the local device
+//			tcp.SourceAddress = System.Net.IPAddress.Parse(dev.IpAddress);			//The IP of the local device
 			tcp.IPProtocol = IPProtocols_Fields.TCP;
 			tcp.TimeToLive = 20;
 			tcp.Id = 100;			
@@ -103,8 +103,12 @@ namespace Test
 			dev.PcapOpen(true, 20);
 			
 			//Set a filter to capture only replies
-			dev.PcapSetFilter("ip src "+destIP+" and ip dst "+
-				dev.IpAddress+" and tcp src port "+destPort+" and tcp dst port "+sourcePort);
+			//FIXME: PcapDevice doesn't have an IpAddress. Not sure if the more permissive
+			//       filter will work the same
+//			dev.PcapSetFilter("ip src "+destIP+" and ip dst "+
+//				dev.IpAddress+" and tcp src port "+destPort+" and tcp dst port "+sourcePort);
+			dev.PcapSetFilter("ip src "+destIP+
+				" and tcp src port "+destPort+" and tcp dst port "+sourcePort);
 
 			//Send the packet
 			Console.Write("Sending packet: "+tcp+"...");
@@ -158,7 +162,7 @@ namespace Test
 
 			PcapDevice device = devices[i];
 
-			SendTcpSyn((NetworkDevice)device);
+			SendTcpSyn(device);
 		}
 	}
 }
