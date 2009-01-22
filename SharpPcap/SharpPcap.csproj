@@ -248,9 +248,6 @@
     <Compile Include="Packets\Util\HexHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\Util\PropertyHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\Util\SupportClass.cs">
       <SubType>Code</SubType>
     </Compile>
