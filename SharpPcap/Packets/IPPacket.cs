@@ -162,7 +162,7 @@ namespace SharpPcap.Packets
                 address = new byte[4];
             } else if(IPVersion == 6)
             {
-                address = new byte[6];
+                address = new byte[16];
             } else
             {
                 throw new System.InvalidOperationException("IPVersion " + IPVersion + " unknown");

@@ -27,6 +27,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
+using SharpPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap
 {
@@ -38,7 +39,7 @@ namespace SharpPcap
 		/// <summary>
 		/// This holds time value
 		/// </summary>
-		private	Pcap.PCAP_PKTHDR	m_pktHdr;
+		private	PcapUnmanagedStructures.pcap_pkthdr m_pktHdr;
 		/// <summary>
 		/// This holds byte received and packets received
 		/// </summary>
@@ -48,7 +49,7 @@ namespace SharpPcap
 		/// </summary>
 		/// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
 		/// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-		internal PcapStatistics(Pcap.PCAP_PKTHDR pktHdr, Pcap.PCAP_PKTDATA pktData)
+		internal PcapStatistics(PcapUnmanagedStructures.pcap_pkthdr pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
 		{
 			this.m_pktHdr	= pktHdr;
 			this.m_pktData	= pktData.bytes;

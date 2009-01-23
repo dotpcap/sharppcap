@@ -40,7 +40,7 @@ namespace SharpPcap
 	/// </summary>
 	public class PcapDevice
 	{
-		private Pcap.PCAP_IF m_pcapIf;
+		private Pcap.PcapInterface m_pcapIf;
 
 		private IntPtr		m_pcapAdapterHandle = IntPtr.Zero;
 		private IntPtr		m_pcapDumpHandle	= IntPtr.Zero;
@@ -54,34 +54,14 @@ namespace SharpPcap
 		private ManualResetEvent m_pcapThreadEvent = new ManualResetEvent(true);
 
 		/// <summary>
-		/// Constructs a new PcapDevice based on a device name
-		/// </summary>
-		/// <param name="name">The name of a device.<br>
-		/// Can be either in pcap device format or windows network
-		/// device format</param>
-		internal PcapDevice(string name):this(Pcap.GetPcapDeviceStruct(name))
-		{
-		}
-
-		/// <summary>
 		/// Constructs a new PcapDevice based on a 'pcapIf' struct
 		/// </summary>
 		/// <param name="pcapIf">A 'pcapIf' struct representing
 		/// the pcap device
 		/// <summary>
-		internal PcapDevice( Pcap.PCAP_IF pcapIf )
+		internal PcapDevice( Pcap.PcapInterface pcapIf )
 		{
 			m_pcapIf = pcapIf;
-
-			if(m_pcapIf.Addresses!=IntPtr.Zero)
-			{
-				Pcap.PCAP_ADDR pcap_addr = 
-					Pcap.GetPcap_Addr( m_pcapIf.Addresses );
-				if(pcap_addr.Addr!=IntPtr.Zero)
-					m_ip = System.Net.IPAddress.HostToNetworkOrder( Pcap.GetPcapAddress( pcap_addr.Addr ) );
-				if(pcap_addr.Netmask!=IntPtr.Zero)
-					m_mask = System.Net.IPAddress.HostToNetworkOrder( Pcap.GetPcapAddress( pcap_addr.Netmask ));
-			}
 		}
 
 		/// <summary>
@@ -369,7 +349,9 @@ namespace SharpPcap
 				//Marshal the packet
 				if ( (header != IntPtr.Zero) && (data != IntPtr.Zero) )
 				{
-					Pcap.PCAP_PKTHDR pkt_header = (Pcap.PCAP_PKTHDR)Marshal.PtrToStructure( header, typeof(Pcap.PCAP_PKTHDR) );
+					PcapUnmanagedStructures.pcap_pkthdr pkt_header =
+                        (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure( header,
+                                                                                    typeof(PcapUnmanagedStructures.pcap_pkthdr) );
 					//SharpPcap.PCAP_PKTDATA pkt_data = (SharpPcap.PCAP_PKTDATA)Marshal.PtrToStructure( data, typeof(SharpPcap.PCAP_PKTDATA) );
 					byte[] pkt_data = new byte[pkt_header.caplen];
 					Marshal.Copy(data, pkt_data, 0, pkt_header.caplen);
@@ -492,7 +474,7 @@ namespace SharpPcap
 			//pointer to a bpf_program struct 
 			IntPtr program = IntPtr.Zero;
 			//Alocate an unmanaged buffer
-			program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(Pcap.bpf_program)));
+			program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
 			//compile the expreesions
 			res = Pcap.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
 			//watch for errors
@@ -581,7 +563,7 @@ namespace SharpPcap
 
 			//Marshal header
 			IntPtr hdrPtr;
-			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(Pcap.PCAP_PKTHDR)));
+			hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr)));
 			Marshal.StructureToPtr(h.m_pcap_pkthdr, hdrPtr, true);
 
 			Pcap.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
@@ -704,8 +686,7 @@ namespace SharpPcap
 		public override string ToString ()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat("name: {0}\n", m_pcapIf.Name);
-			sb.AppendFormat("description: {0}\n", m_pcapIf.Description);
+			sb.AppendFormat("interface: {0}\n", m_pcapIf.ToString());
 			return sb.ToString();
 		}
 	}

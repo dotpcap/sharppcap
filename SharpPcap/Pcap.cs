@@ -30,6 +30,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using SharpPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap
 {
@@ -212,6 +213,13 @@ namespace SharpPcap
 		internal const int		MODE_STAT						=	1;
 		internal const string	PCAP_SRC_IF_STRING				= "rpcap://";
 
+		// Constants for address families
+		// These are set in a Pcap static initializer because the values
+		// differ between Windows and Linux
+		private static int      AF_INET;
+        private static int      AF_PACKET;
+		private static int      AF_INET6;
+
 		#region Callback Implementation ( Not Working from some reason, Bug?)
 
 		[DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
@@ -229,7 +237,9 @@ namespace SharpPcap
 			
 			if (header != IntPtr.Zero)
 			{
-				PCAP_PKTHDR PktInfo = (PCAP_PKTHDR)Marshal.PtrToStructure( header, typeof(PCAP_PKTHDR) );
+				pcap_pkthdr PktInfo =
+                    (pcap_pkthdr)Marshal.PtrToStructure( header,
+                                                                                typeof(pcap_pkthdr) );
 				/* convert the timestamp to readable format */
 				tm = new DateTime( (PktInfo.tv_usec) );				
 			
@@ -239,93 +249,96 @@ namespace SharpPcap
 
 		#endregion Callback Implementation (Not Working)
 
-		#region Unmanaged Structs Implementation
-
-		/// <summary>
-		/// Item in a list of interfaces.
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct PCAP_IF 
+		// managed version of pcap_addr
+		public class PcapAddress
 		{
-			public IntPtr /* pcap_if* */	Next;			
-			public string					Name;			/* name to hand to "pcap_open_live()" */				
-			public string					Description;	/* textual description of interface, or NULL */
-			public IntPtr /*pcap_addr * */	Addresses;
-			public uint						Flags;			/* PCAP_IF_ interface flags */
-		};
+			public System.Net.IPAddress Addr;      /* address */
+			public System.Net.IPAddress Netmask;   /* netmask for that address */
+			public System.Net.IPAddress Broadaddr; /* broadcast address for that address */
+			public System.Net.IPAddress Dstaddr;   /* P2P destination address for that address */
 
-		/// <summary>
-		/// Representation of an interface address.
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct PCAP_ADDR 
+			public PcapAddress(pcap_addr pcap_addr)
+			{
+				Console.WriteLine("Addr {0} {1} {2} {3}", pcap_addr.Addr, pcap_addr.Netmask,
+				                  pcap_addr.Broadaddr, pcap_addr.Dstaddr);
+				if(pcap_addr.Addr != IntPtr.Zero)
+					Addr = Pcap.GetPcapAddress( pcap_addr.Addr );
+				if(pcap_addr.Netmask != IntPtr.Zero)
+					Netmask = Pcap.GetPcapAddress( pcap_addr.Netmask );
+				if(pcap_addr.Broadaddr !=IntPtr.Zero)
+					Broadaddr = Pcap.GetPcapAddress( pcap_addr.Broadaddr );
+				if(pcap_addr.Dstaddr != IntPtr.Zero)
+					Dstaddr = Pcap.GetPcapAddress( pcap_addr.Dstaddr );
+			}
+
+			public override string ToString()
+			{
+				StringBuilder sb = new StringBuilder();
+
+				if(Addr != null)
+					sb.AppendFormat("Addr:      {0}\n", Addr.ToString());
+
+				if(Netmask != null)
+					sb.AppendFormat("Netmask:   {0}\n", Netmask.ToString());
+
+				if(Broadaddr != null)
+					sb.AppendFormat("Broadaddr: {0}\n", Broadaddr.ToString());
+
+				if(Dstaddr != null)
+					sb.AppendFormat("Dstaddr:   {0}\n", Dstaddr.ToString());
+
+				return sb.ToString();
+			}
+		}
+
+		// managed version of pcap_if
+		// NOTE: we can't use pcap_if directly because the class contains
+		//       a pointer to pcap_if that will be freed when the
+		//       device memory is freed, so instead convert the unmanaged structure
+		//       to a managed one to avoid this issue
+		public class PcapInterface
 		{
-			public IntPtr /* pcap_addr* */	Next;
-			public IntPtr /* sockaddr * */	Addr;		/* address */
-			public IntPtr /* sockaddr * */  Netmask;	/* netmask for that address */
-			public IntPtr /* sockaddr * */	Broadaddr;	/* broadcast address for that address */
-			public IntPtr /* sockaddr * */	Dstaddr;	/* P2P destination address for that address */
-		};
+			public string            Name;        /* name to hand to "pcap_open_live()" */				
+			public string            Description; /* textual description of interface */
+			public List<PcapAddress> Addresses;
+			public uint              Flags;       /* PCAP_IF_ interface flags */
 
-		/// <summary>
-		/// Structure used by kernel to store most addresses.
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct SOCKADDR 
-		{
-			public int			sa_family;       /* address family */
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst=14)]
-			public byte[]		sa_data;         /* up to 14 bytes of direct address */
-		};
+			public PcapInterface(pcap_if pcapIf)
+			{
+				Name = pcapIf.Name;
+				Description = pcapIf.Description;
+				Flags = pcapIf.Flags;
 
+				// retrieve addresses
+				Addresses = new List<PcapAddress>();
+				IntPtr address = pcapIf.Addresses;
+				while(address != IntPtr.Zero)
+				{
+					//A sockaddr struct
+					pcap_addr pcap_addr;
 
-		/// <summary>
-		/// Each packet in the dump file is prepended with this generic header.
-		/// This gets around the problem of different headers for different
-		/// packet interfaces.
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			public struct PCAP_PKTHDR 
-		{											//timestamp
-			public int		tv_sec;				///< seconds
-			public int		tv_usec;			///< microseconds
-			public int		caplen;			/* length of portion present */
-			public int		len;			/* length this packet (off wire) */
-		};
+					//Marshal memory pointer into a struct
+					pcap_addr = (pcap_addr)Marshal.PtrToStructure(address, typeof(pcap_addr));
 
-		/// <summary>
-		/// Packet data bytes
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct PCAP_PKTDATA
-		{	
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst=MAX_PACKET_SIZE)]						
-			public byte[]		bytes;
-		};
+					Addresses.Add(new PcapAddress(pcap_addr));
 
-		/// <summary>
-		/// A BPF pseudo-assembly program for packet filtering
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct bpf_program 
-		{
-			public uint bf_len;                
-			public IntPtr /* bpf_insn **/ bf_insns;  
-		};
+					address = pcap_addr.Next; // move to the next address
+				}
+			}
 
-		/// <summary>
-		/// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-			internal struct pcap_send_queue 
-		{
-			public uint maxlen;   
-            public uint len;   
-			public IntPtr /* char **/ ptrBuff;  
-		};
-
-
-		#endregion Unmanaged Structs Implementation
+			public override string ToString()
+			{
+				StringBuilder sb = new StringBuilder();
+				sb.AppendFormat("Name: {0}\n", Name);
+				sb.AppendFormat("Description: {0}\n", Description);
+				foreach(PcapAddress addr in Addresses)
+				{
+					sb.AppendFormat("Addresses:\n{0}\n", addr);
+				}
+				sb.AppendFormat("Flags: {0}\n", Flags);
+				return sb.ToString();
+			}
+		}
 
 		public static string Version
 		{
@@ -343,6 +356,35 @@ namespace SharpPcap
 			}
 		}
 
+		private static bool isUnix()
+		{
+			int p = (int) Environment.OSVersion.Platform;
+            if ((p == 4) || (p == 6) || (p == 128))
+			{
+                return true;
+            } else {
+                return false;
+            }
+		}
+
+		static Pcap()
+		{
+            // happens to have the same value on Windows and Linux
+            AF_INET = 2;
+
+            // AF_PACKET = 17 on Linux, AF_NETBIOS = 17 on Windows
+            // FIXME: need to resolve the discrepency at some point
+            AF_PACKET = 17;
+
+            if(isUnix())
+            {
+                AF_INET6 = 10; // value for linux from socket.h
+            } else
+            {
+                AF_INET6 = 23; // value for windows from winsock.h
+            }
+		}
+
 		/// <summary>
 		/// Returns all pcap network devices available on this machine.
 		/// </summary>
@@ -350,7 +392,6 @@ namespace SharpPcap
 		{
 			IntPtr ptrDevs = IntPtr.Zero; // pointer to a PCAP_IF struct
 			IntPtr next = IntPtr.Zero;    // pointer to a PCAP_IF struct
-			PCAP_IF pcap_if;
 			StringBuilder errbuf = new StringBuilder( 256 ); //will hold errors
 			List<PcapDevice> deviceList = new List<PcapDevice>();
 
@@ -366,9 +407,13 @@ namespace SharpPcap
 				next = ptrDevs;
 				while (next != IntPtr.Zero)
 				{
-					pcap_if = (PCAP_IF)Marshal.PtrToStructure(next, typeof(PCAP_IF)); //Marshal memory pointer into a struct
+                    //Marshal memory pointer into a struct
+                    pcap_if pcap_if_unmanaged =
+                        (pcap_if)Marshal.PtrToStructure(next,
+                                                                                typeof(pcap_if));
+					PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
 					deviceList.Add(new PcapDevice(pcap_if));
-					next = pcap_if.Next;
+					next = pcap_if_unmanaged.Next;
 				}
 			}
 			pcap_freealldevs( ptrDevs );  // free buffers
@@ -382,58 +427,51 @@ namespace SharpPcap
 		/// Can be either in pcap device format or windows network
 		/// device format</param>
 		/// <returns></returns>
-		internal static PCAP_IF GetPcapDeviceStruct(string pcapName)
+		internal static PcapDevice GetPcapDeviceStruct(string pcapName)
 		{
 			if( !pcapName.StartsWith( PCAP_NAME_PREFIX ) )
 			{
 				pcapName = PCAP_NAME_PREFIX+pcapName;
 			}
-			IntPtr ptrDevs = IntPtr.Zero; // pointer to a PCAP_IF struct
-			IntPtr next = IntPtr.Zero;    // pointer to a PCAP_IF struct
-			PCAP_IF pcap_if;
-			StringBuilder errbuf = new StringBuilder( 256 ); //will hold errors
 
-			/* Retrieve the device list */
-			int res = pcap_findalldevs(ref ptrDevs, errbuf);
-			if (res == -1)
+			List<PcapDevice> devices = GetAllDevices();
+			foreach(PcapDevice d in devices)
 			{
-				string err = "Error in SharpPcap.GetAllDevices(): " + errbuf;
-				throw new Exception( err );
-			}
-			else
-			{	// Go through device structs and search for 'pcapName'
-				next = ptrDevs;
-				while (next != IntPtr.Zero)
+				if(d.PcapName.Equals(pcapName))
 				{
-					pcap_if = (PCAP_IF)Marshal.PtrToStructure(next, typeof(PCAP_IF)); //Marshal memory pointer into a struct
-					if(pcap_if.Name==pcapName)
-					{
-						pcap_freealldevs( ptrDevs );  // free buffers
-						return pcap_if;
-					}
-					next = pcap_if.Next;
+					return d;
 				}
 			}
-			pcap_freealldevs( ptrDevs );  // free buffers
+
 			throw new Exception("Device not found: "+pcapName);
 		}
 
-		internal static PCAP_ADDR GetPcap_Addr(IntPtr pcap_addrPtr)
+		internal static System.Net.IPAddress GetPcapAddress(IntPtr sockaddrPtr)
 		{
 			//A sockaddr struct
-			PCAP_ADDR pcap_addr;
-			//Marshal memory pointer into a struct
-			pcap_addr = (PCAP_ADDR)Marshal.PtrToStructure(pcap_addrPtr, typeof(PCAP_ADDR));
-			return pcap_addr;		
-		}
+			sockaddr saddr;
 
-		internal static int GetPcapAddress(IntPtr sockaddrPtr)
-		{
-			//A sockaddr struct
-			SOCKADDR sockaddr;
 			//Marshal memory pointer into a struct
-			sockaddr = (SOCKADDR)Marshal.PtrToStructure(sockaddrPtr, typeof(SOCKADDR));
-			return BitConverter.ToInt32( sockaddr.sa_data, 0);
+			saddr = (sockaddr)Marshal.PtrToStructure(sockaddrPtr,
+                                                                             typeof(sockaddr));
+			byte[] addressBytes;
+			if((saddr.sa_family == AF_INET) || (saddr.sa_family == AF_PACKET))
+			{
+				addressBytes = new byte[4];
+                Array.Copy(saddr.sa_data, addressBytes, addressBytes.Length);
+			} else if(saddr.sa_family == AF_INET6)
+			{
+				addressBytes = new byte[16];
+                sockaddr_in6 sin6 =
+                    (sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
+                                                         typeof(sockaddr_in6));
+                Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
+            } else
+			{
+				throw new System.NotImplementedException("sa_family of " + saddr.sa_family + " not supported");
+			}
+
+			return new System.Net.IPAddress(addressBytes);
 		}
 		
 		public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
@@ -443,7 +481,7 @@ namespace SharpPcap
 
 		public static PcapDevice GetPcapDevice( string pcapDeviceName )
 		{
-			return new PcapDevice( GetPcapDeviceStruct( pcapDeviceName ) );
+			return GetPcapDeviceStruct(pcapDeviceName);
 		}
 	}
 }
