@@ -434,11 +434,6 @@ namespace SharpPcap.Packets
 		public TCPPacket(int lLen, byte[] bytes, bool isEmpty)
 			: base(lLen, bytes)
 		{
-			//tamir
-			if (!isEmpty)
-			{
-				int generatedAux = TcpHeaderLength;
-			}
 		}
 
 		/// <summary> Create a new TCP packet.</summary>
