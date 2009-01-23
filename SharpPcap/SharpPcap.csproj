@@ -214,9 +214,6 @@
     <Compile Include="Packets\TCPPacketTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\TestCase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\TypesOfService.cs">
       <SubType>Code</SubType>
     </Compile>
