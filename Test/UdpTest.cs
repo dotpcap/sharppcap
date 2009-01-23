@@ -14,9 +14,7 @@ namespace Test
        
 		public static void Run(string[] args)
 		{
-			string S = "Hello";
 			int lLen = EthernetFields_Fields.ETH_HEADER_LEN;      
-			//bytes = System.Convert.ToByte(S);
 			const int MIN_PKT_LEN = 42;
 			byte[] data = System.Text.Encoding.ASCII.GetBytes("HELLO");
 			byte[] bytes = new byte[MIN_PKT_LEN + data.Length];
