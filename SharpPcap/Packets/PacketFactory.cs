@@ -3,6 +3,7 @@
 /// Distributed under the Mozilla Public License                            *
 /// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
 /// *************************************************************************
+/// Copyright 2009 Chris Morgan <cmorgan@alum.wpi.edu>
 /// </summary>
 using System;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
@@ -18,50 +19,6 @@ namespace SharpPcap.Packets
 		public static Packet dataToPacket(int linkType, byte[] bytes)
 		{
             return dataToPacket(linkType, bytes, new Timeval(0, 0));
-#if false
-			int ethProtocol;
-
-			// record the length of the headers associated with this link layer type.
-			// this length is the offset to the header embedded in the packet.
-			lLen = LinkLayer.getLinkLayerLength(linkType);
-
-			// extract the protocol code for the type of header embedded in the 
-			// link-layer of the packet
-			int offset = LinkLayer.getProtoOffset(linkType);
-			if (offset == -1)
-            {
-				// if there is no embedded protocol, assume IP?
-				ethProtocol = EthernetProtocols_Fields.IP;
-            } else
-            {
-				ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
-            }
-
-			// try to recognize the ethernet type..
-			switch (ethProtocol)
-			{
-				// arp
-				case EthernetProtocols_Fields.ARP:
-					return new ARPPacket(lLen, bytes);
-
-				case EthernetProtocols_Fields.IP:
-					// ethernet level code is recognized as IP, figure out what kind..
-					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
-					switch (ipProtocol)
-					{
-						case IPProtocols_Fields.ICMP: return new ICMPPacket(lLen, bytes);
-						case IPProtocols_Fields.IGMP: return new IGMPPacket(lLen, bytes);
-						case IPProtocols_Fields.TCP: return new TCPPacket(lLen, bytes);
-						case IPProtocols_Fields.UDP: return new UDPPacket(lLen, bytes);
-
-                        // unidentified ip..
-						default: return new IPPacket(lLen, bytes);
-					}
-
-    			// ethernet level code not recognized, default to anonymous packet..
-				default: return new EthernetPacket(lLen, bytes);
-			}
-#endif
 		}
 
 		/// <summary> Convert captured packet data into an object.</summary>
