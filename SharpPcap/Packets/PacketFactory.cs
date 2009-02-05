@@ -49,7 +49,8 @@ namespace SharpPcap.Packets
 				case EthernetProtocols_Fields.ARP:
 					return new ARPPacket(lLen, bytes, tv);
 
-				case EthernetProtocols_Fields.IP:
+                case EthernetProtocols_Fields.IPV6:
+                case EthernetProtocols_Fields.IP:
 					// ethernet level code is recognized as IP, figure out what kind..
 					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
 					switch (ipProtocol)

@@ -130,7 +130,7 @@ namespace SharpPcap.Packets
 		{
 			get
 			{
-				return (IPPayloadLength() - TcpHeaderLength);
+				return (IPPayloadLength - TcpHeaderLength);
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace SharpPcap.Packets
 		{
 			get
 			{
-                return IPPayloadLength();
+                return IPPayloadLength;
 			}
 		}
 

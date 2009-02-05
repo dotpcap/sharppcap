@@ -103,14 +103,17 @@ namespace SharpPcap.Packets
 		}
 
         /// <summary> Returns the payload length of the packet</summary>
-        public int IPPayloadLength()
+        public int IPPayloadLength
         {
-            if(ipv4 != null)
-                return ipv4.IPPayloadLength;
-            else if(ipv6 != null)
-                return ipv6.IPPayloadLength;
-            else
-                throw new System.InvalidOperationException();
+            get
+            {
+                if(ipv4 != null)
+                    return ipv4.IPPayloadLength;
+                else if(ipv6 != null)
+                    return ipv6.IPPayloadLength;
+                else
+                    throw new System.InvalidOperationException();
+            }
         }
 
 		/// <summary> Convert this IP packet to a readable string.</summary>
