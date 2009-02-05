@@ -31,6 +31,7 @@ namespace SharpPcap.Packets
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
 			}
 		}
+
 		/// <summary> Fetches the port number on the destination host.</summary>
 		virtual public int DestinationPort
 		{
@@ -43,8 +44,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
 			}
-
 		}
+
 		/// <summary> Fetch the packet sequence number.</summary>
 		virtual public long SequenceNumber
 		{
@@ -57,8 +58,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
 			}
-
 		}
+
 		/// <summary>    Fetch the packet acknowledgment number.</summary>
 		virtual public long AcknowledgmentNumber
 		{
@@ -71,8 +72,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
 			}
-
 		}
+
 		/// <summary> Fetch the packet acknowledgment number. </summary>
 		virtual public long AcknowledgementNumber
 		{
@@ -84,8 +85,8 @@ namespace SharpPcap.Packets
 			{
 				AcknowledgmentNumber = value;
 			}
-
 		}
+
 		/// <summary> Fetch the TCP header length in bytes.</summary>
 		virtual public int TCPHeaderLength
 		{
@@ -100,9 +101,9 @@ namespace SharpPcap.Packets
 				_bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] &= (byte)(0x0f);
 				_bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] |= (byte)(((value << 4) & 0xf0));
 			}
-
 		}
-				/// <summary> Fetch the TCP header length in bytes.</summary>
+
+        /// <summary> Fetch the TCP header length in bytes.</summary>
 		virtual public int TcpHeaderLength
 		{
 			get
@@ -114,6 +115,7 @@ namespace SharpPcap.Packets
 				TCPHeaderLength = value;
 			}
 		}
+
 		/// <summary> Fetches the packet TCP header length.</summary>
 		override public int HeaderLength
 		{
@@ -121,8 +123,8 @@ namespace SharpPcap.Packets
 			{
 				return TCPHeaderLength;
 			}
-
 		}
+
 		/// <summary> Fetches the length of the payload data.</summary>
 		virtual public int PayloadDataLength
 		{
@@ -130,8 +132,8 @@ namespace SharpPcap.Packets
 			{
 				return (IPPayloadLength() - TcpHeaderLength);
 			}
-
 		}
+
 		/// <summary> Fetch the window size.</summary>
 		virtual public int WindowSize
 		{
@@ -144,7 +146,6 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
 			}
-
 		}
 
         //TODO: reimplement this taking into account the ipv4 vs. ipv6 differences
@@ -235,9 +236,9 @@ namespace SharpPcap.Packets
 				setFlag(value, TCPFields_Fields.TCP_URG_MASK);
 				_isUrgSet = false;
 			}
-
 		}
-		/// <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
+
+        /// <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
 		virtual public bool Ack
 		{
 			get
@@ -256,9 +257,9 @@ namespace SharpPcap.Packets
 				_isAck = value;
 				_isAckSet = true;
 			}
-
 		}
-		/// <summary> Check the PSH flag, flag indicates the receiver should pass the
+
+        /// <summary> Check the PSH flag, flag indicates the receiver should pass the
 		/// data to the application as soon as possible.
 		/// </summary>
 		virtual public bool Psh
@@ -279,9 +280,9 @@ namespace SharpPcap.Packets
 				_isPsh = value;
 				_isPshSet = true;
 			}
-
 		}
-		/// <summary> Check the RST flag, flag indicates the session should be reset between
+
+        /// <summary> Check the RST flag, flag indicates the session should be reset between
 		/// the sender and the receiver.
 		/// </summary>
 		virtual public bool Rst
@@ -302,9 +303,9 @@ namespace SharpPcap.Packets
 				_isRst = value;
 				_isRstSet = true;
 			}
-
 		}
-		/// <summary> Check the SYN flag, flag indicates the sequence numbers should
+
+        /// <summary> Check the SYN flag, flag indicates the sequence numbers should
 		/// be synchronized between the sender and receiver to initiate
 		/// a connection.
 		/// </summary>
@@ -326,9 +327,9 @@ namespace SharpPcap.Packets
 				_isSyn = value;
 				_isSynSet = true;
 			}
-
 		}
-		/// <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
+
+        /// <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
 		virtual public bool Fin
 		{
 			get
@@ -347,9 +348,9 @@ namespace SharpPcap.Packets
 				_isFin = value;
 				_isFinSet = true;
 			}
-
 		}
-		virtual public bool ECN
+
+        virtual public bool ECN
 		{
 			get
 			{
@@ -360,9 +361,9 @@ namespace SharpPcap.Packets
 			{
 				setFlag(value, TCPFields_Fields.TCP_ECN_MASK);
 			}
-
 		}
-		virtual public bool CWR
+
+        virtual public bool CWR
 		{
 			get
 			{
@@ -373,9 +374,9 @@ namespace SharpPcap.Packets
 			{
 				setFlag(value, TCPFields_Fields.TCP_CWR_MASK);
 			}
-
 		}
-		/// <summary> Fetch the TCP header a byte array.</summary>
+
+        /// <summary> Fetch the TCP header a byte array.</summary>
 		virtual public byte[] TCPHeader
 		{
 			get
@@ -386,18 +387,18 @@ namespace SharpPcap.Packets
 				}
 				return _tcpHeaderBytes;
 			}
-
 		}
-		/// <summary> Fetch the TCP header as a byte array.</summary>
+
+        /// <summary> Fetch the TCP header as a byte array.</summary>
 		override public byte[] Header
 		{
 			get
 			{
 				return TCPHeader;
 			}
-
 		}
-		/// <summary> Fetch the TCP data as a byte array.</summary>
+
+        /// <summary> Fetch the TCP data as a byte array.</summary>
 		virtual public byte[] TCPData
 		{
 			get
@@ -414,18 +415,18 @@ namespace SharpPcap.Packets
 			{
 				SetData(value);
 			}
-
 		}
-		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
 		override public System.String Color
 		{
 			get
 			{
 				return AnsiEscapeSequences_Fields.YELLOW;
 			}
-
 		}
-		/// <summary> </summary>
+
+        /// <summary> </summary>
 		private const long serialVersionUID = 1L;
 
 		/// <summary> Create a new TCP packet.</summary>
@@ -562,15 +563,21 @@ namespace SharpPcap.Packets
 		public virtual void SetData(byte[] data)
 		{
 #if false
-			byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength+IpHeaderLength+EthernetHeaderLength);
-			byte[] newBytes = ArrayHelper.join(headers, data);
-			this._bytes = newBytes;
-			TCPHeaderLength = _bytes.Length-data.Length-IpHeaderLength-EthernetHeaderLength;
+            // extract out all of the headers into 'headers'
+            byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength+IpHeaderLength+EthernetHeaderLength);
 
-			//update ip total length length
-			IPTotalLength = IpHeaderLength + TcpHeaderLength + data.Length;
-			//update also offset and pcap header
-			OnOffsetChanged();
+            // append the data onto the header bytes
+            byte[] newBytes = ArrayHelper.join(headers, data);
+
+            // make the old headers and new data bytes the new packet bytes
+            this._bytes = newBytes;
+
+            TCPHeaderLength = _bytes.Length-data.Length-IpHeaderLength-EthernetHeaderLength;
+
+            //update ip total length length
+            IPTotalLength = IpHeaderLength + TcpHeaderLength + data.Length;
+            //update also offset and pcap header
+            OnOffsetChanged();
 #else
             //TODO: this is more complex since we now handle both ipv4 and ipv6 packets
             throw new System.NotImplementedException();

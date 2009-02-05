@@ -19,7 +19,7 @@ namespace Test
 			byte[] data = System.Text.Encoding.ASCII.GetBytes("HELLO");
 			byte[] bytes = new byte[MIN_PKT_LEN + data.Length];
 			Array.Copy(data, 0, bytes, MIN_PKT_LEN, data.Length);
-           
+
 			List<PcapDevice> devices = Pcap.GetAllDevices();
 			PcapDevice device = devices[2];
 
@@ -45,7 +45,7 @@ namespace Test
 			packet.ipv4.IPTotalLength = bytes.Length - lLen;
 			packet.ipv4.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
 
-			//UDP Fields 
+			//UDP Fields
 			packet.DestinationPort = 9898;
 			packet.SourcePort = 80;
             //TODO: checksum methods are disabled due to unfinished ipv4/ipv6 work
