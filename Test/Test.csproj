@@ -149,6 +149,7 @@
     <Compile Include="UdpTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EthernetPacketTest.cs" />
     <Compile Include="PcapGetAllDevices.cs" />
     <Compile Include="IPv6PacketTest.cs" />
   </ItemGroup>
