@@ -1,0 +1,14 @@
+Changelog
+
+v2.0.0 - 20090205
+- Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
+- Added Mono support
+- Standardize on using System.Net.IPAddress to represent IP addresses instead of a mix of strings and long 
+values
+- Upgraded project files to VS2008 format
+- Use System.Collections.Generic List<> instead of type-specific classes. Remove the type specific classes.
+- Added test for parsing of Ethernet packets
+- Removed SharpPcap.Packets.IPAddress class
+- Implemented IPv6 support in IPPacket with the help of a patch from David Bond.
+- Fixed access of freed memory by fully processing pcap devices
+- Removed several unused classes, files and tests
