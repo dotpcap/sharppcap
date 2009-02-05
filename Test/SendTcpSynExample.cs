@@ -78,12 +78,12 @@ namespace Test
 			//IP fields
 			tcp.DestinationAddress = destIP;			//The IP of the destination host
 //			tcp.SourceAddress = System.Net.IPAddress.Parse(dev.IpAddress);			//The IP of the local device
-			tcp.IPProtocol = IPProtocols_Fields.TCP;
+			tcp.IPProtocol = IPProtocol.IPProtocolType.TCP;
 			tcp.TimeToLive = 20;
-			tcp.Id = 100;			
-			tcp.Version = 4;
-			tcp.IPTotalLength = bytes.Length-lLen;			//Set the correct IP length
-			tcp.IPHeaderLength = IPFields_Fields.IP_HEADER_LEN;
+			tcp.ipv4.Id = 100;			
+			tcp.IPVersion = 4;
+			tcp.ipv4.IPTotalLength = bytes.Length-lLen;			//Set the correct IP length
+			tcp.ipv4.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
 
 			//TCP fields
 			tcp.SourcePort = sourcePort;				//The TCP source port
@@ -97,8 +97,10 @@ namespace Test
 			//tcp.SetData( System.Text.Encoding.ASCII.GetBytes("HELLO") );
 
 			//Calculate checksums
-			tcp.ComputeIPChecksum();
-			tcp.ComputeTCPChecksum();
+            //TODO: need to implement the checksumming routines
+            throw new System.NotImplementedException();
+//			tcp.ComputeIPChecksum();
+//			tcp.ComputeTCPChecksum();
 
 			dev.PcapOpen(true, 20);
 			

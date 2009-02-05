@@ -151,7 +151,7 @@
     <Compile Include="Packets\IPAddress.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\IPFields.cs">
+    <Compile Include="Packets\IPv4Fields.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Packets\IPPacket.cs">
@@ -164,9 +164,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Packets\IPProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IPProtocols.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Packets\IPVersions.cs">
@@ -278,6 +275,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PcapUnmanagedStructures.cs" />
+    <Compile Include="Packets\IPv4Packet.cs" />
+    <Compile Include="Packets\IPv6Packet.cs" />
+    <Compile Include="Packets\IPv6Fields.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

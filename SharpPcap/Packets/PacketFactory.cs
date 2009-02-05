@@ -54,17 +54,19 @@ namespace SharpPcap.Packets
 					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
 					switch (ipProtocol)
 					{
-						case IPProtocols_Fields.ICMP: return new ICMPPacket(lLen, bytes, tv);
-						case IPProtocols_Fields.IGMP: return new IGMPPacket(lLen, bytes, tv);
-						case IPProtocols_Fields.TCP: return new TCPPacket(lLen, bytes, tv);
-                        case IPProtocols_Fields.UDP: return new UDPPacket(lLen, bytes, tv);
+						case (int)IPProtocol.IPProtocolType.ICMP: return new ICMPPacket(lLen, bytes, tv);
+						case (int)IPProtocol.IPProtocolType.IGMP: return new IGMPPacket(lLen, bytes, tv);
+						case (int)IPProtocol.IPProtocolType.TCP:  return new TCPPacket(lLen, bytes, tv);
+                        case (int)IPProtocol.IPProtocolType.UDP:  return new UDPPacket(lLen, bytes, tv);
 
                         // unidentified ip..
-						default: return new IPPacket(lLen, bytes, tv);
+						default:
+                            return new IPPacket(lLen, bytes, tv);
 					}
 
                 // ethernet level code not recognized, default to anonymous packet..
-				default: return new EthernetPacket(lLen, bytes, tv);
+				default:
+                    return new EthernetPacket(lLen, bytes, tv);
 			}
 		}
 

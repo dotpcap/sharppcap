@@ -65,7 +65,9 @@ namespace SharpPcap.Packets
 			}
 
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
+        //TODO: fix this to handle ipv4 vs. ipv6
+#if false
 		/// <summary> Fetch the header checksum.</summary>
 		/// <summary> Fetch the header checksum.</summary>
 		virtual public int UDPChecksum
@@ -81,8 +83,9 @@ namespace SharpPcap.Packets
 			}
 
 		}
-		/// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-		override public bool ValidChecksum
+
+        /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
+		public bool ValidChecksum
 		{
 			get
 			{
@@ -90,14 +93,16 @@ namespace SharpPcap.Packets
 			}
 
 		}
-		virtual public bool ValidUDPChecksum
+
+        virtual public bool ValidUDPChecksum
 		{
 			get
 			{
 				return base.IsValidTransportLayerChecksum(true);
 			}
-
 		}
+#endif
+
 		/// <summary> Fetch the UDP header a byte array.</summary>
 		virtual public byte[] UDPHeader
 		{
@@ -147,6 +152,7 @@ namespace SharpPcap.Packets
 		/// <param name="data">the data bytes</param>
 		public void SetData(byte[] data)
 		{
+#if false
 			byte[] headers = ArrayHelper.copy(_bytes, 0, UDPFields_Fields.UDP_HEADER_LEN +IpHeaderLength+EthernetHeaderLength);
 			byte[] newBytes = ArrayHelper.join(headers, data);
 			this._bytes = newBytes;
@@ -157,6 +163,11 @@ namespace SharpPcap.Packets
 		
 			//update also offset and pcap header
 			OnOffsetChanged();
+#else
+            //TODO: code is more complex since we now have ipv4 and ipv6 packets we can't just
+            // add in a fixed header size
+            throw new System.NotImplementedException();
+#endif
 		}
 
 		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -184,7 +195,7 @@ namespace SharpPcap.Packets
 		/// <summary> Fetch the total length of the UDP packet, including header and
 		/// data payload, in bytes.
 		/// </summary>
-		public override int Length
+		public int Length
 		{
 			get
 			{
@@ -193,8 +204,10 @@ namespace SharpPcap.Packets
 			}
 		}
 
+        //TODO: fix this to properly handle the ipv4 vs. ipv6 differences
+#if false
 		/// <summary> Fetch the header checksum.</summary>
-		public override int Checksum
+		public int Checksum
 		{
 			get
 			{
@@ -239,6 +252,7 @@ namespace SharpPcap.Packets
 		{
 			return ComputeUDPChecksum(true);
 		}
+#endif
 
 		private byte[] _udpHeaderBytes = null;
 

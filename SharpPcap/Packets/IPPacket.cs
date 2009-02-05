@@ -20,275 +20,50 @@ namespace SharpPcap.Packets
 	///
 	/// </summary>
 	[Serializable]
-	public class IPPacket : EthernetPacket, IPFields
+	public class IPPacket : EthernetPacket
 	{
+        public IPv4Packet ipv4;
+        public IPv6Packet ipv6;
+
+        private void SetIPOffsetFromVersion()
+        {
+            if(IPVersion == 4)
+            {
+                _ipOffset = _ethOffset + ipv4.IPHeaderLength;
+            } else if(IPVersion == 6)
+            {
+                _ipOffset = _ethOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
+            } else
+            {
+                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
+            }
+        }
+
 		/// <summary>
 		///  should be overriden by upper classes
 		/// </summary>
 		public override void OnOffsetChanged()
 		{
 			base.OnOffsetChanged();
-			_ipOffset = _ethOffset + IPHeaderLength;
+
+            SetIPOffsetFromVersion();
 		}
 
-		/// <summary> Get the IP version code.</summary>
-		public virtual int Version
-		{
-			get
-			{
-				return IPVersion;
-			}
-			set
-			{
-				IPVersion = value;
-			}
-		}
 		/// <summary> Get the IP version code.</summary>
 		virtual public int IPVersion
 		{
 			get
 			{
-				return (ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_VER_POS, IPFields_Fields.IP_VER_LEN) >> 4) & 0xf;
+				return (ArrayHelper.extractInteger(_bytes, _ethOffset + IPv4Fields_Fields.IP_VER_POS, IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf;
 			}
 
 			set
 			{
-				_bytes[_ethOffset + IPFields_Fields.IP_VER_POS] &= (byte)(0x0f);
-				_bytes[_ethOffset + IPFields_Fields.IP_VER_POS] |= (byte)(((value << 4) & 0xf0));
-			}
-
-		}
-
-		/// <summary> Fetch the IP header length in bytes. </summary>
-		/// <summary> Sets the IP header length field.  At most, this can be a 
-		/// four-bit value.  The high order bits beyond the fourth bit
-		/// will be ignored.
-		/// 
-		/// </summary>
-		/// <param name="length">The length of the IP header in 32-bit words.
-		/// </param>
-		virtual public int IPHeaderLength
-		{
-			get
-			{
-				return (ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_VER_POS, IPFields_Fields.IP_VER_LEN) & 0xf) * 4;
-			}
-
-			set
-			{
-				value /= 4;
-				// Clear low order bits and then set
-				_bytes[_ethOffset + IPFields_Fields.IP_VER_POS] &= (byte)(0xf0);
-				_bytes[_ethOffset + IPFields_Fields.IP_VER_POS] |= (byte)(value & 0x0f);
-				// set offset into _bytes of previous layers
-				_ipOffset = _ethOffset + IPHeaderLength;
-			}
-
-		}
-		/// <summary> Fetch the packet IP header length.</summary>
-		override public int HeaderLength
-		{
-			get
-			{
-				return IPHeaderLength;
-			}
-
-		}
-		/// <summary> Fetch the packet IP header length.</summary>
-		public int IpHeaderLength
-		{
-			get
-			{
-				return IPHeaderLength;
-			}
-
-			set
-			{
-				IPHeaderLength = value;
-			}
-
-		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
-		/// <summary> Fetch the unique ID of this IP datagram. The ID normally 
-		/// increments by one each time a datagram is sent by a host.
-		/// </summary>
-		/// <summary> Sets the IP identification header value.
-		/// 
-		/// </summary>
-		/// <param name="id">A 16-bit unsigned integer.
-		/// </param>
-		virtual public int Id
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_ID_POS, IPFields_Fields.IP_ID_LEN);
-			}
-
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ethOffset + IPFields_Fields.IP_ID_POS, IPFields_Fields.IP_ID_LEN);
-			}
-
-		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
-		/// <summary> Fetch fragmentation offset.</summary>
-		/// <summary> Sets the fragment offset header value.  The offset specifies a
-		/// number of octets (i.e., bytes).
-		/// 
-		/// </summary>
-		/// <param name="offset">A 13-bit unsigned integer.
-		/// </param>
-		virtual public int FragmentOffset
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_FRAG_POS, IPFields_Fields.IP_FRAG_LEN) & 0x1fff;
-			}
-
-			set
-			{
-				_bytes[_ethOffset + IPFields_Fields.IP_FRAG_POS] &= (byte)(0xe0);
-				_bytes[_ethOffset + IPFields_Fields.IP_FRAG_POS] |= (byte)(((value >> 8) & 0x1f));
-				_bytes[_ethOffset + IPFields_Fields.IP_FRAG_POS + 1] = (byte)(value & 0xff);
-			}
-
-		}
-
-        private System.Net.IPAddress GetIPAddress(int fieldOffset)
-        {
-            byte[] address;
-            if(IPVersion == 4)
-            {
-                address = new byte[4];
-            } else if(IPVersion == 6)
-            {
-                address = new byte[16];
-            } else
-            {
-                throw new System.InvalidOperationException("IPVersion " + IPVersion + " unknown");
-            }
-
-            System.Array.Copy(_bytes, fieldOffset,
-                              address, 0, address.Length);
-
-            return new System.Net.IPAddress(address);
-        }
-
-		/// <summary> Fetch the IP address of the host where the packet originated from.</summary>
-		virtual public System.Net.IPAddress SourceAddress
-		{
-			get
-			{
-                return GetIPAddress(_ethOffset + IPFields_Fields.IP_SRC_POS);
-			}
-			set
-			{
-                if(IPVersion != 4)
-                {
-                    throw new System.NotImplementedException("Only IPv4 supported at this time");
-                }
-
-                byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, _bytes, _ethOffset + IPFields_Fields.IP_SRC_POS, address.Length);
+				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
+				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(((value << 4) & 0xf0));
 			}
 		}
 
-		/// <summary> Fetch the IP address of the host where the packet is destined.</summary>
-		virtual public System.Net.IPAddress DestinationAddress
-		{
-			get
-			{
-                return GetIPAddress(_ethOffset + IPFields_Fields.IP_SRC_POS);
-			}
-			set
-			{
-                if(IPVersion != 4)
-                {
-                    throw new System.NotImplementedException("Only IPv4 supported at this time");
-                }
-
-                byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, _bytes, _ethOffset + IPFields_Fields.IP_DST_POS, address.Length);
-			}
-
-		}
-
-		/// <summary> Fetch the IP header a byte array.</summary>
-		virtual public byte[] IPHeader
-		{
-			get
-			{
-				return PacketEncoding.extractHeader(_ethOffset, IPHeaderLength, _bytes);
-			}
-
-		}
-		/// <summary> Fetch the IP header as a byte array.</summary>
-		override public byte[] Header
-		{
-			get
-			{
-				return IPHeader;
-			}
-
-		}
-		/// <summary> Fetch the IP data as a byte array.</summary>
-		virtual public byte[] IPData
-		{
-			get
-			{
-
-				// set data length based on info in headers (note: tcpdump
-				//  can return extra junk bytes which bubble up to here
-
-				//tamir: changed getLength() to specific getIPTotalLength() to fix
-				//confusion in subclasses overloading getLength()
-				int tmpLen = IPTotalLength - IPHeaderLength;
-				return PacketEncoding.extractData(_ethOffset, IPHeaderLength, _bytes, tmpLen);
-			}
-
-		}
-		/// <summary> Fetch the header checksum.</summary>
-		virtual public int IPChecksum
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_CSUM_POS, IPFields_Fields.IP_CSUM_LEN);
-			}
-
-			set
-			{
-				SetChecksum(value, _ethOffset + IPFields_Fields.IP_CSUM_POS);
-			}
-
-		}
-		/// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-		virtual public bool ValidChecksum
-		{
-			get
-			{
-				return ValidIPChecksum;
-			}
-
-		}
-		/// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-		virtual public bool ValidIPChecksum
-		{
-			get
-			{
-				// first validate other information about the packet. if this stuff
-				// is not true, the packet (and therefore the checksum) is invalid
-				// - ip_hl >= 5 (ip_hl is the length in 4-byte words)
-				if (IPHeaderLength < IPFields_Fields.IP_HEADER_LEN)
-				{
-					return false;
-				}
-				else
-				{
-					return (_OnesSum(_bytes, _ethOffset, IpHeaderLength) == 0xffff);
-				}
-			}
-
-		}
 		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
 		override public System.String Color
 		{
@@ -296,8 +71,8 @@ namespace SharpPcap.Packets
 			{
 				return AnsiEscapeSequences_Fields.WHITE;
 			}
-
 		}
+
 		// offset from beginning of byte array where IP header ends (i.e.,
 		//  size of ethernet frame header and IP header
 		protected internal int _ipOffset;
@@ -306,7 +81,18 @@ namespace SharpPcap.Packets
 		public IPPacket(int lLen, byte[] bytes)
 			: base(lLen, bytes)
 		{
-			_ipOffset = _ethOffset + IPHeaderLength;
+            if(IPVersion == 4)
+            {
+                ipv4 = new IPv4Packet(lLen, bytes);
+            } else if(IPVersion == 6)
+            {
+                ipv6 = new IPv6Packet(lLen, bytes);
+            } else
+            {
+                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
+            }
+
+            SetIPOffsetFromVersion();
 		}
 
 		/// <summary> Create a new IP packet.</summary>
@@ -316,290 +102,16 @@ namespace SharpPcap.Packets
 			this._timeval = tv;
 		}
 
-
-		/// <summary> Fetch the type of service./// </summary>
-		public virtual int TypeOfService
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_TOS_POS, IPFields_Fields.IP_TOS_LEN);
-			}
-			set
-			{
-				_bytes[_ethOffset + IPFields_Fields.IP_TOS_POS] = (byte)(value & 0xff);
-			}
-		}
-
-
-		/// <summary> Fetch the IP length in bytes.</summary>
-		public virtual int Length
-		{
-			get
-			{
-				return IPTotalLength;
-			}
-			set
-			{
-				IPTotalLength = value;
-			}
-		}
-		/// <summary> Fetch the IP length in bytes.</summary>
-		public virtual int IPTotalLength
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_LEN_POS, IPFields_Fields.IP_LEN_LEN);
-			}
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ethOffset + IPFields_Fields.IP_LEN_POS, IPFields_Fields.IP_LEN_LEN);
-			}
-		}
-
-		/// <summary> Fetch fragmentation flags.</summary>
-		/// </summary>
-		/// <param name="flags">A 3-bit unsigned integer.
-		/// </param>
-		public virtual int FragmentFlags
-		{
-			get
-			{
-				// fragment flags are the high 3 bits
-				//		int huh = ArrayHelper.extractInteger(_bytes, _ethOffset
-				//				+ IP_FRAG_POS, IP_FRAG_LEN);
-				return (ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_FRAG_POS, IPFields_Fields.IP_FRAG_LEN) >> 13) & 0x7;
-			}
-			set
-			{
-				_bytes[_ethOffset + IPFields_Fields.IP_FRAG_POS] &= (byte)(0x1f);
-				_bytes[_ethOffset + IPFields_Fields.IP_FRAG_POS] |= (byte)(((value << 5) & 0xe0));
-			}
-		}
-		/// <summary> Fetch the time to live. TTL sets the upper limit on the number of 
-		/// routers through which this IP datagram is allowed to pass.
-		/// </summary>
-		public virtual int TimeToLive
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_TTL_POS, IPFields_Fields.IP_TTL_LEN);
-			}
-			set
-			{
-				_bytes[_ethOffset + IPFields_Fields.IP_TTL_POS] = (byte)value;
-			}
-		}
-
-		/// <summary> Fetch the code indicating the type of protocol embedded in the IP</summary>
-		/// <seealso cref="IPProtocols.">
-		/// </seealso>
-		public virtual int IPProtocol
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ethOffset + IPFields_Fields.IP_CODE_POS, IPFields_Fields.IP_CODE_LEN);
-			}
-			set
-			{
-				_bytes[_ethOffset + IPFields_Fields.IP_CODE_POS] = (byte)value;
-			}
-		}
-
-		/// <summary> Fetch the source address as a long.</summary>
-
-
-		/// <summary> Fetch the IP data as a byte array.</summary>
-		public override byte[] Data
-		{
-			get
-			{
-				return IPData;
-			}
-		}
-
-		/// <summary> Fetch the IP header checksum.</summary>
-		public virtual int Checksum
-		{
-			get
-			{
-				return IPChecksum;
-			}
-			set
-			{
-				IPChecksum=value;
-			}
-		}
-
-		/// <summary> Sets the IP header checksum.</summary>
-		protected internal virtual void SetChecksum(int cs, int checkSumOffset)
-		{
-			ArrayHelper.insertLong(_bytes, cs, checkSumOffset, 2);
-		}
-
-		protected internal virtual void SetTransportLayerChecksum(int cs, int csPos)
-		{
-			SetChecksum(cs, _ipOffset + csPos);
-		}
-
-		/// <summary> tamir: 
-		/// Computes the one's complement sum on a byte array
-		/// </summary>
-		protected internal virtual int _OnesCompSum(byte[] bytes)
-		{
-			//just complement the one's sum
-			return _OnesCompSum(bytes, 0, bytes.Length);
-		}
-
-		/// <summary> tamir: 
-		/// Computes the one's complement sum on a byte array
-		/// </summary>
-		protected internal virtual int _OnesCompSum(byte[] bytes, int start, int len)
-		{
-			//just complement the one's sum
-			return (~_OnesSum(bytes, start, len)) & 0xFFFF;
-		}
-
-		/// <summary> tamir:
-		/// Computes the one's sum on a byte array.
-		/// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
-		/// Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
-		/// </summary>
-		protected internal virtual int _OnesSum(byte[] bytes)
-		{
-			return _OnesSum(bytes, 0, bytes.Length);
-		}
-
-		/// <summary> tamir:
-		/// Computes the one's sum on a byte array.
-		/// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
-		/// Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
-		/// </summary>
-		protected internal virtual int _OnesSum(byte[] bytes, int start, int len)
-		{
-			int sum = 0; /* assume 32 bit long, 16 bit short */
-			int i = start;
-			len = start + len;
-
-			while (i < len - 1)
-			{
-				sum += ArrayHelper.extractInteger(bytes, i, 2);
-				//if ((sum & unchecked((int)0x80000000)) != 0)
-				if ((sum & 0x80000000) != 0)
-					/* if high order bit set, fold */
-					sum = (sum & 0xFFFF) + (sum >> 16);
-				i += 2;
-			}
-
-			if (i < len)
-				/* take care of left over byte */
-				sum += ArrayHelper.extractInteger(bytes, start, 2);
-
-			while (sum >> 16 != 0)
-				sum = (sum & 0xFFFF) + (sum >> 16);
-
-			return sum & 0xFFFF;
-		}
-
-		/*
-		* taken from TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W.
-		* Richard Stevens. Page 236
-		*/
-
-		/// <summary> Computes the IP checksum, optionally updating the IP checksum header.
-		/// 
-		/// </summary>
-		/// <param name="update">Specifies whether or not to update the IP checksum
-		/// header after computing the checksum.  A value of true indicates
-		/// the header should be updated, a value of false indicates it
-		/// should not be updated.
-		/// </param>
-		/// <returns> The computed IP checksum.
-		/// </returns>
-		public int ComputeIPChecksum(bool update)
-		{
-			//copy the ip header
-			byte[] ip = ArrayHelper.copy(_bytes, _ethOffset, IpHeaderLength);
-			//reset the checksum field (checksum is calculated when this field is zeroed)
-			ArrayHelper.insertLong(ip, 0, IPFields_Fields.IP_CSUM_POS, 2);
-			//compute the one's complement sum of the ip header
-			int cs = _OnesCompSum(ip, 0, ip.Length);
-			if (update)
-			{
-				IPChecksum = cs;
-			}
-
-			return cs;
-		}
-
-		public int ComputeTransportLayerChecksum(int checksumOffset, bool update, bool pseudoIPHeader)
-		{
-			// copy the tcp section with data
-			byte[] dataToChecksum = IPData;
-			// reset the checksum field (checksum is calculated when this field is
-			// zeroed)
-			ArrayHelper.insertLong(dataToChecksum, 0, checksumOffset, 2);
-			if (pseudoIPHeader)
-				dataToChecksum = AttachPseudoIPHeader(dataToChecksum);
-			// compute the one's complement sum of the tcp header
-			int cs = _OnesCompSum(dataToChecksum);
-			if (update)
-			{
-				SetTransportLayerChecksum(cs, checksumOffset);
-			}
-
-			return cs;
-		}
-
-		/// <summary> Same as <code>computeIPChecksum(true);</code>
-		/// 
-		/// </summary>
-		/// <returns> The computed IP checksum value.
-		/// </returns>
-		public int ComputeIPChecksum()
-		{
-			return ComputeIPChecksum(true);
-		}
-
-		protected internal virtual byte[] AttachPseudoIPHeader(byte[] origHeader)
-		{
-			bool odd = origHeader.Length % 2 != 0;
-			int headerSize = 12 + origHeader.Length;
-			if (odd)
-				headerSize++;
-
-			byte[] headerForChecksum = new byte[headerSize];
-			// 0-7: ip src+dest addr
-			Array.Copy(_bytes, _ethOffset + IPFields_Fields.IP_SRC_POS, headerForChecksum, 0, 8);
-			// 8: always zero
-			headerForChecksum[8] = 0;
-			// 9: ip protocol
-			headerForChecksum[9] = (byte)IPProtocol;
-			// 10-11: header+data length
-			ArrayHelper.insertLong(headerForChecksum, origHeader.Length, 10, 2);
-
-			// prefix the pseudoHeader to the header+data
-			Array.Copy(origHeader, 0, headerForChecksum, 12, origHeader.Length);
-			//if not even length, pad with a zero
-			if (odd)
-				headerForChecksum[headerForChecksum.Length - 1] = 0;
-
-			return headerForChecksum;
-		}
-
-		public virtual bool IsValidTransportLayerChecksum(bool pseudoIPHeader)
-		{
-			byte[] upperLayer = IPData;
-			if (pseudoIPHeader)
-				upperLayer = AttachPseudoIPHeader(upperLayer);
-			int onesSum = _OnesSum(upperLayer);
-			return (onesSum == 0xffff);
-		}
-
-		/// <summary> Fetch the header checksum.</summary>
-		public virtual int GetTransportLayerChecksum(int pos)
-		{
-			return ArrayHelper.extractInteger(_bytes, pos, 2);
-		}
+        /// <summary> Returns the payload length of the packet</summary>
+        public int IPPayloadLength()
+        {
+            if(ipv4 != null)
+                return ipv4.IPPayloadLength;
+            else if(ipv6 != null)
+                return ipv6.IPPayloadLength;
+            else
+                throw new System.InvalidOperationException();
+        }
 
 		/// <summary> Convert this IP packet to a readable string.</summary>
 		public override System.String ToString()
@@ -620,11 +132,11 @@ namespace SharpPcap.Packets
 			buffer.Append("IPPacket");
 			if (colored)
 				buffer.Append(AnsiEscapeSequences_Fields.RESET);
-			buffer.Append(": ");
-			buffer.Append(SourceAddress + " -> " + DestinationAddress);
-			buffer.Append(" proto=" + IPProtocol);
-			buffer.Append(" l=" + IPHeaderLength + "," + Length);
-			buffer.Append(']');
+
+            if(ipv4 != null)
+                buffer.Append(ipv4.ToColoredString(colored));
+            else if(ipv6 != null)
+                buffer.Append(ipv6.ToColoredString(colored));
 
 			return buffer.ToString();
 		}
@@ -639,61 +151,175 @@ namespace SharpPcap.Packets
 			buffer.Append("IPPacket");
 			if (colored)
 				buffer.Append(AnsiEscapeSequences_Fields.RESET);
-			buffer.Append(": ");
-			buffer.Append("version=" + Version + ", ");
-			buffer.Append("hlen=" + HeaderLength + ", ");
-			buffer.Append("tos=" + TypeOfService + ", ");
-			buffer.Append("length=" + Length + ", ");
-			buffer.Append("id=" + Id + ", ");
-			buffer.Append("flags=0x" + System.Convert.ToString(FragmentFlags, 16) + ", ");
-			buffer.Append("offset=" + FragmentOffset + ", ");
-			buffer.Append("ttl=" + TimeToLive + ", ");
-			buffer.Append("proto=" + IPProtocol + ", ");
-			buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
-			if (this.ValidChecksum)
-				buffer.Append(" (correct), ");
-			else
-				buffer.Append(" (incorrect, should be " + ComputeIPChecksum(false) + "), ");
-			buffer.Append("src=" + SourceAddress + ", ");
-			buffer.Append("dest=" + DestinationAddress);
-			buffer.Append(']');
+
+            if(ipv4 != null)
+                buffer.Append(ipv4.ToColoredVerboseString(colored));
+            else if(ipv6 != null)
+                buffer.Append(ipv6.ToColoredVerboseString(colored));
 
 			return buffer.ToString();
 		}
 
-		//UPGRADE_NOTE: Field 'EnclosingInstance' was added to class 'TestProbe' to access its enclosing instance. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1019'"
-		/// <summary> This inner class provides access to private methods for unit testing.</summary>
-		public class TestProbe
+        public static System.Net.IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType, int fieldOffset, byte[] bytes)
+        {
+            byte[] address;
+            if(ipType == System.Net.Sockets.AddressFamily.InterNetwork) // ipv4
+            {
+                address = new byte[4];
+            } else if(ipType == System.Net.Sockets.AddressFamily.InterNetworkV6)
+            {
+                address = new byte[16];
+            } else
+            {
+                throw new System.InvalidOperationException("ipType " + ipType + " unknown");
+            }
+
+            System.Array.Copy(bytes, fieldOffset,
+                              address, 0, address.Length);
+
+            return new System.Net.IPAddress(address);
+        }
+
+
+
+        // some convience mapping methods since there are fields that match exactly between
+        // ipv4 and ipv6
+		/// <summary> Fetch the IP address of the host where the packet originated from.</summary>
+		virtual public System.Net.IPAddress SourceAddress
 		{
-			public TestProbe(IPPacket enclosingInstance)
+			get
 			{
-				InitBlock(enclosingInstance);
+                if(ipv4 != null)
+                {
+                    return ipv4.SourceAddress;
+                } else if(ipv6 != null)
+                {
+                    return ipv6.SourceAddress;
+                } else
+                {
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+                }
 			}
-			private void InitBlock(IPPacket enclosingInstance)
-			{
-				this.enclosingInstance = enclosingInstance;
-			}
-			private IPPacket enclosingInstance;
-			virtual public int ComputedReceiverIPChecksum
-			{
-				get
-				{
-					return Enclosing_Instance._OnesSum(Enclosing_Instance._bytes, Enclosing_Instance._ethOffset, Enclosing_Instance.IpHeaderLength);
-				}
 
-			}
-			virtual public int ComputedSenderIPChecksum()
+			set
 			{
-				return Enclosing_Instance.ComputeIPChecksum(false);
+                if(IPVersion == 4)
+                {
+                    ipv4.SourceAddress = value;
+                } else if(IPVersion == 6)
+                {
+                    ipv6.SourceAddress = value;
+                } else
+                {
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+                }
 			}
-			public IPPacket Enclosing_Instance
-			{
-				get
-				{
-					return enclosingInstance;
-				}
+		}
 
+		/// <summary> Fetch the IP address of the host where the packet is destined.</summary>
+		virtual public System.Net.IPAddress DestinationAddress
+		{
+			get
+			{
+                if(ipv4 != null)
+                {
+                    return ipv4.DestinationAddress;
+                } else if(ipv6 != null)
+                {
+                    return ipv6.DestinationAddress;
+                } else
+                {
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+                }
 			}
-		}		
+
+			set
+			{
+                if(ipv4 != null)
+                {
+                    ipv4.DestinationAddress = value;
+                } else if(ipv6 != null)
+                {
+                    ipv6.DestinationAddress = value;
+                } else
+                {
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+                }
+			}
+		}
+
+        // HopLimit(IPv6) and TimeToLive(IPv4) have the same meaning
+        public int HopLimit
+        {
+            get
+            {
+                return TimeToLive;
+            }
+
+            set
+            {
+                TimeToLive = value;
+            }
+        }
+
+        public int TimeToLive
+        {
+            get
+            {
+                if(ipv4 != null)
+                    return ipv4.TimeToLive;
+                else if(ipv6 != null)
+                    return ipv6.HopLimit;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+            }
+
+            set
+            {
+                if(ipv4 != null)
+                    ipv4.TimeToLive = value;
+                else if(ipv6 != null)
+                    ipv6.HopLimit = value;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
+            }
+        }
+
+        // NextHeader(IPv6) and IPProtocol(IPv4) have the same meaning
+        public IPProtocol.IPProtocolType NextHeader
+        {
+            get
+            {
+                return IPProtocol;
+            }
+
+            set
+            {
+                IPProtocol = value;
+            }
+        }
+
+        public IPProtocol.IPProtocolType IPProtocol
+        {
+            get
+            {
+                if(ipv4 != null)
+                    return ipv4.IPProtocol;
+                else if(ipv6 != null)
+                    return ipv6.NextHeader;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+            set
+            {
+                if(ipv4 != null)
+                    ipv4.IPProtocol = value;
+                else if(ipv6 != null)
+                    ipv6.NextHeader = value;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+        }
 	}
 }

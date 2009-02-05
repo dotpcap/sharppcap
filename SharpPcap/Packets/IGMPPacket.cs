@@ -134,7 +134,7 @@ namespace SharpPcap.Packets
 		}
 
 		/// <summary> Fetch the IGMP header checksum.</summary>
-		public override int Checksum
+		public int Checksum
 		{
 			get
 			{

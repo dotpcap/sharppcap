@@ -10,7 +10,8 @@ namespace SharpPcap.Packets
 	/// <summary> Code constants for ip ports.
 	/// 
 	/// </summary>
-	public struct IPPorts_Fields{
+	public class IPPorts
+    {
 		public readonly static int NONE = - 1; // dummy value for protocols that don't use ports
 		public readonly static int RESERVED_0 = 0;
 		public readonly static int TCPMUX = 1;
@@ -704,10 +705,5 @@ namespace SharpPcap.Packets
 		public readonly static int LIMIT_PRIVILEGED = 1024;
 		/// <summary> IP port mask.</summary>
 		public readonly static int MASK = 0xffff;
-	}
-	public interface IPPorts
-	{
-		//UPGRADE_NOTE: Members of interface 'IPPorts' were extracted into structure 'IPPorts_Fields'. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1045'"
-		
 	}
 }

@@ -128,7 +128,7 @@ namespace SharpPcap.Packets
 		{
 			get
 			{
-				return (IPTotalLength - IPHeaderLength - TcpHeaderLength);
+				return (IPPayloadLength() - TcpHeaderLength);
 			}
 
 		}
@@ -146,7 +146,9 @@ namespace SharpPcap.Packets
 			}
 
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
+        //TODO: reimplement this taking into account the ipv4 vs. ipv6 differences
+#if false        
 		/// <summary> Fetch the header checksum.</summary>
 		/// <summary> Set the checksum of the TCP header</summary>
 		/// <param name="cs">the checksum value
@@ -165,7 +167,7 @@ namespace SharpPcap.Packets
 
 		}
 		/// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-		override public bool ValidChecksum
+		public bool ValidChecksum
 		{
 			get
 			{
@@ -173,14 +175,16 @@ namespace SharpPcap.Packets
 			}
 
 		}
+
 		virtual public bool ValidTCPChecksum
 		{
 			get
 			{
 				return base.IsValidTransportLayerChecksum(true);
 			}
-
 		}
+#endif
+
 		/// <returns> The TCP packet length in bytes.  This is the size of the
 		/// IP packet minus the size of the IP header.
 		/// </returns>
@@ -188,10 +192,10 @@ namespace SharpPcap.Packets
 		{
 			get
 			{
-				return IPTotalLength - IpHeaderLength;
+                return IPPayloadLength();
 			}
-
 		}
+
 		private int AllFlags
 		{
 			get
@@ -443,8 +447,10 @@ namespace SharpPcap.Packets
 			this._timeval = tv;
 		}
 
+        //TODO: fix this now that we have ipv4 vs. ipv6 packets
+#if false
 		/// <summary> Fetch the header checksum.</summary>
-		public override int Checksum
+		public int Checksum
 		{
 			get
 			{
@@ -480,6 +486,7 @@ namespace SharpPcap.Packets
 		{
 			return ComputeTCPChecksum(true);
 		}
+#endif
 
 		private int _urgentPointer;
 		private bool _urgentPointerSet = false;
@@ -554,15 +561,20 @@ namespace SharpPcap.Packets
 		/// </param>
 		public virtual void SetData(byte[] data)
 		{
+#if false
 			byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength+IpHeaderLength+EthernetHeaderLength);
 			byte[] newBytes = ArrayHelper.join(headers, data);
 			this._bytes = newBytes;
 			TCPHeaderLength = _bytes.Length-data.Length-IpHeaderLength-EthernetHeaderLength;
-		
+
 			//update ip total length length
 			IPTotalLength = IpHeaderLength + TcpHeaderLength + data.Length;
 			//update also offset and pcap header
 			OnOffsetChanged();
+#else
+            //TODO: this is more complex since we now handle both ipv4 and ipv6 packets
+            throw new System.NotImplementedException();
+#endif
 		}
 
 		/// <summary> Convert this TCP packet to a readable string.</summary>
@@ -633,11 +645,14 @@ namespace SharpPcap.Packets
 			buffer.Append("syn=" + Syn + ", ");
 			buffer.Append("fin=" + Fin + ", ");
 			buffer.Append("wsize=" + WindowSize + ", ");
+            //TODO: fix this when we have valid checksumming
+#if false            
 			buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
 			if (this.ValidTCPChecksum)
 				buffer.Append(" (correct), ");
 			else
 				buffer.Append(" (incorrect, should be " + ComputeTCPChecksum(false) + "), ");
+#endif
 			buffer.Append("uptr=0x" + System.Convert.ToString(getUrgentPointer(), 16));
 			buffer.Append(']');
 
@@ -663,6 +678,7 @@ namespace SharpPcap.Packets
 
 		public static void MakeValid(TCPPacket tcp)
 		{
+#if false        
 			tcp.IPVersion = 4;
 			tcp.IPTotalLength = tcp.Bytes.Length-14;			//Set the correct IP length
 			tcp.IPHeaderLength = IPFields_Fields.IP_HEADER_LEN;
@@ -670,6 +686,11 @@ namespace SharpPcap.Packets
 			//Calculate checksums
 			tcp.ComputeIPChecksum();
 			tcp.ComputeTCPChecksum();
+#else
+            //TODO: this is more complex now that we handle ipv4 and ipv6 packets, we can't
+            // juse assume a length of 14 for an ip header
+            throw new System.NotImplementedException();
+#endif
 		}
 	}
 }

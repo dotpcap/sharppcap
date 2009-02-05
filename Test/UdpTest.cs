@@ -38,18 +38,20 @@ namespace Test
 			// NOTE: the source address will be filled in by the network stack based on
 			//       the device used for sending
 //			packet.SourceAddress = System.Net.IPAddress.Parse(device.IpAddress);
-			packet.IPProtocol = IPProtocols_Fields.UDP;
+			packet.IPProtocol = IPProtocol.IPProtocolType.UDP;
 			packet.TimeToLive = 20;
-			packet.Id = 100;
-			packet.Version = 4;
-			packet.IPTotalLength = bytes.Length - lLen;
-			packet.IPHeaderLength = IPFields_Fields.IP_HEADER_LEN;
-         
+			packet.ipv4.Id = 100;
+			packet.IPVersion = 4;
+			packet.ipv4.IPTotalLength = bytes.Length - lLen;
+			packet.ipv4.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
+
 			//UDP Fields 
 			packet.DestinationPort = 9898;
 			packet.SourcePort = 80;
-			packet.ComputeIPChecksum();
-			packet.ComputeUDPChecksum();
+            //TODO: checksum methods are disabled due to unfinished ipv4/ipv6 work
+            throw new System.NotImplementedException();
+//			packet.ComputeIPChecksum();
+//			packet.ComputeUDPChecksum();
  
 			device.PcapOpen();
 			device.PcapSendPacket(packet);

@@ -10,12 +10,14 @@ namespace SharpPcap.Packets
 	/// <summary> Code constants for internet protocol versions.
 	/// 
 	/// </summary>
-	public struct IPVersions_Fields{
+	public struct IPVersions_Fields
+    {
 		/// <summary> Internet protocol version 4.</summary>
 		public readonly static int IPV4 = 4;
 		/// <summary> Internet protocol version 6.</summary>
 		public readonly static int IPV6 = 6;
 	}
+
 	public interface IPVersions
 	{
 		//UPGRADE_NOTE: Members of interface 'IPVersions' were extracted into structure 'IPVersions_Fields'. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1045'"

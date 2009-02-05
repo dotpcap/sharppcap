@@ -27,8 +27,8 @@ namespace SharpPcap.Packets
 			{
 				return PacketEncoding.extractHeader(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, _bytes);
 			}
-
 		}
+
 		/// <summary> Fetch the ICMP header as a byte array.</summary>
 		override public byte[] Header
 		{
@@ -36,8 +36,8 @@ namespace SharpPcap.Packets
 			{
 				return ICMPHeader;
 			}
-
 		}
+
 		/// <summary> Fetch the ICMP data as a byte array.</summary>
 		virtual public byte[] ICMPData
 		{
@@ -46,8 +46,8 @@ namespace SharpPcap.Packets
 				int dataLen = _bytes.Length - _ipOffset - ICMPFields_Fields.ICMP_HEADER_LEN;
 				return PacketEncoding.extractData(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, _bytes, dataLen);
 			}
-
 		}
+
 		/// <summary> Fetch the ICMP message type code. Formerly .getMessageType().</summary>
 		virtual public int MessageMajorCode
 		{
@@ -60,8 +60,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS, ICMPFields_Fields.ICMP_CODE_LEN);
 			}
-
 		}
+
 		/// <deprecated> use getMessageMajorCode().
 		/// </deprecated>
 		virtual public int MessageType
@@ -75,8 +75,8 @@ namespace SharpPcap.Packets
 			{
 				MessageMajorCode = value;
 			}
-
 		}
+
 		/// <summary> Fetch the ICMP message type, including subcode. Return value can be 
 		/// used with ICMPMessage.getDescription().
 		/// </summary>
@@ -94,8 +94,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_SUBC_POS, ICMPFields_Fields.ICMP_SUBC_LEN);
 			}
-
 		}
+
 		/// <summary> Fetch the ICMP message subcode.</summary>
 		virtual public int MessageMinorCode
 		{
@@ -124,16 +124,16 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CSUM_POS, ICMPFields_Fields.ICMP_CSUM_LEN);
 			}
-
 		}
+
 		virtual public bool ValidICMPChecksum
 		{
 			get
 			{
-				return base.IsValidTransportLayerChecksum(false);
+                throw new System.NotImplementedException();
 			}
-
 		}
+
 		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
 		override public System.String Color
 		{
@@ -141,8 +141,8 @@ namespace SharpPcap.Packets
 			{
 				return AnsiEscapeSequences_Fields.LIGHT_BLUE;
 			}
-
 		}
+
 		public ICMPPacket(int lLen, byte[] bytes)
 			: base(lLen, bytes)
 		{
@@ -164,7 +164,7 @@ namespace SharpPcap.Packets
 		}
 
 		/// <summary> Fetch the ICMP header checksum.</summary>
-		public override int Checksum
+		public int Checksum
 		{
 			get
 			{
@@ -188,7 +188,8 @@ namespace SharpPcap.Packets
 		/// </returns>
 		public int ComputeICMPChecksum(bool update)
 		{
-			return base.ComputeTransportLayerChecksum(ICMPFields_Fields.ICMP_CSUM_POS, update, false);
+			//return base.ComputeTransportLayerChecksum(ICMPFields_Fields.ICMP_CSUM_POS, update, false);
+            throw new System.NotImplementedException();
 		}
 
 		/// <summary> Same as <code>computeICMPChecksum(true);</code>

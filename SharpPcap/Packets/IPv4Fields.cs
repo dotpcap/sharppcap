@@ -10,7 +10,7 @@ namespace SharpPcap.Packets
 	/// <summary> IP protocol field encoding information.
 	/// 
 	/// </summary>
-	public struct IPFields_Fields{
+	public struct IPv4Fields_Fields{
 		/// <summary> Width of the IP version and header length field in bytes.</summary>
 		public readonly static int IP_VER_LEN = 1;
 
@@ -68,30 +68,20 @@ namespace SharpPcap.Packets
         /// <summary> Length in bytes of an IP header, excluding options.</summary>
 		public readonly static int IP_HEADER_LEN; // == 20
 
-        static IPFields_Fields()
+        public readonly static int IP_ADDRESS_WIDTH = 4;
+
+        static IPv4Fields_Fields()
 		{
-			IP_TOS_POS = IPFields_Fields.IP_VER_POS + IPFields_Fields.IP_VER_LEN;
-			IP_LEN_POS = IPFields_Fields.IP_TOS_POS + IPFields_Fields.IP_TOS_LEN;
-			IP_ID_POS = IPFields_Fields.IP_LEN_POS + IPFields_Fields.IP_LEN_LEN;
-			IP_FRAG_POS = IPFields_Fields.IP_ID_POS + IPFields_Fields.IP_ID_LEN;
-			IP_TTL_POS = IPFields_Fields.IP_FRAG_POS + IPFields_Fields.IP_FRAG_LEN;
-			IP_CODE_POS = IPFields_Fields.IP_TTL_POS + IPFields_Fields.IP_TTL_LEN;
-			IP_CSUM_POS = IPFields_Fields.IP_CODE_POS + IPFields_Fields.IP_CODE_LEN;
-			IP_SRC_POS = IPFields_Fields.IP_CSUM_POS + IPFields_Fields.IP_CSUM_LEN;
-			IP_DST_POS = IPFields_Fields.IP_SRC_POS + IPAddress.WIDTH;
-			IP_HEADER_LEN = IPFields_Fields.IP_DST_POS + IPAddress.WIDTH;
+			IP_TOS_POS = IPv4Fields_Fields.IP_VER_POS + IPv4Fields_Fields.IP_VER_LEN;
+			IP_LEN_POS = IPv4Fields_Fields.IP_TOS_POS + IPv4Fields_Fields.IP_TOS_LEN;
+			IP_ID_POS = IPv4Fields_Fields.IP_LEN_POS + IPv4Fields_Fields.IP_LEN_LEN;
+			IP_FRAG_POS = IPv4Fields_Fields.IP_ID_POS + IPv4Fields_Fields.IP_ID_LEN;
+			IP_TTL_POS = IPv4Fields_Fields.IP_FRAG_POS + IPv4Fields_Fields.IP_FRAG_LEN;
+			IP_CODE_POS = IPv4Fields_Fields.IP_TTL_POS + IPv4Fields_Fields.IP_TTL_LEN;
+			IP_CSUM_POS = IPv4Fields_Fields.IP_CODE_POS + IPv4Fields_Fields.IP_CODE_LEN;
+			IP_SRC_POS = IPv4Fields_Fields.IP_CSUM_POS + IPv4Fields_Fields.IP_CSUM_LEN;
+			IP_DST_POS = IPv4Fields_Fields.IP_SRC_POS + IPv4Fields_Fields.IP_ADDRESS_WIDTH;
+			IP_HEADER_LEN = IPv4Fields_Fields.IP_DST_POS + IPv4Fields_Fields.IP_ADDRESS_WIDTH;
 		}
-	}
-	public interface IPFields
-	{
-		//UPGRADE_NOTE: Members of interface 'IPFields' were extracted into structure 'IPFields_Fields'. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1045'"
-		// field lengths
-		
-		
-		// field positions
-		
-		
-		// complete header length 
-		
 	}
 }
