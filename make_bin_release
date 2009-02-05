@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# script to help with building a binary release package
+#
+# parameter 1 is the output directory
+# parameter 2 is the version being released
+
+function PrintUsage()
+{
+  echo "example:";
+  echo "  ./make_bin_release ~/sharppcap_releases 2.0.0";
+}
+
+if [ "$#" -ne 2 ]; then
+  PrintUsage
+  exit
+fi
+
+baseOutputDirectory=$1
+releaseVersion=$2
+
+binDirectory=${baseOutputDirectory}/bin
+dirName=SharpPcap-${releaseVersion}
+releaseDirectory=${binDirectory}/${dirName}
+
+mkdir ${binDirectory}
+mkdir ${releaseDirectory}
+
+debugDirectory=${releaseDirectory}/Debug
+releaseDirectory=${releaseDirectory}/Release
+
+mkdir ${debugDirectory}
+mkdir ${releaseDirectory}
+
+# copy the assembly files over
+cp SharpPcap/bin/Debug/SharpPcap.dll ${debugDirectory}
+cp SharpPcap/bin/Release/SharpPcap.dll ${releaseDirectory}
+
+# copy the .config files over for Mono support
+cp SharpPcap/SharpPcap.dll.config ${debugDirectory}
+cp SharpPcap/SharpPcap.dll.config ${releaseDirectory}
+
+# make a zip file of the binary files
+cd ${binDirectory}
+zip -r ${binDirectory}/${dirName}.bin.zip ${dirName}

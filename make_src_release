@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# script to help with building a source release package
+#
+# parameter 1 is the output directory
+# parameter 2 is the version being released
+# parameter 3 is the svn path
+#
+
+function PrintUsage()
+{
+  echo "example:";
+  echo "  ./make_src_release ~/sharppcap_releases 2.0.0 tags/SharpPcap_2_0_0";
+}
+
+if [ "$#" -ne 3 ]; then
+  PrintUsage
+  exit
+fi
+
+baseOutputDirectory=$1
+releaseVersion=$2
+svnPathPostfix=$3
+
+# setup some variables
+baseCheckoutDirectory=${baseOutputDirectory}/src
+mkdir ${baseCheckoutDirectory}
+svnPath=https://sharppcap.svn.sourceforge.net/svnroot/sharppcap/${svnPathPostfix}
+dirName=SharpPcap-${releaseVersion}
+
+# check out the files
+checkoutDirectory=${baseCheckoutDirectory}/${dirName}
+svn export ${svnPath} ${checkoutDirectory}
+
+# create a zip file of the directory
+cd ${baseCheckoutDirectory}
+zip -r ${baseCheckoutDirectory}/${dirName}.src.zip ${dirName}
