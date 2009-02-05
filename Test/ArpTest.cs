@@ -78,13 +78,12 @@ namespace Test
 
 			string device = devices[i].PcapName;
 
-			String ip = "";
+			System.Net.IPAddress ip;
 
 			while(true)
 			{
 				Console.Write("-- Please enter IP address to be resolved by ARP: ");
-				ip = Console.ReadLine();
-				if(IPUtil.IsIP(ip))
+                if(System.Net.IPAddress.TryParse(Console.ReadLine(), out ip))
 					break;
 				Console.WriteLine("Bad IP address format, please try again");
 			}
@@ -95,7 +94,7 @@ namespace Test
 			ARP arper = new ARP(device);
 			
 			//print the resolved address
-			Console.WriteLine(ip+" is at: "+arper.Resolve(ip));
+			Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
 		}
 	}
 }

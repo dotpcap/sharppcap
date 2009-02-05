@@ -148,9 +148,6 @@
     <Compile Include="Packets\IGMPPacket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\IPAddress.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\IPv4Fields.cs">
       <SubType>Code</SubType>
     </Compile>

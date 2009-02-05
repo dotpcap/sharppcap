@@ -92,11 +92,13 @@ namespace SharpPcap.Packets
 
 		}
 		/// <summary> Fetch the IGMP group address.</summary>
-		virtual public System.String GroupAddress
+		virtual public System.Net.IPAddress GroupAddress
 		{
 			get
 			{
-				return IPAddress.extract(_ipOffset + IGMPFields_Fields.IGMP_GADDR_POS, _bytes);
+                return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                                             _ipOffset + IGMPFields_Fields.IGMP_GADDR_POS,
+                                             _bytes);
 			}
 
 		}

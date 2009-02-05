@@ -31,7 +31,7 @@ namespace SharpPcap.Packets
 		public readonly static int IGMP_HEADER_LEN; // 8
 		static IGMPFields_Fields()
 		{
-			IGMP_GADDR_LEN = IPAddress.WIDTH;
+			IGMP_GADDR_LEN = IPv4Fields_Fields.IP_ADDRESS_WIDTH;
 			IGMP_MRSP_POS = IGMPFields_Fields.IGMP_CODE_POS + IGMPFields_Fields.IGMP_CODE_LEN;
 			IGMP_CSUM_POS = IGMPFields_Fields.IGMP_MRSP_POS + IGMPFields_Fields.IGMP_MRSP_LEN;
 			IGMP_GADDR_POS = IGMPFields_Fields.IGMP_CSUM_POS + IGMPFields_Fields.IGMP_CSUM_LEN;

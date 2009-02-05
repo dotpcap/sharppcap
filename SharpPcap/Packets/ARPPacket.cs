@@ -32,9 +32,9 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
 			}
-
 		}
-		virtual public int ARPProtocolType
+
+        virtual public int ARPProtocolType
 		{
 			get
 			{
@@ -45,9 +45,9 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
 			}
-
 		}
-		virtual public int ARPHwLength
+
+        virtual public int ARPHwLength
 		{
 			get
 			{
@@ -58,9 +58,9 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
 			}
-
 		}
-		virtual public int ARPProtocolLength
+
+        virtual public int ARPProtocolLength
 		{
 			get
 			{
@@ -71,9 +71,8 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
 			}
-
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
 		/// <summary> Fetch the operation code.
 		/// Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
 		/// </summary>
@@ -91,85 +90,89 @@ namespace SharpPcap.Packets
 			{
 				ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
 			}
-
 		}
-		/// <summary> Fetch the hardware source address.</summary>
+
+        /// <summary> Fetch the hardware source address.</summary>
 		virtual public long ARPSenderHwAddressAsLong
 		{
 			get
 			{
 				return ArrayHelper.extractLong(_bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
 			}
-
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
 		/// <summary> Fetch the proto sender address.</summary>
 		/// <summary> Sets the proto sender address.</summary>
-		virtual public System.String ARPSenderProtoAddress
+		virtual public System.Net.IPAddress ARPSenderProtoAddress
 		{
 			get
 			{
-				return IPAddress.extract(_ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS, _bytes);
+                return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                                             _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS,
+                                             _bytes);
 			}
 
 			set
 			{
-				IPAddress.insert(_bytes, value, _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS);
+                byte[] address = value.GetAddressBytes();
+                System.Array.Copy(address, 0, _bytes, _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS, address.Length);
 			}
-
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
 		/// <summary> Fetch the proto sender address.</summary>
 		/// <summary> Sets the proto sender address.</summary>
-		virtual public System.String ARPTargetProtoAddress
+		virtual public System.Net.IPAddress ARPTargetProtoAddress
 		{
 			get
 			{
-				return IPAddress.extract(_ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS, _bytes);
+                return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                                             _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS,
+                                             _bytes);
 			}
 
 			set
 			{
-				IPAddress.insert(_bytes, value, _ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS);
+                byte[] address = value.GetAddressBytes();
+                System.Array.Copy(address, 0, _bytes, _ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS, address.Length);
 			}
-
 		}
-		/// <summary> Fetch the arp header, excluding arp data payload.</summary>
+
+        /// <summary> Fetch the arp header, excluding arp data payload.</summary>
 		virtual public byte[] ARPHeader
 		{
 			get
 			{
 				return PacketEncoding.extractHeader(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, _bytes);
 			}
-
 		}
-		/// <summary> Fetch data portion of the arp header.</summary>
+
+        /// <summary> Fetch data portion of the arp header.</summary>
 		virtual public byte[] ARPData
 		{
 			get
 			{
 				return PacketEncoding.extractData(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, _bytes);
 			}
-
 		}
-		/// <summary> Fetch the arp header, excluding arp data payload.</summary>
+
+        /// <summary> Fetch the arp header, excluding arp data payload.</summary>
 		override public byte[] Header
 		{
 			get
 			{
 				return ARPHeader;
 			}
-
 		}
-		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
 		override public System.String Color
 		{
 			get
 			{
 				return AnsiEscapeSequences_Fields.PURPLE;
 			}
+        }
 
-		}
 		/// <summary> Create a new ARP packet.</summary>
 		public ARPPacket(int lLen, byte[] bytes)
 			: base(lLen, bytes)
