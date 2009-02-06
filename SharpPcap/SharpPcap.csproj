@@ -103,9 +103,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IPAddress.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\ARPFields.cs">
       <SubType>Code</SubType>
     </Compile>
