@@ -1,5 +1,12 @@
 Changelog
 
+v2.0.1 - ???
+- Upgraded the example projects to VS2008 format
+- Added the example projects to the main solution so the examples are built along with the SharpPcap 
+assembly and the unit tests
+- Fixed compile errors in the examples due to the large number of changes in the library
+- Removed the no longer needed Examples/SharpPcap.sln and the old assembly dll file
+
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
 - Added Mono support
