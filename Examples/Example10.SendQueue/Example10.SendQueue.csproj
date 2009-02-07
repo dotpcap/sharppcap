@@ -49,6 +49,10 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Example10.SendQueue</AssemblyName>
+    <RootNamespace>Example10.SendQueue</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -72,9 +76,13 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Example10.SendQueue</AssemblyName>
+    <RootNamespace>Example10.SendQueue</RootNamespace>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpPcap, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpPcap, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpPcap\bin\Debug\SharpPcap.dll</HintPath>
     </Reference>
@@ -93,9 +101,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Class1.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Example10.SendQueues.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -106,5 +111,7 @@
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
+    <ProjectGuid>{BBF3DECE-E4F5-44BE-BE8C-3016202B17ED}</ProjectGuid>
+    <RootNamespace>Example10.SendQueue</RootNamespace>
   </PropertyGroup>
 </Project>
