@@ -7,6 +7,9 @@ assembly and the unit tests
 - Fixed compile errors in the examples due to the large number of changes in the library
 - Removed the no longer needed Examples/SharpPcap.sln and the old assembly dll file
 - Added some svn:ignore entries to Example directories to keep the svn status output clean
+- Removed the IPAddressList class. Much of this functionality is unused.
+- Removed some unused methods of the Convert class
+- Removed unused PcapDevice.m_ip member variable and accessor
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
