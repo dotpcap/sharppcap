@@ -41,7 +41,7 @@ namespace Test
 			packet.IPProtocol = IPProtocol.IPProtocolType.UDP;
 			packet.TimeToLive = 20;
 			packet.ipv4.Id = 100;
-			packet.IPVersion = 4;
+			packet.IPVersion = IPPacket.IPVersions.IPv4;
 			packet.ipv4.IPTotalLength = bytes.Length - lLen;
 			packet.ipv4.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
 

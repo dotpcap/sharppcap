@@ -22,15 +22,26 @@ namespace SharpPcap.Packets
 	[Serializable]
 	public class IPPacket : EthernetPacket
 	{
+    	/// <summary> Code constants for internet protocol versions.
+    	/// 
+    	/// </summary>
+    	public enum IPVersions
+        {
+    		/// <summary> Internet protocol version 4.</summary>
+    		IPv4 = 4,
+    		/// <summary> Internet protocol version 6.</summary>
+    		IPv6 = 6
+    	}
+
         public IPv4Packet ipv4;
         public IPv6Packet ipv6;
 
         private void SetIPOffsetFromVersion()
         {
-            if(IPVersion == 4)
+            if(IPVersion == IPVersions.IPv4)
             {
                 _ipOffset = _ethOffset + ipv4.IPHeaderLength;
-            } else if(IPVersion == 6)
+            } else if(IPVersion == IPVersions.IPv6)
             {
                 _ipOffset = _ethOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
             } else
@@ -50,17 +61,19 @@ namespace SharpPcap.Packets
 		}
 
 		/// <summary> Get the IP version code.</summary>
-		virtual public int IPVersion
+		virtual public IPVersions IPVersion
 		{
 			get
 			{
-				return (ArrayHelper.extractInteger(_bytes, _ethOffset + IPv4Fields_Fields.IP_VER_POS, IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf;
+				return (IPVersions)((ArrayHelper.extractInteger(_bytes,
+                                                                _ethOffset + IPv4Fields_Fields.IP_VER_POS,
+                                                                IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf);
 			}
 
 			set
 			{
 				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
-				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(((value << 4) & 0xf0));
+				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
 			}
 		}
 
@@ -81,10 +94,10 @@ namespace SharpPcap.Packets
 		public IPPacket(int lLen, byte[] bytes)
 			: base(lLen, bytes)
 		{
-            if(IPVersion == 4)
+            if(IPVersion == IPVersions.IPv4)
             {
                 ipv4 = new IPv4Packet(lLen, bytes);
-            } else if(IPVersion == 6)
+            } else if(IPVersion == IPVersions.IPv6)
             {
                 ipv6 = new IPv6Packet(lLen, bytes);
             } else
@@ -206,10 +219,10 @@ namespace SharpPcap.Packets
 
 			set
 			{
-                if(IPVersion == 4)
+                if(IPVersion == IPVersions.IPv4)
                 {
                     ipv4.SourceAddress = value;
-                } else if(IPVersion == 6)
+                } else if(IPVersion == IPVersions.IPv6)
                 {
                     ipv6.SourceAddress = value;
                 } else

@@ -154,9 +154,6 @@
     <Compile Include="Packets\IPProtocol.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\IPVersions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\LinkLayer.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -81,7 +81,7 @@ namespace Test
 			tcp.IPProtocol = IPProtocol.IPProtocolType.TCP;
 			tcp.TimeToLive = 20;
 			tcp.ipv4.Id = 100;			
-			tcp.IPVersion = 4;
+			tcp.IPVersion = IPPacket.IPVersions.IPv4;
 			tcp.ipv4.IPTotalLength = bytes.Length-lLen;			//Set the correct IP length
 			tcp.ipv4.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
 
