@@ -1,8 +1,9 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using System.Collections.Generic;
+using SharpPcap;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib.Test.Example3
+namespace SharpPcap.Test.Example3
 {
 	/// <summary>
 	/// Basic capture example
@@ -15,12 +16,12 @@ namespace Tamir.IPLib.Test.Example3
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example3.BasicCap.cs", ver);
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)
@@ -52,7 +53,7 @@ namespace Tamir.IPLib.Test.Example3
 
 			//Register our handler function to the 'packet arrival' event
 			device.PcapOnPacketArrival += 
-				new SharpPcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+				new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
 			//Open the device for capturing
 			//true -- means promiscuous mode

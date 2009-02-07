@@ -1,8 +1,10 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using System.Collections.Generic;
+using System.Net;
+using SharpPcap;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib.Test.Example6
+namespace SharpPcap.Test.Example6
 {
 	/// <summary>
 	/// Basic capture example
@@ -15,13 +17,13 @@ namespace Tamir.IPLib.Test.Example6
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example6.DumpTCP.cs", ver);
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)
@@ -52,7 +54,7 @@ namespace Tamir.IPLib.Test.Example6
 
 			//Register our handler function to the 'packet arrival' event
 			device.PcapOnPacketArrival += 
-				new SharpPcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+				new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
 			//Open the device for capturing
 			//true -- means promiscuous mode
@@ -73,7 +75,7 @@ namespace Tamir.IPLib.Test.Example6
 				device.PcapDescription);
 
 			//Start capture 'INFINTE' number of packets
-			device.PcapCapture( SharpPcap.INFINITE );
+			device.PcapCapture( SharpPcap.Pcap.INFINITE );
 
 			//Close the pcap device
 			//(Note: this line will never be called since
@@ -93,8 +95,8 @@ namespace Tamir.IPLib.Test.Example6
 				int len = packet.PcapHeader.PacketLength;
 
 				TCPPacket tcp = (TCPPacket)packet;
-				string srcIp = tcp.SourceAddress;
-				string dstIp = tcp.DestinationAddress;
+				IPAddress srcIp = tcp.SourceAddress;
+				IPAddress dstIp = tcp.DestinationAddress;
 				int srcPort = tcp.SourcePort;
 				int dstPort = tcp.DestinationPort;
 

@@ -1,5 +1,6 @@
 using System;
-using Tamir.IPLib;
+using System.Collections.Generic;
+using SharpPcap;
 
 namespace Example11.SendQueue
 {
@@ -14,13 +15,13 @@ namespace Example11.SendQueue
 		[STAThread]
 		static void Main1(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example9.SendPacket.cs", ver);
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

@@ -1,8 +1,9 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using System.Collections.Generic;
+using SharpPcap;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib.Test.Example10
+namespace SharpPcap.Test.Example10
 {
 	/// <summary>
 	/// Basic capture example with no callback
@@ -15,7 +16,7 @@ namespace Tamir.IPLib.Test.Example10
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example10.SendQueues.cs", ver);
 
@@ -28,7 +29,7 @@ namespace Tamir.IPLib.Test.Example10
 			try
 			{
 				//Get an offline file pcap device
-				device = SharpPcap.GetPcapOfflineDevice( capFile );
+				device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
 				//Open the device for capturing
 				device.PcapOpen();
 			} 
@@ -73,7 +74,7 @@ namespace Tamir.IPLib.Test.Example10
 
 			int i=0;
 
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 			/* Scan the list printing every entry */
 			foreach(PcapDevice dev in devices)
 			{

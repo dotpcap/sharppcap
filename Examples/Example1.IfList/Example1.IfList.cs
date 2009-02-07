@@ -1,7 +1,8 @@
 using System;
-using Tamir.IPLib;
+using System.Collections.Generic;
+using SharpPcap;
 
-namespace Tamir.IPLib.Test.Example1
+namespace SharpPcap.Test.Example1
 {
 	/// <summary>
 	/// Obtaining the device list
@@ -14,12 +15,12 @@ namespace Tamir.IPLib.Test.Example1
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example4.IfList.cs", ver);
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

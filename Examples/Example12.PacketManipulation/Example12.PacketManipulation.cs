@@ -1,6 +1,7 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using System.Collections.Generic;
+using SharpPcap;
+using SharpPcap.Packets;
 
 namespace Example12.PacketManipulation
 {
@@ -15,13 +16,13 @@ namespace Example12.PacketManipulation
 		[STAThread]
 		static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example12.PacketManipulation.cs", ver);
 			Console.WriteLine();
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)
@@ -54,7 +55,7 @@ namespace Example12.PacketManipulation
 			{
 				Console.Write("-- Please enter an input capture file name: ");
 				string capFile = Console.ReadLine();
-				device = SharpPcap.GetPcapOfflineDevice(capFile);
+				device = SharpPcap.Pcap.GetPcapOfflineDevice(capFile);
 			}
 			else
 			{
@@ -64,7 +65,7 @@ namespace Example12.PacketManipulation
 
 			//Register our handler function to the 'packet arrival' event
 			device.PcapOnPacketArrival += 
-				new Tamir.IPLib.SharpPcap.PacketArrivalEvent(device_PcapOnPacketArrival);
+				new SharpPcap.Pcap.PacketArrivalEvent(device_PcapOnPacketArrival);
 
 			//Open the device for capturing
 			//true -- means promiscuous mode
@@ -77,7 +78,7 @@ namespace Example12.PacketManipulation
 				device.PcapDescription);
 
 			//Start capture 'INFINTE' number of packets
-			device.PcapCapture( SharpPcap.INFINITE );
+			device.PcapCapture( SharpPcap.Pcap.INFINITE );
 
 			//Close the pcap device
 			//(Note: this line will never be called since
@@ -85,7 +86,7 @@ namespace Example12.PacketManipulation
 			device.PcapClose();
 		}
 
-		private static void device_PcapOnPacketArrival(object sender, Tamir.IPLib.Packets.Packet packet)
+		private static void device_PcapOnPacketArrival(object sender, SharpPcap.Packets.Packet packet)
 		{
 			if(packet is EthernetPacket)
 			{				
@@ -101,12 +102,14 @@ namespace Example12.PacketManipulation
 					IPPacket ip = ((IPPacket)packet);
 					
 					//manipulate IP parameters
-					ip.SourceAddress = "1.2.3.4";
-					ip.DestinationAddress = "44.33.22.11";
+					ip.SourceAddress = System.Net.IPAddress.Parse("1.2.3.4");
+					ip.DestinationAddress = System.Net.IPAddress.Parse("44.33.22.11");
 					ip.TimeToLive = 11;
 
 					//Recalculate the IP checksum
-					ip.ComputeIPChecksum();
+                    //TODO: IPPacket needs to fix support for this
+                    //   after the ipv4/ipv6 changes were integrated
+//					ip.ComputeIPChecksum();
 
 					if (ip is TCPPacket)
 					{
@@ -123,7 +126,8 @@ namespace Example12.PacketManipulation
 						tcp.SequenceNumber = 800;
 
 						//Recalculate the TCP checksum
-						tcp.ComputeTCPChecksum();
+                        //TODO: TCPPacket needs this fixed after the ipv4/ipv6 changes
+//						tcp.ComputeTCPChecksum();
 					}
 
 					if (ip is UDPPacket)
@@ -135,8 +139,9 @@ namespace Example12.PacketManipulation
 						udp.DestinationPort = 8888;
 
 						//Recalculate the UDP checksum
-						udp.ComputeUDPChecksum();
-					}
+                        //TODO: UDPPacket needs this fixed after the ipv4/ipv6 changes
+//                        udp.ComputeUDPChecksum();
+                    }
 				}
 				Console.WriteLine("Manipulated packet: "+eth.ToColoredString(false));
 			}

@@ -1,8 +1,9 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using System.Collections.Generic;
+using SharpPcap;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib.Test.Example4
+namespace SharpPcap.Test.Example4
 {
 	/// <summary>
 	/// Basic capture example with no callback
@@ -15,12 +16,12 @@ namespace Tamir.IPLib.Test.Example4
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example4.BasicCapNoCallback.cs", ver);
 
 			/* Retrieve the device list */
-			PcapDeviceList devices = SharpPcap.GetAllDevices();
+			List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 			/*If no device exists, print error */
 			if(devices.Count<1)

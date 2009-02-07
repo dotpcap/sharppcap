@@ -1,8 +1,8 @@
 using System;
-using Tamir.IPLib;
-using Tamir.IPLib.Packets;
+using SharpPcap;
+using SharpPcap.Packets;
 
-namespace Tamir.IPLib.Test.Example8
+namespace SharpPcap.Test.Example8
 {
 	/// <summary>
 	/// Basic capture example
@@ -15,7 +15,7 @@ namespace Tamir.IPLib.Test.Example8
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			string ver = Tamir.IPLib.Version.GetVersionString();
+			string ver = SharpPcap.Version.GetVersionString();
 			/* Print SharpPcap version */
 			Console.WriteLine("SharpPcap {0}, Example8.ReadFile.cs", ver);
 			Console.WriteLine();
@@ -29,7 +29,7 @@ namespace Tamir.IPLib.Test.Example8
 			try
 			{
 				//Get an offline file pcap device
-				device = SharpPcap.GetPcapOfflineDevice( capFile );
+				device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
 				//Open the device for capturing
 				device.PcapOpen();
 			} 
@@ -41,7 +41,7 @@ namespace Tamir.IPLib.Test.Example8
 
 			//Register our handler function to the 'packet arrival' event
 			device.PcapOnPacketArrival += 
-				new SharpPcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+				new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
 			Console.WriteLine();
 			Console.WriteLine
@@ -50,7 +50,7 @@ namespace Tamir.IPLib.Test.Example8
 
 			//Start capture 'INFINTE' number of packets
 			//This method will return when EOF reached.
-			device.PcapCapture( SharpPcap.INFINITE );
+			device.PcapCapture( SharpPcap.Pcap.INFINITE );
 
 			//Close the pcap device
 			device.PcapClose();
