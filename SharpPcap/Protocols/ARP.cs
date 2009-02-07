@@ -202,7 +202,7 @@ namespace SharpPcap.Protocols
 			arp.ARPSenderProtoAddress = localIP;
 			// ether fields
 			arp.SourceHwAddress = localMAC;
-			arp.EthernetProtocol = EthernetProtocols_Fields.ARP;
+			arp.EthernetProtocol = EthernetPacket.EtherType.ARP;
 			return arp;
 		}
 	}

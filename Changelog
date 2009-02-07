@@ -13,6 +13,8 @@ assembly and the unit tests
 - Removed unnecessary Packets/SupportClass.cs
 - Moved TypesOfService_Fields into IPv4Packet as this field is IPv4 specific. Removed 
 Packets/TypesOfService.cs
+- Renamed 'public struct EthernetProtocols_Fields' to 'public struct EtherType' and moved the struct inside 
+of class EthernetPacket for better encapsulation. Removed EthernetProtocols.cs and EthernetProtocol.cs.
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly

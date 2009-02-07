@@ -36,7 +36,7 @@ namespace SharpPcap.Packets
 			if (offset == -1)
             {
 				// if there is no embedded protocol, assume IP?
-				ethProtocol = EthernetProtocols_Fields.IP;
+				ethProtocol = EthernetPacket.EtherType.IP;
             } else
             {
 				ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
@@ -46,11 +46,11 @@ namespace SharpPcap.Packets
 			switch (ethProtocol)
 			{
 				// arp
-				case EthernetProtocols_Fields.ARP:
+				case EthernetPacket.EtherType.ARP:
 					return new ARPPacket(lLen, bytes, tv);
 
-                case EthernetProtocols_Fields.IPV6:
-                case EthernetProtocols_Fields.IP:
+                case EthernetPacket.EtherType.IPV6:
+                case EthernetPacket.EtherType.IP:
 					// ethernet level code is recognized as IP, figure out what kind..
 					int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
 					switch (ipProtocol)

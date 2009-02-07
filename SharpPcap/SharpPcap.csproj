@@ -115,12 +115,6 @@
     <Compile Include="Packets\EthernetPacket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\EthernetProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\EthernetProtocols.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\ICMPFields.cs">
       <SubType>Code</SubType>
     </Compile>

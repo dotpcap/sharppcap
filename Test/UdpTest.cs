@@ -30,7 +30,7 @@ namespace Test
 			// NOTE: the source hw address will be filled in by the network stack or the
 			//       network hardware
 //			packet.SourceHwAddress = device.MacAddress;
-			packet.EthernetProtocol = EthernetProtocols_Fields.IP;
+			packet.EthernetProtocol = EthernetPacket.EtherType.IP;
 
 			//IP Fields
 			packet.DestinationAddress = System.Net.IPAddress.Parse("58.100.187.167");
