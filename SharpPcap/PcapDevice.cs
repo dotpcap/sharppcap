@@ -40,6 +40,22 @@ namespace SharpPcap
 	/// </summary>
 	public class PcapDevice
 	{
+    	/// <summary>
+    	/// The working mode of a Pcap device
+    	/// </summary>
+    	public enum PcapMode
+    	{
+    		/// <summary>
+    		/// Set a Pcap device to Capture mode (MODE_CAPT)
+    		/// </summary>
+    		Capture,
+
+    		/// <summary>
+    		/// Set a Pcap device to Statistics mode (MODE_STAT)
+    		/// </summary>
+    		Statistics
+    	};
+
 		private Pcap.PcapInterface m_pcapIf;
 
 		private IntPtr		m_pcapAdapterHandle = IntPtr.Zero;
@@ -47,7 +63,6 @@ namespace SharpPcap
 		private bool		m_pcapStarted		= false;
 		private PcapMode	m_pcapMode			= PcapMode.Capture;
 		private int			m_pcapPacketCount	= Pcap.INFINITE;//Infinite
-		private int			m_ip	= 0;//just for fun
 		private int			m_mask	= 0;//for filter expression
 
 		//For thread synchronization
@@ -114,11 +129,6 @@ namespace SharpPcap
 			get{return (PcapFlags&Pcap.PCAP_IF_LOOPBACK)==1;}
 		}
 
-		public virtual string PcapIpAddress
-		{
-			get{return Util.Convert.IpInt32ToString(m_ip);}
-		}
-
 		/// <summary>
 		/// The underlying pcap device handle
 		/// </summary>
@@ -157,7 +167,7 @@ namespace SharpPcap
 			get{return m_pcapStarted;}
 		}
 
-		public virtual PcapMode PcapMode
+		public virtual PcapMode Mode
 		{
 			get{return m_pcapMode;}
 			set
@@ -432,7 +442,7 @@ namespace SharpPcap
 		private void SendPacketArrivalEvent(Packet p)
 		{
 			//If mode is MODE_CAP:
-			if(PcapMode==PcapMode.Capture)
+			if(Mode==PcapMode.Capture)
 			{
 				if(PcapOnPacketArrival != null )
 				{
@@ -441,7 +451,7 @@ namespace SharpPcap
 				}
 			}
 			//else mode is MODE_STAT
-			else if(PcapMode==PcapMode.Statistics)
+			else if(Mode==PcapMode.Statistics)
 			{
 				if(PcapOnPcapStatistics != null)
 				{
@@ -475,7 +485,7 @@ namespace SharpPcap
 			IntPtr program = IntPtr.Zero;
 			//Alocate an unmanaged buffer
 			program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
-			//compile the expreesions
+			//compile the expressions
 			res = Pcap.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
 			//watch for errors
 			if(res<0)

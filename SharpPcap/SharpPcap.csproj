@@ -223,9 +223,6 @@
     <Compile Include="PcapHeader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PcapOfflineDevice.cs">
       <SubType>Code</SubType>
     </Compile>
