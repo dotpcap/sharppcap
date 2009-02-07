@@ -59,8 +59,9 @@ namespace SharpPcap.Packets
 		/// <summary> Generate a random MAC address.</summary>
 		public static long random()
 		{
-			//UPGRADE_WARNING: Data types in Visual C# might be different.  Verify the accuracy of narrowing conversions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1042'"
-			return (long)(0xffffffffffffL * SupportClass.Random.NextDouble());
+            System.Random rand = new System.Random();
+            rand.NextDouble();
+			return (long)(0xffffffffffffL * rand.NextDouble());
 		}
 
 		/// <summary> The width in bytes of a MAC address.</summary>

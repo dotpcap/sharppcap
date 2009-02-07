@@ -10,6 +10,7 @@ assembly and the unit tests
 - Removed the IPAddressList class. Much of this functionality is unused.
 - Removed some unused methods of the Convert class
 - Removed unused PcapDevice.m_ip member variable and accessor
+- Removed unnecessary Packets/SupportClass.cs
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
