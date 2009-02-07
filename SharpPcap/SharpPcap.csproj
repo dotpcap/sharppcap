@@ -247,9 +247,6 @@
     <Compile Include="Util\Int64Range.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Util\IPAddressList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Util\IPAddressRange.cs">
       <SubType>Code</SubType>
     </Compile>
