@@ -1,6 +1,6 @@
 Changelog
 
-v2.0.1 - ???
+v2.0.1 - 20090207
 - Upgraded the example projects to VS2008 format
 - Added the example projects to the main solution so the examples are built along with the SharpPcap 
 assembly and the unit tests
