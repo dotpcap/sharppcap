@@ -36,17 +36,7 @@ namespace SharpPcap.Util
 	/// </summary>
 	public class Convert
 	{
-		public static byte[] GetBytes(string str)
-		{
-			return Encoding.Default.GetBytes(str);
-		}
-
-		public static string GetString(byte[] bytes)
-		{
-			return Encoding.Default.GetString(bytes, 0, bytes.Length);
-		}
-
-		//From: http://www.ip2location.com/README-IP-COUNTRY.htm
+        //From: http://www.ip2location.com/README-IP-COUNTRY.htm
 		public static uint IpStringToInt32(string DottedIP)
 		{
 			int i;
@@ -65,20 +55,6 @@ namespace SharpPcap.Util
 				}
 				return (uint)num;
 			}
-		}
-
-		public static string IpInt32ToString(uint ip)
-		{
-			uint w =  ( ip / 16777216 ) % 256;
-			uint x =  ( ip / 65536    ) % 256;
-			uint y =  ( ip / 256      ) % 256;
-			uint z =  ( ip            ) % 256;
-			return (w+"."+x+"."+y+"."+z);
-		}
-
-		public static string IpInt32ToString(int ip)
-		{
-			return IpInt32ToString((uint)ip);
 		}
 
 		/// <summary>
