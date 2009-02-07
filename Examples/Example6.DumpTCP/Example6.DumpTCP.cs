@@ -95,8 +95,8 @@ namespace SharpPcap.Test.Example6
 				int len = packet.PcapHeader.PacketLength;
 
 				TCPPacket tcp = (TCPPacket)packet;
-				IPAddress srcIp = tcp.SourceAddress;
-				IPAddress dstIp = tcp.DestinationAddress;
+				System.Net.IPAddress srcIp = tcp.SourceAddress;
+				System.Net.IPAddress dstIp = tcp.DestinationAddress;
 				int srcPort = tcp.SourcePort;
 				int dstPort = tcp.DestinationPort;
 
