@@ -5,6 +5,26 @@ namespace SharpPcap.Packets
 {
 	public class IPv4Packet : EthernetPacket
 	{
+    	/// <summary> Type of service code constants for IP. Type of service describes 
+    	/// how a packet should be handled.
+    	/// <p>
+    	/// TOS is an 8-bit record in an IP header which contains a 3-bit 
+    	/// precendence field, 4 TOS bit fields and a 0 bit.
+    	/// <p>
+    	/// The following constants are bit masks which can be logically and'ed
+    	/// with the 8-bit IP TOS field to determine what type of service is set.
+    	/// <p>
+    	/// Taken from TCP/IP Illustrated V1 by Richard Stevens, p34.
+    	/// 
+    	/// </summary>
+    	public struct TypesOfService_Fields{
+    		public readonly static int MINIMIZE_DELAY = 0x10;
+    		public readonly static int MAXIMIZE_THROUGHPUT = 0x08;
+    		public readonly static int MAXIMIZE_RELIABILITY = 0x04;
+    		public readonly static int MINIMIZE_MONETARY_COST = 0x02;
+    		public readonly static int UNUSED = 0x01;
+    	}
+
         public static int ipVersion = 4;
 
 		/// <summary>

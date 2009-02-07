@@ -11,6 +11,8 @@ assembly and the unit tests
 - Removed some unused methods of the Convert class
 - Removed unused PcapDevice.m_ip member variable and accessor
 - Removed unnecessary Packets/SupportClass.cs
+- Moved TypesOfService_Fields into IPv4Packet as this field is IPv4 specific. Removed 
+Packets/TypesOfService.cs
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly

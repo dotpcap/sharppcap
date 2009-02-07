@@ -190,9 +190,6 @@
     <Compile Include="Packets\TCPPacket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\TypesOfService.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\UDPFields.cs">
       <SubType>Code</SubType>
     </Compile>
