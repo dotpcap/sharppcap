@@ -205,7 +205,12 @@ namespace SharpPcap.Packets
 		public virtual void OnOffsetChanged()
 		{
 			if(PcapHeader!=null)
-				PcapHeader = new PcapHeader(PcapHeader.Seconds, PcapHeader.MicroSeconds, _bytes.Length, _bytes.Length);
+            {
+				PcapHeader = new PcapHeader(PcapHeader.Seconds,
+                                            PcapHeader.MicroSeconds,
+                                            (uint)_bytes.Length,
+                                            (uint)_bytes.Length);
+            }
 		}
 
 		/// <summary> Fetch the timeval containing the time the packet arrived on the 

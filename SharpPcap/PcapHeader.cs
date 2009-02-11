@@ -39,6 +39,7 @@ namespace SharpPcap
 		/// The underlying pcap_pkthdr structure
 		/// </summary>
 		internal PcapUnmanagedStructures.pcap_pkthdr m_pcap_pkthdr;
+
 		/// <summary>
 		/// Constructs a new PcapHeader
 		/// </summary>
@@ -46,6 +47,7 @@ namespace SharpPcap
 		{
 			m_pcap_pkthdr = new PcapUnmanagedStructures.pcap_pkthdr();
 		}
+
 		/// <summary>
 		/// Constructs a new PcapHeader
 		/// </summary>
@@ -54,6 +56,7 @@ namespace SharpPcap
 		{
 			this.m_pcap_pkthdr = m_pcap_pkthdr;
 		}
+
 		/// <summary>
 		/// Constructs a new PcapHeader
 		/// </summary>
@@ -61,42 +64,44 @@ namespace SharpPcap
 		/// <param name="microseconds">The microseconds value of the packet's timestamp</param>
 		/// <param name="packetLength">The actual length of the packet</param>
 		/// <param name="captureLength">The length of the capture</param>
-		public PcapHeader( int seconds, int microseconds, int packetLength, int captureLength )
+		public PcapHeader( ulong seconds, ulong microseconds, uint packetLength, uint captureLength )
 		{
-			this.m_pcap_pkthdr.tv_sec		=	seconds;
-			this.m_pcap_pkthdr.tv_usec	=	microseconds;
-			this.m_pcap_pkthdr.len		=	packetLength;
-			this.m_pcap_pkthdr.caplen		=	captureLength;
+			this.m_pcap_pkthdr.ts.tv_sec    =	(IntPtr)seconds;
+			this.m_pcap_pkthdr.ts.tv_usec   =	(IntPtr)microseconds;
+			this.m_pcap_pkthdr.len          =	packetLength;
+			this.m_pcap_pkthdr.caplen       =	captureLength;
 		}
+
 		/// <summary>
 		/// The seconds value of the packet's timestamp
 		/// </summary>
-		public int Seconds
+		public ulong Seconds
 		{
-			get{return m_pcap_pkthdr.tv_sec;}
-			set{m_pcap_pkthdr.tv_sec=value;}
+			get{return (ulong)m_pcap_pkthdr.ts.tv_sec;}
+			set{m_pcap_pkthdr.ts.tv_sec = (IntPtr)value;}
 		}
+
 		/// <summary>
 		/// The microseconds value of the packet's timestamp
 		/// </summary>
-		public int MicroSeconds
+		public ulong MicroSeconds
 		{
-			get{return m_pcap_pkthdr.tv_usec;}
-			set{m_pcap_pkthdr.tv_usec=value;}
+			get{return (ulong)m_pcap_pkthdr.ts.tv_usec;}
+			set{m_pcap_pkthdr.ts.tv_usec = (IntPtr)value;}
 		}
 
 		/// <summary>
 		/// The actual length of the packet
 		/// </summary>
-		public int PacketLength
+		public uint PacketLength
 		{
-			get{return m_pcap_pkthdr.len;}
-			set{m_pcap_pkthdr.len=value;}
+			get {return m_pcap_pkthdr.len;}
+			set {m_pcap_pkthdr.len=value;}
 		}
 		/// <summary>
 		/// The length of the capture
 		/// </summary>
-		public int CaptureLength
+		public uint CaptureLength
 		{
 			get{return m_pcap_pkthdr.caplen;}
 			set{m_pcap_pkthdr.caplen=value;}

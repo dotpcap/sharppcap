@@ -66,7 +66,7 @@ namespace SharpPcap
 			}
 
 			if(pcapHdr.caplen==0)
-				pcapHdr.caplen = packet.Length;//set the length in the header field
+				pcapHdr.caplen = (uint)packet.Length;//set the length in the header field
 
 			//Marshal packet
 			IntPtr pktPtr;
@@ -124,8 +124,8 @@ namespace SharpPcap
 		public bool Add( byte[] packet, int seconds, int microseconds )
 		{
 			PcapUnmanagedStructures.pcap_pkthdr hdr = new SharpPcap.PcapUnmanagedStructures.pcap_pkthdr();
-			hdr.tv_sec=seconds;
-			hdr.tv_usec=microseconds;
+			hdr.ts.tv_sec = (IntPtr)seconds;
+			hdr.ts.tv_usec = (IntPtr)microseconds;
 			return this.Add( packet, hdr );
 		}
 

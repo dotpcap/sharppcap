@@ -9,7 +9,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 	/// Item in a list of interfaces.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		public struct pcap_if 
+	public struct pcap_if 
 	{
 		public IntPtr /* pcap_if* */	Next;			
 		public string					Name;			/* name to hand to "pcap_open_live()" */				
@@ -22,7 +22,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 	/// Representation of an interface address.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		public struct pcap_addr 
+	public struct pcap_addr 
 	{
 		public IntPtr /* pcap_addr* */	Next;
 		public IntPtr /* sockaddr * */	Addr;		/* address */
@@ -36,7 +36,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 	/// 'struct sockaddr'
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		internal struct sockaddr 
+	internal struct sockaddr 
 	{
 		public UInt16		sa_family;       /* address family */
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst=14)]
@@ -49,7 +49,7 @@ namespace SharpPcap.PcapUnmanagedStructures
     /// 'struct sockaddr_in6'
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-        internal struct sockaddr_in6
+    internal struct sockaddr_in6
     {
         public UInt16       sin6_family;    /* address family */
         public UInt16       sin6_port;      /* Transport layer port # */
@@ -57,19 +57,29 @@ namespace SharpPcap.PcapUnmanagedStructures
         [MarshalAs(UnmanagedType.ByValArray, SizeConst=16)]
         public byte[]       sin6_addr;      /* IPv6 address */
         public UInt32       sin6_scope_id;  /* scope id (new in RFC2553) */
-    };
+    };
+    [StructLayout(LayoutKind.Sequential)]    
+    public struct timeval
+    {
+        // NOTE: The use of IntPtr here is due to the issue with the timeval structure
+        //       The timeval structure contains long values, which differ between 32 bit and
+        //       64 bit platforms. One trick, thanks to Jon Pryor for the suggestion, is to
+        //       use IntPtr. The size of IntPtr will change depending on the platform the
+        //       code runs on, so it should handle the size properly on both 64 bit and 32 bit platforms.
+        public IntPtr tv_sec;
+        public IntPtr tv_usec;
+    };
+
 	/// <summary>
 	/// Each packet in the dump file is prepended with this generic header.
 	/// This gets around the problem of different headers for different
 	/// packet interfaces.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		public struct pcap_pkthdr 
-	{											//timestamp
-		public int		tv_sec;				///< seconds
-		public int		tv_usec;			///< microseconds
-		public int		caplen;			/* length of portion present */
-		public int		len;			/* length this packet (off wire) */
+    public struct pcap_pkthdr 
+    {
+        public timeval  ts;             /* time stamp */
+        public UInt32   caplen;         /* length of portion present */        public UInt32   len;            /* length this packet (off wire) */
 	};
 
 	/// <summary>
@@ -78,7 +88,7 @@ namespace SharpPcap.PcapUnmanagedStructures
     ///        unmanaged byte array
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		internal struct PCAP_PKTDATA
+	internal struct PCAP_PKTDATA
 	{	
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst=SharpPcap.Pcap.MAX_PACKET_SIZE)]						
 		public byte[]		bytes;
@@ -88,7 +98,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 	/// A BPF pseudo-assembly program for packet filtering
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		internal struct bpf_program 
+	internal struct bpf_program 
 	{
 		public uint bf_len;                
 		public IntPtr /* bpf_insn **/ bf_insns;  
@@ -98,7 +108,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 	/// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-		internal struct pcap_send_queue 
+	internal struct pcap_send_queue 
 	{
 		public uint maxlen;   
         public uint len;   

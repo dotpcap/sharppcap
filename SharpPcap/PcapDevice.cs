@@ -340,7 +340,7 @@ namespace SharpPcap
 
 			//Get a packet from winpcap
 			res = Pcap.pcap_next_ex( PcapHandle, ref header, ref data);
-			p=null;
+			p = null;
 
 			if(res>0)
 			{
@@ -350,11 +350,12 @@ namespace SharpPcap
 					PcapUnmanagedStructures.pcap_pkthdr pkt_header =
                         (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure( header,
                                                                                     typeof(PcapUnmanagedStructures.pcap_pkthdr) );
-					//SharpPcap.PCAP_PKTDATA pkt_data = (SharpPcap.PCAP_PKTDATA)Marshal.PtrToStructure( data, typeof(SharpPcap.PCAP_PKTDATA) );
 					byte[] pkt_data = new byte[pkt_header.caplen];
-					Marshal.Copy(data, pkt_data, 0, pkt_header.caplen);
-					p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data, new Packets.Util.Timeval(pkt_header.tv_sec, pkt_header.tv_usec));
-					p.PcapHeader = new PcapHeader( pkt_header );
+					Marshal.Copy(data, pkt_data, 0, (int)pkt_header.caplen);
+					p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data,
+                                                           new Packets.Util.Timeval((ulong)pkt_header.ts.tv_sec,
+                                                                                    (ulong)pkt_header.ts.tv_usec));
+                    p.PcapHeader = new PcapHeader( pkt_header );
 				}
 			}
 			return res;
@@ -576,7 +577,7 @@ namespace SharpPcap
 		/// <param name="p">The packet to write</param>
 		public void PcapDump(byte[] p)
 		{
-			PcapDump(p, new PcapHeader(0, 0, p.Length,p.Length));
+			PcapDump(p, new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length));
 		}
 
 		/// <summary>

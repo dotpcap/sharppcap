@@ -86,24 +86,26 @@ namespace SharpPcap
 		/// <summary>
 		/// The 'Seconds' part of the timestamp
 		/// </summary>
-		public int Seconds
+        public ulong Seconds
 		{
 			get
 			{
-				return m_pktHdr.tv_sec;
+				return (ulong)m_pktHdr.ts.tv_sec;
 			}			
 		}
-		/// <summary>
+
+        /// <summary>
 		/// The 'MicroSeconds' part of the timestamp
 		/// </summary>
-		public int MicroSeconds
+		public ulong MicroSeconds
 		{
 			get
 			{
-				return m_pktHdr.tv_usec;
+				return (ulong)m_pktHdr.ts.tv_usec;
 			}			
 		}
-		/// <summary>
+
+        /// <summary>
 		/// The timestamps
 		/// </summary>
 		public System.DateTime Date

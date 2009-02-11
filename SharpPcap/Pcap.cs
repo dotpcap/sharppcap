@@ -241,7 +241,7 @@ namespace SharpPcap
                     (pcap_pkthdr)Marshal.PtrToStructure( header,
                                                                                 typeof(pcap_pkthdr) );
 				/* convert the timestamp to readable format */
-				tm = new DateTime( (PktInfo.tv_usec) );				
+				tm = new DateTime( (long)(PktInfo.ts.tv_usec) );				
 			
 				Console.WriteLine("{0}, len: {1}", tm.ToShortTimeString(), PktInfo.len);
 			}

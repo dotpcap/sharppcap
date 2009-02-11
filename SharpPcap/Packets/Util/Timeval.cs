@@ -18,13 +18,13 @@ namespace SharpPcap.Packets.Util
 			{
                 long ticksAtEpoch = new DateTime(1970, 1, 1).Ticks;
                 long microsecondsPerMillisecond = 1000;
-                long tickOffsetFromEpoch = (seconds * TimeSpan.TicksPerSecond) +
-                                           ((microseconds * TimeSpan.TicksPerMillisecond) / microsecondsPerMillisecond);
+                long tickOffsetFromEpoch = (long)(seconds * TimeSpan.TicksPerSecond) +
+                                           (((long)microseconds * TimeSpan.TicksPerMillisecond) / microsecondsPerMillisecond);
                 return new System.DateTime(ticksAtEpoch + tickOffsetFromEpoch);
 			}
 		}
 
-		virtual public long Seconds
+		virtual public ulong Seconds
 		{
 			get
 			{
@@ -33,7 +33,7 @@ namespace SharpPcap.Packets.Util
 			
 		}
 
-		virtual public int MicroSeconds
+		virtual public ulong MicroSeconds
 		{
 			get
 			{
@@ -42,7 +42,7 @@ namespace SharpPcap.Packets.Util
 			
 		}
 
-		public Timeval(long seconds, int microseconds)
+		public Timeval(ulong seconds, ulong microseconds)
 		{
 			this.seconds = seconds;
 			this.microseconds = microseconds;
@@ -59,7 +59,7 @@ namespace SharpPcap.Packets.Util
 			return sb.ToString();
 		}
 		
-		internal long seconds;
-		internal int microseconds;
+		internal ulong seconds;
+		internal ulong microseconds;
 	}
 }
