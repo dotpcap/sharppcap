@@ -44,7 +44,7 @@ If you try it on another platform and have difficulties please submit a bug on t
 	found.
 </P>
 <PRE>/* Retrieve the device list */
-PcapDeviceList devices = SharpPcap.GetAllDevices();
+List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
 
 /*If no device exists, print error */
 if(devices.Count&lt;1)
@@ -58,16 +58,7 @@ int i=0;
 /* Scan the list printing every entry */
 foreach(PcapDevice dev in devices)
 {
-    /* Description */
-    Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
-    Console.WriteLine();
-    /* Name */
-    Console.WriteLine("\tName:\t{0}",dev.PcapName);
-    /* IP Address */
-    Console.WriteLine("\tIP Address: \t\t{0}",dev.PcapIpAddress);
-    /* Is Loopback */
-    Console.WriteLine("\tLoopback: \t\t{0}",dev.PcapLoopback);
-
+    Console.Writeline("{0}", dev.ToString());
     Console.WriteLine();
     i++;
 }</PRE>
@@ -100,78 +91,6 @@ Hit 'Enter' to exit...</PRE>
 	network card on the machine. So each <CODE>PcapDevice</CODE> in the list that 
 	has IPHelper information can be casted to a <CODE>NetworkDevice</CODE> type.
 </P>
-<P>The <CODE>NetworkDevice</CODE> class contains useful information about the 
-	underlying network adapter. Similar to the 'ipconfig' command available in 
-	Windows NT , it holds IP information (IP address, subnet mask and default 
-	gateway), the MAC address (physical address) of the adapter, DHCP and WINS 
-	information.
-</P>
-<P>The following sample go over each <CODE>PcapDevice</CODE> in the list and prints 
-	its basic pcap information. Later, if the device is actually a <CODE>NetworkDevice</CODE>, 
-	it casts and then prints the device's advanced information.
-</P>
-<PRE>/* Scan the list printing every entry */
-foreach(PcapDevice dev in devices)
-{
-    /* Description */
-    Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
-    Console.WriteLine();
-    /* Name */
-    Console.WriteLine("\tName:\t\t{0}",dev.PcapName);
-    /* Is Loopback */
-    Console.WriteLine("\tLoopback:\t\t{0}",dev.PcapLoopback);
-
-    /* 
-    If the device is a physical network device,
-    lets print some advanced info
-    */
-    if(dev is NetworkDevice)
-    {//Then..
-
-        /* Cast to NetworkDevice */
-        NetworkDevice netDev = (NetworkDevice)dev;
-        /* Print advanced info */
-        Console.WriteLine("\tIP Address:\t\t{0}",netDev.IpAddress);
-        Console.WriteLine("\tSubnet Mask:\t\t{0}",netDev.SubnetMask);
-        Console.WriteLine("\tMAC Address:\t\t{0}",netDev.MacAddress);
-        Console.WriteLine("\tDefault Gateway:\t{0}",netDev.DefaultGateway);
-        Console.WriteLine("\tPrimary WINS:\t\t{0}",netDev.WinsServerPrimary);
-        Console.WriteLine("\tSecondary WINS:\t\t{0}",netDev.WinsServerSecondary);
-        Console.WriteLine("\tDHCP Enabled:\t\t{0}",netDev.DhcpEnabled);
-        Console.WriteLine("\tDHCP Server:\t\t{0}",netDev.DhcpServer);
-        Console.WriteLine("\tDHCP Lease Obtained:\t{0}",netDev.DhcpLeaseObtained);
-        Console.WriteLine("\tDHCP Lease Expires:\t{0}",netDev.DhcpLeaseExpires);
-    }
-    Console.WriteLine();
-    i++;
-}</PRE>
-<P>And here is a sample output:</P>
-<PRE>SharpPcap 1.0.2.0, Example4.IfListAdv.cs
-
-The following devices are available on this machine:
-----------------------------------------------------
-
-0) Generic dialup adapter
-
-        Name:           \Device\NPF_GenericDialupAdapter
-        Loopback:               False
-
-1) Intel(R) PRO/1000 MT Mobile Connection (Microsoft's Packet Scheduler)
-
-        Name:           \Device\NPF_{355BF264-B768-454A-84BC-096A44F0ADA9}
-        Loopback:               False
-        IP Address:             10.10.10.100
-        Subnet Mask:            255.255.255.0
-        MAC Address:            000D60CDB2A5
-        Default Gateway:        10.10.10.1
-        Primary WINS:           1.1.1.1
-        Secondary WINS:         2.2.2.2
-        DHCP Enabled:           True
-        DHCP Server:            10.10.10.1
-        DHCP Lease Obtained:    27-Nov-05 11:13:55
-        DHCP Lease Expires:     30-Nov-05 11:13:55
-
-Hit 'Enter' to exit...</PRE>
 <H3 id="basicCap">3. Opening an adapter and capturing packets</H3>
 <P>Now that we've seen how to obtain an adapter to play with, let's start the real 
 	job, opening an adapter and capturing some traffic. In this section we'll write 
@@ -399,8 +318,8 @@ private static void device_PcapOnPacketArrival(object sender, Packet packet)
         int len = packet.PcapHeader.len;
 
         TCPPacket tcp = (TCPPacket)packet;
-        string srcIp = tcp.SourceAddress;
-        string dstIp = tcp.DestinationAddress;
+        System.Net.IPAddress srcIp = tcp.SourceAddress;
+        System.Net.IPAddress dstIp = tcp.DestinationAddress;
         int srcPort = tcp.SourcePort;
         int dstPort = tcp.DestinationPort;
 
@@ -532,7 +451,7 @@ PcapDevice device;
 try
 {
     //Get an offline file pcap device
-    device = SharpPcap.GetPcapOfflineDevice( capFile );
+    device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
     //Open the device for capturing
     device.PcapOpen();
 } 
@@ -637,7 +556,7 @@ Console.WriteLine("-- Device closed.");</PRE>
 try
 {
     //Get an offline file pcap device
-    device = SharpPcap.GetPcapOfflineDevice( capFile );
+    device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
     //Open the device for capturing
     device.PcapOpen();
 } 
@@ -682,7 +601,7 @@ Console.WriteLine();
 
 int i=0;
 
-PcapDeviceList devices = SharpPcap.GetAllDevices();
+List<PcapDevice> devices = SharpPcap.GetAllDevices();
 /* Scan the list printing every entry */
 foreach(PcapDevice dev in devices)
 {
