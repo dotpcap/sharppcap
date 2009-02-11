@@ -86,8 +86,8 @@ namespace SharpPcap.Test.Example11
 			Console.ReadLine();
 		}
 
-		static int oldSec=0;
-		static int oldUsec=0;
+		static ulong oldSec=0;
+		static ulong oldUsec=0;
 		/// <summary>
 		/// Gets a pcap stat object and calculate bps and pps
 		/// </summary>
@@ -95,9 +95,9 @@ namespace SharpPcap.Test.Example11
 		{
 			/* Calculate the delay in microseconds from the last sample. */
 			/* This value is obtained from the timestamp that's associated with the sample. */
-			int delay=(statistics.Seconds - oldSec) * 1000000 - oldUsec + statistics.MicroSeconds;
+			ulong delay = (statistics.Seconds - oldSec) * 1000000 - oldUsec + statistics.MicroSeconds;
 			/* Get the number of Bits per second */
-			long bps =  ( statistics.RecievedBytes * 8 * 1000000) / delay;
+			ulong bps = ((ulong)statistics.RecievedBytes * 8 * 1000000) / delay;
 			/*										 ^       ^
 													 |		 |
 													 |		 | 
@@ -108,7 +108,7 @@ namespace SharpPcap.Test.Example11
 			*/
 
 			/* Get the number of Packets per second */
-			long pps=(statistics.RecievedPackets * 1000000) / delay;
+			ulong pps = ((ulong)statistics.RecievedPackets * 1000000) / delay;
 
 			/* Convert the timestamp to readable format */
 			string ts = statistics.Date.ToLongTimeString();

@@ -88,7 +88,7 @@ namespace SharpPcap.Test.Example5
 		private static void device_PcapOnPacketArrival(object sender, Packet packet)
 		{
 			DateTime time = packet.PcapHeader.Date;
-			int len = packet.PcapHeader.PacketLength;
+			uint len = packet.PcapHeader.PacketLength;
 			Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
 				time.Hour, time.Minute, time.Second, time.Millisecond, len);
 		}

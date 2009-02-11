@@ -16,8 +16,8 @@ namespace Test
             Console.WriteLine(tcp.SourceHwAddress);
 
             EthernetPacket e = (EthernetPacket)p;            
-            Assert.AreEqual(e.SourceHwAddress, "00:13:10:03:71:47");
-            Assert.AreEqual(e.DestinationHwAddress, "00:e0:4c:e5:73:ad");
+            Assert.AreEqual("00:13:10:03:71:47", e.SourceHwAddress);
+            Assert.AreEqual("00:e0:4c:e5:73:ad", e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
             Assert.AreEqual(System.Net.IPAddress.Parse("82.165.240.134"), ip.SourceAddress);
@@ -30,12 +30,12 @@ namespace Test
             Console.WriteLine(p.ToString());
 
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(e.SourceHwAddress, "00:16:cf:c9:1e:29");
-            Assert.AreEqual(e.DestinationHwAddress,"00:14:bf:f2:ef:0a");
+            Assert.AreEqual("00:16:cf:c9:1e:29", e.SourceHwAddress);
+            Assert.AreEqual("00:14:bf:f2:ef:0a", e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
-            Assert.AreEqual(ip.SourceAddress, System.Net.IPAddress.Parse("192.168.1.104"));
-            Assert.AreEqual(ip.DestinationAddress, System.Net.IPAddress.Parse("86.42.196.13"));
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
+            Assert.AreEqual(System.Net.IPAddress.Parse("86.42.196.13"), ip.DestinationAddress);
         }
 
         // udp
@@ -43,8 +43,8 @@ namespace Test
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(e.SourceHwAddress, "00:14:bf:f2:ef:0a");
-            Assert.AreEqual(e.DestinationHwAddress, "00:16:cf:c9:1e:29");
+            Assert.AreEqual("00:14:bf:f2:ef:0a", e.SourceHwAddress);
+            Assert.AreEqual("00:16:cf:c9:1e:29", e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
             Assert.AreEqual(System.Net.IPAddress.Parse("172.210.164.56"), ip.SourceAddress);
@@ -56,8 +56,8 @@ namespace Test
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(e.SourceHwAddress, "00;16:cf:c9:1e:29");
-            Assert.AreEqual(e.DestinationHwAddress, "00:14:bf:f2:ef:0a");
+            Assert.AreEqual( "00:16:cf:c9:1e:29", e.SourceHwAddress);
+            Assert.AreEqual("00:14:bf:f2:ef:0a", e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
@@ -69,8 +69,8 @@ namespace Test
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(e.SourceHwAddress, "00:18:f8:4b:17:a0");
-            Assert.AreEqual(e.DestinationHwAddress, "ff:ff:ff:ff:ff:ff");
+            Assert.AreEqual("00:18:f8:4b:17:a0", e.SourceHwAddress);
+            Assert.AreEqual("ff:ff:ff:ff:ff:ff", e.DestinationHwAddress);
         }
 
         // icmp
@@ -78,8 +78,8 @@ namespace Test
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(e.SourceHwAddress, "00:16:cf:c9:1e:29");
-            Assert.AreEqual(e.DestinationHwAddress, "00:14:bf:f2:ef:0a");
+            Assert.AreEqual("00:16:cf:c9:1e:29", e.SourceHwAddress);
+            Assert.AreEqual("00:14:bf:f2:ef:0a", e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);

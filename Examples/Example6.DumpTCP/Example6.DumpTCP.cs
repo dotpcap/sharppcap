@@ -92,7 +92,7 @@ namespace SharpPcap.Test.Example6
 			if(packet is TCPPacket)
 			{				
 				DateTime time = packet.PcapHeader.Date;
-				int len = packet.PcapHeader.PacketLength;
+				uint len = packet.PcapHeader.PacketLength;
 
 				TCPPacket tcp = (TCPPacket)packet;
 				System.Net.IPAddress srcIp = tcp.SourceAddress;
