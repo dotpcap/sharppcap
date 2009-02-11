@@ -280,18 +280,6 @@ namespace SharpPcap
 			}
 		}
 
-//		/// <summary>
-//		/// This method blocks until the capturing process is stopped
-//		/// </summary>
-//		public virtual void WaitForStop()
-//		{
-//			if (PcapStarted)
-//			{
-//				m_pcapThreadEvent.Reset();
-//				m_pcapThreadEvent.WaitOne();
-//			}
-//		}
-
 		/// <summary>
 		/// Closes this adapter
 		/// </summary>
