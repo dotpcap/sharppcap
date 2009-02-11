@@ -103,9 +103,11 @@ namespace SharpPcap
 				string err = "Unable to open offline adapter: "+errbuf.ToString();
 				throw new Exception( err );
 			}
+
 			//set the local handle
 			this.PcapHandle = adapterHandle;
 		}
+
 		/// <summary>
 		/// Opens the device for capture
 		/// </summary>
@@ -138,25 +140,5 @@ namespace SharpPcap
 		{
 			throw new PcapException("It is not possible to set a capture filter on an offline device");
 		}
-
-//		/// <summary>
-//		/// The underlying pcap device handle
-//		/// </summary>
-//		protected override IntPtr PcapHandle
-//		{
-//			get
-//			{
-//				return base.PcapHandle;
-//			}
-//			set
-//			{
-//				//This is an offline device so we need to close
-//				//the file handle before zeroing the handle
-//				if((value==IntPtr.Zero)&&(PcapHandle!=IntPtr.Zero))
-//					SharpPcap.pcap_close(PcapHandle);
-//				base.PcapHandle = value;
-//			}
-//		}
-
 	}
 }
