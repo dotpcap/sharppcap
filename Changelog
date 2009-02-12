@@ -1,5 +1,13 @@
 Changelog
 
+v2.0.2 - TDB
+- Modifed 'struct pcap_pkthdr' to contain a proper 'struct timeval'. Fixes a bug where 64 bit platforms 
+would see crashes when reading packets from a PcapOfflineDevice. Crash was due to a segfault because the 
+pcap_pkthdr size differed from that of the platform and the packet size was coming back as some large and 
+invalid value. The subsequent marshalling of the packet data would be out of the range of data and would 
+produce the segfault.
+- Fixed a few of the examples in the html documentation.
+
 v2.0.1 - 20090207
 - Upgraded the example projects to VS2008 format
 - Added the example projects to the main solution so the examples are built along with the SharpPcap 
