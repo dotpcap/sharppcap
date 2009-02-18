@@ -626,6 +626,9 @@ namespace SharpPcap.Packets
 			buffer.Append(" l=" + TCPHeaderLength + "," + PayloadDataLength);
 			buffer.Append(']');
 
+            // append the base class output
+            buffer.Append(base.ToColoredString(colored));
+
 			return buffer.ToString();
 		}
 
@@ -663,7 +666,10 @@ namespace SharpPcap.Packets
 			buffer.Append("uptr=0x" + System.Convert.ToString(getUrgentPointer(), 16));
 			buffer.Append(']');
 
-			return buffer.ToString();
+            // append the base class output
+            buffer.Append(base.ToColoredVerboseString(colored));
+
+            return buffer.ToString();
 		}
 
 		public static TCPPacket RandomPacket()

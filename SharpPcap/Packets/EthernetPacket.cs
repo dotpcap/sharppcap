@@ -363,7 +363,17 @@ namespace SharpPcap.Packets
 			buffer.Append(" l=" + EthernetHeaderLength); // + "," + data.length);
 			buffer.Append(']');
 
+            // append the base output
+            buffer.Append(base.ToColoredString(colored));
+
 			return buffer.ToString();
 		}
+
+        /// <summary> Convert this IP packet to a more verbose string.</summary>
+		public override System.String ToColoredVerboseString(bool colored)
+        {
+            //TODO: just output the colored output for now
+            return ToColoredString(colored);
+        }
 	}
 }

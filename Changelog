@@ -1,6 +1,9 @@
 Changelog
 
 v2.0.2 - TDB
+- Have ToColoredString() and ToColoredVerboseString() overrides call the base 
+instances of the same methods. This ensures that full output is produced from each 
+packet.
 - Introduced 'struct sockaddr_in' and modified Pcap.GetPcapAddress() to use sockaddr_in for IPv4 addresses. 
 Previously the code was incorrectly attempting to extract the address from the sockaddr directly. Fixes a user 
 reported bug where IPv4 addresses are displayed incorrectly from PcapDevice.ToString().

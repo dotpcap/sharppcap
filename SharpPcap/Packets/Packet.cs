@@ -29,34 +29,34 @@ namespace SharpPcap.Packets
 			get
 			{
 				return null;
-			}
-			
+			}			
 		}
-		virtual public System.String Color
+
+        virtual public System.String Color
 		{
 			get
 			{
 				return "";
-			}
-			
+			}			
 		}
-		virtual public Timeval Timeval
+
+        virtual public Timeval Timeval
 		{
 			get
 			{
 				return null;
-			}
-			
+			}			
 		}
-		virtual public byte[] Bytes
+
+        virtual public byte[] Bytes
 		{
 			get
 			{
 				return null;
-			}
-			
+			}			
 		}
-		virtual public PcapHeader PcapHeader
+
+        virtual public PcapHeader PcapHeader
 		{
 			get
 			{
@@ -64,19 +64,24 @@ namespace SharpPcap.Packets
 					this.pcapHeader=new PcapHeader();
 				return this.pcapHeader;
 			}
-			
+
 			set
 			{
 				this.pcapHeader = value;
-			}
-			
+			}			
 		}
-		public virtual System.String ToColoredString(bool colored)
+
+        public virtual System.String ToColoredString(bool colored)
 		{
-			return ToString();
+			return String.Empty;
 		}
-		
-		/// <summary> Fetch data portion of the packet.</summary>
+
+        public virtual System.String ToColoredVerboseString(bool colored)
+		{
+			return String.Empty;
+		}
+
+        /// <summary> Fetch data portion of the packet.</summary>
 		public virtual byte[] Data
 		{
 			get

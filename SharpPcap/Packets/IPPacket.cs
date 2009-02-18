@@ -158,7 +158,7 @@ namespace SharpPcap.Packets
 		}
 
 		/// <summary> Convert this IP packet to a more verbose string.</summary>
-		public virtual System.String ToColoredVerboseString(bool colored)
+		public override System.String ToColoredVerboseString(bool colored)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			buffer.Append('[');

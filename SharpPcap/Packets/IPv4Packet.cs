@@ -647,11 +647,14 @@ namespace SharpPcap.Packets
 			buffer.Append(" l=" + IPHeaderLength + "," + Length);
 			buffer.Append(']');
 
+            // append the base class output
+            buffer.Append(base.ToColoredString(colored));
+
 			return buffer.ToString();
 		}
 
 		/// <summary> Convert this IP packet to a more verbose string.</summary>
-		public virtual System.String ToColoredVerboseString(bool colored)
+		public override System.String ToColoredVerboseString(bool colored)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 			buffer.Append('[');
@@ -678,6 +681,9 @@ namespace SharpPcap.Packets
 			buffer.Append("src=" + SourceAddress + ", ");
 			buffer.Append("dest=" + DestinationAddress);
 			buffer.Append(']');
+
+            // append the base class output
+            buffer.Append(base.ToColoredVerboseString(colored));
 
 			return buffer.ToString();
 		}
