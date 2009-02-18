@@ -1,6 +1,9 @@
 Changelog
 
 v2.0.2 - TDB
+- Introduced 'struct sockaddr_in' and modified Pcap.GetPcapAddress() to use sockaddr_in for IPv4 addresses. 
+Previously the code was incorrectly attempting to extract the address from the sockaddr directly. Fixes a user 
+reported bug where IPv4 addresses are displayed incorrectly from PcapDevice.ToString().
 - Modifed 'struct pcap_pkthdr' to contain a proper 'struct timeval'. Fixes a bug where 64 bit platforms 
 would see crashes when reading packets from a PcapOfflineDevice. Crash was due to a segfault because the 
 pcap_pkthdr size differed from that of the platform and the packet size was coming back as some large and 

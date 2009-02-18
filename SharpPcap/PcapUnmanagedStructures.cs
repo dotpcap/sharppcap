@@ -15,7 +15,7 @@ namespace SharpPcap.PcapUnmanagedStructures
 		public string					Name;			/* name to hand to "pcap_open_live()" */				
 		public string					Description;	/* textual description of interface, or NULL */
 		public IntPtr /*pcap_addr * */	Addresses;
-		public uint						Flags;			/* PCAP_IF_ interface flags */
+		public UInt32					Flags;			/* PCAP_IF_ interface flags */
 	};
 
 	/// <summary>
@@ -31,20 +31,48 @@ namespace SharpPcap.PcapUnmanagedStructures
 		public IntPtr /* sockaddr * */	Dstaddr;	/* P2P destination address for that address */
 	};
 
-	/// <summary>
-	/// Structure used by kernel to store most addresses.
-	/// 'struct sockaddr'
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct sockaddr 
-	{
-		public UInt16		sa_family;       /* address family */
-		[MarshalAs(UnmanagedType.ByValArray, SizeConst=14)]
-		public byte[]		sa_data;         /* up to 14 bytes of direct address */
-	};
+    /// <summary>
+    /// Structure used by kernel to store a generic address
+    /// Look at the sa_family value to determine which specific structure to use
+    /// 'struct sockaddr'
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct sockaddr 
+    {
+        public UInt16       sa_family;      /* address family */
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=14)]
+        public byte[]       sa_data;        /* 14 bytes of protocol address */
+    };
 
     /// <summary>
-    /// Structure that holds ipv6 addresses
+    /// Structure that holds an ipv4 address
+    /// </summary>
+    public struct in_addr
+    {
+        public Int32 s_addr;
+    }
+
+    /// <summary>
+    /// Structure that holds an ipv4 address
+    /// 'struct sockaddr'
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct sockaddr_in
+    {
+        public UInt16       sa_family;      /* address family */
+        public UInt16       sa_port;        /* port */
+        public in_addr      sin_addr;       /* address */
+
+        // TODO: would be great to be able to have the compiler take care of this for us
+        //       but I'm not sure how to
+
+        // pad the size of sockaddr_in out to 16 bytes
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
+        private byte[]       pad;
+    };
+
+    /// <summary>
+    /// Structure that holds an ipv6 address
     /// NOTE: we cast the 'struct sockaddr*' to this structure based on the sa_family type
     /// 'struct sockaddr_in6'
     /// </summary>
@@ -58,6 +86,7 @@ namespace SharpPcap.PcapUnmanagedStructures
         public byte[]       sin6_addr;      /* IPv6 address */
         public UInt32       sin6_scope_id;  /* scope id (new in RFC2553) */
     };
+
     [StructLayout(LayoutKind.Sequential)]    
     public struct timeval
     {
