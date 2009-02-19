@@ -90,7 +90,7 @@ namespace Test
 			tcp.DestinationPort = destPort;				//The TCP dest port
 			tcp.Syn = true;						//Set the SYN flag on
 			tcp.WindowSize = 555;
-			tcp.AcknowledgementNumber = 1000;
+			tcp.AcknowledgmentNumber = 1000;
 			tcp.SequenceNumber = 1000;			
 			tcp.TCPHeaderLength = TCPFields_Fields.TCP_HEADER_LEN;			//Set the correct TCP header length
 

@@ -74,19 +74,6 @@ namespace SharpPcap.Packets
 			}
 		}
 
-		/// <summary> Fetch the packet acknowledgment number. </summary>
-		virtual public long AcknowledgementNumber
-		{
-			get
-			{
-				return AcknowledgmentNumber;
-			}
-			set
-			{
-				AcknowledgmentNumber = value;
-			}
-		}
-
 		/// <summary> Fetch the TCP header length in bytes.</summary>
 		virtual public int TCPHeaderLength
 		{
