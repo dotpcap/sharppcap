@@ -470,7 +470,17 @@ namespace SharpPcap
                 address = new System.Net.IPAddress(addressBytes);
             } else
             {
-                throw new System.NotImplementedException("sa_family of " + saddr.sa_family + " not supported");
+                // output the data portion of the generic sockaddr structure to aid with debugging
+                StringBuilder sbHex = new StringBuilder();
+                StringBuilder sbDecimal = new StringBuilder();
+                for (int x = 0; x < saddr.sa_data.Length; x++)
+                {
+                    sbHex.AppendFormat("[{0}]", saddr.sa_data[x].ToString("x2"));
+                    sbDecimal.AppendFormat("[{0}]", saddr.sa_data[x]);
+                }
+
+                throw new System.NotImplementedException("sa_family of " + saddr.sa_family + " not supported" +
+                                                         " Hex sockaddr.sa_data: " + sbHex.ToString() + " Decimal sockaddr.sa_data:" + sbDecimal.ToString());
             }
 
             return address;
