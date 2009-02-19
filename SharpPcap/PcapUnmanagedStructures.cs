@@ -108,7 +108,7 @@ namespace SharpPcap.PcapUnmanagedStructures
     public struct pcap_pkthdr 
     {
         public timeval  ts;             /* time stamp */
-        public UInt32   caplen;         /* length of portion present */        public UInt32   len;            /* length this packet (off wire) */
+        public UInt32   caplen;         /* length of portion present */        public UInt32   len;            /* length this packet (off wire) */
 	};
 
 	/// <summary>

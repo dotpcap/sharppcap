@@ -1,6 +1,8 @@
 Changelog
 
 v2.0.2 - TDB
+- Set 'svn propset svn:eol-style native' on all .cs files so we don't have line ending 
+conflicts between Windows and Linux.
 - Have ToColoredString() and ToColoredVerboseString() overrides call the base 
 instances of the same methods. This ensures that full output is produced from each 
 packet.
