@@ -49,7 +49,7 @@ namespace SharpPcap.PcapUnmanagedStructures
     /// </summary>
     public struct in_addr
     {
-        public Int32 s_addr;
+        public UInt32 s_addr;
     }
 
     /// <summary>
