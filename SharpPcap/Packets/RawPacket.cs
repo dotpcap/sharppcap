@@ -27,7 +27,7 @@
 //            {
 //                return timeval;
 //            }
-			
+            
 //        }
 //        /// <summary> Fetch the raw packet data.</summary>
 //        virtual public byte[] Data
@@ -36,7 +36,7 @@
 //            {
 //                return bytes;
 //            }
-			
+            
 //        }
 //        /// <summary> Fetch the number of bytes dropped (if any) when the packet 
 //        /// was captured.
@@ -53,7 +53,7 @@
 //            {
 //                return droplen;
 //            }
-			
+            
 //        }
 //        /// <summary> Create a new raw packet.
 //        /// 
@@ -72,7 +72,7 @@
 //            this.bytes = bytes;
 //            this.droplen = droplen;
 //        }
-		
+        
 //        /// <summary> Convert this packet to a readable string.</summary>
 //        public override System.String ToString()
 //        {
@@ -84,15 +84,15 @@
 //            buffer.Append("d = ");
 //            buffer.Append(HexHelper.toString(bytes));
 //            buffer.Append(']');
-			
+            
 //            return buffer.ToString();
 //        }
-		
-		
+        
+        
 //        private Timeval timeval;
 //        private byte[] bytes;
 //        private int droplen;
-		
+        
 //        private System.String _rcsid = "$Id: RawPacket.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $";
 //    }
 //}

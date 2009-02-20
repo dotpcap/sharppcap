@@ -10,15 +10,15 @@ Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-	1. Redistributions of source code must retain the above copyright notice,
-		this list of conditions and the following disclaimer.
+    1. Redistributions of source code must retain the above copyright notice,
+        this list of conditions and the following disclaimer.
 
-	2. Redistributions in binary form must reproduce the above copyright 
-		notice, this list of conditions and the following disclaimer in 
-		the documentation and/or other materials provided with the distribution.
+    2. Redistributions in binary form must reproduce the above copyright 
+        notice, this list of conditions and the following disclaimer in 
+        the documentation and/or other materials provided with the distribution.
 
-	3. The names of the authors may not be used to endorse or promote products
-		derived from this software without specific prior written permission.
+    3. The names of the authors may not be used to endorse or promote products
+        derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
 INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -34,67 +34,67 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Test
 {
-	/// <summary>
-	/// A sample showing how to use the Address Resolution Protocol (ARP)
-	/// with the SharpPcap library.
-	/// </summary>
-	public class ArpTest
-	{
+    /// <summary>
+    /// A sample showing how to use the Address Resolution Protocol (ARP)
+    /// with the SharpPcap library.
+    /// </summary>
+    public class ArpTest
+    {
 
-		public static void Main3(string[] args)
-		{
-			string ver = SharpPcap.Version.GetVersionString();
-			/* Print SharpPcap version */
-			Console.WriteLine("SharpPcap {0}, ArpTest.cs", ver);
-			Console.WriteLine();
+        public static void Main3(string[] args)
+        {
+            string ver = SharpPcap.Version.GetVersionString();
+            /* Print SharpPcap version */
+            Console.WriteLine("SharpPcap {0}, ArpTest.cs", ver);
+            Console.WriteLine();
 
-			/* Retrieve the device list */
-			List<PcapDevice> devices = Pcap.GetAllDevices();
+            /* Retrieve the device list */
+            List<PcapDevice> devices = Pcap.GetAllDevices();
 
-			/*If no device exists, print error */
-			if(devices.Count<1)
-			{
-				Console.WriteLine("No device found on this machine");
-				return;
-			}
-			
-			Console.WriteLine("The following devices are available on this machine:");
-			Console.WriteLine("----------------------------------------------------");
-			Console.WriteLine();
+            /*If no device exists, print error */
+            if(devices.Count<1)
+            {
+                Console.WriteLine("No device found on this machine");
+                return;
+            }
+            
+            Console.WriteLine("The following devices are available on this machine:");
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine();
 
-			int i=0;
+            int i=0;
 
-			/* Scan the list printing every entry */
-			foreach(PcapDevice dev in devices)
-			{
-				/* Description */
-				Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
-				i++;
-			}
+            /* Scan the list printing every entry */
+            foreach(PcapDevice dev in devices)
+            {
+                /* Description */
+                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                i++;
+            }
 
-			Console.WriteLine();
-			Console.Write("-- Please choose a device for sending the ARP request: ");
-			i = int.Parse( Console.ReadLine() );
+            Console.WriteLine();
+            Console.Write("-- Please choose a device for sending the ARP request: ");
+            i = int.Parse( Console.ReadLine() );
 
-			string device = devices[i].PcapName;
+            string device = devices[i].PcapName;
 
-			System.Net.IPAddress ip;
+            System.Net.IPAddress ip;
 
-			while(true)
-			{
-				Console.Write("-- Please enter IP address to be resolved by ARP: ");
+            while(true)
+            {
+                Console.Write("-- Please enter IP address to be resolved by ARP: ");
                 if(System.Net.IPAddress.TryParse(Console.ReadLine(), out ip))
-					break;
-				Console.WriteLine("Bad IP address format, please try again");
-			}
+                    break;
+                Console.WriteLine("Bad IP address format, please try again");
+            }
 
-			//Create a new ARP resolver
-			//(for more info, see:
-			//http://www.tamirgal.com/home/SourceView.aspx?Item=SharpPcap&File=ARP.cs)
-			ARP arper = new ARP(device);
-			
-			//print the resolved address
-			Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
-		}
-	}
+            //Create a new ARP resolver
+            //(for more info, see:
+            //http://www.tamirgal.com/home/SourceView.aspx?Item=SharpPcap&File=ARP.cs)
+            ARP arper = new ARP(device);
+            
+            //print the resolved address
+            Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
+        }
+    }
 }

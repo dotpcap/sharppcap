@@ -3,33 +3,33 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap.PcapUnmanagedStructures
 {
-	#region Unmanaged Structs Implementation
+    #region Unmanaged Structs Implementation
 
-	/// <summary>
-	/// Item in a list of interfaces.
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	public struct pcap_if 
-	{
-		public IntPtr /* pcap_if* */	Next;			
-		public string					Name;			/* name to hand to "pcap_open_live()" */				
-		public string					Description;	/* textual description of interface, or NULL */
-		public IntPtr /*pcap_addr * */	Addresses;
-		public UInt32					Flags;			/* PCAP_IF_ interface flags */
-	};
+    /// <summary>
+    /// Item in a list of interfaces.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct pcap_if 
+    {
+        public IntPtr /* pcap_if* */    Next;           
+        public string                   Name;           /* name to hand to "pcap_open_live()" */                
+        public string                   Description;    /* textual description of interface, or NULL */
+        public IntPtr /*pcap_addr * */  Addresses;
+        public UInt32                   Flags;          /* PCAP_IF_ interface flags */
+    };
 
-	/// <summary>
-	/// Representation of an interface address.
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	public struct pcap_addr 
-	{
-		public IntPtr /* pcap_addr* */	Next;
-		public IntPtr /* sockaddr * */	Addr;		/* address */
-		public IntPtr /* sockaddr * */  Netmask;	/* netmask for that address */
-		public IntPtr /* sockaddr * */	Broadaddr;	/* broadcast address for that address */
-		public IntPtr /* sockaddr * */	Dstaddr;	/* P2P destination address for that address */
-	};
+    /// <summary>
+    /// Representation of an interface address.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct pcap_addr 
+    {
+        public IntPtr /* pcap_addr* */  Next;
+        public IntPtr /* sockaddr * */  Addr;       /* address */
+        public IntPtr /* sockaddr * */  Netmask;    /* netmask for that address */
+        public IntPtr /* sockaddr * */  Broadaddr;  /* broadcast address for that address */
+        public IntPtr /* sockaddr * */  Dstaddr;    /* P2P destination address for that address */
+    };
 
     /// <summary>
     /// Structure used by kernel to store a generic address
@@ -99,50 +99,50 @@ namespace SharpPcap.PcapUnmanagedStructures
         public IntPtr tv_usec;
     };
 
-	/// <summary>
-	/// Each packet in the dump file is prepended with this generic header.
-	/// This gets around the problem of different headers for different
-	/// packet interfaces.
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
+    /// <summary>
+    /// Each packet in the dump file is prepended with this generic header.
+    /// This gets around the problem of different headers for different
+    /// packet interfaces.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct pcap_pkthdr 
     {
         public timeval  ts;             /* time stamp */
         public UInt32   caplen;         /* length of portion present */        public UInt32   len;            /* length this packet (off wire) */
-	};
+    };
 
-	/// <summary>
+    /// <summary>
     /// Packet data bytes
     /// NOTE: This struct doesn't exist in header files, it is a construct to map to an
     ///        unmanaged byte array
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct PCAP_PKTDATA
-	{	
-		[MarshalAs(UnmanagedType.ByValArray, SizeConst=SharpPcap.Pcap.MAX_PACKET_SIZE)]						
-		public byte[]		bytes;
-	};
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PCAP_PKTDATA
+    {   
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=SharpPcap.Pcap.MAX_PACKET_SIZE)]                     
+        public byte[]       bytes;
+    };
 
-	/// <summary>
-	/// A BPF pseudo-assembly program for packet filtering
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct bpf_program 
-	{
-		public uint bf_len;                
-		public IntPtr /* bpf_insn **/ bf_insns;  
-	};
+    /// <summary>
+    /// A BPF pseudo-assembly program for packet filtering
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct bpf_program 
+    {
+        public uint bf_len;                
+        public IntPtr /* bpf_insn **/ bf_insns;  
+    };
 
-	/// <summary>
-	/// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct pcap_send_queue 
-	{
-		public uint maxlen;   
+    /// <summary>
+    /// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct pcap_send_queue 
+    {
+        public uint maxlen;   
         public uint len;   
-		public IntPtr /* char **/ ptrBuff;  
-	};
+        public IntPtr /* char **/ ptrBuff;  
+    };
 
-	#endregion Unmanaged Structs Implementation
+    #endregion Unmanaged Structs Implementation
 }

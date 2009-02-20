@@ -284,8 +284,8 @@ namespace SharpPcap.Packets
         //
         // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv6
         // http://tools.ietf.org/html/rfc2460#page-27
-		protected internal virtual byte[] AttachPseudoIPHeader(byte[] origHeader)
-		{
+        protected internal virtual byte[] AttachPseudoIPHeader(byte[] origHeader)
+        {
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
 
@@ -306,12 +306,12 @@ namespace SharpPcap.Packets
             // 40: Next header
             bw.Write((byte)NextHeader);
 
-			// prefix the pseudoHeader to the header+data
+            // prefix the pseudoHeader to the header+data
             byte[] header = ms.ToArray();
             int headerSize = header.Length + origHeader.Length; 
-			bool odd = origHeader.Length % 2 != 0;
-			if (odd)
-				headerSize++;
+            bool odd = origHeader.Length % 2 != 0;
+            if (odd)
+                headerSize++;
 
             byte[] finalData = new byte[headerSize];
 
@@ -321,12 +321,12 @@ namespace SharpPcap.Packets
             // copy the origHeader in
             Array.Copy(origHeader, 0, finalData, header.Length, origHeader.Length);
 
-			//if not even length, pad with a zero
-			if (odd)
-				finalData[finalData.Length - 1] = 0;
+            //if not even length, pad with a zero
+            if (odd)
+                finalData[finalData.Length - 1] = 0;
 
-			return finalData;
-		}
+            return finalData;
+        }
 
         /// <summary>
         /// Converts the packet to a string.
@@ -341,9 +341,9 @@ namespace SharpPcap.Packets
             // TODO Implement Better ToString
         }
 
-		/// <summary> Convert this IP packet to a more verbose string.</summary>
-		public override System.String ToColoredVerboseString(bool colored)
-		{
+        /// <summary> Convert this IP packet to a more verbose string.</summary>
+        public override System.String ToColoredVerboseString(bool colored)
+        {
             throw new System.NotImplementedException();
         }
 

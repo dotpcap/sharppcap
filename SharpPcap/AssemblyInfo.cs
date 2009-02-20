@@ -41,7 +41,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("SharpPcap")]
 [assembly: AssemblyCopyright("Tamir Gal and others")]
 [assembly: AssemblyTrademark("SharpPcap")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]     
 
 //
 // Version information for an assembly consists of the following four values:

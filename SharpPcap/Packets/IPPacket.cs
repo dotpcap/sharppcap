@@ -13,25 +13,25 @@ using System.ComponentModel;
 
 namespace SharpPcap.Packets
 {
-	/// <summary> An IP protocol packet.
-	/// <p>
-	/// Extends an ethernet packet, adding IP header information and an IP 
-	/// data payload. 
-	///
-	/// </summary>
-	[Serializable]
-	public class IPPacket : EthernetPacket
-	{
-    	/// <summary> Code constants for internet protocol versions.
-    	/// 
-    	/// </summary>
-    	public enum IPVersions
+    /// <summary> An IP protocol packet.
+    /// <p>
+    /// Extends an ethernet packet, adding IP header information and an IP 
+    /// data payload. 
+    ///
+    /// </summary>
+    [Serializable]
+    public class IPPacket : EthernetPacket
+    {
+        /// <summary> Code constants for internet protocol versions.
+        /// 
+        /// </summary>
+        public enum IPVersions
         {
-    		/// <summary> Internet protocol version 4.</summary>
-    		IPv4 = 4,
-    		/// <summary> Internet protocol version 6.</summary>
-    		IPv6 = 6
-    	}
+            /// <summary> Internet protocol version 4.</summary>
+            IPv4 = 4,
+            /// <summary> Internet protocol version 6.</summary>
+            IPv6 = 6
+        }
 
         public IPv4Packet ipv4;
         public IPv6Packet ipv6;
@@ -50,50 +50,50 @@ namespace SharpPcap.Packets
             }
         }
 
-		/// <summary>
-		///  should be overriden by upper classes
-		/// </summary>
-		public override void OnOffsetChanged()
-		{
-			base.OnOffsetChanged();
+        /// <summary>
+        ///  should be overriden by upper classes
+        /// </summary>
+        public override void OnOffsetChanged()
+        {
+            base.OnOffsetChanged();
 
             SetIPOffsetFromVersion();
-		}
+        }
 
-		/// <summary> Get the IP version code.</summary>
-		virtual public IPVersions IPVersion
-		{
-			get
-			{
-				return (IPVersions)((ArrayHelper.extractInteger(_bytes,
+        /// <summary> Get the IP version code.</summary>
+        virtual public IPVersions IPVersion
+        {
+            get
+            {
+                return (IPVersions)((ArrayHelper.extractInteger(_bytes,
                                                                 _ethOffset + IPv4Fields_Fields.IP_VER_POS,
                                                                 IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf);
-			}
+            }
 
-			set
-			{
-				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
-				_bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
-			}
-		}
+            set
+            {
+                _bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
+                _bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
+            }
+        }
 
-		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-		override public System.String Color
-		{
-			get
-			{
-				return AnsiEscapeSequences_Fields.WHITE;
-			}
-		}
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        override public System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences_Fields.WHITE;
+            }
+        }
 
-		// offset from beginning of byte array where IP header ends (i.e.,
-		//  size of ethernet frame header and IP header
-		protected internal int _ipOffset;
+        // offset from beginning of byte array where IP header ends (i.e.,
+        //  size of ethernet frame header and IP header
+        protected internal int _ipOffset;
 
-		/// <summary> Create a new IP packet. </summary>
-		public IPPacket(int lLen, byte[] bytes)
-			: base(lLen, bytes)
-		{
+        /// <summary> Create a new IP packet. </summary>
+        public IPPacket(int lLen, byte[] bytes)
+            : base(lLen, bytes)
+        {
             if(IPVersion == IPVersions.IPv4)
             {
                 ipv4 = new IPv4Packet(lLen, bytes);
@@ -106,14 +106,14 @@ namespace SharpPcap.Packets
             }
 
             SetIPOffsetFromVersion();
-		}
+        }
 
-		/// <summary> Create a new IP packet.</summary>
-		public IPPacket(int lLen, byte[] bytes, Timeval tv)
-			: this(lLen, bytes)
-		{
-			this._timeval = tv;
-		}
+        /// <summary> Create a new IP packet.</summary>
+        public IPPacket(int lLen, byte[] bytes, Timeval tv)
+            : this(lLen, bytes)
+        {
+            this._timeval = tv;
+        }
 
         /// <summary> Returns the payload length of the packet</summary>
         public int IPPayloadLength
@@ -129,52 +129,52 @@ namespace SharpPcap.Packets
             }
         }
 
-		/// <summary> Convert this IP packet to a readable string.</summary>
-		public override System.String ToString()
-		{
-			return ToColoredString(false);
-		}
+        /// <summary> Convert this IP packet to a readable string.</summary>
+        public override System.String ToString()
+        {
+            return ToColoredString(false);
+        }
 
-		/// <summary> Generate string with contents describing this IP packet.</summary>
-		/// <param name="colored">whether or not the string should contain ansi
-		/// color escape sequences.
-		/// </param>
-		public override System.String ToColoredString(bool colored)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			buffer.Append('[');
-			if (colored)
-				buffer.Append(Color);
-			buffer.Append("IPPacket");
-			if (colored)
-				buffer.Append(AnsiEscapeSequences_Fields.RESET);
+        /// <summary> Generate string with contents describing this IP packet.</summary>
+        /// <param name="colored">whether or not the string should contain ansi
+        /// color escape sequences.
+        /// </param>
+        public override System.String ToColoredString(bool colored)
+        {
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+            buffer.Append('[');
+            if (colored)
+                buffer.Append(Color);
+            buffer.Append("IPPacket");
+            if (colored)
+                buffer.Append(AnsiEscapeSequences_Fields.RESET);
 
             if(ipv4 != null)
                 buffer.Append(ipv4.ToColoredString(colored));
             else if(ipv6 != null)
                 buffer.Append(ipv6.ToColoredString(colored));
 
-			return buffer.ToString();
-		}
+            return buffer.ToString();
+        }
 
-		/// <summary> Convert this IP packet to a more verbose string.</summary>
-		public override System.String ToColoredVerboseString(bool colored)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			buffer.Append('[');
-			if (colored)
-				buffer.Append(Color);
-			buffer.Append("IPPacket");
-			if (colored)
-				buffer.Append(AnsiEscapeSequences_Fields.RESET);
+        /// <summary> Convert this IP packet to a more verbose string.</summary>
+        public override System.String ToColoredVerboseString(bool colored)
+        {
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+            buffer.Append('[');
+            if (colored)
+                buffer.Append(Color);
+            buffer.Append("IPPacket");
+            if (colored)
+                buffer.Append(AnsiEscapeSequences_Fields.RESET);
 
             if(ipv4 != null)
                 buffer.Append(ipv4.ToColoredVerboseString(colored));
             else if(ipv6 != null)
                 buffer.Append(ipv6.ToColoredVerboseString(colored));
 
-			return buffer.ToString();
-		}
+            return buffer.ToString();
+        }
 
         public static System.Net.IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType, int fieldOffset, byte[] bytes)
         {
@@ -200,11 +200,11 @@ namespace SharpPcap.Packets
 
         // some convience mapping methods since there are fields that match exactly between
         // ipv4 and ipv6
-		/// <summary> Fetch the IP address of the host where the packet originated from.</summary>
-		virtual public System.Net.IPAddress SourceAddress
-		{
-			get
-			{
+        /// <summary> Fetch the IP address of the host where the packet originated from.</summary>
+        virtual public System.Net.IPAddress SourceAddress
+        {
+            get
+            {
                 if(ipv4 != null)
                 {
                     return ipv4.SourceAddress;
@@ -215,10 +215,10 @@ namespace SharpPcap.Packets
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
-			}
+            }
 
-			set
-			{
+            set
+            {
                 if(IPVersion == IPVersions.IPv4)
                 {
                     ipv4.SourceAddress = value;
@@ -229,14 +229,14 @@ namespace SharpPcap.Packets
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
-			}
-		}
+            }
+        }
 
-		/// <summary> Fetch the IP address of the host where the packet is destined.</summary>
-		virtual public System.Net.IPAddress DestinationAddress
-		{
-			get
-			{
+        /// <summary> Fetch the IP address of the host where the packet is destined.</summary>
+        virtual public System.Net.IPAddress DestinationAddress
+        {
+            get
+            {
                 if(ipv4 != null)
                 {
                     return ipv4.DestinationAddress;
@@ -247,10 +247,10 @@ namespace SharpPcap.Packets
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
-			}
+            }
 
-			set
-			{
+            set
+            {
                 if(ipv4 != null)
                 {
                     ipv4.DestinationAddress = value;
@@ -261,8 +261,8 @@ namespace SharpPcap.Packets
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
-			}
-		}
+            }
+        }
 
         // HopLimit(IPv6) and TimeToLive(IPv4) have the same meaning
         public int HopLimit
@@ -337,5 +337,5 @@ namespace SharpPcap.Packets
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
             }
         }
-	}
+    }
 }

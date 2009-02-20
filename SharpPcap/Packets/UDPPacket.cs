@@ -12,292 +12,292 @@ using SharpPcap.Packets.Util;
 
 namespace SharpPcap.Packets
 {
-	/// <summary> A UDP packet.
-	/// <p>
-	/// Extends an IP packet, adding a UDP header and UDP data payload.
-	/// 
-	/// </summary>
-	[Serializable]
-	public class UDPPacket : IPPacket, UDPFields
-	{
-		/// <summary> Fetch the port number on the source host.</summary>
-		virtual public int SourcePort
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
-			}
+    /// <summary> A UDP packet.
+    /// <p>
+    /// Extends an IP packet, adding a UDP header and UDP data payload.
+    /// 
+    /// </summary>
+    [Serializable]
+    public class UDPPacket : IPPacket, UDPFields
+    {
+        /// <summary> Fetch the port number on the source host.</summary>
+        virtual public int SourcePort
+        {
+            get
+            {
+                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
+            }
 
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
-			}
+            set
+            {
+                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
+            }
 
-		}
-		/// <summary> Fetch the port number on the target host.</summary>
-		virtual public int DestinationPort
-		{
-			get
-			{
-				return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
-			}
+        }
+        /// <summary> Fetch the port number on the target host.</summary>
+        virtual public int DestinationPort
+        {
+            get
+            {
+                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
+            }
 
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
-			}
+            set
+            {
+                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
+            }
 
-		}
-		/// <summary> Fetch the total length of the UDP packet, including header and
-		/// data payload, in bytes.
-		/// </summary>
-		virtual public int UDPLength
-		{
-			get
-			{
-				// should produce the same value as header.length + data.length
-				return Length;
-			}
+        }
+        /// <summary> Fetch the total length of the UDP packet, including header and
+        /// data payload, in bytes.
+        /// </summary>
+        virtual public int UDPLength
+        {
+            get
+            {
+                // should produce the same value as header.length + data.length
+                return Length;
+            }
 
-			set
-			{
-				ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
-			}
+            set
+            {
+                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
+            }
 
-		}
+        }
 
         //TODO: fix this to handle ipv4 vs. ipv6
 #if false
-		/// <summary> Fetch the header checksum.</summary>
-		/// <summary> Fetch the header checksum.</summary>
-		virtual public int UDPChecksum
-		{
-			get
-			{
-				return GetTransportLayerChecksum(_ipOffset + UDPFields_Fields.UDP_CSUM_POS);
-			}
+        /// <summary> Fetch the header checksum.</summary>
+        /// <summary> Fetch the header checksum.</summary>
+        virtual public int UDPChecksum
+        {
+            get
+            {
+                return GetTransportLayerChecksum(_ipOffset + UDPFields_Fields.UDP_CSUM_POS);
+            }
 
-			set
-			{
-				SetTransportLayerChecksum(value, UDPFields_Fields.UDP_CSUM_POS);
-			}
+            set
+            {
+                SetTransportLayerChecksum(value, UDPFields_Fields.UDP_CSUM_POS);
+            }
 
-		}
+        }
 
         /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-		public bool ValidChecksum
-		{
-			get
-			{
-				return ValidUDPChecksum;
-			}
+        public bool ValidChecksum
+        {
+            get
+            {
+                return ValidUDPChecksum;
+            }
 
-		}
+        }
 
         virtual public bool ValidUDPChecksum
-		{
-			get
-			{
-				return base.IsValidTransportLayerChecksum(true);
-			}
-		}
+        {
+            get
+            {
+                return base.IsValidTransportLayerChecksum(true);
+            }
+        }
 #endif
 
-		/// <summary> Fetch the UDP header a byte array.</summary>
-		virtual public byte[] UDPHeader
-		{
-			get
-			{
-				if (_udpHeaderBytes == null)
-				{
-					_udpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes);
-				}
-				return _udpHeaderBytes;
-			}
+        /// <summary> Fetch the UDP header a byte array.</summary>
+        virtual public byte[] UDPHeader
+        {
+            get
+            {
+                if (_udpHeaderBytes == null)
+                {
+                    _udpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes);
+                }
+                return _udpHeaderBytes;
+            }
 
-		}
-		/// <summary> Fetch the UDP header as a byte array.</summary>
-		override public byte[] Header
-		{
-			get
-			{
-				return UDPHeader;
-			}
+        }
+        /// <summary> Fetch the UDP header as a byte array.</summary>
+        override public byte[] Header
+        {
+            get
+            {
+                return UDPHeader;
+            }
 
-		}
-		/// <summary> Fetch the UDP data as a byte array.</summary>
-		virtual public byte[] UDPData
-		{
-			get
-			{
-				if (_udpDataBytes == null)
-				{
-					// set data length based on info in headers (note: tcpdump
-					//  can return extra junk bytes which bubble up to here
-					int tmpLen = _bytes.Length - _ipOffset - UDPFields_Fields.UDP_HEADER_LEN;
-					_udpDataBytes = PacketEncoding.extractData(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes, tmpLen);
-				}
-				return _udpDataBytes;
-			}
-			set
-			{
-				SetData(value);
-			}
+        }
+        /// <summary> Fetch the UDP data as a byte array.</summary>
+        virtual public byte[] UDPData
+        {
+            get
+            {
+                if (_udpDataBytes == null)
+                {
+                    // set data length based on info in headers (note: tcpdump
+                    //  can return extra junk bytes which bubble up to here
+                    int tmpLen = _bytes.Length - _ipOffset - UDPFields_Fields.UDP_HEADER_LEN;
+                    _udpDataBytes = PacketEncoding.extractData(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes, tmpLen);
+                }
+                return _udpDataBytes;
+            }
+            set
+            {
+                SetData(value);
+            }
 
-		}
+        }
 
-		/// <summary>
-		/// Sets the data section of this udp packet
-		/// </summary>
-		/// <param name="data">the data bytes</param>
-		public void SetData(byte[] data)
-		{
+        /// <summary>
+        /// Sets the data section of this udp packet
+        /// </summary>
+        /// <param name="data">the data bytes</param>
+        public void SetData(byte[] data)
+        {
 #if false
-			byte[] headers = ArrayHelper.copy(_bytes, 0, UDPFields_Fields.UDP_HEADER_LEN +IpHeaderLength+EthernetHeaderLength);
-			byte[] newBytes = ArrayHelper.join(headers, data);
-			this._bytes = newBytes;
-			UDPLength = _bytes.Length-IpHeaderLength-EthernetHeaderLength;
-		
-			//update ip total length length
-			IPTotalLength = IpHeaderLength + UDPFields_Fields.UDP_HEADER_LEN + data.Length;
-		
-			//update also offset and pcap header
-			OnOffsetChanged();
+            byte[] headers = ArrayHelper.copy(_bytes, 0, UDPFields_Fields.UDP_HEADER_LEN +IpHeaderLength+EthernetHeaderLength);
+            byte[] newBytes = ArrayHelper.join(headers, data);
+            this._bytes = newBytes;
+            UDPLength = _bytes.Length-IpHeaderLength-EthernetHeaderLength;
+        
+            //update ip total length length
+            IPTotalLength = IpHeaderLength + UDPFields_Fields.UDP_HEADER_LEN + data.Length;
+        
+            //update also offset and pcap header
+            OnOffsetChanged();
 #else
             //TODO: code is more complex since we now have ipv4 and ipv6 packets we can't just
             // add in a fixed header size
             throw new System.NotImplementedException();
 #endif
-		}
+        }
 
-		/// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-		override public System.String Color
-		{
-			get
-			{
-				return AnsiEscapeSequences_Fields.LIGHT_GREEN;
-			}
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        override public System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences_Fields.LIGHT_GREEN;
+            }
 
-		}
-		/// <summary> Create a new UDP packet.</summary>
-		public UDPPacket(int lLen, byte[] bytes)
-			: base(lLen, bytes)
-		{
-		}
+        }
+        /// <summary> Create a new UDP packet.</summary>
+        public UDPPacket(int lLen, byte[] bytes)
+            : base(lLen, bytes)
+        {
+        }
 
-		/// <summary> Create a new UDP packet.</summary>
-		public UDPPacket(int lLen, byte[] bytes, Timeval tv)
-			: this(lLen, bytes)
-		{
-			this._timeval = tv;
-		}
+        /// <summary> Create a new UDP packet.</summary>
+        public UDPPacket(int lLen, byte[] bytes, Timeval tv)
+            : this(lLen, bytes)
+        {
+            this._timeval = tv;
+        }
 
-		/// <summary> Fetch the total length of the UDP packet, including header and
-		/// data payload, in bytes.
-		/// </summary>
-		public int Length
-		{
-			get
-			{
-				// should produce the same value as header.length + data.length
-				return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
-			}
-		}
+        /// <summary> Fetch the total length of the UDP packet, including header and
+        /// data payload, in bytes.
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                // should produce the same value as header.length + data.length
+                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
+            }
+        }
 
         //TODO: fix this to properly handle the ipv4 vs. ipv6 differences
 #if false
-		/// <summary> Fetch the header checksum.</summary>
-		public int Checksum
-		{
-			get
-			{
-				return UDPChecksum;
-			}
-			set
-			{
-				UDPChecksum=value;
-			}
-		}
+        /// <summary> Fetch the header checksum.</summary>
+        public int Checksum
+        {
+            get
+            {
+                return UDPChecksum;
+            }
+            set
+            {
+                UDPChecksum=value;
+            }
+        }
 
-		/// <summary> Computes the UDP checksum, optionally updating the UDP checksum header.
-		/// 
-		/// </summary>
-		/// <param name="update">Specifies whether or not to update the UDP checksum header
-		/// after computing the checksum. A value of true indicates the
-		/// header should be updated, a value of false indicates it should
-		/// not be updated.
-		/// </param>
-		/// <returns> The computed UDP checksum.
-		/// </returns>
-		public int ComputeUDPChecksum(bool update)
-		{
-			// copy the udp section with data
-			byte[] udp = IPData;
-			// reset the checksum field (checksum is calculated when this field is
-			// zeroed)
-			ArrayHelper.insertLong(udp, 0, UDPFields_Fields.UDP_CSUM_POS, UDPFields_Fields.UDP_CSUM_LEN);
-			//pseudo ip header should be attached to the udp+data
-			udp = AttachPseudoIPHeader(udp);
-			// compute the one's complement sum of the udp header
-			int cs = _OnesCompSum(udp);
-			if (update)
-			{
-				UDPChecksum = cs;
-			}
+        /// <summary> Computes the UDP checksum, optionally updating the UDP checksum header.
+        /// 
+        /// </summary>
+        /// <param name="update">Specifies whether or not to update the UDP checksum header
+        /// after computing the checksum. A value of true indicates the
+        /// header should be updated, a value of false indicates it should
+        /// not be updated.
+        /// </param>
+        /// <returns> The computed UDP checksum.
+        /// </returns>
+        public int ComputeUDPChecksum(bool update)
+        {
+            // copy the udp section with data
+            byte[] udp = IPData;
+            // reset the checksum field (checksum is calculated when this field is
+            // zeroed)
+            ArrayHelper.insertLong(udp, 0, UDPFields_Fields.UDP_CSUM_POS, UDPFields_Fields.UDP_CSUM_LEN);
+            //pseudo ip header should be attached to the udp+data
+            udp = AttachPseudoIPHeader(udp);
+            // compute the one's complement sum of the udp header
+            int cs = _OnesCompSum(udp);
+            if (update)
+            {
+                UDPChecksum = cs;
+            }
 
-			return cs;
-		}
+            return cs;
+        }
 
-		public int ComputeUDPChecksum()
-		{
-			return ComputeUDPChecksum(true);
-		}
+        public int ComputeUDPChecksum()
+        {
+            return ComputeUDPChecksum(true);
+        }
 #endif
 
-		private byte[] _udpHeaderBytes = null;
+        private byte[] _udpHeaderBytes = null;
 
-		private byte[] _udpDataBytes = null;
+        private byte[] _udpDataBytes = null;
 
-		/// <summary> Fetch the UDP data as a byte array.</summary>
-		public override byte[] Data
-		{
-			get
-			{
-				return UDPData;
-			}
-		}
+        /// <summary> Fetch the UDP data as a byte array.</summary>
+        public override byte[] Data
+        {
+            get
+            {
+                return UDPData;
+            }
+        }
 
-		/// <summary> Convert this UDP packet to a readable string.</summary>
-		public override System.String ToString()
-		{
-			return ToColoredString(false);
-		}
+        /// <summary> Convert this UDP packet to a readable string.</summary>
+        public override System.String ToString()
+        {
+            return ToColoredString(false);
+        }
 
-		/// <summary> Generate string with contents describing this UDP packet.</summary>
-		/// <param name="colored">whether or not the string should contain ansi
-		/// color escape sequences.
-		/// </param>
-		public override System.String ToColoredString(bool colored)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-			buffer.Append('[');
-			if (colored)
-				buffer.Append(Color);
-			buffer.Append("UDPPacket");
-			if (colored)
-				buffer.Append(AnsiEscapeSequences_Fields.RESET);
-			buffer.Append(": ");
-			buffer.Append(SourceAddress);
-			buffer.Append('.');
-			buffer.Append(IPPort.getName(SourcePort));
-			buffer.Append(" -> ");
-			buffer.Append(DestinationAddress);
-			buffer.Append('.');
-			buffer.Append(IPPort.getName(DestinationPort));
-			buffer.Append(" l=" + UDPFields_Fields.UDP_HEADER_LEN + "," + (Length - UDPFields_Fields.UDP_HEADER_LEN));
-			buffer.Append(']');
+        /// <summary> Generate string with contents describing this UDP packet.</summary>
+        /// <param name="colored">whether or not the string should contain ansi
+        /// color escape sequences.
+        /// </param>
+        public override System.String ToColoredString(bool colored)
+        {
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+            buffer.Append('[');
+            if (colored)
+                buffer.Append(Color);
+            buffer.Append("UDPPacket");
+            if (colored)
+                buffer.Append(AnsiEscapeSequences_Fields.RESET);
+            buffer.Append(": ");
+            buffer.Append(SourceAddress);
+            buffer.Append('.');
+            buffer.Append(IPPort.getName(SourcePort));
+            buffer.Append(" -> ");
+            buffer.Append(DestinationAddress);
+            buffer.Append('.');
+            buffer.Append(IPPort.getName(DestinationPort));
+            buffer.Append(" l=" + UDPFields_Fields.UDP_HEADER_LEN + "," + (Length - UDPFields_Fields.UDP_HEADER_LEN));
+            buffer.Append(']');
 
-			return buffer.ToString();
-		}
-	}
+            return buffer.ToString();
+        }
+    }
 }
