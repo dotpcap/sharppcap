@@ -117,7 +117,7 @@ namespace SharpPcap.Packets
 			}
 
 		}
-		//UPGRADE_NOTE: Respective javadoc comments were merged.  It should be changed in order to comply with .NET documentation conventions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1199'"
+
 		/// <summary> Fetch the unique ID of this IP datagram. The ID normally 
 		/// increments by one each time a datagram is sent by a host.
 		/// </summary>
@@ -277,7 +277,7 @@ namespace SharpPcap.Packets
 				}
 				else
 				{
-					return (_OnesSum(_bytes, _ethOffset, IpHeaderLength) == 0xffff);
+					return (ChecksumUtils.OnesSum(_bytes, _ethOffset, IpHeaderLength) == 0xffff);
 				}
 			}
 
@@ -453,70 +453,6 @@ namespace SharpPcap.Packets
 			SetChecksum(cs, _ipOffset + csPos);
 		}
 
-		/// <summary>
-		/// Computes the one's complement sum on a byte array
-		/// </summary>
-		protected internal virtual int _OnesCompSum(byte[] bytes)
-		{
-			//just complement the one's sum
-			return _OnesCompSum(bytes, 0, bytes.Length);
-		}
-
-		/// <summary> 
-		/// Computes the one's complement sum on a byte array
-		/// </summary>
-		protected internal virtual int _OnesCompSum(byte[] bytes, int start, int len)
-		{
-			//just complement the one's sum
-			return (~_OnesSum(bytes, start, len)) & 0xFFFF;
-		}
-
-		/// <summary>
-		/// Computes the one's sum on a byte array.
-		/// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
-		/// Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
-		/// </summary>
-		protected internal virtual int _OnesSum(byte[] bytes)
-		{
-			return _OnesSum(bytes, 0, bytes.Length);
-		}
-
-		/// <summary>
-		/// Computes the one's sum on a byte array.
-		/// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
-		/// Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
-		/// </summary>
-		protected internal virtual int _OnesSum(byte[] bytes, int start, int len)
-		{
-			int sum = 0; /* assume 32 bit long, 16 bit short */
-			int i = start;
-			len = start + len;
-
-			while (i < len - 1)
-			{
-				sum += ArrayHelper.extractInteger(bytes, i, 2);
-				//if ((sum & unchecked((int)0x80000000)) != 0)
-				if ((sum & 0x80000000) != 0)
-					/* if high order bit set, fold */
-					sum = (sum & 0xFFFF) + (sum >> 16);
-				i += 2;
-			}
-
-			if (i < len)
-				/* take care of left over byte */
-				sum += ArrayHelper.extractInteger(bytes, start, 2);
-
-			while (sum >> 16 != 0)
-				sum = (sum & 0xFFFF) + (sum >> 16);
-
-			return sum & 0xFFFF;
-		}
-
-		/*
-		* taken from TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W.
-		* Richard Stevens. Page 236
-		*/
-
 		/// <summary> Computes the IP checksum, optionally updating the IP checksum header.
 		/// 
 		/// </summary>
@@ -534,7 +470,7 @@ namespace SharpPcap.Packets
 			//reset the checksum field (checksum is calculated when this field is zeroed)
 			ArrayHelper.insertLong(ip, 0, IPv4Fields_Fields.IP_CSUM_POS, 2);
 			//compute the one's complement sum of the ip header
-			int cs = _OnesCompSum(ip, 0, ip.Length);
+			int cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
 			if (update)
 			{
 				IPChecksum = cs;
@@ -553,7 +489,7 @@ namespace SharpPcap.Packets
 			if (pseudoIPHeader)
 				dataToChecksum = AttachPseudoIPHeader(dataToChecksum);
 			// compute the one's complement sum of the tcp header
-			int cs = _OnesCompSum(dataToChecksum);
+			int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
 			if (update)
 			{
 				SetTransportLayerChecksum(cs, checksumOffset);
@@ -612,7 +548,7 @@ namespace SharpPcap.Packets
 			byte[] upperLayer = IPData;
 			if (pseudoIPHeader)
 				upperLayer = AttachPseudoIPHeader(upperLayer);
-			int onesSum = _OnesSum(upperLayer);
+			int onesSum = ChecksumUtils.OnesSum(upperLayer);
 			return (onesSum == 0xffff);
 		}
 
@@ -706,9 +642,9 @@ namespace SharpPcap.Packets
 			{
 				get
 				{
-					return Enclosing_Instance._OnesSum(Enclosing_Instance._bytes,
-                                                       Enclosing_Instance._ethOffset,
-                                                       Enclosing_Instance.IpHeaderLength);
+					return ChecksumUtils.OnesSum(Enclosing_Instance._bytes,
+                                                 Enclosing_Instance._ethOffset,
+                                                 Enclosing_Instance.IpHeaderLength);
 				}
 			}
 

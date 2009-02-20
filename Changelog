@@ -1,6 +1,7 @@
 Changelog
 
 v2.0.2 - TDB
+- Refactor checksumming code into Packets/Util/ChecksumUtils.cs
 - Set 'svn propset svn:eol-style native' on all .cs files so we don't have line ending 
 conflicts between Windows and Linux.
 - Have ToColoredString() and ToColoredVerboseString() overrides call the base 

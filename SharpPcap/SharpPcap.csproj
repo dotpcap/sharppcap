@@ -251,6 +251,7 @@
     <Compile Include="Packets\IPv4Packet.cs" />
     <Compile Include="Packets\IPv6Packet.cs" />
     <Compile Include="Packets\IPv6Fields.cs" />
+    <Compile Include="Packets\Util\ChecksumUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
