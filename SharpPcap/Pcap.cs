@@ -249,24 +249,124 @@ namespace SharpPcap
 
         #endregion Callback Implementation (Not Working)
 
+        public class Sockaddr
+        {
+            public enum Type
+            {
+                AF_INET_AF_INET6,
+                HARDWARE,
+                UNKNOWN
+            }
+            public Type type;
+
+            public System.Net.IPAddress ipAddress;
+            public byte[] hardwareAddress;
+
+            private int _sa_family;
+            public int sa_family
+            {
+                get { return _sa_family; }
+            }
+
+            public Sockaddr(IntPtr sockaddrPtr)
+            {
+                // A sockaddr struct. We use this to determine the address family
+                sockaddr saddr;
+
+                // Marshal memory pointer into a struct
+                saddr = (sockaddr)Marshal.PtrToStructure(sockaddrPtr,
+                                                         typeof(sockaddr));
+
+                // record the sa_family for informational purposes
+                _sa_family = saddr.sa_family;
+
+                byte[] addressBytes;
+                if(saddr.sa_family == AF_INET)
+                {
+                    type = Type.AF_INET_AF_INET6; 
+                    sockaddr_in saddr_in = (sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
+                                                                               typeof(sockaddr_in));
+                    ipAddress = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
+                } else if(saddr.sa_family == AF_INET6)
+                {
+                    type = Type.AF_INET_AF_INET6;
+                    addressBytes = new byte[16];
+                    sockaddr_in6 sin6 =
+                        (sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
+                                                             typeof(sockaddr_in6));
+                    Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
+                    ipAddress = new System.Net.IPAddress(addressBytes);
+                } else if(saddr.sa_family == AF_PACKET)
+                {
+                    type = Type.HARDWARE;
+
+                    sockaddr_ll saddr_ll = (sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
+                                                                               typeof(sockaddr_ll));
+
+                    hardwareAddress = new byte[saddr_ll.sll_halen];
+                    for(int x = 0; x < saddr_ll.sll_halen; x++)
+                    {
+                        hardwareAddress[x] = saddr_ll.sll_addr[x];
+                    }
+                } else
+                {
+                    type = Type.UNKNOWN;
+
+                    // place the sockaddr.sa_data into the hardware address just in case
+                    // someone wants access to the bytes
+                    hardwareAddress = new byte[saddr.sa_data.Length];
+                    for(int x = 0; x < saddr.sa_data.Length; x++)
+                    {
+                        hardwareAddress[x] = saddr.sa_data[x];
+                    }
+                }
+            }
+
+            public override string ToString()
+            {
+                if(type == Type.AF_INET_AF_INET6)
+                {
+                    return ipAddress.ToString();
+                } else if(type == Type.HARDWARE)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("HW addr: ");
+                    for(int x = 0; x < hardwareAddress.Length; x++)
+                    {
+                        if(x == 0)
+                            sb.AppendFormat("{0}", hardwareAddress[x].ToString("x2"));
+                        else
+                            sb.AppendFormat(":{0}", hardwareAddress[x].ToString("x2"));
+                    }
+
+                    return sb.ToString();
+                } else if(type == Type.UNKNOWN)
+                {
+                    return String.Empty;
+                }
+
+                return String.Empty;
+            }
+        }
+
         // managed version of pcap_addr
         public class PcapAddress
         {
-            public System.Net.IPAddress Addr;      /* address */
-            public System.Net.IPAddress Netmask;   /* netmask for that address */
-            public System.Net.IPAddress Broadaddr; /* broadcast address for that address */
-            public System.Net.IPAddress Dstaddr;   /* P2P destination address for that address */
+            public Sockaddr Addr;
+            public Sockaddr Netmask;
+            public Sockaddr Broadaddr;
+            public Sockaddr Dstaddr;
 
             public PcapAddress(pcap_addr pcap_addr)
             {
                 if(pcap_addr.Addr != IntPtr.Zero)
-                    Addr = Pcap.GetPcapAddress( pcap_addr.Addr );
+                    Addr = new Sockaddr( pcap_addr.Addr );
                 if(pcap_addr.Netmask != IntPtr.Zero)
-                    Netmask = Pcap.GetPcapAddress( pcap_addr.Netmask );
+                    Netmask = new Sockaddr( pcap_addr.Netmask );
                 if(pcap_addr.Broadaddr !=IntPtr.Zero)
-                    Broadaddr = Pcap.GetPcapAddress( pcap_addr.Broadaddr );
+                    Broadaddr = new Sockaddr( pcap_addr.Broadaddr );
                 if(pcap_addr.Dstaddr != IntPtr.Zero)
-                    Dstaddr = Pcap.GetPcapAddress( pcap_addr.Dstaddr );
+                    Dstaddr = new Sockaddr( pcap_addr.Dstaddr );
             }
 
             public override string ToString()
@@ -313,14 +413,14 @@ namespace SharpPcap
                 while(address != IntPtr.Zero)
                 {
                     //A sockaddr struct
-                    pcap_addr pcap_addr;
+                    pcap_addr addr;
 
                     //Marshal memory pointer into a struct
-                    pcap_addr = (pcap_addr)Marshal.PtrToStructure(address, typeof(pcap_addr));
+                    addr = (pcap_addr)Marshal.PtrToStructure(address, typeof(pcap_addr));
 
-                    Addresses.Add(new PcapAddress(pcap_addr));
+                    Addresses.Add(new PcapAddress(addr));
 
-                    address = pcap_addr.Next; // move to the next address
+                    address = addr.Next; // move to the next address
                 }
             }
 
@@ -444,48 +544,6 @@ namespace SharpPcap
             throw new Exception("Device not found: "+pcapName);
         }
 
-        internal static System.Net.IPAddress GetPcapAddress(IntPtr sockaddrPtr)
-        {
-            System.Net.IPAddress address;
-
-            // A sockaddr struct. We use this to determine the address family
-            sockaddr saddr;
-
-            // Marshal memory pointer into a struct
-            saddr = (sockaddr)Marshal.PtrToStructure(sockaddrPtr,
-                                                     typeof(sockaddr));
-            byte[] addressBytes;
-            if((saddr.sa_family == AF_INET) || (saddr.sa_family == AF_PACKET))
-            {
-                sockaddr_in saddr_in = (sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
-                                                                           typeof(sockaddr_in));
-                address = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
-            } else if(saddr.sa_family == AF_INET6)
-            {
-                addressBytes = new byte[16];
-                sockaddr_in6 sin6 =
-                    (sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
-                                                         typeof(sockaddr_in6));
-                Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
-                address = new System.Net.IPAddress(addressBytes);
-            } else
-            {
-                // output the data portion of the generic sockaddr structure to aid with debugging
-                StringBuilder sbHex = new StringBuilder();
-                StringBuilder sbDecimal = new StringBuilder();
-                for (int x = 0; x < saddr.sa_data.Length; x++)
-                {
-                    sbHex.AppendFormat("[{0}]", saddr.sa_data[x].ToString("x2"));
-                    sbDecimal.AppendFormat("[{0}]", saddr.sa_data[x]);
-                }
-
-                throw new System.NotImplementedException("sa_family of " + saddr.sa_family + " not supported" +
-                                                         " Hex sockaddr.sa_data: " + sbHex.ToString() + " Decimal sockaddr.sa_data:" + sbDecimal.ToString());
-            }
-
-            return address;
-        }
-        
         public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
         {
             return new PcapOfflineDevice( pcapFileName );

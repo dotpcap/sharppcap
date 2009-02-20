@@ -87,6 +87,22 @@ namespace SharpPcap.PcapUnmanagedStructures
         public UInt32       sin6_scope_id;  /* scope id (new in RFC2553) */
     };
 
+    /// <summary>
+    /// Structure to represent a low level address, like a hardware address
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct sockaddr_ll
+    {
+        public UInt16 sll_family;
+        public UInt16 sll_protocol;
+        public UInt32 sll_ifindex;
+        public UInt16 sll_hatype;
+        public byte   sll_pkttype;
+        public byte   sll_halen;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
+        public byte[] sll_addr;
+    };
+
     [StructLayout(LayoutKind.Sequential)]    
     public struct timeval
     {
