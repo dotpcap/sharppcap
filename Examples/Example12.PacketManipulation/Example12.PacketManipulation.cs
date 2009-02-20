@@ -122,7 +122,7 @@ namespace Example12.PacketManipulation
 						tcp.Fin = !tcp.Fin;
 						tcp.Ack = !tcp.Ack;
 						tcp.WindowSize = 500;
-						tcp.AcknowledgementNumber = 800;
+						tcp.AcknowledgmentNumber = 800;
 						tcp.SequenceNumber = 800;
 
 						//Recalculate the TCP checksum
