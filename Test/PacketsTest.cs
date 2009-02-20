@@ -15,6 +15,7 @@ namespace Test
 			{
 //				TCPPacket tcp = TCPPacket.RandomPacket();
                 //TODO: TCPPacket to be fixed after the ipv4/ipv6 changes as ValidIPChecksum doesn't work now
+                // And this test should use a known quantity, a packet recorded and loaded from a file
                 throw new System.NotImplementedException();
 //				Assert.IsTrue(tcp.ValidIPChecksum);
 //				Assert.IsTrue(tcp.ValidTCPChecksum);
