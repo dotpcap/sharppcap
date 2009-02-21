@@ -30,7 +30,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using SharpPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap
 {
@@ -237,9 +236,9 @@ namespace SharpPcap
             
             if (header != IntPtr.Zero)
             {
-                pcap_pkthdr PktInfo =
-                    (pcap_pkthdr)Marshal.PtrToStructure( header,
-                                                                                typeof(pcap_pkthdr) );
+                PcapUnmanagedStructures.pcap_pkthdr PktInfo =
+                    (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure( header,
+                                                                                typeof(PcapUnmanagedStructures.pcap_pkthdr) );
                 /* convert the timestamp to readable format */
                 tm = new DateTime( (long)(PktInfo.ts.tv_usec) );                
             
@@ -271,11 +270,11 @@ namespace SharpPcap
             public Sockaddr(IntPtr sockaddrPtr)
             {
                 // A sockaddr struct. We use this to determine the address family
-                sockaddr saddr;
+                PcapUnmanagedStructures.sockaddr saddr;
 
                 // Marshal memory pointer into a struct
-                saddr = (sockaddr)Marshal.PtrToStructure(sockaddrPtr,
-                                                         typeof(sockaddr));
+                saddr = (PcapUnmanagedStructures.sockaddr)Marshal.PtrToStructure(sockaddrPtr,
+                                                         typeof(PcapUnmanagedStructures.sockaddr));
 
                 // record the sa_family for informational purposes
                 _sa_family = saddr.sa_family;
@@ -284,24 +283,26 @@ namespace SharpPcap
                 if(saddr.sa_family == AF_INET)
                 {
                     type = Type.AF_INET_AF_INET6; 
-                    sockaddr_in saddr_in = (sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
-                                                                               typeof(sockaddr_in));
+                    PcapUnmanagedStructures.sockaddr_in saddr_in = 
+                        (PcapUnmanagedStructures.sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
+                                                                                    typeof(PcapUnmanagedStructures.sockaddr_in));
                     ipAddress = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
                 } else if(saddr.sa_family == AF_INET6)
                 {
                     type = Type.AF_INET_AF_INET6;
                     addressBytes = new byte[16];
-                    sockaddr_in6 sin6 =
-                        (sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
-                                                             typeof(sockaddr_in6));
+                    PcapUnmanagedStructures.sockaddr_in6 sin6 =
+                        (PcapUnmanagedStructures.sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
+                                                             typeof(PcapUnmanagedStructures.sockaddr_in6));
                     Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
                     ipAddress = new System.Net.IPAddress(addressBytes);
                 } else if(saddr.sa_family == AF_PACKET)
                 {
                     type = Type.HARDWARE;
 
-                    sockaddr_ll saddr_ll = (sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
-                                                                               typeof(sockaddr_ll));
+                    PcapUnmanagedStructures.sockaddr_ll saddr_ll =
+                        (PcapUnmanagedStructures.sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
+                                                          typeof(PcapUnmanagedStructures.sockaddr_ll));
 
                     hardwareAddress = new byte[saddr_ll.sll_halen];
                     for(int x = 0; x < saddr_ll.sll_halen; x++)
@@ -357,7 +358,7 @@ namespace SharpPcap
             public Sockaddr Broadaddr;
             public Sockaddr Dstaddr;
 
-            public PcapAddress(pcap_addr pcap_addr)
+            internal PcapAddress(PcapUnmanagedStructures.pcap_addr pcap_addr)
             {
                 if(pcap_addr.Addr != IntPtr.Zero)
                     Addr = new Sockaddr( pcap_addr.Addr );
@@ -401,7 +402,7 @@ namespace SharpPcap
             public List<PcapAddress> Addresses;
             public uint              Flags;       /* PCAP_IF_ interface flags */
 
-            public PcapInterface(pcap_if pcapIf)
+            internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf)
             {
                 Name = pcapIf.Name;
                 Description = pcapIf.Description;
@@ -413,10 +414,11 @@ namespace SharpPcap
                 while(address != IntPtr.Zero)
                 {
                     //A sockaddr struct
-                    pcap_addr addr;
+                    PcapUnmanagedStructures.pcap_addr addr;
 
                     //Marshal memory pointer into a struct
-                    addr = (pcap_addr)Marshal.PtrToStructure(address, typeof(pcap_addr));
+                    addr = (PcapUnmanagedStructures.pcap_addr)Marshal.PtrToStructure(address,
+                                                                                     typeof(PcapUnmanagedStructures.pcap_addr));
 
                     Addresses.Add(new PcapAddress(addr));
 
@@ -506,9 +508,9 @@ namespace SharpPcap
                 while (next != IntPtr.Zero)
                 {
                     //Marshal memory pointer into a struct
-                    pcap_if pcap_if_unmanaged =
-                        (pcap_if)Marshal.PtrToStructure(next,
-                                                        typeof(pcap_if));
+                    PcapUnmanagedStructures.pcap_if pcap_if_unmanaged =
+                        (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(next,
+                                                        typeof(PcapUnmanagedStructures.pcap_if));
                     PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
                     deviceList.Add(new PcapDevice(pcap_if));
                     next = pcap_if_unmanaged.Next;

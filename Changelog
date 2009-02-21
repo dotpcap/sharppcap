@@ -1,6 +1,15 @@
 Changelog
 
 v2.0.2 - TDB
+- Remove unnecessary stuff from the SharpPcap namespace by hiding the 
+PcapUnmanagedStructures by moving from a namespace of 
+SharpPcap.PcapUnmanagedStructures to putting the structures inside of an internal 
+class named PcapUnmanagedStructures. Switch some methods from public to internal so 
+they are hidden like the unmanaged structures now are.
+- Improve PcapAddress by introducing a Sockaddr container class. Enables handling of 
+hardware addresses that were previously confused and parsed as IP addresses and also 
+resolves a user reported issue with unknown sockaddr.sa_family of 0 by treating this 
+case as unknown.
 - Refactor checksumming code into Packets/Util/ChecksumUtils.cs
 - Set 'svn propset svn:eol-style native' on all .cs files so we don't have line ending 
 conflicts between Windows and Linux.

@@ -58,7 +58,7 @@ namespace SharpPcap
         /// <param name="packet">The packet bytes to add</param>
         /// <param name="pcapHdr">The pcap header of the packet</param>
         /// <returns>True if success, else false</returns>
-        public bool Add( byte[] packet, PcapUnmanagedStructures.pcap_pkthdr pcapHdr )
+        internal bool Add( byte[] packet, PcapUnmanagedStructures.pcap_pkthdr pcapHdr )
         {
             if(m_queue==IntPtr.Zero)
             {
@@ -91,7 +91,7 @@ namespace SharpPcap
         /// <param name="packet">The packet bytes to add</param>
         /// <param name="pcapHdr">The pcap header of the packet</param>
         /// <returns>True if success, else false</returns>
-        public bool Add( byte[] packet, PcapHeader pcapHdr )
+        internal bool Add( byte[] packet, PcapHeader pcapHdr )
         {
             return this.Add( packet, pcapHdr.m_pcap_pkthdr);
         }

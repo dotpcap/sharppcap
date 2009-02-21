@@ -52,7 +52,7 @@ namespace SharpPcap
         /// Constructs a new PcapHeader
         /// </summary>
         /// <param name="m_pcap_pkthdr">The underlying pcap_pkthdr structure</param>
-        public PcapHeader( PcapUnmanagedStructures.pcap_pkthdr m_pcap_pkthdr )
+        internal PcapHeader( PcapUnmanagedStructures.pcap_pkthdr m_pcap_pkthdr )
         {
             this.m_pcap_pkthdr = m_pcap_pkthdr;
         }
