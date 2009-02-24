@@ -28,6 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace SharpPcap.Util
 {
@@ -259,5 +260,36 @@ namespace SharpPcap.Util
             long m = MacToLong(mac);
             return MacToString(m);
         }
+
+        public static short Ntoh(short val)
+        {
+            return IPAddress.NetworkToHostOrder(val);
+        }
+
+        public static int Ntoh(int val)
+        {
+            return IPAddress.NetworkToHostOrder(val);
+        }
+
+        public static long Ntoh(long val)
+        {
+            return IPAddress.NetworkToHostOrder(val);
+        }
+
+        public static short Hton(short val)
+        {
+            return IPAddress.HostToNetworkOrder(val);
+        }
+
+        public static int Hton(int val)
+        {
+            return IPAddress.HostToNetworkOrder(val);
+        }
+
+        public static long Hton(long val)
+        {
+            return IPAddress.HostToNetworkOrder(val);
+        }
+
     }
 }
