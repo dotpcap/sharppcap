@@ -25,7 +25,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractHeader(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, _bytes);
+                return PacketEncoding.extractHeader(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, Bytes);
             }
         }
 
@@ -43,8 +43,8 @@ namespace SharpPcap.Packets
         {
             get
             {
-                int dataLen = _bytes.Length - _ipOffset - ICMPFields_Fields.ICMP_HEADER_LEN;
-                return PacketEncoding.extractData(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, _bytes, dataLen);
+                int dataLen = Bytes.Length - _ipOffset - ICMPFields_Fields.ICMP_HEADER_LEN;
+                return PacketEncoding.extractData(_ipOffset, ICMPFields_Fields.ICMP_HEADER_LEN, Bytes, dataLen);
             }
         }
 
@@ -53,12 +53,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS, ICMPFields_Fields.ICMP_CODE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS, ICMPFields_Fields.ICMP_CODE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS, ICMPFields_Fields.ICMP_CODE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS, ICMPFields_Fields.ICMP_CODE_LEN);
             }
         }
 
@@ -87,12 +87,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + ICMPFields_Fields.ICMP_SUBC_POS, ICMPFields_Fields.ICMP_SUBC_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + ICMPFields_Fields.ICMP_SUBC_POS, ICMPFields_Fields.ICMP_SUBC_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_SUBC_POS, ICMPFields_Fields.ICMP_SUBC_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + ICMPFields_Fields.ICMP_SUBC_POS, ICMPFields_Fields.ICMP_SUBC_LEN);
             }
         }
 
@@ -101,12 +101,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS + 1, ICMPFields_Fields.ICMP_CODE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS + 1, ICMPFields_Fields.ICMP_CODE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS + 1, ICMPFields_Fields.ICMP_CODE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CODE_POS + 1, ICMPFields_Fields.ICMP_CODE_LEN);
             }
 
         }
@@ -117,12 +117,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + ICMPFields_Fields.ICMP_CSUM_POS, ICMPFields_Fields.ICMP_CSUM_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + ICMPFields_Fields.ICMP_CSUM_POS, ICMPFields_Fields.ICMP_CSUM_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CSUM_POS, ICMPFields_Fields.ICMP_CSUM_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + ICMPFields_Fields.ICMP_CSUM_POS, ICMPFields_Fields.ICMP_CSUM_LEN);
             }
         }
 
@@ -225,7 +225,7 @@ namespace SharpPcap.Packets
             buffer.Append(ICMPMessage.getDescription(MessageCode));
             buffer.Append(", ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" l=" + ICMPFields_Fields.ICMP_HEADER_LEN + "," + (_bytes.Length - _ipOffset - ICMPFields_Fields.ICMP_HEADER_LEN));
+            buffer.Append(" l=" + ICMPFields_Fields.ICMP_HEADER_LEN + "," + (Bytes.Length - _ipOffset - ICMPFields_Fields.ICMP_HEADER_LEN));
             buffer.Append(']');
 
             return buffer.ToString();

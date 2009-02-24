@@ -5,6 +5,7 @@
 /// *************************************************************************
 /// </summary>
 using System;
+using SharpPcap.Packets.Util;
 namespace SharpPcap.Packets
 {
     /// <summary> IPProtocol utility class.
@@ -111,7 +112,28 @@ namespace SharpPcap.Packets
         /// </returns>
         public static int extractProtocol(int lLen, byte[] packetBytes)
         {
-            return packetBytes[lLen + IPv4Fields_Fields.IP_CODE_POS];
+            IPPacket.IPVersions ipVer = ExtractVersion(lLen, packetBytes);
+            int protoOffset;
+
+            switch (ipVer)
+            {
+                case IPPacket.IPVersions.IPv4:
+                    protoOffset = IPv4Fields_Fields.IP_CODE_POS;
+                    break;
+                case IPPacket.IPVersions.IPv6:
+                    protoOffset = IPv6Fields_Fields.NEXT_HEADER_POS;
+                    break;
+                default:
+                    return -1;//unknown ip version
+            }
+            return packetBytes[lLen + protoOffset];
+        }
+
+        public static IPPacket.IPVersions ExtractVersion(int lLen, byte[] packetBytes)
+        {
+            return (IPPacket.IPVersions)((ArrayHelper.extractInteger(packetBytes,
+                                                            lLen + IPv4Fields_Fields.IP_VER_POS,
+                                                            IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf);
         }
 
         static IPProtocol()

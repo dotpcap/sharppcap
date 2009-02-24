@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using SharpPcap.Packets.Util;
+using System.Net;
 
 namespace SharpPcap
 {
@@ -46,21 +48,16 @@ namespace SharpPcap
             BinaryReader br = new BinaryReader(memStream);
             Int32 sum = 0;
 
-            Int16 val;
-            try
+            UInt16 val;
+
+            while (memStream.Position < len-1)
             {
-                while(true)
-                {
-                    val = br.ReadInt16();
-                    sum += val;
-                }
-            } catch
-            {
-                // We expect exceptions when we hit the end of the stream
+                val = (UInt16)Util.IPUtil.Ntoh(br.ReadInt16());
+                sum += val;
             }
 
             // if we have a remaining byte we should add it
-            if((len & 2) != 0)
+            if (memStream.Position < len)
             {
                 sum += br.ReadByte();
             }
@@ -71,7 +68,7 @@ namespace SharpPcap
                 sum = (sum & 0xffff) + (sum >> 16);
             }
 
-            return sum & 0xFFFF;
+            return sum;
         }
     }
 }

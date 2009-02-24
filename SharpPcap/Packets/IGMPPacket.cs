@@ -27,7 +27,7 @@ namespace SharpPcap.Packets
             {
                 if (_igmpHeaderBytes == null)
                 {
-                    _igmpHeaderBytes = PacketEncoding.extractHeader(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, _bytes);
+                    _igmpHeaderBytes = PacketEncoding.extractHeader(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes);
                 }
                 return _igmpHeaderBytes;
             }
@@ -51,9 +51,9 @@ namespace SharpPcap.Packets
                 {
                     // set data length based on info in headers (note: tcpdump
                     //  can return extra junk bytes which bubble up to here
-                    int dataLen = _bytes.Length - _ethOffset - IGMPFields_Fields.IGMP_HEADER_LEN;
+                    int dataLen = Bytes.Length - _ethOffset - IGMPFields_Fields.IGMP_HEADER_LEN;
 
-                    _igmpDataBytes = PacketEncoding.extractData(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, _bytes, dataLen);
+                    _igmpDataBytes = PacketEncoding.extractData(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes, dataLen);
                 }
                 return _igmpDataBytes;
             }
@@ -69,7 +69,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + IGMPFields_Fields.IGMP_CODE_POS, IGMPFields_Fields.IGMP_CODE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_CODE_POS, IGMPFields_Fields.IGMP_CODE_LEN);
             }
 
         }
@@ -78,7 +78,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + IGMPFields_Fields.IGMP_MRSP_POS, IGMPFields_Fields.IGMP_MRSP_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_MRSP_POS, IGMPFields_Fields.IGMP_MRSP_LEN);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + IGMPFields_Fields.IGMP_CSUM_POS, IGMPFields_Fields.IGMP_CSUM_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_CSUM_POS, IGMPFields_Fields.IGMP_CSUM_LEN);
             }
 
         }
@@ -98,7 +98,7 @@ namespace SharpPcap.Packets
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
                                              _ipOffset + IGMPFields_Fields.IGMP_GADDR_POS,
-                                             _bytes);
+                                             Bytes);
             }
 
         }
@@ -169,7 +169,7 @@ namespace SharpPcap.Packets
             buffer.Append(", ");
             buffer.Append(GroupAddress + ": ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" l=" + IGMPFields_Fields.IGMP_HEADER_LEN + "," + (_bytes.Length - _ipOffset - IGMPFields_Fields.IGMP_HEADER_LEN));
+            buffer.Append(" l=" + IGMPFields_Fields.IGMP_HEADER_LEN + "," + (Bytes.Length - _ipOffset - IGMPFields_Fields.IGMP_HEADER_LEN));
             buffer.Append(']');
 
             return buffer.ToString();

@@ -53,7 +53,10 @@ namespace SharpPcap.Packets
             get
             {
                 return null;
-            }           
+            }
+            protected set
+            {
+            }
         }
 
         virtual public PcapHeader PcapHeader

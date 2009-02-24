@@ -23,12 +23,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
         }
 
@@ -37,12 +37,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
         }
 
@@ -51,12 +51,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractLong(_bytes, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
+                return ArrayHelper.extractLong(Bytes, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
             }
         }
 
@@ -65,12 +65,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractLong(_bytes, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
+                return ArrayHelper.extractLong(Bytes, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
             }
         }
 
@@ -79,14 +79,14 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ((ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN) >> 12) & 0xf) * 4;
+                return ((ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN) >> 12) & 0xf) * 4;
             }
 
             set
             {
                 value = value / 4;
-                _bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] &= (byte)(0x0f);
-                _bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] |= (byte)(((value << 4) & 0xf0));
+                Bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] &= (byte)(0x0f);
+                Bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] |= (byte)(((value << 4) & 0xf0));
             }
         }
 
@@ -117,7 +117,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return (IPPayloadLength - TcpHeaderLength);
+                return (IPPayloadLength);
             }
         }
 
@@ -126,17 +126,15 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
             }
         }
 
-        //TODO: reimplement this taking into account the ipv4 vs. ipv6 differences
-#if false        
         /// <summary> Fetch the header checksum.</summary>
         /// <summary> Set the checksum of the TCP header</summary>
         /// <param name="cs">the checksum value
@@ -155,11 +153,11 @@ namespace SharpPcap.Packets
 
         }
         /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-        public bool ValidChecksum
+        public override bool ValidChecksum
         {
             get
             {
-                return ValidTCPChecksum;
+                return ValidIPChecksum && ValidTCPChecksum;
             }
 
         }
@@ -171,7 +169,6 @@ namespace SharpPcap.Packets
                 return base.IsValidTransportLayerChecksum(true);
             }
         }
-#endif
 
         /// <returns> The TCP packet length in bytes.  This is the size of the
         /// IP packet minus the size of the IP header.
@@ -190,7 +187,7 @@ namespace SharpPcap.Packets
             {
                 if (!_allFlagsSet)
                 {
-                    _allFlags = ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
+                    _allFlags = ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
                     //tamir: added
                     _allFlagsSet = true;
                 }
@@ -200,7 +197,7 @@ namespace SharpPcap.Packets
             set
             {
 
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
                 _allFlagsSet = false;
             }
 
@@ -370,7 +367,7 @@ namespace SharpPcap.Packets
             {
                 if (_tcpHeaderBytes == null)
                 {
-                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, TcpHeaderLength, _bytes);
+                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, TcpHeaderLength, Bytes);
                 }
                 return _tcpHeaderBytes;
             }
@@ -394,7 +391,7 @@ namespace SharpPcap.Packets
                 {
                     // set data length based on info in headers (note: tcpdump
                     //  can return extra junk bytes which bubble up to here
-                    _tcpDataBytes = PacketEncoding.extractData(_ipOffset, TcpHeaderLength, _bytes, PayloadDataLength);
+                    _tcpDataBytes = PacketEncoding.extractData(_ipOffset, TcpHeaderLength, Bytes, PayloadDataLength);
                 }
                 return _tcpDataBytes;
             }
@@ -435,8 +432,6 @@ namespace SharpPcap.Packets
             this._timeval = tv;
         }
 
-        //TODO: fix this now that we have ipv4 vs. ipv6 packets
-#if false
         /// <summary> Fetch the header checksum.</summary>
         public int Checksum
         {
@@ -462,7 +457,7 @@ namespace SharpPcap.Packets
         /// </returns>
         public int ComputeTCPChecksum(bool update)
         {
-            return base.ComputeTransportLayerChecksum(TCPFields_Fields.TCP_CSUM_POS, true, true);
+            return base.ComputeTransportLayerChecksum(TCPFields_Fields.TCP_CSUM_POS, update, true);
         }
 
         /// <summary> Same as <code>computeTCPChecksum(true);</code>
@@ -474,7 +469,6 @@ namespace SharpPcap.Packets
         {
             return ComputeTCPChecksum(true);
         }
-#endif
 
         private int _urgentPointer;
         private bool _urgentPointerSet = false;
@@ -484,7 +478,7 @@ namespace SharpPcap.Packets
         {
             if (!_urgentPointerSet)
             {
-                _urgentPointer = ArrayHelper.extractInteger(_bytes, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
+                _urgentPointer = ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
                 _urgentPointerSet = true;
             }
             return _urgentPointer;
@@ -497,7 +491,7 @@ namespace SharpPcap.Packets
         /// </param>
         public void setUrgentPointer(int pointer)
         {
-            ArrayHelper.insertLong(_bytes, pointer, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
+            ArrayHelper.insertLong(Bytes, pointer, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
             _urgentPointerSet = false;
         }
 
@@ -549,26 +543,25 @@ namespace SharpPcap.Packets
         /// </param>
         public virtual void SetData(byte[] data)
         {
-#if false
+            //reset cached tcp data
+            _tcpDataBytes = null;
+
             // extract out all of the headers into 'headers'
-            byte[] headers = ArrayHelper.copy(_bytes, 0, TcpHeaderLength+IpHeaderLength+EthernetHeaderLength);
+            byte[] headers = ArrayHelper.copy(Bytes, 0, TcpHeaderLength + IpHeaderLength + EthernetHeaderLength);
 
             // append the data onto the header bytes
             byte[] newBytes = ArrayHelper.join(headers, data);
 
             // make the old headers and new data bytes the new packet bytes
-            this._bytes = newBytes;
+            this.Bytes = newBytes;
 
-            TCPHeaderLength = _bytes.Length-data.Length-IpHeaderLength-EthernetHeaderLength;
+            TCPHeaderLength = Bytes.Length - data.Length - IpHeaderLength - EthernetHeaderLength;
 
             //update ip total length length
-            IPTotalLength = IpHeaderLength + TcpHeaderLength + data.Length;
+            IPPayloadLength = data.Length;
+
             //update also offset and pcap header
             OnOffsetChanged();
-#else
-            //TODO: this is more complex since we now handle both ipv4 and ipv6 packets
-            throw new System.NotImplementedException();
-#endif
         }
 
         /// <summary> Convert this TCP packet to a readable string.</summary>
@@ -641,15 +634,12 @@ namespace SharpPcap.Packets
             buffer.Append("rst=" + Rst + ", ");
             buffer.Append("syn=" + Syn + ", ");
             buffer.Append("fin=" + Fin + ", ");
-            buffer.Append("wsize=" + WindowSize + ", ");
-            //TODO: fix this when we have valid checksumming
-#if false            
+            buffer.Append("wsize=" + WindowSize + ", ");       
             buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
             if (this.ValidTCPChecksum)
                 buffer.Append(" (correct), ");
             else
                 buffer.Append(" (incorrect, should be " + ComputeTCPChecksum(false) + "), ");
-#endif
             buffer.Append("uptr=0x" + System.Convert.ToString(getUrgentPointer(), 16));
             buffer.Append(']');
 
@@ -658,7 +648,6 @@ namespace SharpPcap.Packets
 
             return buffer.ToString();
         }
-
         public static TCPPacket RandomPacket()
         {
             return RandomPacket(54);
@@ -666,31 +655,51 @@ namespace SharpPcap.Packets
 
         public static TCPPacket RandomPacket(int size)
         {
+            return RandomPacket(size, IPVersions.IPv4);
+        }
+
+        public static TCPPacket RandomPacket(IPVersions ipver)
+        {
+            return RandomPacket(ipver==IPVersions.IPv6 ? 74:54, ipver);
+        }
+
+        public static TCPPacket RandomPacket(int size, IPVersions ipver)
+        {
             if(size<54)
                 throw new Exception("Size should be at least 54 (Eth + IP + TCP)");
+            if(ipver == IPVersions.IPv6 && size < 74)
+                throw new Exception("Size should be at least 74 (Eth + IPv6 + TCP)");
 
             byte[] bytes = new byte[size];
             SharpPcap.Util.Rand.Instance.GetBytes(bytes);
             TCPPacket tcp = new TCPPacket(14, bytes, true);
-            MakeValid(tcp);
+            MakeValid(tcp, ipver);
             return tcp;
         }
 
-        public static void MakeValid(TCPPacket tcp)
+
+        public static void MakeValid(TCPPacket tcp, IPVersions ipver)
         {
-#if false        
-            tcp.IPVersion = 4;
-            tcp.IPTotalLength = tcp.Bytes.Length-14;            //Set the correct IP length
-            tcp.IPHeaderLength = IPFields_Fields.IP_HEADER_LEN;
+            tcp.IPVersion = ipver;
+            tcp.IPProtocol = Packets.IPProtocol.IPProtocolType.TCP;
             tcp.TCPHeaderLength = TCPFields_Fields.TCP_HEADER_LEN;          //Set the correct TCP header length
+
+            if (ipver == IPVersions.IPv4)
+            {
+                tcp.IPTotalLength = tcp.Bytes.Length - 14;            //Set the correct IP length
+                tcp.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
+            }
+            else if (ipver == IPVersions.IPv6)
+            {
+                tcp.IPPayloadLength = tcp.Bytes.Length - EthernetFields_Fields.ETH_HEADER_LEN - IPv6Fields_Fields.IPv6_HEADER_LEN;
+            }
+            else
+            {
+            }
+
             //Calculate checksums
             tcp.ComputeIPChecksum();
             tcp.ComputeTCPChecksum();
-#else
-            //TODO: this is more complex now that we handle ipv4 and ipv6 packets, we can't
-            // juse assume a length of 14 for an ip header
-            throw new System.NotImplementedException();
-#endif
         }
     }
 }

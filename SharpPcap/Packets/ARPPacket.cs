@@ -25,12 +25,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ethOffset + ARPFields_Fields.ARP_HW_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethOffset + ARPFields_Fields.ARP_HW_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
             }
         }
 
@@ -38,12 +38,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ethOffset + ARPFields_Fields.ARP_PR_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethOffset + ARPFields_Fields.ARP_PR_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_TYPE_POS, ARPFields_Fields.ARP_ADDR_TYPE_LEN);
             }
         }
 
@@ -51,12 +51,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ethOffset + ARPFields_Fields.ARP_HW_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethOffset + ARPFields_Fields.ARP_HW_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_HW_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
             }
         }
 
@@ -64,12 +64,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ethOffset + ARPFields_Fields.ARP_PR_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethOffset + ARPFields_Fields.ARP_PR_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_PR_LEN_POS, ARPFields_Fields.ARP_ADDR_SIZE_LEN);
             }
         }
 
@@ -83,12 +83,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
             }
         }
 
@@ -97,7 +97,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractLong(_bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
+                return ArrayHelper.extractLong(Bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
             }
         }
 
@@ -109,13 +109,13 @@ namespace SharpPcap.Packets
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
                                              _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS,
-                                             _bytes);
+                                             Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, _bytes, _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS, address.Length);
             }
         }
 
@@ -127,13 +127,13 @@ namespace SharpPcap.Packets
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
                                              _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS,
-                                             _bytes);
+                                             Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, _bytes, _ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS, address.Length);
             }
         }
 
@@ -142,7 +142,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractHeader(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, _bytes);
+                return PacketEncoding.extractHeader(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, Bytes);
             }
         }
 
@@ -151,7 +151,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractData(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, _bytes);
+                return PacketEncoding.extractData(_ethOffset, ARPFields_Fields.ARP_HEADER_LEN, Bytes);
             }
         }
 
@@ -190,18 +190,18 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, _bytes);
+                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, Bytes);
             }
             set
             {
-                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, _bytes);
+                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, Bytes);
             }
         }
 
         /// <summary> Sets the hardware source address.</summary>
         public virtual void setARPSenderHwAddress(long addr)
         {
-            ArrayHelper.insertLong(_bytes, addr, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
+            ArrayHelper.insertLong(Bytes, addr, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
         }
 
         /// <summary> Gets/Sets the hardware destination address.</summary>
@@ -209,18 +209,18 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, _bytes);
+                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, Bytes);
             }
             set
             {
-                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, _bytes);
+                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, Bytes);
             }
         }
 
         /// <summary> Sets the hardware destination address.</summary>
         public virtual void setARPTargetHwAddress(long addr)
         {
-            ArrayHelper.insertLong(_bytes, addr, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, 6);
+            ArrayHelper.insertLong(Bytes, addr, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, 6);
         }
 
         /// <summary> Fetch data portion of the arp header.</summary>

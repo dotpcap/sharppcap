@@ -239,10 +239,14 @@ namespace SharpPcap.Packets
             {
                 return _bytes;
             }
+            protected set
+            {
+                _bytes = value;
+            }
 
         }
         // store the data here, all subclasses can offset into this
-        protected internal byte[] _bytes;
+        private byte[] _bytes;
 
         // offset from beginning of byte array where the data payload 
         // (i.e. IP packet) starts. The size of the ethernet frame header.

@@ -25,12 +25,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + UDPFields_Fields.UDP_SP_POS, UDPFields_Fields.UDP_PORT_LEN);
             }
 
         }
@@ -39,12 +39,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + UDPFields_Fields.UDP_DP_POS, UDPFields_Fields.UDP_PORT_LEN);
             }
 
         }
@@ -61,7 +61,7 @@ namespace SharpPcap.Packets
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
             }
 
         }
@@ -110,7 +110,7 @@ namespace SharpPcap.Packets
             {
                 if (_udpHeaderBytes == null)
                 {
-                    _udpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes);
+                    _udpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, Bytes);
                 }
                 return _udpHeaderBytes;
             }
@@ -134,8 +134,8 @@ namespace SharpPcap.Packets
                 {
                     // set data length based on info in headers (note: tcpdump
                     //  can return extra junk bytes which bubble up to here
-                    int tmpLen = _bytes.Length - _ipOffset - UDPFields_Fields.UDP_HEADER_LEN;
-                    _udpDataBytes = PacketEncoding.extractData(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, _bytes, tmpLen);
+                    int tmpLen = Bytes.Length - _ipOffset - UDPFields_Fields.UDP_HEADER_LEN;
+                    _udpDataBytes = PacketEncoding.extractData(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, Bytes, tmpLen);
                 }
                 return _udpDataBytes;
             }
@@ -200,7 +200,7 @@ namespace SharpPcap.Packets
             get
             {
                 // should produce the same value as header.length + data.length
-                return ArrayHelper.extractInteger(_bytes, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipOffset + UDPFields_Fields.UDP_LEN_POS, UDPFields_Fields.UDP_LEN_LEN);
             }
         }
 

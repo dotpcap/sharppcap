@@ -36,17 +36,70 @@ namespace SharpPcap.Packets
         public IPv4Packet ipv4;
         public IPv6Packet ipv6;
 
-        private void SetIPOffsetFromVersion()
+        // offset from beginning of byte array where IP header ends (i.e.,
+        //  size of ethernet frame header and IP header
+        protected internal int _ipOffset;
+
+        /// <summary> Create a new IP packet. </summary>
+        public IPPacket(int lLen, byte[] bytes, IPVersions version)
+            : base(lLen, bytes)
         {
-            if(IPVersion == IPVersions.IPv4)
+            IPVersion = version;
+        }
+
+        /// <summary> Create a new IP packet. </summary>
+        public IPPacket(int lLen, byte[] bytes)
+            : base(lLen, bytes)
+        {
+            InitIPPacket(IPVersion);
+        }
+
+        /// <summary> Create a new IP packet.</summary>
+        public IPPacket(int lLen, byte[] bytes, Timeval tv)
+            : this(lLen, bytes)
+        {
+            this._timeval = tv;
+        }
+
+        /// <summary> Create a new IP packet.</summary>
+        public IPPacket(int lLen, byte[] bytes, Timeval tv, IPVersions version)
+            : this(lLen, bytes, version)
+        {
+            this._timeval = tv;
+        }
+
+        private void InitIPPacket(IPVersions version)
+        {
+            ipv4 = null;
+            ipv6 = null;
+
+            if (version == IPVersions.IPv4)
             {
-                _ipOffset = _ethOffset + ipv4.IPHeaderLength;
-            } else if(IPVersion == IPVersions.IPv6)
+                ipv4 = new IPv4Packet(EthernetHeaderLength, Bytes);
+                _ipOffset = _ethOffset + IPv4Fields_Fields.IP_HEADER_LEN;
+            }
+            else if (version == IPVersions.IPv6)
             {
+                ipv6 = new IPv6Packet(EthernetHeaderLength, Bytes);
                 _ipOffset = _ethOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
-            } else
+            }
+            else
             {
-                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
+                //lame default
+                _ipOffset = _ethOffset;
+            }
+        }
+
+        public override byte[] Bytes
+        {
+            get
+            {
+                return base.Bytes;
+            }
+            protected set
+            {
+                base.Bytes = value;
+                InitIPPacket(IPVersion);
             }
         }
 
@@ -57,7 +110,7 @@ namespace SharpPcap.Packets
         {
             base.OnOffsetChanged();
 
-            SetIPOffsetFromVersion();
+            InitIPPacket(IPVersion);
         }
 
         /// <summary> Get the IP version code.</summary>
@@ -65,15 +118,18 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return (IPVersions)((ArrayHelper.extractInteger(_bytes,
+                return (IPVersions)((ArrayHelper.extractInteger(Bytes,
                                                                 _ethOffset + IPv4Fields_Fields.IP_VER_POS,
                                                                 IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf);
             }
 
             set
             {
-                _bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
-                _bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
+                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
+                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
+
+                //version had changed, reinit packet
+                InitIPPacket(IPVersion);
             }
         }
 
@@ -86,35 +142,6 @@ namespace SharpPcap.Packets
             }
         }
 
-        // offset from beginning of byte array where IP header ends (i.e.,
-        //  size of ethernet frame header and IP header
-        protected internal int _ipOffset;
-
-        /// <summary> Create a new IP packet. </summary>
-        public IPPacket(int lLen, byte[] bytes)
-            : base(lLen, bytes)
-        {
-            if(IPVersion == IPVersions.IPv4)
-            {
-                ipv4 = new IPv4Packet(lLen, bytes);
-            } else if(IPVersion == IPVersions.IPv6)
-            {
-                ipv6 = new IPv6Packet(lLen, bytes);
-            } else
-            {
-                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
-            }
-
-            SetIPOffsetFromVersion();
-        }
-
-        /// <summary> Create a new IP packet.</summary>
-        public IPPacket(int lLen, byte[] bytes, Timeval tv)
-            : this(lLen, bytes)
-        {
-            this._timeval = tv;
-        }
-
         /// <summary> Returns the payload length of the packet</summary>
         public int IPPayloadLength
         {
@@ -124,6 +151,15 @@ namespace SharpPcap.Packets
                     return ipv4.IPPayloadLength;
                 else if(ipv6 != null)
                     return ipv6.IPPayloadLength;
+                else
+                    throw new System.InvalidOperationException();
+            }
+            set
+            {
+                if (ipv4 != null)
+                    ipv4.IPTotalLength = value + IPv4Fields_Fields.IP_HEADER_LEN;
+                else if (ipv6 != null)
+                    ipv6.IPPayloadLength = value;
                 else
                     throw new System.InvalidOperationException();
             }
@@ -142,17 +178,20 @@ namespace SharpPcap.Packets
         public override System.String ToColoredString(bool colored)
         {
             System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("IPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences_Fields.RESET);
-
             if(ipv4 != null)
                 buffer.Append(ipv4.ToColoredString(colored));
-            else if(ipv6 != null)
+            else if (ipv6 != null)
                 buffer.Append(ipv6.ToColoredString(colored));
+            else
+            {
+                //unknown version
+                buffer.Append('[');
+                if (colored)
+                    buffer.Append(Color);
+                buffer.Append("IPPacket (Unkown Version)");
+                if (colored)
+                    buffer.Append(AnsiEscapeSequences_Fields.RESET);
+            }
 
             return buffer.ToString();
         }
@@ -333,6 +372,202 @@ namespace SharpPcap.Packets
                     ipv4.IPProtocol = value;
                 else if(ipv6 != null)
                     ipv6.NextHeader = value;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+        }
+
+        /// <summary> Fetch the header checksum.</summary>
+        public virtual int GetTransportLayerChecksum(int pos)
+        {
+            return ArrayHelper.extractInteger(Bytes, pos, 2);
+        }
+
+        protected internal virtual void SetTransportLayerChecksum(int cs, int csPos)
+        {
+            SetChecksum(cs, _ipOffset + csPos);
+        }
+
+        public virtual bool IsValidTransportLayerChecksum(bool pseudoIPHeader)
+        {
+            byte[] upperLayer = IPData;
+            if (pseudoIPHeader)
+                upperLayer = AttachPseudoIPHeader(upperLayer);
+            int onesSum = ChecksumUtils.OnesSum(upperLayer);
+            return (onesSum == 0xffff);
+        }
+
+        /// <summary> Sets the IP header checksum.</summary>
+        protected internal virtual void SetChecksum(int cs, int checkSumOffset)
+        {
+            ArrayHelper.insertLong(Bytes, cs, checkSumOffset, 2);
+        }
+
+        /// <summary>
+        /// Returns the IP data.
+        /// </summary>
+        virtual public byte[] IPData
+        {
+            get
+            {
+                if (ipv4 != null)
+                    return ipv4.IPData;
+                else if (ipv6 != null)
+                    return ipv6.IPData;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+        }
+
+        protected internal virtual byte[] AttachPseudoIPHeader(byte[] origHeader)
+        {
+            if (ipv4 != null)
+                return ipv4.AttachPseudoIPHeader(origHeader);
+            else if (ipv6 != null)
+                return ipv6.AttachPseudoIPHeader(origHeader);
+            else
+                throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+        }
+
+        public int ComputeTransportLayerChecksum(int checksumOffset, bool update, bool pseudoIPHeader)
+        {
+            // copy the tcp section with data
+            byte[] dataToChecksum = IPData;
+            // reset the checksum field (checksum is calculated when this field is
+            // zeroed)
+            ArrayHelper.insertLong(dataToChecksum, 0, checksumOffset, 2);
+            if (pseudoIPHeader)
+                dataToChecksum = AttachPseudoIPHeader(dataToChecksum);
+            // compute the one's complement sum of the tcp header
+            int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+            if (update)
+            {
+                SetTransportLayerChecksum(cs, checksumOffset);
+            }
+
+            return cs;
+        }
+
+        /// <summary> Same as <code>computeIPChecksum(true);</code>
+        /// 
+        /// </summary>
+        /// <returns> The computed IP checksum value.
+        /// </returns>
+        public int ComputeIPChecksum()
+        {
+            return ComputeIPChecksum(true);
+        }
+
+        /// <summary> Computes the IP checksum, optionally updating the IP checksum header.
+        /// 
+        /// </summary>
+        /// <param name="update">Specifies whether or not to update the IP checksum
+        /// header after computing the checksum.  A value of true indicates
+        /// the header should be updated, a value of false indicates it
+        /// should not be updated.
+        /// </param>
+        /// <returns> The computed IP checksum.
+        /// </returns>
+        public int ComputeIPChecksum(bool update)
+        {
+            if (ipv4 != null)
+                return ipv4.ComputeIPChecksum(update);
+            else if (ipv6 != null)
+                return 0;
+            else
+                throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+        }
+
+        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        virtual public bool ValidChecksum
+        {
+            get
+            {
+                return ValidIPChecksum;
+            }
+
+        }
+
+        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        virtual public bool ValidIPChecksum
+        {
+            get
+            {
+                if (ipv4 != null)
+                    return ipv4.ValidIPChecksum;
+                else if (ipv6 != null)
+                    return true;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+        }
+
+        /// <summary> Fetch the IP header length in bytes. </summary>
+        /// <summary> Sets the IP header length field.  At most, this can be a 
+        /// four-bit value.  The high order bits beyond the fourth bit
+        /// will be ignored.
+        /// 
+        /// </summary>
+        /// <param name="length">The length of the IP header in 32-bit words.
+        /// </param>
+        virtual public int IPHeaderLength
+        {
+            get
+            {
+                if (ipv4 != null)
+                    return ipv4.IPHeaderLength;
+                else if (ipv6 != null)
+                    return IPv6Fields_Fields.IPv6_HEADER_LEN;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+            set
+            {
+                if (ipv4 != null)
+                    ipv4.IPHeaderLength = value;
+                else if (ipv6 != null)
+                    throw new System.InvalidOperationException("can't set IPHeaderLength on ipv6 packet");
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+        }
+
+        /// <summary> Fetch the packet IP header length.</summary>
+        public int IpHeaderLength
+        {
+            get
+            {
+                return IPHeaderLength;
+            }
+
+            set
+            {
+                IPHeaderLength = value;
+            }
+        }
+
+        /// <summary> Fetch the IP length in bytes.</summary>
+        public virtual int IPTotalLength
+        {
+            get
+            {
+                if (ipv4 != null)
+                    return ipv4.IPTotalLength;
+                else if (ipv6 != null)
+                    return IPv6Fields_Fields.IPv6_HEADER_LEN + ipv6.IPPayloadLength;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+            set
+            {
+                if (ipv4 != null)
+                    ipv4.IPTotalLength = value;
+                else if (ipv6 != null)
+                    ipv6.IPPayloadLength = value - IPv6Fields_Fields.IPv6_HEADER_LEN;
                 else
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
             }
