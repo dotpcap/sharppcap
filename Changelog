@@ -1,6 +1,14 @@
 Changelog
 
 v2.0.2 - TDB
+- Added comparison to known checksum values, extracted from wireshark, to 
+IPv6PacketTest.TCPChecksumIPv6
+- Integrated a patch from Tamir Gal
+    * Fixes IPv4 and IPv6 checksumming and adds unit test case for IPv6 checksum
+    * Int64RangeTest cases
+    * The ability to create an IPPacket from scratch
+    * Simplifies the OnesComplement code
+    * Re-enabled the checksum tests in PacketsTest.cs
 - Remove unnecessary stuff from the SharpPcap namespace by hiding the 
 PcapUnmanagedStructures by moving from a namespace of 
 SharpPcap.PcapUnmanagedStructures to putting the structures inside of an internal 
