@@ -75,5 +75,30 @@ namespace SharpPcap.Util
                 last = cur;
             }
         }
+
+        [Test]
+        public virtual void testRange2()
+        {
+            int min = 54; int max = 1500;
+            NumberRange range = new Int64Range(min, max);
+            for (int i = 0; i < 10000; i++)
+            {
+                long n = range.nextRandom();
+                Assert.Greater((decimal)n+1, min);
+                Assert.Less((decimal)n-1, max);
+            }
+        }
+
+        [Test]
+        public virtual void testRange3()
+        {
+            int min = 54; int max = 1500;
+            for (int i = 0; i < 10000; i++)
+            {
+                long n = Rand.Instance.GetInt(min, max);
+                Assert.Greater((decimal)n + 1, min);
+                Assert.Less((decimal)n - 1, max);
+            }
+        }
     }
 }

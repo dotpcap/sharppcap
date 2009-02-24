@@ -11,14 +11,24 @@ namespace Test
         [Test]
         public void TestChecksums()
         {
+            IPPacket.IPVersions[] versions = { IPPacket.IPVersions.IPv4, IPPacket.IPVersions.IPv6 };
+
             for(int i=0; i<10000; i++)
             {
-//              TCPPacket tcp = TCPPacket.RandomPacket();
-                //TODO: TCPPacket to be fixed after the ipv4/ipv6 changes as ValidIPChecksum doesn't work now
-                // And this test should use a known quantity, a packet recorded and loaded from a file
-                throw new System.NotImplementedException();
-//              Assert.IsTrue(tcp.ValidIPChecksum);
-//              Assert.IsTrue(tcp.ValidTCPChecksum);
+                int len;
+                //choose random version
+                IPPacket.IPVersions ipver = versions[Rand.Instance.GetInt(0, 1)];
+                //choose random len based on version
+                if (ipver == IPPacket.IPVersions.IPv4)
+                    len = Rand.Instance.GetInt(54, 1500);
+                else
+                    len = Rand.Instance.GetInt(74, 1500);
+
+                TCPPacket tcp = TCPPacket.RandomPacket(len, ipver);
+                //TODO: this test should use a known quantity, a packet recorded and loaded from a file
+                Assert.AreEqual(len, tcp.Bytes.Length);
+                Assert.IsTrue(tcp.ValidIPChecksum);
+                Assert.IsTrue(tcp.ValidTCPChecksum);
             }
         }
     }

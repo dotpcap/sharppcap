@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 using SharpPcap;
@@ -41,6 +42,61 @@ namespace Test
             Assert.AreEqual(16, ipPacket.IPPayloadLength);
 
             dev.PcapClose();
+        }
+
+        // Test that we can load and parse an IPv6 TCP packet
+        [Test]
+        public void TCPChecksumIPv6()
+        {
+            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/ipv6_http.pcap");
+            dev.PcapOpen();
+
+            Packet p;
+
+            // checksums from wireshark of the capture file
+            int[] expectedChecksum = {0x41a2,
+                                      0x4201,
+                                      0x5728,
+                                      0xf448,
+                                      0xee07,
+                                      0x939c,
+                                      0x63e4,
+                                      0x4590,
+                                      0x3725,
+                                      0x3723};
+
+            int packetIndex = 0;
+            while ((p = dev.PcapGetNextPacket()) != null)
+            {
+                Assert.IsTrue(p is TCPPacket);
+                TCPPacket t = (TCPPacket)p;
+                Assert.IsTrue(t.ValidChecksum);
+
+                // compare the computed checksum to the expected one
+                Assert.AreEqual(expectedChecksum[packetIndex],
+                                t.ComputeTCPChecksum());
+
+                packetIndex++;
+            }
+
+            dev.PcapClose();
+        }
+
+        // Test that we can correctly set the data section of a IPv6 packet
+        [Test]
+        public void TCPDataIPv6()
+        {
+            String s = "-++++=== HELLLLOOO ===++++-";
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
+
+            //create random pkt
+            TCPPacket p = TCPPacket.RandomPacket(IPPacket.IPVersions.IPv6);
+
+            //replace pkt's data with our string
+            p.TCPData = data;
+
+            //sanity check
+            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.TCPData));
         }
     }
 }
