@@ -1,6 +1,12 @@
 Changelog
 
 v2.0.2 - TDB
+- Integrated a patch from Chris Penrose
+    * Re-enable checksumming for UDP
+    * Remove duplicate IPPacket.IpHeaderLength property, switch code to use the 
+existing IPPacket.IPHeaderLength property
+    * Add additional checks to EthernetPacketTest.cs
+    * Improve IPv6Packet test to be easier to extend packet checking
 - Added comparison to known checksum values, extracted from wireshark, to 
 IPv6PacketTest.TCPChecksumIPv6
 - Integrated a patch from Tamir Gal

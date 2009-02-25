@@ -547,7 +547,7 @@ namespace SharpPcap.Packets
             _tcpDataBytes = null;
 
             // extract out all of the headers into 'headers'
-            byte[] headers = ArrayHelper.copy(Bytes, 0, TcpHeaderLength + IpHeaderLength + EthernetHeaderLength);
+            byte[] headers = ArrayHelper.copy(Bytes, 0, TcpHeaderLength + IPHeaderLength + EthernetHeaderLength);
 
             // append the data onto the header bytes
             byte[] newBytes = ArrayHelper.join(headers, data);
@@ -555,7 +555,7 @@ namespace SharpPcap.Packets
             // make the old headers and new data bytes the new packet bytes
             this.Bytes = newBytes;
 
-            TCPHeaderLength = Bytes.Length - data.Length - IpHeaderLength - EthernetHeaderLength;
+            TCPHeaderLength = Bytes.Length - data.Length - IPHeaderLength - EthernetHeaderLength;
 
             //update ip total length length
             IPPayloadLength = data.Length;

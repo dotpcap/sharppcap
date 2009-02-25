@@ -11,7 +11,31 @@ namespace Test
 {
     [TestFixture]
     public class IPv6PacketTest
-    {   
+    { 
+        // icmpv6
+        public void VerifyPacket0(Packet p)
+        {
+            Assert.IsNotNull(p);
+            Console.WriteLine(p.ToString());
+
+            EthernetPacket e = (EthernetPacket)p;
+            Assert.AreEqual("00:a0:cc:d9:41:75", e.SourceHwAddress);
+            Assert.AreEqual("33:33:00:00:00:02", e.DestinationHwAddress);
+
+            IPPacket ip = (IPPacket)p;
+            Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
+            Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
+            Assert.AreEqual(IPPacket.IPVersions.IPv6, ip.IPVersion);
+            Assert.AreEqual(IPProtocol.IPProtocolType.ICMPV6, ip.IPProtocol);
+            Assert.AreEqual(16,  ip.IPPayloadLength);
+            Assert.AreEqual(255, ip.HopLimit);
+            Assert.AreEqual(255, ip.TimeToLive);
+            Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
+//          Assert.AreEqual(0x5d50, ip.ComputeIPChecksum());
+            Assert.AreEqual(1221145299, ip.Timeval.Seconds);
+            Assert.AreEqual(453568.000, ip.Timeval.MicroSeconds);
+        }
+
         // Test that we can load and parse an IPv6 packet
         [Test]
         public void IPv6PacketTestParsing()
@@ -20,26 +44,22 @@ namespace Test
             dev.PcapOpen();                                                                           
 
             Packet p;
-            p = dev.PcapGetNextPacket();
+            int packetIndex = 0;
+            while((p = dev.PcapGetNextPacket()) != null)
+            {
+                Console.WriteLine("got packet");
+                switch(packetIndex)
+                {
+                case 0:
+                    VerifyPacket0(p);
+                    break;
+                default:
+                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                    break;
+                }
 
-            Assert.IsNotNull(p);
-
-            Console.WriteLine(p.GetType());
-            IPPacket ipPacket = (IPPacket)p;
-
-            System.Net.IPAddress sourceAddress = System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175");
-            Console.WriteLine("sourceAddress {0}", sourceAddress);
-            Console.WriteLine("SourceAddress {0}", ipPacket.SourceAddress);
-            Assert.AreEqual(sourceAddress, ipPacket.SourceAddress);
-
-            System.Net.IPAddress destinationAddress = System.Net.IPAddress.Parse("ff02::2");
-            Console.WriteLine("destinationAddress {0}", destinationAddress);
-            Console.WriteLine("DestinationAddress {0}", ipPacket.DestinationAddress);
-            Assert.AreEqual(destinationAddress, ipPacket.DestinationAddress);
-
-            Assert.AreEqual(255, ipPacket.HopLimit);
-            Assert.AreEqual(IPProtocol.IPProtocolType.ICMPV6, ipPacket.NextHeader);
-            Assert.AreEqual(16, ipPacket.IPPayloadLength);
+                packetIndex++;
+            }
 
             dev.PcapClose();
         }

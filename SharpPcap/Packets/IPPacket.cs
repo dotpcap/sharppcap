@@ -535,20 +535,6 @@ namespace SharpPcap.Packets
 
         }
 
-        /// <summary> Fetch the packet IP header length.</summary>
-        public int IpHeaderLength
-        {
-            get
-            {
-                return IPHeaderLength;
-            }
-
-            set
-            {
-                IPHeaderLength = value;
-            }
-        }
-
         /// <summary> Fetch the IP length in bytes.</summary>
         public virtual int IPTotalLength
         {

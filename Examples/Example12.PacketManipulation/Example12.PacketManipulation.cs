@@ -89,9 +89,9 @@ namespace Example12.PacketManipulation
         private static void device_PcapOnPacketArrival(object sender, SharpPcap.Packets.Packet packet)
         {
             if(packet is EthernetPacket)
-            {               
+            {
                 EthernetPacket eth = ((EthernetPacket)packet);
-                Console.WriteLine("Original packet: "+eth.ToColoredString(false));
+                Console.WriteLine("Original Eth packet: " + eth.ToColoredString(false));
 
                 //Manipulate ethernet parameters
                 eth.SourceHwAddress = "00:11:22:33:44:55";
@@ -100,20 +100,20 @@ namespace Example12.PacketManipulation
                 if (packet is IPPacket)
                 {
                     IPPacket ip = ((IPPacket)packet);
-                    
+                    Console.WriteLine("Original IP packet: " + ip.ToColoredString(false));
+
                     //manipulate IP parameters
                     ip.SourceAddress = System.Net.IPAddress.Parse("1.2.3.4");
                     ip.DestinationAddress = System.Net.IPAddress.Parse("44.33.22.11");
                     ip.TimeToLive = 11;
 
                     //Recalculate the IP checksum
-                    //TODO: IPPacket needs to fix support for this
-                    //   after the ipv4/ipv6 changes were integrated
-//                  ip.ComputeIPChecksum();
+                    ip.ComputeIPChecksum();
 
                     if (ip is TCPPacket)
                     {
                         TCPPacket tcp = ((TCPPacket)ip);
+                        Console.WriteLine("Original TCP packet: " + tcp.ToColoredString(false));
 
                         //manipulate TCP parameters
                         tcp.SourcePort = 9999;
@@ -126,24 +126,23 @@ namespace Example12.PacketManipulation
                         tcp.SequenceNumber = 800;
 
                         //Recalculate the TCP checksum
-                        //TODO: TCPPacket needs this fixed after the ipv4/ipv6 changes
-//                      tcp.ComputeTCPChecksum();
+                        tcp.ComputeTCPChecksum();
                     }
 
                     if (ip is UDPPacket)
                     {
                         UDPPacket udp = ((UDPPacket)ip);
+                        Console.WriteLine("Original UDP packet: " + udp.ToColoredString(false));
 
                         //manipulate UDP parameters
                         udp.SourcePort = 9999;
                         udp.DestinationPort = 8888;
 
                         //Recalculate the UDP checksum
-                        //TODO: UDPPacket needs this fixed after the ipv4/ipv6 changes
-//                        udp.ComputeUDPChecksum();
+                        udp.ComputeUDPChecksum();
                     }
                 }
-                Console.WriteLine("Manipulated packet: "+eth.ToColoredString(false));
+                Console.WriteLine("Manipulated Eth packet: " + eth.ToColoredString(false));
             }
         }
     }

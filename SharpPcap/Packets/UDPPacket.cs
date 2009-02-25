@@ -66,9 +66,6 @@ namespace SharpPcap.Packets
 
         }
 
-        //TODO: fix this to handle ipv4 vs. ipv6
-#if false
-        /// <summary> Fetch the header checksum.</summary>
         /// <summary> Fetch the header checksum.</summary>
         virtual public int UDPChecksum
         {
@@ -85,7 +82,7 @@ namespace SharpPcap.Packets
         }
 
         /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-        public bool ValidChecksum
+        public override bool ValidChecksum
         {
             get
             {
@@ -101,7 +98,6 @@ namespace SharpPcap.Packets
                 return base.IsValidTransportLayerChecksum(true);
             }
         }
-#endif
 
         /// <summary> Fetch the UDP header a byte array.</summary>
         virtual public byte[] UDPHeader
@@ -152,22 +148,19 @@ namespace SharpPcap.Packets
         /// <param name="data">the data bytes</param>
         public void SetData(byte[] data)
         {
-#if false
-            byte[] headers = ArrayHelper.copy(_bytes, 0, UDPFields_Fields.UDP_HEADER_LEN +IpHeaderLength+EthernetHeaderLength);
+            if (IPVersion != IPVersions.IPv4)
+                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
+
+            byte[] headers = ArrayHelper.copy(Bytes, 0, UDPFields_Fields.UDP_HEADER_LEN + IPHeaderLength + EthernetHeaderLength);
             byte[] newBytes = ArrayHelper.join(headers, data);
-            this._bytes = newBytes;
-            UDPLength = _bytes.Length-IpHeaderLength-EthernetHeaderLength;
-        
+            this.Bytes = newBytes;
+            UDPLength = Bytes.Length - IPHeaderLength - EthernetHeaderLength;
+
             //update ip total length length
-            IPTotalLength = IpHeaderLength + UDPFields_Fields.UDP_HEADER_LEN + data.Length;
-        
+            IPTotalLength = IPHeaderLength + UDPFields_Fields.UDP_HEADER_LEN + data.Length;
+
             //update also offset and pcap header
             OnOffsetChanged();
-#else
-            //TODO: code is more complex since we now have ipv4 and ipv6 packets we can't just
-            // add in a fixed header size
-            throw new System.NotImplementedException();
-#endif
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -204,8 +197,6 @@ namespace SharpPcap.Packets
             }
         }
 
-        //TODO: fix this to properly handle the ipv4 vs. ipv6 differences
-#if false
         /// <summary> Fetch the header checksum.</summary>
         public int Checksum
         {
@@ -231,6 +222,9 @@ namespace SharpPcap.Packets
         /// </returns>
         public int ComputeUDPChecksum(bool update)
         {
+            if (IPVersion != IPVersions.IPv4)
+                throw new System.NotImplementedException("IPVersion of " + IPVersion + " is unrecognized");
+
             // copy the udp section with data
             byte[] udp = IPData;
             // reset the checksum field (checksum is calculated when this field is
@@ -239,7 +233,7 @@ namespace SharpPcap.Packets
             //pseudo ip header should be attached to the udp+data
             udp = AttachPseudoIPHeader(udp);
             // compute the one's complement sum of the udp header
-            int cs = _OnesCompSum(udp);
+            int cs = ChecksumUtils.OnesComplementSum(udp);
             if (update)
             {
                 UDPChecksum = cs;
@@ -252,7 +246,6 @@ namespace SharpPcap.Packets
         {
             return ComputeUDPChecksum(true);
         }
-#endif
 
         private byte[] _udpHeaderBytes = null;
 
