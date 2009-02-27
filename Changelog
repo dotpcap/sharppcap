@@ -7,11 +7,11 @@ v2.0.2 - TDB
 - Integrated a patch from Chris Penrose
     * Re-enable checksumming for UDP
     * Remove duplicate IPPacket.IpHeaderLength property, switch code to use the 
-existing IPPacket.IPHeaderLength property
+      existing IPPacket.IPHeaderLength property
     * Add additional checks to EthernetPacketTest.cs
     * Improve IPv6Packet test to be easier to extend packet checking
 - Added comparison to known checksum values, extracted from wireshark, to 
-IPv6PacketTest.TCPChecksumIPv6
+  IPv6PacketTest.TCPChecksumIPv6
 - Integrated a patch from Tamir Gal
     * Fixes IPv4 and IPv6 checksumming and adds unit test case for IPv6 checksum
     * Int64RangeTest cases
@@ -19,34 +19,34 @@ IPv6PacketTest.TCPChecksumIPv6
     * Simplifies the OnesComplement code
     * Re-enabled the checksum tests in PacketsTest.cs
 - Remove unnecessary stuff from the SharpPcap namespace by hiding the 
-PcapUnmanagedStructures by moving from a namespace of 
-SharpPcap.PcapUnmanagedStructures to putting the structures inside of an internal 
-class named PcapUnmanagedStructures. Switch some methods from public to internal so 
-they are hidden like the unmanaged structures now are.
+  PcapUnmanagedStructures by moving from a namespace of 
+  SharpPcap.PcapUnmanagedStructures to putting the structures inside of an internal 
+  class named PcapUnmanagedStructures. Switch some methods from public to internal so 
+  they are hidden like the unmanaged structures now are.
 - Improve PcapAddress by introducing a Sockaddr container class. Enables handling of 
-hardware addresses that were previously confused and parsed as IP addresses and also 
-resolves a user reported issue with unknown sockaddr.sa_family of 0 by treating this 
-case as unknown.
+  hardware addresses that were previously confused and parsed as IP addresses and also 
+  resolves a user reported issue with unknown sockaddr.sa_family of 0 by treating this 
+  case as unknown.
 - Refactor checksumming code into Packets/Util/ChecksumUtils.cs
 - Set 'svn propset svn:eol-style native' on all .cs files so we don't have line ending 
-conflicts between Windows and Linux.
+  conflicts between Windows and Linux.
 - Have ToColoredString() and ToColoredVerboseString() overrides call the base 
-instances of the same methods. This ensures that full output is produced from each 
-packet.
+  instances of the same methods. This ensures that full output is produced from each 
+  packet.
 - Introduced 'struct sockaddr_in' and modified Pcap.GetPcapAddress() to use sockaddr_in for IPv4 addresses. 
-Previously the code was incorrectly attempting to extract the address from the sockaddr directly. Fixes a user 
-reported bug where IPv4 addresses are displayed incorrectly from PcapDevice.ToString().
+  Previously the code was incorrectly attempting to extract the address from the sockaddr directly. Fixes a user 
+  reported bug where IPv4 addresses are displayed incorrectly from PcapDevice.ToString().
 - Modifed 'struct pcap_pkthdr' to contain a proper 'struct timeval'. Fixes a bug where 64 bit platforms 
-would see crashes when reading packets from a PcapOfflineDevice. Crash was due to a segfault because the 
-pcap_pkthdr size differed from that of the platform and the packet size was coming back as some large and 
-invalid value. The subsequent marshalling of the packet data would be out of the range of data and would 
-produce the segfault.
+  would see crashes when reading packets from a PcapOfflineDevice. Crash was due to a segfault because the 
+  pcap_pkthdr size differed from that of the platform and the packet size was coming back as some large and 
+  invalid value. The subsequent marshalling of the packet data would be out of the range of data and would 
+  produce the segfault.
 - Fixed a few of the examples in the html documentation.
 
 v2.0.1 - 20090207
 - Upgraded the example projects to VS2008 format
 - Added the example projects to the main solution so the examples are built along with the SharpPcap 
-assembly and the unit tests
+  assembly and the unit tests
 - Fixed compile errors in the examples due to the large number of changes in the library
 - Removed the no longer needed Examples/SharpPcap.sln and the old assembly dll file
 - Added some svn:ignore entries to Example directories to keep the svn status output clean
@@ -55,17 +55,17 @@ assembly and the unit tests
 - Removed unused PcapDevice.m_ip member variable and accessor
 - Removed unnecessary Packets/SupportClass.cs
 - Moved TypesOfService_Fields into IPv4Packet as this field is IPv4 specific. Removed 
-Packets/TypesOfService.cs
+  Packets/TypesOfService.cs
 - Renamed 'public struct EthernetProtocols_Fields' to 'public struct EtherType' and moved the struct inside 
-of class EthernetPacket for better encapsulation. Removed EthernetProtocols.cs and EthernetProtocol.cs.
+  of class EthernetPacket for better encapsulation. Removed EthernetProtocols.cs and EthernetProtocol.cs.
 - Move 'public struct IPVersions_Fields' into IPPacket.cs and rename to 'public enum IPVersions'. Remove now 
-empty IPVersions.cs
+  empty IPVersions.cs
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
 - Added Mono support
 - Standardize on using System.Net.IPAddress to represent IP addresses instead of a mix of strings and long 
-values
+  values
 - Upgraded project files to VS2008 format
 - Use System.Collections.Generic List<> instead of type-specific classes. Remove the type specific classes.
 - Added test for parsing of Ethernet packets
