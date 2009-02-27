@@ -23,8 +23,7 @@ binDirectory=${baseOutputDirectory}/bin
 dirName=SharpPcap-${releaseVersion}
 releaseDirectory=${binDirectory}/${dirName}
 
-mkdir ${binDirectory}
-mkdir ${releaseDirectory}
+mkdir -p ${releaseDirectory}
 
 debugDirectory=${releaseDirectory}/Debug
 releaseDirectory=${releaseDirectory}/Release
