@@ -1,6 +1,9 @@
 Changelog
 
 v2.0.2 - TDB
+- Added accessor, PcapDevice.Interface, to enable the user to retrieve the PcapDevice's
+  interface. Enables user to get the ip/hardware/etc addresses that the PcapDevice is
+  associated with. Suggestion by Riyaz Ahemed.
 - Integrated a patch from Chris Penrose
     * Re-enable checksumming for UDP
     * Remove duplicate IPPacket.IpHeaderLength property, switch code to use the 

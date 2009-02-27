@@ -57,6 +57,10 @@ namespace SharpPcap
         };
 
         private Pcap.PcapInterface m_pcapIf;
+        public Pcap.PcapInterface Interface
+        {
+            get { return m_pcapIf; }
+        }
 
         private IntPtr      m_pcapAdapterHandle = IntPtr.Zero;
         private IntPtr      m_pcapDumpHandle    = IntPtr.Zero;
