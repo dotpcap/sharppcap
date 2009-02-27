@@ -102,29 +102,29 @@ namespace Test
 //          tcp.ComputeIPChecksum();
 //          tcp.ComputeTCPChecksum();
 
-            dev.PcapOpen(true, 20);
+            dev.Open(true, 20);
             
             //Set a filter to capture only replies
             //FIXME: PcapDevice doesn't have an IpAddress. Not sure if the more permissive
             //       filter will work the same
 //          dev.PcapSetFilter("ip src "+destIP+" and ip dst "+
 //              dev.IpAddress+" and tcp src port "+destPort+" and tcp dst port "+sourcePort);
-            dev.PcapSetFilter("ip src "+destIP+
+            dev.SetFilter("ip src "+destIP+
                 " and tcp src port "+destPort+" and tcp dst port "+sourcePort);
 
             //Send the packet
             Console.Write("Sending packet: "+tcp+"...");
-            dev.PcapSendPacket(tcp);
+            dev.SendPacket(tcp);
             Console.WriteLine("Packet sent.");
 
             //Holds the reply
             Packet reply;
             //Wait till you get a reply
-            while((reply=dev.PcapGetNextPacket())==null);
+            while((reply=dev.GetNextPacket())==null);
             //print the reply
             Console.WriteLine("Reply received: "+reply);
 
-            dev.PcapClose();
+            dev.Close();
         }
 
         public static void Main1(string[] args)
@@ -154,7 +154,7 @@ namespace Test
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 

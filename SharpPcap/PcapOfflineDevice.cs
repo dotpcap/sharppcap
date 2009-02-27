@@ -54,7 +54,7 @@ namespace SharpPcap
             m_pcapFile = pcapFile;
         }
 
-        public override string PcapName
+        public override string Name
         {
             get
             {
@@ -62,7 +62,7 @@ namespace SharpPcap
             }
         }
 
-        public override string PcapDescription
+        public override string Description
         {
             get
             {
@@ -70,11 +70,11 @@ namespace SharpPcap
             }
         }
 
-        public long PcapFileSize
+        public long FileSize
         {
             get
             {
-                return new FileInfo( PcapName ).Length;
+                return new FileInfo( Name ).Length;
             }
         }
 
@@ -82,20 +82,20 @@ namespace SharpPcap
         /// <summary>
         /// The underlying pcap file name
         /// </summary>
-        public string PcapFileName
+        public string FileName
         {
-            get{ return System.IO.Path.GetFileName( this.PcapName );}
+            get{ return System.IO.Path.GetFileName( this.Name );}
         }
 
         /// <summary>
         /// Opens the device for capture
         /// </summary>
-        public override void PcapOpen()
+        public override void Open()
         {
             //holds errors
             StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
             //opens offline pcap file
-            IntPtr adapterHandle = Pcap.pcap_open_offline( this.PcapName, errbuf);
+            IntPtr adapterHandle = Pcap.pcap_open_offline( this.Name, errbuf);
 
             //handle error
             if ( adapterHandle == IntPtr.Zero)
@@ -114,9 +114,9 @@ namespace SharpPcap
         /// <param name="promiscuous_mode">This parameter
         /// has no affect on this method since it's an 
         /// offline device</param>
-        public override void PcapOpen(bool promiscuous_mode)
+        public override void Open(bool promiscuous_mode)
         {
-            this.PcapOpen();
+            this.Open();
         }       
 
         /// <summary>
@@ -128,15 +128,15 @@ namespace SharpPcap
         /// <param name="read_timeout">This parameter
         /// has no affect on this method since it's an 
         /// offline device</param>
-        public override void PcapOpen(bool promiscuous_mode, int read_timeout)
+        public override void Open(bool promiscuous_mode, int read_timeout)
         {
-            this.PcapOpen();
+            this.Open();
         }
 
         /// <summary>
         /// Setting a capture filter on this offline device is not supported
         /// </summary>
-        public override void PcapSetFilter( string filter )
+        public override void SetFilter( string filter )
         {
             throw new PcapException("It is not possible to set a capture filter on an offline device");
         }

@@ -152,18 +152,18 @@ namespace SharpPcap.Protocols
             String arpFilter = "arp and ether dst " + IPUtil.MacFormat(localMAC);
 
             //open the device with 20ms timeout
-            device.PcapOpen(true, 20);
+            device.Open(true, 20);
             //set the filter
-            device.PcapSetFilter(arpFilter);
+            device.SetFilter(arpFilter);
             //inject the packet to the wire
-            device.PcapSendPacket(request);
+            device.SendPacket(request);
 
             ARPPacket reply;
 
             while(true)
             {
                 //read the next packet from the network
-                reply = (ARPPacket)device.PcapGetNextPacket();
+                reply = (ARPPacket)device.GetNextPacket();
                 if(reply==null)continue;
                 
                 //if this is the reply we're looking for, stop
@@ -173,7 +173,7 @@ namespace SharpPcap.Protocols
                 }
             }
             //free the device
-            device.PcapClose();
+            device.Close();
             //return the resolved MAC address
             return reply.ARPSenderHwAddress;
         }

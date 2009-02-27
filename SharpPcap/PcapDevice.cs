@@ -29,6 +29,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
 using SharpPcap.Util;
 using SharpPcap.Packets;
 using System.Runtime.InteropServices;
@@ -94,43 +95,48 @@ namespace SharpPcap
         /// Fires whenever a new packet is received on this Pcap Device.<br>
         /// This event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
-        public event Pcap.PacketArrivalEvent PcapOnPacketArrival;
+        public event Pcap.PacketArrivalEvent OnPacketArrival;
 
         /// <summary>
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br>
         /// This event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
-        public event Pcap.PcapStatisticsEvent PcapOnPcapStatistics;
+        public event Pcap.PcapStatisticsEvent OnPcapStatistics;
 
         /// <summary>
         /// Fired when the capture process of this pcap device is stopped
         /// </summary>
-        public event Pcap.PcapCaptureStoppedEvent PcapOnCaptureStopped;
+        public event Pcap.PcapCaptureStoppedEvent OnCaptureStopped;
         
         /// <summary>
         /// Gets the pcap name of this network device
         /// </summary>
-        public virtual string PcapName
+        public virtual string Name
         {
-            get{return m_pcapIf.Name;}
+            get { return m_pcapIf.Name; }
+        }
+
+        public virtual List<Pcap.PcapAddress> Addresses
+        {
+            get { return m_pcapIf.Addresses; }
         }
 
         /// <summary>
         /// Gets the pcap description of this device
         /// </summary>
-        public virtual string PcapDescription
+        public virtual string Description
         {
-            get{return m_pcapIf.Description;}
+            get{ return m_pcapIf.Description; }
         }
 
-        public virtual uint PcapFlags
+        public virtual uint Flags
         {
-            get{return m_pcapIf.Flags;}
+            get{ return m_pcapIf.Flags; }
         }
 
-        public virtual bool PcapLoopback
+        public virtual bool Loopback
         {
-            get{return (PcapFlags&Pcap.PCAP_IF_LOOPBACK)==1;}
+            get{ return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
         }
 
         /// <summary>
@@ -149,7 +155,7 @@ namespace SharpPcap
         {
             get
             {
-                if(!PcapOpened)
+                if(!Opened)
                     throw new InvalidOperationException("Cannot get datalink, the pcap device is not opened");
                 return Pcap.pcap_datalink(PcapHandle);
             }
@@ -158,7 +164,7 @@ namespace SharpPcap
         /// <summary>
         /// Return a value indicating if this adapter is opened
         /// </summary>
-        public virtual bool PcapOpened
+        public virtual bool Opened
         {
             get{return (PcapHandle != IntPtr.Zero);}
         }
@@ -166,7 +172,7 @@ namespace SharpPcap
         /// <summary>
         /// Return a value indicating if the capturing process of this adapter is started
         /// </summary>
-        public virtual bool PcapStarted
+        public virtual bool Started
         {
             get{return m_pcapStarted;}
         }
@@ -176,7 +182,7 @@ namespace SharpPcap
             get{return m_pcapMode;}
             set
             {
-                if(!PcapOpened)
+                if(!Opened)
                     throw new PcapException
                         ("Can't set PcapMode, the device is not opened");
 
@@ -192,9 +198,9 @@ namespace SharpPcap
         /// Open the device with default values of: promiscuous_mode=false, read_timeout=1000
         /// To start capturing call the 'PcapStartCapture' function
         /// </summary>
-        public virtual void PcapOpen()
+        public virtual void Open()
         {
-            this.PcapOpen(false);
+            this.Open(false);
         }
 
         /// <summary>
@@ -203,9 +209,9 @@ namespace SharpPcap
         /// <param name="promiscuous_mode">A value indicating wether to open the
         ///  device in promiscuous mode (true = capture *all* packets on the network,
         ///  including packets not for me)</param>
-        public virtual void PcapOpen(bool promiscuous_mode)
+        public virtual void Open(bool promiscuous_mode)
         {
-            this.PcapOpen( promiscuous_mode, 1000 );
+            this.Open( promiscuous_mode, 1000 );
         }
 
         /// <summary>
@@ -215,17 +221,17 @@ namespace SharpPcap
         ///  device in promiscuous mode (true = capture *all* packets on the network,
         ///  including packets not for me)</param>
         /// <param name="read_timeout">The timeout in miliseconds to wait for a  packet arrival</param>
-        public virtual void PcapOpen(bool promiscuous_mode, int read_timeout)
+        public virtual void Open(bool promiscuous_mode, int read_timeout)
         {
             short mode = 0;
             if (promiscuous_mode) mode = 1;
 
-            if ( !PcapOpened )
+            if ( !Opened )
             {
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
                 PcapHandle = Pcap.pcap_open_live
-                    (   PcapName,           // name of the device
+                    (   Name,           // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
                                             // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
                         mode,               // promiscuous mode
@@ -234,7 +240,7 @@ namespace SharpPcap
 
                 if ( PcapHandle == IntPtr.Zero)
                 {
-                    string err = "Unable to open the adapter ("+PcapName+"). "+errbuf.ToString();
+                    string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
                     throw new Exception( err );
                 }
             }
@@ -243,15 +249,15 @@ namespace SharpPcap
         /// <summary>
         /// Starts the capturing process
         /// </summary>
-        public virtual void PcapStartCapture()
+        public virtual void StartCapture()
         {
-            if(!PcapStarted)
+            if(!Started)
             {
-                if ( !PcapOpened )
+                if ( !Opened )
                 {
                     throw new Exception("Can't start capture, the pcap device is not opened.");
                 }
-                Thread thSniff = new Thread(new ThreadStart(this.PcapCaptureLoop));
+                Thread thSniff = new Thread(new ThreadStart(this.CaptureLoop));
                 m_pcapThreadEvent.Reset();  //reset the thread signal
                 thSniff.Start();            //start capture thread  
                 m_pcapThreadEvent.WaitOne();//wait for 'started' signal from thread
@@ -264,19 +270,19 @@ namespace SharpPcap
         /// </summary>
         /// <param name="packetCount">The number of packets to be captured. 
         /// Value of '-1' means infinite.</param>
-        public virtual void PcapCapture(int packetCount)
+        public virtual void Capture(int packetCount)
         {
             m_pcapPacketCount = packetCount;
-            PcapCaptureLoop();
+            CaptureLoop();
             m_pcapPacketCount = Pcap.INFINITE;;
         }
 
         /// <summary>
         /// Stops the capture process
         /// </summary>
-        public virtual void PcapStopCapture()
+        public virtual void StopCapture()
         {
-            if (PcapStarted)
+            if (Started)
             {
                 m_pcapThreadEvent.Reset();  //reset the thread signal
                 m_pcapStarted = false;      //unset the 'started' signal
@@ -287,31 +293,31 @@ namespace SharpPcap
         /// <summary>
         /// Closes this adapter
         /// </summary>
-        public virtual void PcapClose()
+        public virtual void Close()
         {
             if(PcapHandle==IntPtr.Zero)
                 return;
 
-            if (PcapStarted)
+            if (Started)
             {
-                PcapStopCapture();
+                StopCapture();
             }
             Pcap.pcap_close(PcapHandle);
             PcapHandle = IntPtr.Zero;
             
             //Remove event handlers
-            if ( PcapOnPacketArrival != null)
+            if ( OnPacketArrival != null)
             {
-                foreach(Pcap.PacketArrivalEvent pa in PcapOnPacketArrival.GetInvocationList())
+                foreach(Pcap.PacketArrivalEvent pa in OnPacketArrival.GetInvocationList())
                 {
-                    PcapOnPacketArrival -= pa;
+                    OnPacketArrival -= pa;
                 }
             }
-            if ( PcapOnPcapStatistics != null)
+            if ( OnPcapStatistics != null)
             {
-                foreach(Pcap.PcapStatisticsEvent pse in PcapOnPcapStatistics.GetInvocationList())
+                foreach(Pcap.PcapStatisticsEvent pse in OnPcapStatistics.GetInvocationList())
                 {
-                    PcapOnPcapStatistics -= pse;
+                    OnPcapStatistics -= pse;
                 }
             }
         }
@@ -320,10 +326,10 @@ namespace SharpPcap
         /// Gets the next packet captured on this device
         /// </summary>
         /// <returns>The next packet captured on this device</returns>
-        public virtual Packet PcapGetNextPacket()
+        public virtual Packet GetNextPacket()
         {
             Packet p;
-            int res = PcapGetNextPacket( out p );
+            int res = GetNextPacket( out p );
             if(res==-1)
                 throw new PcapException("Error receiving packet.");
             return p;
@@ -334,7 +340,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">A packet reference</param>
         /// <returns>A reference to a packet object</returns
-        public virtual int PcapGetNextPacket(out Packet p)
+        public virtual int GetNextPacket(out Packet p)
         {
             //Pointer to a packet info struct
             IntPtr header = IntPtr.Zero;
@@ -368,7 +374,7 @@ namespace SharpPcap
         /// <summary>
         /// The capture procedure
         /// </summary>
-        protected virtual void PcapCaptureLoop()
+        protected virtual void CaptureLoop()
         {
             //Set the 'started' flag
             m_pcapStarted = true;
@@ -395,7 +401,7 @@ namespace SharpPcap
                         }
                     }
                     //Capture a packet
-                    res=PcapGetNextPacket( out p );
+                    res = GetNextPacket( out p );
 
 
                     if(res==0)/* Timeout elapsed */
@@ -437,29 +443,29 @@ namespace SharpPcap
             //If mode is MODE_CAP:
             if(Mode==PcapMode.Capture)
             {
-                if(PcapOnPacketArrival != null )
+                if(OnPacketArrival != null )
                 {
                     //Invoke the packet arrival event                                           
-                    PcapOnPacketArrival(this, p);
+                    OnPacketArrival(this, p);
                 }
             }
             //else mode is MODE_STAT
             else if(Mode==PcapMode.Statistics)
             {
-                if(PcapOnPcapStatistics != null)
+                if(OnPcapStatistics != null)
                 {
                     //Invoke the pcap statistics event
-                    PcapOnPcapStatistics(this, new PcapStatistics(p));
+                    OnPcapStatistics(this, new PcapStatistics(p));
                 }
             }
         }
 
         private void SendCaptureStoppedEvent(bool error)
         {
-            if(PcapOnCaptureStopped!=null)
+            if(OnCaptureStopped!=null)
             {
                 //Notify upper applications
-                PcapOnCaptureStopped(this, error);
+                OnCaptureStopped(this, error);
             }
         }
 
@@ -470,7 +476,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="filterExpression">The filter expression to 
         /// compile</param>
-        public virtual void PcapSetFilter(string filterExpression)
+        public virtual void SetFilter(string filterExpression)
         {
             int res; IntPtr err_ptr; string err="";
 
@@ -514,14 +520,14 @@ namespace SharpPcap
         /// Opens a file for packet writings
         /// </summary>
         /// <param name="fileName"></param>
-        public void PcapDumpOpen(string fileName)
+        public void DumpOpen(string fileName)
         {
-            if(PcapDumpOpened)
+            if(DumpOpened)
             {
                 throw new PcapException("A dump file is already opened");
             }
             m_pcapDumpHandle = Pcap.pcap_dump_open(PcapHandle, fileName);
-            if(!PcapDumpOpened)
+            if(!DumpOpened)
                 throw new PcapException("Error openning dump file.");
         }
 
@@ -529,9 +535,9 @@ namespace SharpPcap
         /// Closes the opened dump file
         /// </summary>
         /// <param name="fileName"></param>
-        public void PcapDumpClose()
+        public void DumpClose()
         {
-            if(PcapDumpOpened)
+            if(DumpOpened)
             {
                 Pcap.pcap_dump_close(m_pcapDumpHandle);
                 m_pcapDumpHandle = IntPtr.Zero;
@@ -542,9 +548,9 @@ namespace SharpPcap
         /// Flushes all write buffers of the opened dump file
         /// </summary>
         /// <param name="fileName"></param>
-        public void PcapDumpFlush()
+        public void DumpFlush()
         {
-            if(PcapDumpOpened)
+            if(DumpOpened)
                 Pcap.pcap_dump_flush(m_pcapDumpHandle);
         }
 
@@ -552,11 +558,11 @@ namespace SharpPcap
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        public void PcapDump(byte[] p, PcapHeader h)
+        public void Dump(byte[] p, PcapHeader h)
         {
-            if(!PcapOpened)
+            if(!Opened)
                 throw new InvalidOperationException("Cannot dump packet, device is not opened");
-            if(!PcapDumpOpened)
+            if(!DumpOpened)
                 throw new InvalidOperationException("Cannot dump packet, dump file is not opened");
 
             //Marshal packet
@@ -579,24 +585,24 @@ namespace SharpPcap
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        public void PcapDump(byte[] p)
+        public void Dump(byte[] p)
         {
-            PcapDump(p, new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length));
+            Dump(p, new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length));
         }
 
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        public void PcapDump(Packet p)
+        public void Dump(Packet p)
         {
-            PcapDump(p.Bytes, p.PcapHeader);
+            Dump(p.Bytes, p.PcapHeader);
         }
 
         /// <summary>
         /// Gets a value indicating wether pcap dump file is already associated with this device
         /// </summary>
-        public bool PcapDumpOpened
+        public bool DumpOpened
         {
             get{return m_pcapDumpHandle!=IntPtr.Zero;}
         }
@@ -605,9 +611,9 @@ namespace SharpPcap
         /// Sends a raw packet throgh this device
         /// </summary>
         /// <param name="p">The packet to send</param>
-        public void PcapSendPacket(Packet p)
+        public void SendPacket(Packet p)
         {
-            PcapSendPacket(p.Bytes);
+            SendPacket(p.Bytes);
         }
 
 
@@ -616,18 +622,18 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">The packet to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public void PcapSendPacket(Packet p, int size)
+        public void SendPacket(Packet p, int size)
         {
-            PcapSendPacket(p.Bytes, size);
+            SendPacket(p.Bytes, size);
         }
 
         /// <summary>
         /// Sends a raw packet throgh this device
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
-        public void PcapSendPacket(byte[] p)
+        public void SendPacket(byte[] p)
         {
-            PcapSendPacket(p, p.Length);
+            SendPacket(p, p.Length);
         }
 
         /// <summary>
@@ -635,9 +641,9 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public void PcapSendPacket(byte[] p, int size)
+        public void SendPacket(byte[] p, int size)
         {
-            if ( PcapOpened )
+            if ( Opened )
             {
                 if (size > p.Length)
                 {
@@ -656,8 +662,10 @@ namespace SharpPcap
 
                 int res = Pcap.pcap_sendpacket(PcapHandle, p_packet, size);
                 Marshal.FreeHGlobal(p_packet);
-                if(res<0)
-                    throw new PcapException("Can't send packet: "+PcapLastError);
+                if(res < 0)
+                {
+                    throw new PcapException("Can't send packet: " + LastError);
+                }
             }
             else
             {
@@ -669,7 +677,7 @@ namespace SharpPcap
         /// Sends all packets in a 'PcapSendQueue' out this pcap device
         /// </summary>
         /// <param name="q">The 'PcapSendQueue' hodling the packets</param>
-        public int PcapSendQueue( PcapSendQueue q, bool sync )
+        public int SendQueue( PcapSendQueue q, bool sync )
         {
             return q.Transmit( this, sync );
         }
@@ -677,7 +685,7 @@ namespace SharpPcap
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
-        public string PcapLastError
+        public string LastError
         {
             get
             {

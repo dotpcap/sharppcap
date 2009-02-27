@@ -537,7 +537,7 @@ namespace SharpPcap
             List<PcapDevice> devices = GetAllDevices();
             foreach(PcapDevice d in devices)
             {
-                if(d.PcapName.Equals(pcapName))
+                if(d.Name.Equals(pcapName))
                 {
                     return d;
                 }

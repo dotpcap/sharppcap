@@ -17,10 +17,10 @@ namespace SharpPcap.Util
         public virtual void Checksum()
         {
             PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/tcp.pcap");
-            dev.PcapOpen();
+            dev.Open();
 
             Packet p;
-            p = dev.PcapGetNextPacket();
+            p = dev.GetNextPacket();
 
             Assert.IsNotNull(p);
 
@@ -32,7 +32,7 @@ namespace SharpPcap.Util
             Console.WriteLine("Checksum: "+t.Checksum.ToString("X"));
             Assert.IsTrue(t.ValidChecksum);
 
-            dev.PcapClose();
+            dev.Close();
         }
 
         // Test that we can load and parse an IPv6 TCP packet

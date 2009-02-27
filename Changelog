@@ -1,6 +1,26 @@
 Changelog
 
 v2.0.2 - TDB
+- Rename some methods, accessors and variables to remove the 'Pcap' prefix.
+  It doesn't seem useful to keep this prefix since the classes and assembly are
+  clearly named as being SharpPcap or Pcap.
+- API breaking changes due to renaming (there are others that aren't in
+  this list)
+    * PcapDevice.PcapOpen()          -> PcapDevice.Open()
+    * PcapDevice.PcapClose()         -> PcapDevice.Close()
+    * PcapDevice.PcapOpened          -> PcapDevice.Opened
+    * PcapDevice.PcapStarted         -> PcapDevice.Started
+    * PcapDevice.PcapDescription     -> PcapDevice.Description
+    * PcapDevice.PcapName            -> PcapDevice.Name
+    * PcapDevice.PcapStartCapture()  -> PcapDevice.StartCapture()
+    * PcapDevice.PcapCapture()       -> PcapDevice.Capture()
+    * PcapDevice.PcapStopCapture()   -> PcapDevice.StopCapture()
+    * PcapDevice.PcapGetNextPacket() -> PcapDevice.GetNextPacket()
+    * PcapDevice.PcapSetFilter()     -> PcapDevice.SetFilter()
+    * PcapDevice.PcapSendPacket()    -> PcapDevice.SendPacket()
+
+- Added PcapDevice.Addresses, this goes along with PcapDevice.Name, .Description and
+  .Flags to provide visibility into the PcapDevice's underlying PcapInterface
 - Added accessor, PcapDevice.Interface, to enable the user to retrieve the PcapDevice's
   interface. Enables user to get the ip/hardware/etc addresses that the PcapDevice is
   associated with. Suggestion by Riyaz Ahemed.
@@ -33,13 +53,15 @@ v2.0.2 - TDB
 - Have ToColoredString() and ToColoredVerboseString() overrides call the base 
   instances of the same methods. This ensures that full output is produced from each 
   packet.
-- Introduced 'struct sockaddr_in' and modified Pcap.GetPcapAddress() to use sockaddr_in for IPv4 addresses. 
-  Previously the code was incorrectly attempting to extract the address from the sockaddr directly. Fixes a user 
+- Introduced 'struct sockaddr_in' and modified Pcap.GetPcapAddress() to use sockaddr_in 
+  for IPv4 addresses. Previously the code was incorrectly attempting to extract the
+  address from the sockaddr directly. Fixes a user 
   reported bug where IPv4 addresses are displayed incorrectly from PcapDevice.ToString().
-- Modifed 'struct pcap_pkthdr' to contain a proper 'struct timeval'. Fixes a bug where 64 bit platforms 
-  would see crashes when reading packets from a PcapOfflineDevice. Crash was due to a segfault because the 
-  pcap_pkthdr size differed from that of the platform and the packet size was coming back as some large and 
-  invalid value. The subsequent marshalling of the packet data would be out of the range of data and would 
+- Modifed 'struct pcap_pkthdr' to contain a proper 'struct timeval'. Fixes a bug where
+  64 bit platforms would see crashes when reading packets from a PcapOfflineDevice. Crash
+  was due to a segfault because the pcap_pkthdr size differed from that of the platform and
+  the packet size was coming back as some large and invalid value. The subsequent
+  marshalling of the packet data would be out of the range of data and would 
   produce the segfault.
 - Fixed a few of the examples in the html documentation.
 

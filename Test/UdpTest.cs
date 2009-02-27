@@ -53,9 +53,9 @@ namespace Test
 //          packet.ComputeIPChecksum();
 //          packet.ComputeUDPChecksum();
  
-            device.PcapOpen();
-            device.PcapSendPacket(packet);
-            device.PcapClose();
+            device.Open();
+            device.SendPacket(packet);
+            device.Close();
         }
     }
 }

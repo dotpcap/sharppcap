@@ -41,11 +41,11 @@ namespace Test
         public void IPv6PacketTestParsing()
         {
             PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/ipv6_icmpv6_packet.pcap");
-            dev.PcapOpen();                                                                           
+            dev.Open();                                                                           
 
             Packet p;
             int packetIndex = 0;
-            while((p = dev.PcapGetNextPacket()) != null)
+            while((p = dev.GetNextPacket()) != null)
             {
                 Console.WriteLine("got packet");
                 switch(packetIndex)
@@ -61,7 +61,7 @@ namespace Test
                 packetIndex++;
             }
 
-            dev.PcapClose();
+            dev.Close();
         }
 
         // Test that we can load and parse an IPv6 TCP packet
@@ -69,7 +69,7 @@ namespace Test
         public void TCPChecksumIPv6()
         {
             PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/ipv6_http.pcap");
-            dev.PcapOpen();
+            dev.Open();
 
             Packet p;
 
@@ -86,7 +86,7 @@ namespace Test
                                       0x3723};
 
             int packetIndex = 0;
-            while ((p = dev.PcapGetNextPacket()) != null)
+            while ((p = dev.GetNextPacket()) != null)
             {
                 Assert.IsTrue(p is TCPPacket);
                 TCPPacket t = (TCPPacket)p;
@@ -99,7 +99,7 @@ namespace Test
                 packetIndex++;
             }
 
-            dev.PcapClose();
+            dev.Close();
         }
 
         // Test that we can correctly set the data section of a IPv6 packet

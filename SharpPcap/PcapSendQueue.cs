@@ -139,7 +139,7 @@ namespace SharpPcap
         /// <returns></returns>
         public int Transmit( PcapDevice device, bool synchronize)
         {
-            if(!device.PcapOpened)
+            if(!device.Opened)
                 throw new PcapException("Can't transmit queue, the pcap device is closed.");
 
             if(m_queue==IntPtr.Zero)

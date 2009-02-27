@@ -147,11 +147,11 @@ namespace Test
         public void TestParsingKnownPackets()
         {
             PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/test_stream.pcap");
-            dev.PcapOpen();
+            dev.Open();
 
             Packet p;
             int packetIndex = 0;
-            while((p = dev.PcapGetNextPacket()) != null)
+            while((p = dev.GetNextPacket()) != null)
             {
                 Console.WriteLine("got packet");
                 switch(packetIndex)
@@ -182,7 +182,7 @@ namespace Test
                 packetIndex++;
             }
 
-            dev.PcapClose();
+            dev.Close();
         }
     }
 }

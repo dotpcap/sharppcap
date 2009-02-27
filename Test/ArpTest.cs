@@ -68,7 +68,7 @@ namespace Test
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -76,7 +76,7 @@ namespace Test
             Console.Write("-- Please choose a device for sending the ARP request: ");
             i = int.Parse( Console.ReadLine() );
 
-            string device = devices[i].PcapName;
+            string device = devices[i].Name;
 
             System.Net.IPAddress ip;
 
