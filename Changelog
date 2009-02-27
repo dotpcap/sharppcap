@@ -1,6 +1,6 @@
 Changelog
 
-v2.0.2 - TDB
+v2.0.2 - 20090227
 - Rename some methods, accessors and variables to remove the 'Pcap' prefix.
   It doesn't seem useful to keep this prefix since the classes and assembly are
   clearly named as being SharpPcap or Pcap.
@@ -67,8 +67,8 @@ v2.0.2 - TDB
 
 v2.0.1 - 20090207
 - Upgraded the example projects to VS2008 format
-- Added the example projects to the main solution so the examples are built along with the SharpPcap 
-  assembly and the unit tests
+- Added the example projects to the main solution so the examples are built along with
+  the SharpPcap assembly and the unit tests
 - Fixed compile errors in the examples due to the large number of changes in the library
 - Removed the no longer needed Examples/SharpPcap.sln and the old assembly dll file
 - Added some svn:ignore entries to Example directories to keep the svn status output clean
@@ -78,18 +78,20 @@ v2.0.1 - 20090207
 - Removed unnecessary Packets/SupportClass.cs
 - Moved TypesOfService_Fields into IPv4Packet as this field is IPv4 specific. Removed 
   Packets/TypesOfService.cs
-- Renamed 'public struct EthernetProtocols_Fields' to 'public struct EtherType' and moved the struct inside 
-  of class EthernetPacket for better encapsulation. Removed EthernetProtocols.cs and EthernetProtocol.cs.
-- Move 'public struct IPVersions_Fields' into IPPacket.cs and rename to 'public enum IPVersions'. Remove now 
-  empty IPVersions.cs
+- Renamed 'public struct EthernetProtocols_Fields' to 'public struct EtherType' and moved
+  the struct inside of class EthernetPacket for better encapsulation. Removed
+  EthernetProtocols.cs and EthernetProtocol.cs.
+- Move 'public struct IPVersions_Fields' into IPPacket.cs and rename to
+  'public enum IPVersions'. Remove now empty IPVersions.cs
 
 v2.0.0 - 20090205
 - Renamed the Tamir.IPLib namespace to SharpPcap to match the name of the assembly
 - Added Mono support
-- Standardize on using System.Net.IPAddress to represent IP addresses instead of a mix of strings and long 
-  values
+- Standardize on using System.Net.IPAddress to represent IP addresses instead of a mix
+  of strings and long values
 - Upgraded project files to VS2008 format
-- Use System.Collections.Generic List<> instead of type-specific classes. Remove the type specific classes.
+- Use System.Collections.Generic List<> instead of type-specific classes. Remove the
+  type specific classes.
 - Added test for parsing of Ethernet packets
 - Removed SharpPcap.Packets.IPAddress class
 - Implemented IPv6 support in IPPacket with the help of a patch from David Bond.
