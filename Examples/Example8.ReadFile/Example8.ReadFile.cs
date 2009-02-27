@@ -31,7 +31,7 @@ namespace SharpPcap.Test.Example8
                 //Get an offline file pcap device
                 device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
                 //Open the device for capturing
-                device.PcapOpen();
+                device.Open();
             } 
             catch(Exception e)
             {
@@ -40,7 +40,7 @@ namespace SharpPcap.Test.Example8
             }
 
             //Register our handler function to the 'packet arrival' event
-            device.PcapOnPacketArrival += 
+            device.OnPacketArrival += 
                 new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
             Console.WriteLine();
@@ -50,10 +50,10 @@ namespace SharpPcap.Test.Example8
 
             //Start capture 'INFINTE' number of packets
             //This method will return when EOF reached.
-            device.PcapCapture( SharpPcap.Pcap.INFINITE );
+            device.Capture( SharpPcap.Pcap.INFINITE );
 
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
             Console.WriteLine("-- End of file reached.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example7
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -54,31 +54,31 @@ namespace SharpPcap.Test.Example7
             PcapDevice device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
-            device.PcapOnPacketArrival += 
+            device.OnPacketArrival += 
                 new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
             //Open the device for capturing
             //true -- means promiscuous mode
             //1000 -- means a read wait of 1000ms
-            device.PcapOpen(true, 1000);
+            device.Open(true, 1000);
 
             //Open or create a capture output file
-            device.PcapDumpOpen( capFile );
+            device.DumpOpen( capFile );
 
             Console.WriteLine();
             Console.WriteLine
                 ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
-                device.PcapDescription);
+                device.Description);
 
             //Start capture 'INFINTE' number of packets
-            device.PcapCapture( SharpPcap.Pcap.INFINITE );
+            device.Capture( SharpPcap.Pcap.INFINITE );
 
             //Close the pcap device
             //(Note: these lines will never be called since
             // we're capturing infinite number of packets
-            device.PcapDumpFlush();
-            device.PcapDumpClose();
-            device.PcapClose();
+            device.DumpFlush();
+            device.DumpClose();
+            device.Close();
         }
 
         /// <summary>
@@ -88,10 +88,10 @@ namespace SharpPcap.Test.Example7
         {                       
             PcapDevice device = (PcapDevice)sender;
             //if device has a dump file opened
-            if( device.PcapDumpOpened )
+            if( device.DumpOpened )
             {
                 //dump the packet to the file
-                device.PcapDump( packet );
+                device.Dump( packet );
                 Console.WriteLine("Packet dumped to file.");
             }
         }

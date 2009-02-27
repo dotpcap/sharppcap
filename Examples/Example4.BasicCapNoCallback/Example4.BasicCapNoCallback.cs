@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example4
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -54,16 +54,16 @@ namespace SharpPcap.Test.Example4
             //Open the device for capturing
             //true -- means promiscuous mode
             //1000 -- means a read wait of 1000ms
-            device.PcapOpen(true, 1000);
+            device.Open(true, 1000);
 
             Console.WriteLine();
             Console.WriteLine("-- Listenning on {0}...",
-                device.PcapDescription);
+                device.Description);
 
             Packet packet;
 
             //Keep capture packets using PcapGetNextPacket()
-            while( (packet=device.PcapGetNextPacket()) != null )
+            while( (packet=device.GetNextPacket()) != null )
             {
                 // Prints the time and length of each received packet
                 DateTime time = packet.PcapHeader.Date;
@@ -73,7 +73,7 @@ namespace SharpPcap.Test.Example4
             }
 
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
             Console.WriteLine("-- Timeout (1000ms) elapsed, capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

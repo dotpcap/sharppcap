@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example9
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -63,7 +63,7 @@ namespace SharpPcap.Test.Example9
             }
 
             //Open the device
-            device.PcapOpen();
+            device.Open();
             
             //Generate a random packet
             byte[] bytes = GetRandomPacket();
@@ -71,7 +71,7 @@ namespace SharpPcap.Test.Example9
             try
             {
                 //Send the packet out the network device
-                device.PcapSendPacket( bytes );
+                device.SendPacket( bytes );
                 Console.WriteLine("-- Packet sent successfuly.");
             }
             catch(Exception e)
@@ -80,7 +80,7 @@ namespace SharpPcap.Test.Example9
             }
 
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
             Console.WriteLine("-- Device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

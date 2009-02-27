@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example11
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -52,35 +52,35 @@ namespace SharpPcap.Test.Example11
             PcapDevice device = devices[i];
 
             //Register our handler function to the 'pcap statistics' event
-            device.PcapOnPcapStatistics += 
+            device.OnPcapStatistics += 
                 new Pcap.PcapStatisticsEvent( device_PcapOnPcapStatistics );
 
             //Open the device for capturing
             //true -- means promiscuous mode
             //1000 -- means stats will be collected 1000ms
-            device.PcapOpen(true, 1000);
+            device.Open(true, 1000);
 
             //Handle TCP packets only
-            device.PcapSetFilter( "tcp" );
+            device.SetFilter( "tcp" );
 
             //Set device to statistics mode
             device.Mode = PcapDevice.PcapMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
-                device.PcapDescription);
+                device.Description);
 
             //Start the capturing process
-            device.PcapStartCapture();
+            device.StartCapture();
 
             //Wait for 'Enter' from the user.
             Console.ReadLine();
 
             //Stop the capturing process
-            device.PcapStopCapture();
+            device.StopCapture();
 
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
             Console.WriteLine("Capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

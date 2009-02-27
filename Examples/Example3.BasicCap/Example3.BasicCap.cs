@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example3
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -52,31 +52,31 @@ namespace SharpPcap.Test.Example3
             PcapDevice device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
-            device.PcapOnPacketArrival += 
+            device.OnPacketArrival += 
                 new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
             //Open the device for capturing
             //true -- means promiscuous mode
             //1000 -- means a read wait of 1000ms
-            device.PcapOpen(true, 1000);
+            device.Open(true, 1000);
 
             Console.WriteLine();
             Console.WriteLine("-- Listenning on {0}, hit 'Enter' to stop...",
-                device.PcapDescription);
+                device.Description);
 
             //Start the capturing process
-            device.PcapStartCapture();
+            device.StartCapture();
 
             //Wait for 'Enter' from the user.
             Console.ReadLine();
 
             //Stop the capturing process
-            device.PcapStopCapture();
+            device.StopCapture();
 
             Console.WriteLine("-- Capture stopped.");
 
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
         }
 
         /// <summary>

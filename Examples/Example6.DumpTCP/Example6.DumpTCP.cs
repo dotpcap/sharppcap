@@ -42,7 +42,7 @@ namespace SharpPcap.Test.Example6
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
@@ -53,18 +53,18 @@ namespace SharpPcap.Test.Example6
             PcapDevice device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
-            device.PcapOnPacketArrival += 
+            device.OnPacketArrival += 
                 new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
 
             //Open the device for capturing
             //true -- means promiscuous mode
             //1000 -- means a read wait of 1000ms
-            device.PcapOpen(true, 1000);
+            device.Open(true, 1000);
 
             //tcpdump filter to capture only TCP/IP packets         
             string filter = "ip and tcp";
             //Associate the filter with this capture
-            device.PcapSetFilter( filter );
+            device.SetFilter( filter );
 
             Console.WriteLine();
             Console.WriteLine
@@ -72,15 +72,15 @@ namespace SharpPcap.Test.Example6
                 filter);
             Console.WriteLine
                 ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
-                device.PcapDescription);
+                device.Description);
 
             //Start capture 'INFINTE' number of packets
-            device.PcapCapture( SharpPcap.Pcap.INFINITE );
+            device.Capture( SharpPcap.Pcap.INFINITE );
 
             //Close the pcap device
             //(Note: this line will never be called since
             // we're capturing infinite number of packets
-            device.PcapClose();
+            device.Close();
         }
 
         /// <summary>

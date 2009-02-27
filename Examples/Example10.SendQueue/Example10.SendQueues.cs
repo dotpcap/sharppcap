@@ -31,7 +31,7 @@ namespace SharpPcap.Test.Example10
                 //Get an offline file pcap device
                 device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
                 //Open the device for capturing
-                device.PcapOpen();
+                device.Open();
             } 
             catch(Exception e)
             {
@@ -43,13 +43,13 @@ namespace SharpPcap.Test.Example10
 
             //Allocate a new send queue
             PcapSendQueue squeue = new PcapSendQueue
-                ( (int)((PcapOfflineDevice)device).PcapFileSize );
+                ( (int)((PcapOfflineDevice)device).FileSize );
             Packet packet;
             
             try
             {
                 //Go through all packets in the file and add to the queue
-                while( (packet=device.PcapGetNextPacket()) != null )
+                while( (packet=device.GetNextPacket()) != null )
                 {
                     if( !squeue.Add( packet ) )
                     {
@@ -79,14 +79,14 @@ namespace SharpPcap.Test.Example10
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.PcapDescription);
+                Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to transmit on: ");
             i = int.Parse( Console.ReadLine() );
-            devices[i].PcapOpen();
+            devices[i].Open();
             string resp;
 
             if(devices[i].PcapDataLink != device.PcapDataLink)
@@ -98,11 +98,11 @@ namespace SharpPcap.Test.Example10
                 if((resp!="")&&( !resp.StartsWith("y")))
                 {
                     Console.WriteLine("Cancelled by user!");
-                    devices[i].PcapClose();
+                    devices[i].Close();
                     return;
                 }
             }
-            device.PcapClose();
+            device.Close();
             device = devices[i];
 
             Console.Write("This will transmit all queued packets through"+
@@ -118,12 +118,12 @@ namespace SharpPcap.Test.Example10
             try
             {
                 Console.Write("Sending packets...");
-                int sent = device.PcapSendQueue( squeue, true );
+                int sent = device.SendQueue( squeue, true );
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {
                     Console.WriteLine("An error occurred sending the packets: {0}. "+
-                        "Only {1} bytes were sent\n", device.PcapLastError, sent);
+                        "Only {1} bytes were sent\n", device.LastError, sent);
                 }
             }
             catch(Exception e)
@@ -134,7 +134,7 @@ namespace SharpPcap.Test.Example10
             squeue.Dispose();
             Console.WriteLine("-- Queue is disposed.");
             //Close the pcap device
-            device.PcapClose();
+            device.Close();
             Console.WriteLine("-- Device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
