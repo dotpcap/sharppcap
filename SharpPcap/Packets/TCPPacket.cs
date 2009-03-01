@@ -117,7 +117,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return (IPPayloadLength);
+                return (IPPayloadLength - TCPHeaderLength);
             }
         }
 
@@ -546,19 +546,26 @@ namespace SharpPcap.Packets
             //reset cached tcp data
             _tcpDataBytes = null;
 
-            // extract out all of the headers into 'headers'
-            byte[] headers = ArrayHelper.copy(Bytes, 0, TcpHeaderLength + IPHeaderLength + EthernetHeaderLength);
+            // the new packet is the length of the headers + the size of the TCPPacket data payload
+            int headerLength = TcpHeaderLength + IPHeaderLength + EthernetHeaderLength;
+            int newPacketLength = headerLength + data.Length;
 
-            // append the data onto the header bytes
-            byte[] newBytes = ArrayHelper.join(headers, data);
+            byte[] newPacketBytes = new byte[newPacketLength];
+
+            // copy the headers into the new packet
+            Array.Copy(Bytes, newPacketBytes, headerLength);
+ 
+            // copy the data into the new packet, immediately after the headers
+            Array.Copy(data, 0, newPacketBytes, headerLength, data.Length);
 
             // make the old headers and new data bytes the new packet bytes
-            this.Bytes = newBytes;
+            this.Bytes = newPacketBytes;
 
-            TCPHeaderLength = Bytes.Length - data.Length - IPHeaderLength - EthernetHeaderLength;
+            // NOTE: TCPHeaderLength remains the same, we only updated the data portion
+            // of the tcp packet
 
-            //update ip total length length
-            IPPayloadLength = data.Length;
+            //update ip total length
+            IPPayloadLength = TCPHeaderLength + Bytes.Length;
 
             //update also offset and pcap header
             OnOffsetChanged();

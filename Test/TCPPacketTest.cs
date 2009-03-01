@@ -7,11 +7,30 @@ namespace SharpPcap.Util
     [TestFixture]
     public class TCPPacketTest
     {
-                
-        [TestFixtureSetUp]
-        public virtual void  SetUp()
+        [Test]
+        public virtual void TCPData()
         {
-        }
+            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/tcp_with_extra_bytes.pcap");
+            dev.Open();
+
+            Packet p;
+            p = dev.GetNextPacket();
+
+            Assert.IsNotNull(p);
+
+            Console.WriteLine(p.GetType());
+            Assert.IsTrue(p is TCPPacket);
+
+            TCPPacket t = (TCPPacket)p;
+
+            // even though the packet has 6 bytes of extra data, the ip packet shows a size of
+            // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
+            // there should be zero bytes in the TCPData value
+            int expectedTcpDataLength = 0;
+            Assert.AreEqual(expectedTcpDataLength, t.TCPData.Length);
+
+            dev.Close();
+        }        
 
         [Test]
         public virtual void Checksum()

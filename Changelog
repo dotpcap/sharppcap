@@ -1,4 +1,15 @@
 Changelog
+v2.0.3 - TBD
+- Fix issues with TCPPacket.TCPData not returning the correct data
+    - Fix TCPPacket.PayloadDataLength, should be (IPPayloadLength - TCPHeaderLength),
+      not just (IPPayloadLength)
+    - Rewrite and fix TCPPacket.SetData() to perform a single byte[] allocation when 
+      building the new TCPPacket, this should improve performance. Stop SetData() from 
+      altering the TCPHeaderLength, we are only changing the data. Use the correct 
+      value when setting the IPPayloadLength.
+    - Add a TCPPacketTest test that reads a pcap capture file that contains a TCP 
+      packet with a few extra bytes at the end and verifies that the TCPData is 
+      correctly returned with a length of zero. Test fails without above fixes.
 
 v2.0.2 - 20090227
 - Rename some methods, accessors and variables to remove the 'Pcap' prefix.
