@@ -1,5 +1,21 @@
 Changelog
 v2.0.3 - TBD
+- Integrated patch from Phill L, Lucid Communications, LLC. to fix a null pointer 
+  exception that occurs with the PcapHandler() callback from pcap/winpcap.
+  
+  The crash is due to C# using stdcall calling convention by default and c/c++ using 
+  cdecl calling convention by default. These calling conventions are the same for 
+  parameters passed to the handler, so the call to PcapHandler() delegate should 
+  result in the handler being called properly, returning from the handler is another 
+  story.
+
+  Because cdecl requires that the caller cleanup the stack but stdcall requires the
+  callee cleanup the stack, the default c# stdcall function would result in stack
+  corruption, although the return value in EAX should be passed correctly. This would
+  explain observed behavior in the code that notes that the first call works but
+  subsequent calls fail, this is due to the stack being corrupted upon the return of
+  the first call. The fix is to add a method attribute to set cdecl calling 
+  convention.
 - Fix issues with TCPPacket.TCPData not returning the correct data
     - Fix TCPPacket.PayloadDataLength, should be (IPPayloadLength - TCPHeaderLength),
       not just (IPPayloadLength)

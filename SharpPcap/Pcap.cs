@@ -219,15 +219,15 @@ namespace SharpPcap
         private static int      AF_PACKET;
         private static int      AF_INET6;
 
-        #region Callback Implementation ( Not Working from some reason, Bug?)
 
         [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
         private extern static int pcap_loop(IntPtr /* pcap_t* */ adaptHandle, short count, PcapHandler callback, IntPtr ptr);
 
         /// <summary>
-        /// From some reason the Callback inplementation doesn't work.
-        /// It fires for one time and then throws null pointer exception
+        /// The delegate declaration for PcapHandler requires an UnmanagedFunctionPointer attribute.
+        /// Without this it fires for one time and then throws null pointer exception
         /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void PcapHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr pkt_data);
 
         private void MyPacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr pkt_data)
@@ -246,7 +246,6 @@ namespace SharpPcap
             }
         }
 
-        #endregion Callback Implementation (Not Working)
 
         public class Sockaddr
         {
