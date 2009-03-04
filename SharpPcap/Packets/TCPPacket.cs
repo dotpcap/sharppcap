@@ -90,19 +90,6 @@ namespace SharpPcap.Packets
             }
         }
 
-        /// <summary> Fetch the TCP header length in bytes.</summary>
-        virtual public int TcpHeaderLength
-        {
-            get
-            {
-                return TCPHeaderLength;
-            }
-            set
-            {
-                TCPHeaderLength = value;
-            }
-        }
-
         /// <summary> Fetches the packet TCP header length.</summary>
         override public int HeaderLength
         {
@@ -367,7 +354,7 @@ namespace SharpPcap.Packets
             {
                 if (_tcpHeaderBytes == null)
                 {
-                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, TcpHeaderLength, Bytes);
+                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, TCPHeaderLength, Bytes);
                 }
                 return _tcpHeaderBytes;
             }
@@ -546,7 +533,7 @@ namespace SharpPcap.Packets
             _tcpDataBytes = null;
 
             // the new packet is the length of the headers + the size of the TCPPacket data payload
-            int headerLength = TcpHeaderLength + IPHeaderLength + EthernetHeaderLength;
+            int headerLength = TCPHeaderLength + IPHeaderLength + EthernetHeaderLength;
             int newPacketLength = headerLength + data.Length;
 
             byte[] newPacketBytes = new byte[newPacketLength];
