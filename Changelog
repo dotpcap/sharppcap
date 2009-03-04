@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Integrated patch from Phill L. to prevent creation of the ChecksumUtils class, all 
+  methods are static, and prevent inheriting from the class. Fix a potential overflow 
+  issue by using only MemoryStream variables in a limit check.
 - Remove TCPPacket.TcpHeaderLength, we already have TCPPacket.TCPHeaderLength
 - Integrated patch from Phill L, Lucid Communications, LLC. to fix a null pointer 
   exception that occurs with the PcapHandler() callback from pcap/winpcap.

@@ -15,8 +15,10 @@ namespace SharpPcap
     * taken from TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W.
     * Richard Stevens. Page 236
     */
-    public class ChecksumUtils
+    public sealed class ChecksumUtils
     {
+        private ChecksumUtils() { }
+
         /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
@@ -50,7 +52,7 @@ namespace SharpPcap
 
             UInt16 val;
 
-            while (memStream.Position < len-1)
+            while (memStream.Position < memStream.Length -1)
             {
                 val = (UInt16)Util.IPUtil.Ntoh(br.ReadInt16());
                 sum += val;
