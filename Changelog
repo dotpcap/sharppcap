@@ -16,6 +16,8 @@ v2.0.3 - TBD
   subsequent calls fail, this is due to the stack being corrupted upon the return of
   the first call. The fix is to add a method attribute to set cdecl calling 
   convention.
+- Remove error masking from TCPPacket.TCPData set accessor by switching to using a 
+  straight Array.Copy()
 - Fix issues with TCPPacket.TCPData not returning the correct data
     - Fix TCPPacket.PayloadDataLength, should be (IPPayloadLength - TCPHeaderLength),
       not just (IPPayloadLength)

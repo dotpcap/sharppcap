@@ -389,9 +389,8 @@ namespace SharpPcap.Packets
             {
                 if (_tcpDataBytes == null)
                 {
-                    // set data length based on info in headers (note: tcpdump
-                    //  can return extra junk bytes which bubble up to here
-                    _tcpDataBytes = PacketEncoding.extractData(_ipOffset, TcpHeaderLength, Bytes, PayloadDataLength);
+                    _tcpDataBytes = new byte[PayloadDataLength];
+                    Array.Copy(Bytes, _ipOffset + TCPHeaderLength, _tcpDataBytes, 0, PayloadDataLength);
                 }
                 return _tcpDataBytes;
             }
@@ -565,7 +564,7 @@ namespace SharpPcap.Packets
             // of the tcp packet
 
             //update ip total length
-            IPPayloadLength = TCPHeaderLength + Bytes.Length;
+            IPPayloadLength = TCPHeaderLength + data.Length;
 
             //update also offset and pcap header
             OnOffsetChanged();
