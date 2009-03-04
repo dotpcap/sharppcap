@@ -513,11 +513,12 @@ namespace SharpPcap.Packets
 
         private byte[] _tcpHeaderBytes = null;
 
+        // cached copy of the payload of the tcp packet
         private byte[] _tcpDataBytes = null;
 
-        /// <summary> Fetch the TCP data as a byte array.</summary>
-        public override byte[] Data
-        {
+        /// <summary> Fetch the TCP data as a byte array.</summary>                          
+        public override byte[] Data                                                          
+        {                                                                                    
             get
             {
                 return TCPData;
@@ -540,7 +541,7 @@ namespace SharpPcap.Packets
 
             // copy the headers into the new packet
             Array.Copy(Bytes, newPacketBytes, headerLength);
- 
+
             // copy the data into the new packet, immediately after the headers
             Array.Copy(data, 0, newPacketBytes, headerLength, data.Length);
 
@@ -593,7 +594,8 @@ namespace SharpPcap.Packets
             if (Rst)
                 buffer.Append(" rst");
             if (Syn)
-                buffer.Append(" syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "]");
+                buffer.Append(" syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "," +
+                              SequenceNumber + "]");
             if (Fin)
                 buffer.Append(" fin");
             buffer.Append(" l=" + TCPHeaderLength + "," + PayloadDataLength);
