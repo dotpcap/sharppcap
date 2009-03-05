@@ -43,7 +43,7 @@ namespace SharpPcap
         //       This file is called $assembly_name.dll.config and is placed in the
         //       same directory as the assembly
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
-        private const string PCAP_DLL = "wpcap.dll";
+        private const string PCAP_DLL = "wpcap";
 
         /// <summary>A delegate for Packet Arrival events</summary>
         public delegate void PacketArrivalEvent(object sender, Packets.Packet packet);
@@ -64,7 +64,7 @@ namespace SharpPcap
         /// <summary>A string value that prefixes avery pcap device name </summary>
         internal const string PCAP_NAME_PREFIX = @"\Device\NPF_";
 
-        [DllImport("wpcap.dll", CharSet=CharSet.Auto)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Auto)]
         private extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
 
         /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
@@ -74,7 +74,7 @@ namespace SharpPcap
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static IntPtr /* pcap_t* */ pcap_open_live(string dev, int packetLen, short mode, short timeout, StringBuilder errbuf);
 
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
@@ -87,14 +87,14 @@ namespace SharpPcap
         /// <summary>
         ///  Save a packet to disk.  
         /// </summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static void  pcap_dump (IntPtr /*u_char * */user, IntPtr /*const struct pcap_pkthdr * */h, IntPtr /*const u_char * */sp) ;
         
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static IntPtr /* pcap_t* */ pcap_open(string dev, int packetLen, short mode, short timeout,IntPtr auth, StringBuilder errbuf);
 
         /// <summary> close the files associated with p and deallocates resources.</summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static void  pcap_close (IntPtr /*pcap_t **/adaptHandle) ;           
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace SharpPcap
         /// <param name="data">contains the data of the packet to send (including the various protocol headers)</param>
         /// <param name="size">the dimension of the buffer pointed by data</param>
         /// <returns>0 if the packet is succesfully sent, -1 otherwise.</returns>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, IntPtr  data, int size);
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace SharpPcap
         /// <param name="queue">A pointer to a queue</param>
         /// <param name="header">The pcap header of the packet to send</param>
         /// <param name="data">The packet data</param>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static int pcap_sendqueue_queue(IntPtr /* pcap_send_queue * */queue, IntPtr /* **pkt_header */ header , IntPtr  data);
              
 
@@ -159,7 +159,7 @@ namespace SharpPcap
         /// <summary>
         /// Compile a packet filter, converting an high level filtering expression (see Filtering expression syntax) in a program that can be interpreted by the kernel-level filtering engine. 
         /// </summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static int pcap_compile (IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp, string /*char * */str, int optimize, UInt32 netmask);
 
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
@@ -172,7 +172,7 @@ namespace SharpPcap
         internal extern static IntPtr pcap_geterr (IntPtr /*pcap_t * */ adaptHandle);
 
         /// <summary>Returns a pointer to a string giving information about the version of the libpcap library being used; note that it contains more information than just a version number. </summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static string /*const char **/  pcap_lib_version ();
         
         /// <summary>return the standard I/O stream of the 'savefile' opened by pcap_dump_open().</summary>
@@ -182,7 +182,7 @@ namespace SharpPcap
         /// <summary>Flushes the output buffer to the 'savefile', so that any packets 
         /// written with pcap_dump() but not yet written to the 'savefile' will be written. 
         /// -1 is returned on error, 0 on success. </summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static int pcap_dump_flush (IntPtr /*pcap_dumper_t **/p);
             
         /// <summary>Closes a savefile. </summary>
@@ -190,7 +190,7 @@ namespace SharpPcap
         internal extern static void  pcap_dump_close (IntPtr /*pcap_dumper_t **/p);
                 
         /// <summary> Return the link layer of an adapter. </summary>
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static int pcap_datalink(IntPtr /* pcap_t* */ adaptHandle);
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SharpPcap
         private static int      AF_INET6;
 
 
-        [DllImport("wpcap.dll", CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         private extern static int pcap_loop(IntPtr /* pcap_t* */ adaptHandle, short count, PcapHandler callback, IntPtr ptr);
 
         /// <summary>

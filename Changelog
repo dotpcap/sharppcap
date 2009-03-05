@@ -1,5 +1,11 @@
 Changelog
 v2.0.3 - TBD
+- Fix SharpPcap.dll.config to remove the .dll extension after the pcap library name 
+  change from wpcap.dll to wpcap.
+- Patch from Phill L. to consistently use the PCAP_DLL const string instead of 
+  specifying the library name explicitly. Change library from wpcap.dll to wpcap, 
+  Windows should append .dll to the library name as the name contains no other '.' 
+  characters.
 - Integrated patch from Phill L. to prevent creation of the ChecksumUtils class, all 
   methods are static, and prevent inheriting from the class. Fix a potential overflow 
   issue by using only MemoryStream variables in a limit check.
