@@ -95,12 +95,12 @@ namespace SharpPcap
             //holds errors
             StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
             //opens offline pcap file
-            IntPtr adapterHandle = Pcap.pcap_open_offline( this.Name, errbuf);
+            IntPtr adapterHandle = SafeNativeMethods.pcap_open_offline( this.Name, errbuf);
 
             //handle error
             if ( adapterHandle == IntPtr.Zero)
             {
-                string err = "Unable to open offline adapter: "+errbuf.ToString();
+                string err = "Unable to open offline adapter: " + errbuf.ToString();
                 throw new Exception( err );
             }
 

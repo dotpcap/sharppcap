@@ -157,7 +157,7 @@ namespace SharpPcap
             {
                 if(!Opened)
                     throw new InvalidOperationException("Cannot get datalink, the pcap device is not opened");
-                return Pcap.pcap_datalink(PcapHandle);
+                return SafeNativeMethods.pcap_datalink(PcapHandle);
             }
         }
 
@@ -190,7 +190,7 @@ namespace SharpPcap
                 int mode = ( m_pcapMode==PcapMode.Capture ? 
                              Pcap.MODE_CAPT : 
                              Pcap.MODE_STAT);
-                Pcap.pcap_setmode(this.PcapHandle ,mode);
+                SafeNativeMethods.pcap_setmode(this.PcapHandle ,mode);
             }
         }
 
@@ -230,7 +230,7 @@ namespace SharpPcap
             {
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
-                PcapHandle = Pcap.pcap_open_live
+                PcapHandle = SafeNativeMethods.pcap_open_live
                     (   Name,           // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
                                             // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
@@ -302,7 +302,7 @@ namespace SharpPcap
             {
                 StopCapture();
             }
-            Pcap.pcap_close(PcapHandle);
+            SafeNativeMethods.pcap_close(PcapHandle);
             PcapHandle = IntPtr.Zero;
             
             //Remove event handlers
@@ -349,7 +349,7 @@ namespace SharpPcap
             int res = 0;
 
             //Get a packet from winpcap
-            res = Pcap.pcap_next_ex( PcapHandle, ref header, ref data);
+            res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
             p = null;
 
             if(res>0)
@@ -485,13 +485,13 @@ namespace SharpPcap
             //Alocate an unmanaged buffer
             program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
             //compile the expressions
-            res = Pcap.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
+            res = SafeNativeMethods.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
             //watch for errors
             if(res<0)
             {
                 try
                 {
-                    err_ptr = Pcap.pcap_geterr( PcapHandle );
+                    err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
                     err = Marshal.PtrToStringAnsi( err_ptr );
                 }
                 catch{}
@@ -499,13 +499,13 @@ namespace SharpPcap
                 throw new PcapException(err);
             }
             //associate the filter with this device
-            res = Pcap.pcap_setfilter( PcapHandle, program );
+            res = SafeNativeMethods.pcap_setfilter( PcapHandle, program );
             //watch for errors
             if(res<0)
             {
                 try
                 {
-                    err_ptr = Pcap.pcap_geterr(PcapHandle);
+                    err_ptr = SafeNativeMethods.pcap_geterr(PcapHandle);
                     err = Marshal.PtrToStringAnsi(err_ptr);
                 }
                 catch{}
@@ -514,7 +514,7 @@ namespace SharpPcap
             }
 
             // free any pcap internally allocated memory from pcap_compile()
-            Pcap.pcap_freecode(program);
+            SafeNativeMethods.pcap_freecode(program);
 
             // free allocated buffers
             Marshal.FreeHGlobal(program);
@@ -530,7 +530,7 @@ namespace SharpPcap
             {
                 throw new PcapException("A dump file is already opened");
             }
-            m_pcapDumpHandle = Pcap.pcap_dump_open(PcapHandle, fileName);
+            m_pcapDumpHandle = SafeNativeMethods.pcap_dump_open(PcapHandle, fileName);
             if(!DumpOpened)
                 throw new PcapException("Error openning dump file.");
         }
@@ -543,7 +543,7 @@ namespace SharpPcap
         {
             if(DumpOpened)
             {
-                Pcap.pcap_dump_close(m_pcapDumpHandle);
+                SafeNativeMethods.pcap_dump_close(m_pcapDumpHandle);
                 m_pcapDumpHandle = IntPtr.Zero;
             }
         }
@@ -555,7 +555,7 @@ namespace SharpPcap
         public void DumpFlush()
         {
             if(DumpOpened)
-                Pcap.pcap_dump_flush(m_pcapDumpHandle);
+                SafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
         }
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace SharpPcap
             hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr)));
             Marshal.StructureToPtr(h.m_pcap_pkthdr, hdrPtr, true);
 
-            Pcap.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
+            SafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
 
             Marshal.FreeHGlobal(pktPtr);
             Marshal.FreeHGlobal(hdrPtr);
@@ -664,7 +664,7 @@ namespace SharpPcap
                 p_packet = Marshal.AllocHGlobal( size );
                 Marshal.Copy(p, 0, p_packet, size);     
 
-                int res = Pcap.pcap_sendpacket(PcapHandle, p_packet, size);
+                int res = SafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
                 Marshal.FreeHGlobal(p_packet);
                 if(res < 0)
                 {
@@ -693,7 +693,7 @@ namespace SharpPcap
         {
             get
             {
-                IntPtr err_ptr = Pcap.pcap_geterr( PcapHandle );
+                IntPtr err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
                 return Marshal.PtrToStringAnsi( err_ptr );
             }
         }

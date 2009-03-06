@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Move pinvoke declarations to SafeNativeMethods.cs per a suggestion from Phill L. to 
+  follow this MS recommendation, http://msdn.microsoft.com/en-us/ms182161.aspx
 - Patch from Phill L. to seal the Version class and rename Version.GetVersionString() 
   to a VersionString property. Fix the examples to use the Version.VersionString 
   property.

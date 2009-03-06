@@ -47,7 +47,7 @@ namespace SharpPcap
         /// to allocate for the queue</param>
         public PcapSendQueue(int memSize)
         {
-            m_queue = Pcap.pcap_sendqueue_alloc( memSize );
+            m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)
                 throw new PcapException("Error creating PcapSendQueue");
         }
@@ -78,7 +78,7 @@ namespace SharpPcap
             hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr)));
             Marshal.StructureToPtr(pcapHdr, hdrPtr, true);
 
-            int res = Pcap.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
+            int res = SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
 
             Marshal.FreeHGlobal(pktPtr);
             Marshal.FreeHGlobal(hdrPtr);    
@@ -148,7 +148,7 @@ namespace SharpPcap
             }
 
             int sync = synchronize ? 1 : 0;         
-            return Pcap.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
+            return SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace SharpPcap
         {
             if(m_queue!=IntPtr.Zero)
             {
-                Pcap.pcap_sendqueue_destroy( m_queue );
+                SafeNativeMethods.pcap_sendqueue_destroy( m_queue );
             }
         }
 
