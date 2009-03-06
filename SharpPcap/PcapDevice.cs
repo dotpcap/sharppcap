@@ -512,7 +512,11 @@ namespace SharpPcap
                 err = "Can't set filter.\n"+err;
                 throw new PcapException(err);
             }
-            //free allocated buffers
+
+            // free any pcap internally allocated memory from pcap_compile()
+            Pcap.pcap_freecode(program);
+
+            // free allocated buffers
             Marshal.FreeHGlobal(program);
         }
 
