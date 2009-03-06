@@ -43,7 +43,7 @@ namespace Test
 
         public static void Main3(string[] args)
         {
-            string ver = SharpPcap.Version.GetVersionString();
+            string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, ArpTest.cs", ver);
             Console.WriteLine();

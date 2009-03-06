@@ -16,7 +16,7 @@ namespace Example12.PacketManipulation
         [STAThread]
         static void Main(string[] args)
         {
-            string ver = SharpPcap.Version.GetVersionString();
+            string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example12.PacketManipulation.cs", ver);
             Console.WriteLine();

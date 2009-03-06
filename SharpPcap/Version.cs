@@ -33,17 +33,22 @@ namespace SharpPcap
     /// <summary>
     /// Represent the current version of SharpPcap.
     /// </summary>
-    public class Version
+    public sealed class Version
     {
+        Version() { }
+
         /// <summary>
         /// Returns the current version string of the SharpPcap library
         /// </summary>
         /// <returns>the current version string of the SharpPcap library</returns>
-        public static string GetVersionString()
+        public static string VersionString
         {
-            System.Reflection.Assembly asm
-                = System.Reflection.Assembly.GetAssembly(typeof(SharpPcap.Version));
-            return asm.GetName().Version.ToString();
+            get
+            {
+                System.Reflection.Assembly asm
+                    = System.Reflection.Assembly.GetAssembly(typeof(SharpPcap.Version));
+                return asm.GetName().Version.ToString();
+            }
         }
     }
 }

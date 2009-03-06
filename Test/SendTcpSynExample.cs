@@ -129,7 +129,7 @@ namespace Test
 
         public static void Main1(string[] args)
         {
-            string ver = SharpPcap.Version.GetVersionString();
+            string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, SendTcpSynExample.cs", ver);
             Console.WriteLine();

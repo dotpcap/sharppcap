@@ -16,7 +16,7 @@ namespace SharpPcap.Test.Example5
         [STAThread]
         public static void Main(string[] args)
         {
-            string ver = SharpPcap.Version.GetVersionString();
+            string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example5.PcapFilter.cs", ver);
             Console.WriteLine();

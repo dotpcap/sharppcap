@@ -16,7 +16,7 @@ namespace SharpPcap.Test.Example4
         [STAThread]
         public static void Main(string[] args)
         {
-            string ver = SharpPcap.Version.GetVersionString();
+            string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example4.BasicCapNoCallback.cs", ver);
 

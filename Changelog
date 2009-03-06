@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Patch from Phill L. to seal the Version class and rename Version.GetVersionString() 
+  to a VersionString property. Fix the examples to use the Version.VersionString 
+  property.
 - Patch from Phill L. to add pcap_freecode() and free memory allocated by 
   pcap_compile(). Fixes a small memory leak from each call to PcapDevice.SetFilter()
 - Fix SharpPcap.dll.config to remove the .dll extension after the pcap library name 
