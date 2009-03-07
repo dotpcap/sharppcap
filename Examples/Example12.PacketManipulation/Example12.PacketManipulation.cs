@@ -86,20 +86,20 @@ namespace Example12.PacketManipulation
             device.Close();
         }
 
-        private static void device_PcapOnPacketArrival(object sender, SharpPcap.Packets.Packet packet)
+        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
         {
-            if(packet is EthernetPacket)
+            if(e.Packet is EthernetPacket)
             {
-                EthernetPacket eth = ((EthernetPacket)packet);
+                EthernetPacket eth = ((EthernetPacket)e.Packet);
                 Console.WriteLine("Original Eth packet: " + eth.ToColoredString(false));
 
                 //Manipulate ethernet parameters
                 eth.SourceHwAddress = "00:11:22:33:44:55";
                 eth.DestinationHwAddress = "00:99:88:77:66:55";
 
-                if (packet is IPPacket)
+                if (e.Packet is IPPacket)
                 {
-                    IPPacket ip = ((IPPacket)packet);
+                    IPPacket ip = ((IPPacket)e.Packet);
                     Console.WriteLine("Original IP packet: " + ip.ToColoredString(false));
 
                     //manipulate IP parameters

@@ -82,10 +82,10 @@ namespace SharpPcap.Test.Example3
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, Packet packet)
+        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
         {
-            DateTime time = packet.PcapHeader.Date;
-            uint len = packet.PcapHeader.PacketLength;
+            DateTime time = e.Packet.PcapHeader.Date;
+            uint len = e.Packet.PcapHeader.PacketLength;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
         }

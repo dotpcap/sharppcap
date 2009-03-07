@@ -446,7 +446,7 @@ namespace SharpPcap
                 if(OnPacketArrival != null )
                 {
                     //Invoke the packet arrival event                                           
-                    OnPacketArrival(this, p);
+                    OnPacketArrival(this, new PcapCaptureEventArgs(p));
                 }
             }
             //else mode is MODE_STAT
@@ -455,7 +455,7 @@ namespace SharpPcap
                 if(OnPcapStatistics != null)
                 {
                     //Invoke the pcap statistics event
-                    OnPcapStatistics(this, new PcapStatistics(p));
+                    OnPcapStatistics(this, new PcapStatisticsEventArgs(p));
                 }
             }
         }

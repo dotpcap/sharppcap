@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Patch from Phill L. to use event handlers as recommended by http://msdn.microsoft.com/en-us/ms182133.aspx
+  for packet arrival and statistics events
 - Move pinvoke declarations to SafeNativeMethods.cs per a suggestion from Phill L. to 
   follow this MS recommendation, http://msdn.microsoft.com/en-us/ms182161.aspx
 - Patch from Phill L. to seal the Version class and rename Version.GetVersionString() 

@@ -39,15 +39,15 @@ namespace SharpPcap
     public class Pcap
     {
         /// <summary>A delegate for Packet Arrival events</summary>
-        public delegate void PacketArrivalEvent(object sender, Packets.Packet packet);
+        public delegate void PacketArrivalEvent(object sender, PcapCaptureEventArgs e);
 
         /// <summary>
         /// A delegate for delivering network statistics
         /// </summary>
-        public delegate void PcapStatisticsEvent(object sender, PcapStatistics statistics);
+        public delegate void PcapStatisticsEvent(object sender, PcapStatisticsEventArgs e);
 
         /// <summary>
-        /// A delegate fornotifying of a capture stopped event
+        /// A delegate for notifying of a capture stopped event
         /// </summary>
         public delegate void PcapCaptureStoppedEvent(object sender, bool error);
 

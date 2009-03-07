@@ -87,14 +87,14 @@ namespace SharpPcap.Test.Example6
         /// Prints the time, length, src ip, src port, dst ip and dst port
         /// for each TCP/IP packet received on the network
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, Packet packet)
+        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
         {           
-            if(packet is TCPPacket)
+            if(e.Packet is TCPPacket)
             {               
-                DateTime time = packet.PcapHeader.Date;
-                uint len = packet.PcapHeader.PacketLength;
+                DateTime time = e.Packet.PcapHeader.Date;
+                uint len = e.Packet.PcapHeader.PacketLength;
 
-                TCPPacket tcp = (TCPPacket)packet;
+                TCPPacket tcp = (TCPPacket)e.Packet;
                 System.Net.IPAddress srcIp = tcp.SourceAddress;
                 System.Net.IPAddress dstIp = tcp.DestinationAddress;
                 int srcPort = tcp.SourcePort;

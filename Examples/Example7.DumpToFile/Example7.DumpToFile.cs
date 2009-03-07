@@ -84,14 +84,14 @@ namespace SharpPcap.Test.Example7
         /// <summary>
         /// Dumps each received packet to a pcap file
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, Packet packet)
+        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
         {                       
             PcapDevice device = (PcapDevice)sender;
             //if device has a dump file opened
             if( device.DumpOpened )
             {
                 //dump the packet to the file
-                device.Dump( packet );
+                device.Dump( e.Packet );
                 Console.WriteLine("Packet dumped to file.");
             }
         }

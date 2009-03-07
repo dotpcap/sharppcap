@@ -62,11 +62,11 @@ namespace SharpPcap.Test.Example8
         /// <summary>
         /// Prints the source and dest MAC addresses of each received Ethernet frame
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, Packet packet)
+        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
         {       
-            if( packet is EthernetPacket )
+            if( e.Packet is EthernetPacket )
             {
-                EthernetPacket etherFrame = (EthernetPacket)packet;
+                EthernetPacket etherFrame = (EthernetPacket)e.Packet;
                 Console.WriteLine("At: {0}:{1}: MAC:{2} -> MAC:{3}",
                     etherFrame.PcapHeader.Date.ToString(),
                     etherFrame.PcapHeader.Date.Millisecond,
