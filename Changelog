@@ -1,5 +1,10 @@
 Changelog
 v2.0.3 - TBD
+- Fix get accessor of ARPPacket.ARPTargetProtoAddress to use the target protocol address
+  position, ARP_T_PR_ADDR_POS instead of ARP_S_PR_ADDR_POS, the source protocol address
+  position. Bug reported by Houmin Li.
+- Move Test/ArpTest.cs to Example 2. Add a new arp packet test, ArpPacketTest.cs that tests
+  parsing a arp request and response.
 - PcapDevice.GetNextPacket() should check if the device is opened before attempting to 
   use the PcapHandle and throw an exception if the device isn't opened. Fixes an 
   unmanaged segfault that can occur when calling PcapDevice.GetNextPacket() on a 

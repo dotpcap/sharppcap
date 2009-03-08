@@ -126,7 +126,7 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             _ethOffset + ARPFields_Fields.ARP_S_PR_ADDR_POS,
+                                             _ethOffset + ARPFields_Fields.ARP_T_PR_ADDR_POS,
                                              Bytes);
             }
 
