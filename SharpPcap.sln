@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example01.IfList", "Examples\Example1.IfList\Example01.IfList.csproj", "{35085F7F-892E-485F-8BD9-59033DA23DA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example02.IfListAdv", "Examples\Example2.IfListAdv\Example02.IfListAdv.csproj", "{24B780FC-379D-4DB9-B2F8-1D1CED4EDC08}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example03.BasicCap", "Examples\Example3.BasicCap\Example03.BasicCap.csproj", "{2B5462B9-068B-46E8-B139-E3B9211A48B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example04.BasicCapNoCallback", "Examples\Example4.BasicCapNoCallback\Example04.BasicCapNoCallback.csproj", "{2FF8A255-C168-43A9-9D3C-3EBC05127934}"
