@@ -348,6 +348,13 @@ namespace SharpPcap
             IntPtr data = IntPtr.Zero;
             int res = 0;
 
+            // using an invalid PcapHandle can result in an unmanaged segfault
+            // so check for that here
+            if(!Opened)
+            {
+                throw new PcapException("Device must be opened via Open() prior to use");
+            }
+
             //Get a packet from winpcap
             res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
             p = null;
