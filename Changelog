@@ -1,5 +1,6 @@
 Changelog
 v2.0.3 - TBD
+- Phill L. mentioned that Example2 is the same as Example 1, removed Example 2
 - Patch from Phill L. to use event handlers as recommended by http://msdn.microsoft.com/en-us/ms182133.aspx
   for packet arrival and statistics events
 - Move pinvoke declarations to SafeNativeMethods.cs per a suggestion from Phill L. to 
