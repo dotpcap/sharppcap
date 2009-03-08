@@ -17,7 +17,7 @@ namespace SharpPcap.Test.Example1
         {
             string ver = SharpPcap.Version.VersionString;
             /* Print SharpPcap version */
-            Console.WriteLine("SharpPcap {0}, Example4.IfList.cs", ver);
+            Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
             /* Retrieve the device list */
             List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
