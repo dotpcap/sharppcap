@@ -75,23 +75,10 @@ namespace SharpPcap
         private static int      AF_PACKET;
         private static int      AF_INET6;
 
-
-        private void MyPacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr pkt_data)
-        {
-            DateTime tm;
-            
-            if (header != IntPtr.Zero)
-            {
-                PcapUnmanagedStructures.pcap_pkthdr PktInfo =
-                    (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure( header,
-                                                                                typeof(PcapUnmanagedStructures.pcap_pkthdr) );
-                /* convert the timestamp to readable format */
-                tm = new DateTime( (long)(PktInfo.ts.tv_usec) );                
-            
-                Console.WriteLine("{0}, len: {1}", tm.ToShortTimeString(), PktInfo.len);
-            }
-        }
-
+        // Constants for pcap loop exit status.
+        internal const int LOOP_USER_TERMINATED  = -2;
+        internal const int LOOP_EXIT_WITH_ERROR  = -1;
+        internal const int LOOP_COUNT_EXHAUSTED  =  0;
 
         public class Sockaddr
         {

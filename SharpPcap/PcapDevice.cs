@@ -70,9 +70,6 @@ namespace SharpPcap
         private int         m_pcapPacketCount   = Pcap.INFINITE;//Infinite
         private int         m_mask  = 0;//for filter expression
 
-        //For thread synchronization
-        private ManualResetEvent m_pcapThreadEvent = new ManualResetEvent(true);
-
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
         /// </summary>
@@ -251,16 +248,13 @@ namespace SharpPcap
         /// </summary>
         public virtual void StartCapture()
         {
-            if(!Started)
+            if (!Started)
             {
-                if ( !Opened )
-                {
+                if (!Opened)
                     throw new Exception("Can't start capture, the pcap device is not opened.");
-                }
-                Thread thSniff = new Thread(new ThreadStart(this.CaptureLoop));
-                m_pcapThreadEvent.Reset();  //reset the thread signal
-                thSniff.Start();            //start capture thread  
-                m_pcapThreadEvent.WaitOne();//wait for 'started' signal from thread
+
+                Thread thSniff = new Thread(new ThreadStart(this.CaptureThread));
+                thSniff.Start();
             }
         }
 
@@ -273,8 +267,35 @@ namespace SharpPcap
         public virtual void Capture(int packetCount)
         {
             m_pcapPacketCount = packetCount;
-            CaptureLoop();
+            CaptureThread();
             m_pcapPacketCount = Pcap.INFINITE;;
+        }
+
+        public virtual void CaptureThread()
+        {
+            SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
+
+            m_pcapStarted = true;
+
+            int res = loop(m_pcapPacketCount, Callback, new IntPtr());
+
+            switch (res)    // Check pcap loop status results and notify upstream.
+            {
+                case Pcap.LOOP_USER_TERMINATED:     // User requsted loop termination with StopCapture()
+                    SendCaptureStoppedEvent(false);
+                    break;
+                case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
+                    SendCaptureStoppedEvent(false);
+                    break;
+                case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occoured whilst capturing.
+                    SendCaptureStoppedEvent(true);
+                    break;
+
+                default:    // This can only be triggered by a bug in libpcap.
+                    throw new Exception("Unknown pcap_loop exit status.");
+            }
+
+            m_pcapStarted = false;
         }
 
         /// <summary>
@@ -284,9 +305,7 @@ namespace SharpPcap
         {
             if (Started)
             {
-                m_pcapThreadEvent.Reset();  //reset the thread signal
-                m_pcapStarted = false;      //unset the 'started' signal
-                m_pcapThreadEvent.WaitOne();//wait for the 'stopped' signal from thread
+                SafeNativeMethods.pcap_breakloop(PcapHandle);
             }
         }
 
@@ -364,85 +383,44 @@ namespace SharpPcap
                 //Marshal the packet
                 if ( (header != IntPtr.Zero) && (data != IntPtr.Zero) )
                 {
-                    PcapUnmanagedStructures.pcap_pkthdr pkt_header =
-                        (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure( header,
-                                                                                    typeof(PcapUnmanagedStructures.pcap_pkthdr) );
-                    byte[] pkt_data = new byte[pkt_header.caplen];
-                    Marshal.Copy(data, pkt_data, 0, (int)pkt_header.caplen);
-                    p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data,
-                                                           new Packets.Util.Timeval((ulong)pkt_header.ts.tv_sec,
-                                                                                    (ulong)pkt_header.ts.tv_usec));
-                    p.PcapHeader = new PcapHeader( pkt_header );
+                    p = MarshalPacket(header, data);
                 }
             }
             return res;
         }
 
         /// <summary>
-        /// The capture procedure
+        /// The capture procedure.
         /// </summary>
-        protected virtual void CaptureLoop()
+        private int loop(int count, SafeNativeMethods.pcap_handler callback, IntPtr user)
         {
-            //Set the 'started' flag
-            m_pcapStarted = true;
-            //holds the captured packets
-            Packet p = null;
-            //counts the captured pcakers
-            uint packetCount = 0;
-            //read result value
-            int res=0;          
-            //Notify waiting threads that we started
-            m_pcapThreadEvent.Set();
+            return SafeNativeMethods.pcap_loop(PcapHandle, count, callback, user);
+        }
 
-            while ( m_pcapStarted )
-            {
-                try
-                {
-                    if(m_pcapPacketCount != Pcap.INFINITE)
-                    {
-                        //check for packet count limit
-                        if (packetCount >= m_pcapPacketCount)
-                        {
-                            m_pcapStarted=false;
-                            break;
-                        }
-                    }
-                    //Capture a packet
-                    res = GetNextPacket( out p );
+        /// <summary>
+        /// Pcap_loop callback method.
+        /// </summary>
+        protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
+        {
+            Packet p = MarshalPacket(header, data);
+            SendPacketArrivalEvent(p);
+        }
 
+        protected virtual Packet MarshalPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
+        {
+            Packet p = new Packet();
+            PcapUnmanagedStructures.pcap_pkthdr pkt_header =
+                (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure(header,
+                                                                             typeof(PcapUnmanagedStructures.pcap_pkthdr));
+            byte[] pkt_data = new byte[pkt_header.caplen];
+            Marshal.Copy(data, pkt_data, 0, (int)pkt_header.caplen);
 
-                    if(res==0)/* Timeout elapsed */
-                        continue;
+            p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data,
+                                                   new Packets.Util.Timeval((ulong)pkt_header.ts.tv_sec,
+                                                                            (ulong)pkt_header.ts.tv_usec));
+            p.pcapHeader = new PcapHeader(pkt_header);
 
-                    if(res<0)
-                    {
-                        m_pcapStarted=false;
-                        break;
-                    }
-                
-                    //If captured ok, send event
-                    if(p != null)
-                    {
-                        //increment packet count
-                        packetCount++;
-                        //notify upper application of this packet
-                        SendPacketArrivalEvent(p);
-                    }
-                }
-                catch(Exception e)
-                {
-                    //Notify upper application
-                    SendCaptureStoppedEvent(true);
-                    //Notify waiting threads
-                    m_pcapThreadEvent.Set();
-                    //re-throw the exception
-                    throw e;
-                }
-            }
-            //Notify upper application
-            SendCaptureStoppedEvent(false);
-            //Notify waiting threads
-            m_pcapThreadEvent.Set();
+            return p;
         }
 
         private void SendPacketArrivalEvent(Packet p)

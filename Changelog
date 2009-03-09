@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Move capture loop and thread synchronization over to pcap by using pcap_loop()/pcap_breakloop(),
+  patch from Phill L.
 - Fix get accessor of ARPPacket.ARPTargetProtoAddress to use the target protocol address
   position, ARP_T_PR_ADDR_POS instead of ARP_S_PR_ADDR_POS, the source protocol address
   position. Bug reported by Houmin Li.
