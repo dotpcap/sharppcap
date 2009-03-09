@@ -119,9 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Compile Include="ArpTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,6 +149,7 @@
     <Compile Include="EthernetPacketTest.cs" />
     <Compile Include="PcapGetAllDevices.cs" />
     <Compile Include="IPv6PacketTest.cs" />
+    <Compile Include="ArpPacketTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
