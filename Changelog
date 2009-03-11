@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Add Header and HeaderLength property overrides to the IPPacket class otherwise a
+  polymorphic Packet instance won't behave properly for IPPackets
 - Remove IPv4Packet.IpHeaderLength, we already have IPv4Packet.IPHeaderLength
 - Move capture loop and thread synchronization over to pcap by using pcap_loop()/pcap_breakloop(),
   patch from Phill L.

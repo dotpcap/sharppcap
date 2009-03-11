@@ -503,6 +503,29 @@ namespace SharpPcap.Packets
 
         }
 
+        /// <summary> Fetch the header a byte array.</summary>
+        virtual public byte[] IPHeader
+        {
+            get
+            {
+                if(ipv4 != null)
+                    return ipv4.IPHeader;
+                else if(ipv6 != null)
+                    return ipv6.IPv6Header;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+        }
+
+        /// <summary> Fetch the UDP header as a byte array.</summary>
+        override public byte[] Header
+        {
+            get
+            {
+                return IPHeader;
+            }
+        }
+
         /// <summary> Fetch the IP header length in bytes. </summary>
         /// <summary> Sets the IP header length field.  At most, this can be a 
         /// four-bit value.  The high order bits beyond the fourth bit
@@ -533,6 +556,15 @@ namespace SharpPcap.Packets
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
             }
 
+        }
+
+        /// <summary> Fetches the packet header length.</summary>
+        override public int HeaderLength
+        {
+            get
+            {
+                return IPHeaderLength;
+            }
         }
 
         /// <summary> Fetch the IP length in bytes.</summary>
