@@ -103,19 +103,6 @@ namespace SharpPcap.Packets
             }
 
         }
-        /// <summary> Fetch the packet IP header length.</summary>
-        public int IpHeaderLength
-        {
-            get
-            {
-                return IPHeaderLength;
-            }
-
-            set
-            {
-                IPHeaderLength = value;
-            }
-        }
 
         /// <summary> Fetch the unique ID of this IP datagram. The ID normally 
         /// increments by one each time a datagram is sent by a host.
@@ -276,7 +263,7 @@ namespace SharpPcap.Packets
                 }
                 else
                 {
-                    return (ChecksumUtils.OnesSum(Bytes, _ethOffset, IpHeaderLength) == 0xffff);
+                    return (ChecksumUtils.OnesSum(Bytes, _ethOffset, IPHeaderLength) == 0xffff);
                 }
             }
 
@@ -465,7 +452,7 @@ namespace SharpPcap.Packets
         public int ComputeIPChecksum(bool update)
         {
             //copy the ip header
-            byte[] ip = ArrayHelper.copy(Bytes, _ethOffset, IpHeaderLength);
+            byte[] ip = ArrayHelper.copy(Bytes, _ethOffset, IPHeaderLength);
             //reset the checksum field (checksum is calculated when this field is zeroed)
             ArrayHelper.insertLong(ip, 0, IPv4Fields_Fields.IP_CSUM_POS, 2);
             //compute the one's complement sum of the ip header
@@ -618,7 +605,7 @@ namespace SharpPcap.Packets
                 {
                     return ChecksumUtils.OnesSum(Enclosing_Instance.Bytes,
                                                  Enclosing_Instance._ethOffset,
-                                                 Enclosing_Instance.IpHeaderLength);
+                                                 Enclosing_Instance.IPHeaderLength);
                 }
             }
 

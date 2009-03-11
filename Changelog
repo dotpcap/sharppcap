@@ -1,5 +1,6 @@
 Changelog
 v2.0.3 - TBD
+- Remove IPv4Packet.IpHeaderLength, we already have IPv4Packet.IPHeaderLength
 - Move capture loop and thread synchronization over to pcap by using pcap_loop()/pcap_breakloop(),
   patch from Phill L.
 - Fix get accessor of ARPPacket.ARPTargetProtoAddress to use the target protocol address
