@@ -1,8 +1,9 @@
 using System;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.Packets;
 
-namespace SharpPcap.Util
+namespace Test
 {
     [TestFixture]
     public class TCPPacketTest
