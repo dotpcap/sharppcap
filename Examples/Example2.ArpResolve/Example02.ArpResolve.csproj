@@ -103,7 +103,7 @@
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
-    <ProjectGuid>{35085F7F-892E-485F-8BD9-59033DA23DA1}</ProjectGuid>
+    <ProjectGuid>{FEED11A7-3C2C-4D7E-AD85-3ABE02E4E2D1}</ProjectGuid>
     <RootNamespace>SharpPcap.Test.Example1</RootNamespace>
   </PropertyGroup>
   <ItemGroup>

@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Enable generation of xml documentation. Enable overflow checking in debug build. Patch from
+  Phill L.
 - Add a UDPPacket unit test, UDPPacketTest.cs. Test the length of the byte[]
   returned by UDPPacket.UDPData.
 - Add UDPPacket override of HeaderLength. Also add a PayloadDataLength accessor and a 
