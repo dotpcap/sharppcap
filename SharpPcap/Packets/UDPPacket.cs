@@ -34,6 +34,7 @@ namespace SharpPcap.Packets
             }
 
         }
+
         /// <summary> Fetch the port number on the target host.</summary>
         virtual public int DestinationPort
         {
@@ -112,6 +113,7 @@ namespace SharpPcap.Packets
             }
 
         }
+
         /// <summary> Fetch the UDP header as a byte array.</summary>
         override public byte[] Header
         {
@@ -119,8 +121,35 @@ namespace SharpPcap.Packets
             {
                 return UDPHeader;
             }
-
         }
+
+        /// <summary> Fetch the UDP header length in bytes.</summary>
+        virtual public int UDPHeaderLength
+        {
+            get
+            {
+                return UDPFields_Fields.UDP_HEADER_LEN;
+            }
+        }
+
+        /// <summary> Fetches the packet header length.</summary>
+        override public int HeaderLength
+        {
+            get
+            {
+                return UDPHeaderLength;
+            }
+        }
+
+        /// <summary> Fetches the length of the payload data.</summary>
+        virtual public int PayloadDataLength
+        {
+            get
+            {
+                return (IPPayloadLength - UDPHeaderLength);
+            }
+        }
+
         /// <summary> Fetch the UDP data as a byte array.</summary>
         virtual public byte[] UDPData
         {
@@ -128,10 +157,8 @@ namespace SharpPcap.Packets
             {
                 if (_udpDataBytes == null)
                 {
-                    // set data length based on info in headers (note: tcpdump
-                    //  can return extra junk bytes which bubble up to here
-                    int tmpLen = Bytes.Length - _ipOffset - UDPFields_Fields.UDP_HEADER_LEN;
-                    _udpDataBytes = PacketEncoding.extractData(_ipOffset, UDPFields_Fields.UDP_HEADER_LEN, Bytes, tmpLen);
+                    _udpDataBytes = new byte[PayloadDataLength];
+                    Array.Copy(Bytes, _ipOffset + UDPHeaderLength, _udpDataBytes, 0, PayloadDataLength);
                 }
                 return _udpDataBytes;
             }

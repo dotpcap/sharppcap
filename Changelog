@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Add UDPPacket override of HeaderLength. Also add a PayloadDataLength accessor and a 
+  UDPHeaderLength accessor to match TCPPacket.
+- Switch to using Array.Copy() in UDPPacket.UDPData
 - Add Header and HeaderLength property overrides to the IPPacket class otherwise a
   polymorphic Packet instance won't behave properly for IPPackets
 - Remove IPv4Packet.IpHeaderLength, we already have IPv4Packet.IPHeaderLength
