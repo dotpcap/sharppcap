@@ -188,7 +188,7 @@ namespace SharpPcap.Packets
                 buffer.Append('[');
                 if (colored)
                     buffer.Append(Color);
-                buffer.Append("IPPacket (Unkown Version)");
+                buffer.Append("IPPacket (Unknown Version)");
                 if (colored)
                     buffer.Append(AnsiEscapeSequences_Fields.RESET);
             }
