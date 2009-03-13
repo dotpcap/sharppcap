@@ -27,8 +27,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Text.RegularExpressions;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace SharpPcap.Util
 {

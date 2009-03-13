@@ -4,7 +4,6 @@
 /// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
 /// *************************************************************************
 /// </summary>
-using System;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using HexHelper = SharpPcap.Packets.Util.HexHelper;
 namespace SharpPcap.Packets

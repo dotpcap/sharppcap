@@ -1,8 +1,8 @@
 using System;
 using System.Net;
+using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.Packets;
-using NUnit.Framework;
 
 namespace Test
 {

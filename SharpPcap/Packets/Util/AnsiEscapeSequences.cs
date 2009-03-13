@@ -6,7 +6,6 @@
 /// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
 /// *************************************************************************
 /// </summary>
-using System;
 namespace SharpPcap.Packets.Util
 {
     

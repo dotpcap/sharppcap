@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
-using SharpPcap;
 using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example6

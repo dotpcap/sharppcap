@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap;
 using NUnit.Framework;
+using SharpPcap;
 
 namespace Test
 {

@@ -1,11 +1,8 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Packets;
-using SharpPcap.Protocols;
-using SharpPcap.Util;
- 
+
 namespace Test
 {
     

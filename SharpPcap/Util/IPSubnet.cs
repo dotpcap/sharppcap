@@ -1,4 +1,3 @@
-using System;
 namespace SharpPcap.Util
 {   
     public class IPSubnet:IPAddressRange

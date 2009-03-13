@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap;
 using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example4

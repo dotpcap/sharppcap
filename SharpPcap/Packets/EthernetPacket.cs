@@ -5,10 +5,9 @@
 /// *************************************************************************
 /// </summary>
 using System;
-using AnsiEscapeSequences = SharpPcap.Packets.Util.AnsiEscapeSequences;
+using SharpPcap.Packets.Util;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
-using SharpPcap.Packets.Util;
 namespace SharpPcap.Packets
 {
     /// <summary> An ethernet packet.

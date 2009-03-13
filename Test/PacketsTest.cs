@@ -1,7 +1,6 @@
-using System;
-using SharpPcap.Util;
-using SharpPcap.Packets;
 using NUnit.Framework;
+using SharpPcap.Packets;
+using SharpPcap.Util;
 
 namespace Test
 {

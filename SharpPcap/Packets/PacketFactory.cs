@@ -5,7 +5,6 @@
 /// *************************************************************************
 /// Copyright 2009 Chris Morgan <cmorgan@alum.wpi.edu>
 /// </summary>
-using System;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
 namespace SharpPcap.Packets

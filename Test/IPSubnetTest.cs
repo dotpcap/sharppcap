@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using SharpPcap.Util;
 
 namespace Test

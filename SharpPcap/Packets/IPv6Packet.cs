@@ -7,12 +7,10 @@
 ///   http://www.mozilla.org/NPL/MPL-1.1.txt
 /// </summary>
 using System;
+using System.IO;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
-using System.IO;
-using System.Diagnostics;
-using System.Net;
 
 namespace SharpPcap.Packets
 {

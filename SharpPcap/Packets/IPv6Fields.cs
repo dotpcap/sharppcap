@@ -9,7 +9,6 @@
 /// Project
 ///   https://sourceforge.net/projects/sharppcap/
 /// </summary>
-using System;
 
 namespace SharpPcap.Packets
 {

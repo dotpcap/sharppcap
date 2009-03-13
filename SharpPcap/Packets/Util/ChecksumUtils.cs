@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using SharpPcap.Packets.Util;
-using System.Net;
 
 namespace SharpPcap
 {

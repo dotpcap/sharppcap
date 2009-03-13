@@ -8,7 +8,6 @@ using System;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
-using SharpPcap.Packets.Util;
 
 namespace SharpPcap.Packets
 {

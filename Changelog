@@ -1,5 +1,6 @@
 Changelog
 v2.0.3 - TBD
+- Remove duplicate and unnecessary 'using' statements, patch from Phill L.
 - Enable generation of xml documentation. Enable overflow checking in debug build. Patch from
   Phill L.
 - Add a UDPPacket unit test, UDPPacketTest.cs. Test the length of the byte[]

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap.Packets;
 using SharpPcap;
+using SharpPcap.Packets;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.

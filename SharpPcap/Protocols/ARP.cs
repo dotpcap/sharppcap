@@ -1,5 +1,4 @@
 using System;
-using SharpPcap;
 using SharpPcap.Packets;
 using SharpPcap.Util;
 

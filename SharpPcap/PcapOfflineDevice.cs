@@ -27,8 +27,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace SharpPcap
 {
