@@ -166,13 +166,7 @@ namespace SharpPcap
         /// Read packets until cnt packets are processed or an error occurs.
         /// </summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
-        internal extern static int pcap_loop(IntPtr /* pcap_t* */ adaptHandle, int count, pcap_handler callback, IntPtr ptr);
-
-        /// <summary>
-        /// Set a flag that will force pcap_dispatch() or pcap_loop() to return rather than looping. 
-        /// </summary>
-        [DllImport(PCAP_DLL)]
-        internal extern static void pcap_breakloop(IntPtr /* pcap_t* */ adaptHandle);
+        internal extern static int pcap_dispatch(IntPtr /* pcap_t* */ adaptHandle, int count, pcap_handler callback, IntPtr ptr);
 
         /// <summary>
         /// The delegate declaration for PcapHandler requires an UnmanagedFunctionPointer attribute.
@@ -181,5 +175,16 @@ namespace SharpPcap
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void pcap_handler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr pkt_data);
 
+        /// <summary>
+        /// Retrieves a selectable file descriptor
+        /// </summary>
+        /// <param name="adaptHandle">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL)]
+        internal extern static int pcap_get_selectable_fd(IntPtr /* pcap_t* */ adaptHandle);
     }
 }

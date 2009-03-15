@@ -92,6 +92,7 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
@@ -254,6 +255,7 @@
     <Compile Include="Packets\IPv6Fields.cs" />
     <Compile Include="Packets\Util\ChecksumUtils.cs" />
     <Compile Include="SafeNativeMethods.cs" />
+    <Compile Include="PcapDeviceCaptureLoop.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

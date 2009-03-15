@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Split capture thread out of PcapDevice.cs and into PcapDeviceCaptureLoop.cs
+- Switch from pcap_loop()/pcap_breakloop() to pcap_dispatch() in preparation for Linux
+  platform specific capture code.
 - Remove duplicate and unnecessary 'using' statements, patch from Phill L.
 - Enable generation of xml documentation. Enable overflow checking in debug build. Patch from
   Phill L.

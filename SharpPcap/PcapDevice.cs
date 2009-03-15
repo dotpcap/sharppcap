@@ -38,7 +38,7 @@ namespace SharpPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class PcapDevice
+    public partial class PcapDevice
     {
         /// <summary>
         /// The working mode of a Pcap device
@@ -64,7 +64,6 @@ namespace SharpPcap
 
         private IntPtr      m_pcapAdapterHandle = IntPtr.Zero;
         private IntPtr      m_pcapDumpHandle    = IntPtr.Zero;
-        private bool        m_pcapStarted       = false;
         private PcapMode    m_pcapMode          = PcapMode.Capture;
         private int         m_pcapPacketCount   = Pcap.INFINITE;//Infinite
         private int         m_mask  = 0;//for filter expression
@@ -165,14 +164,6 @@ namespace SharpPcap
             get{return (PcapHandle != IntPtr.Zero);}
         }
 
-        /// <summary>
-        /// Return a value indicating if the capturing process of this adapter is started
-        /// </summary>
-        public virtual bool Started
-        {
-            get{return m_pcapStarted;}
-        }
-
         public virtual PcapMode Mode
         {
             get{return m_pcapMode;}
@@ -243,72 +234,6 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Starts the capturing process
-        /// </summary>
-        public virtual void StartCapture()
-        {
-            if (!Started)
-            {
-                if (!Opened)
-                    throw new Exception("Can't start capture, the pcap device is not opened.");
-
-                Thread thSniff = new Thread(new ThreadStart(this.CaptureThread));
-                thSniff.Start();
-            }
-        }
-
-        /// <summary>
-        /// Captures packets on this network device. This method will block
-        /// until capturing is finished.
-        /// </summary>
-        /// <param name="packetCount">The number of packets to be captured. 
-        /// Value of '-1' means infinite.</param>
-        public virtual void Capture(int packetCount)
-        {
-            m_pcapPacketCount = packetCount;
-            CaptureThread();
-            m_pcapPacketCount = Pcap.INFINITE;;
-        }
-
-        public virtual void CaptureThread()
-        {
-            SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
-
-            m_pcapStarted = true;
-
-            int res = loop(m_pcapPacketCount, Callback, new IntPtr());
-
-            switch (res)    // Check pcap loop status results and notify upstream.
-            {
-                case Pcap.LOOP_USER_TERMINATED:     // User requsted loop termination with StopCapture()
-                    SendCaptureStoppedEvent(false);
-                    break;
-                case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
-                    SendCaptureStoppedEvent(false);
-                    break;
-                case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occoured whilst capturing.
-                    SendCaptureStoppedEvent(true);
-                    break;
-
-                default:    // This can only be triggered by a bug in libpcap.
-                    throw new Exception("Unknown pcap_loop exit status.");
-            }
-
-            m_pcapStarted = false;
-        }
-
-        /// <summary>
-        /// Stops the capture process
-        /// </summary>
-        public virtual void StopCapture()
-        {
-            if (Started)
-            {
-                SafeNativeMethods.pcap_breakloop(PcapHandle);
-            }
-        }
-
-        /// <summary>
         /// Closes this adapter
         /// </summary>
         public virtual void Close()
@@ -322,7 +247,7 @@ namespace SharpPcap
             }
             SafeNativeMethods.pcap_close(PcapHandle);
             PcapHandle = IntPtr.Zero;
-            
+
             //Remove event handlers
             if ( OnPacketArrival != null)
             {
@@ -386,14 +311,6 @@ namespace SharpPcap
                 }
             }
             return res;
-        }
-
-        /// <summary>
-        /// The capture procedure.
-        /// </summary>
-        private int loop(int count, SafeNativeMethods.pcap_handler callback, IntPtr user)
-        {
-            return SafeNativeMethods.pcap_loop(PcapHandle, count, callback, user);
         }
 
         /// <summary>
