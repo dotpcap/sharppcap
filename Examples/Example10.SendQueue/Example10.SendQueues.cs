@@ -78,7 +78,7 @@ namespace SharpPcap.Test.Example10
             foreach(PcapDevice dev in devices)
             {
                 /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.Description);
+                Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
 

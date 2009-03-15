@@ -33,14 +33,11 @@ namespace SharpPcap.Test.Example1
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
-
             /* Scan the list printing every entry */
             foreach(PcapDevice dev in devices)
             {
                 Console.WriteLine(dev.ToString());
                 Console.WriteLine();
-                i++;
             }
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
