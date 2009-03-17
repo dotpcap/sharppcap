@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Add bool PcapDevice.CheckFilter(string filterExpression, out string errorString) to
+  enable the checking of filters before setting them
 - Split capture thread out of PcapDevice.cs and into PcapDeviceCaptureLoop.cs
 - Switch from pcap_loop()/pcap_breakloop() to pcap_dispatch() in preparation for Linux
   platform specific capture code.

@@ -371,6 +371,89 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
+        /// or unmanaged memory will be leaked
+        /// </summary>
+        /// <param name="filterExpression">
+        /// A <see cref="System.String"/>
+        /// </param>
+        /// <param name="bpfProgram">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        private bool CompileFilter(string filterExpression,
+                                   out IntPtr bpfProgram,
+                                   out string errorString)
+        {
+            int res;
+            IntPtr err_ptr;
+            string err = String.Empty;
+
+            bpfProgram = IntPtr.Zero;
+            errorString = null;
+
+            //Alocate an unmanaged buffer
+            bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
+
+            //compile the expressions
+            res = SafeNativeMethods.pcap_compile(PcapHandle, bpfProgram, filterExpression, 1, (uint)m_mask);
+
+            if(res < 0)
+            {
+                try
+                {
+                    err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
+                    err = Marshal.PtrToStringAnsi( err_ptr );
+                }
+                catch {}
+
+                // free up the program memory
+                Marshal.FreeHGlobal(bpfProgram);            
+                bpfProgram = IntPtr.Zero; // make sure not to pass out a valid pointer
+
+                // set the error string
+                errorString = err;
+
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Free memory allocated in CompileFilter()
+        /// </summary>
+        /// <param name="bpfProgram">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        private void FreeBpfProgram(IntPtr bpfProgram)
+        {
+            // free any pcap internally allocated memory from pcap_compile()
+            SafeNativeMethods.pcap_freecode(bpfProgram);
+
+            // free allocated buffers
+            Marshal.FreeHGlobal(bpfProgram);            
+        }
+
+        /// <summary>
+        /// Returns true if the filter expression was able to be compiled into a
+        /// program without errors
+        /// </summary>
+        public virtual bool CheckFilter(string filterExpression,
+                                        out string errorString)
+        {
+            IntPtr bpfProgram;
+
+            if(!CompileFilter(filterExpression, out bpfProgram, out errorString))
+            {
+                return false;
+            }
+
+            FreeBpfProgram(bpfProgram);
+
+            return true;
+        }
+
+        /// <summary>
         /// Compile a kernel level filtering expression, and associate the filter 
         /// with this device. For more info on filter expression syntax, see:
         /// http://www.winpcap.org/docs/docs31/html/group__language.html
@@ -379,46 +462,38 @@ namespace SharpPcap
         /// compile</param>
         public virtual void SetFilter(string filterExpression)
         {
-            int res; IntPtr err_ptr; string err="";
+            int res;
+            IntPtr err_ptr;
+            IntPtr bpfProgram;
+            string errorString;
 
-            //pointer to a bpf_program struct 
-            IntPtr program = IntPtr.Zero;
-            //Alocate an unmanaged buffer
-            program = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
-            //compile the expressions
-            res = SafeNativeMethods.pcap_compile(PcapHandle, program, filterExpression,1, (uint)m_mask);
-            //watch for errors
-            if(res<0)
+            // attempt to compile the program
+            if(!CompileFilter(filterExpression, out bpfProgram, out errorString))
             {
-                try
-                {
-                    err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
-                    err = Marshal.PtrToStringAnsi( err_ptr );
-                }
-                catch{}
-                err = "Can't compile filter: "+err;
+                string err = "Can't compile filter: " + errorString;
                 throw new PcapException(err);
             }
+
             //associate the filter with this device
-            res = SafeNativeMethods.pcap_setfilter( PcapHandle, program );
+            res = SafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
+
+            // free the program whether or not we were successful in setting the filter
+            // we don't want to unmanaged memory if we throw
+            FreeBpfProgram(bpfProgram);
+
             //watch for errors
-            if(res<0)
+            if(res < 0)
             {
                 try
                 {
                     err_ptr = SafeNativeMethods.pcap_geterr(PcapHandle);
-                    err = Marshal.PtrToStringAnsi(err_ptr);
+                    errorString = Marshal.PtrToStringAnsi(err_ptr);
                 }
                 catch{}
-                err = "Can't set filter.\n"+err;
-                throw new PcapException(err);
+                errorString = "Can't set filter.\n" + errorString;
+
+                throw new PcapException(errorString);
             }
-
-            // free any pcap internally allocated memory from pcap_compile()
-            SafeNativeMethods.pcap_freecode(program);
-
-            // free allocated buffers
-            Marshal.FreeHGlobal(program);
         }
 
         /// <summary>
