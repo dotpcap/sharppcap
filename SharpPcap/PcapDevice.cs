@@ -66,7 +66,7 @@ namespace SharpPcap
         private IntPtr      m_pcapDumpHandle    = IntPtr.Zero;
         private PcapMode    m_pcapMode          = PcapMode.Capture;
         private int         m_pcapPacketCount   = Pcap.INFINITE;//Infinite
-        private int         m_mask  = 0;//for filter expression
+        private int         m_mask  = 0; //for filter expression
 
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
@@ -380,9 +380,11 @@ namespace SharpPcap
         /// <param name="bpfProgram">
         /// A <see cref="IntPtr"/>
         /// </param>
-        private bool CompileFilter(string filterExpression,
-                                   out IntPtr bpfProgram,
-                                   out string errorString)
+        private static bool CompileFilter(IntPtr pcapHandle,
+                                          string filterExpression,
+                                          uint mask,
+                                          out IntPtr bpfProgram,
+                                          out string errorString)
         {
             int res;
             IntPtr err_ptr;
@@ -395,13 +397,17 @@ namespace SharpPcap
             bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
 
             //compile the expressions
-            res = SafeNativeMethods.pcap_compile(PcapHandle, bpfProgram, filterExpression, 1, (uint)m_mask);
+            res = SafeNativeMethods.pcap_compile(pcapHandle,
+                                                 bpfProgram,
+                                                 filterExpression,
+                                                 1,
+                                                 mask);
 
             if(res < 0)
             {
                 try
                 {
-                    err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
+                    err_ptr = SafeNativeMethods.pcap_geterr( pcapHandle );
                     err = Marshal.PtrToStringAnsi( err_ptr );
                 }
                 catch {}
@@ -425,7 +431,7 @@ namespace SharpPcap
         /// <param name="bpfProgram">
         /// A <see cref="IntPtr"/>
         /// </param>
-        private void FreeBpfProgram(IntPtr bpfProgram)
+        private static void FreeBpfProgram(IntPtr bpfProgram)
         {
             // free any pcap internally allocated memory from pcap_compile()
             SafeNativeMethods.pcap_freecode(bpfProgram);
@@ -438,18 +444,22 @@ namespace SharpPcap
         /// Returns true if the filter expression was able to be compiled into a
         /// program without errors
         /// </summary>
-        public virtual bool CheckFilter(string filterExpression,
-                                        out string errorString)
+        public static bool CheckFilter(string filterExpression,
+                                       out string errorString)
         {
             IntPtr bpfProgram;
+            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead(LinkLayers_Fields.EN10MB, Pcap.MAX_PACKET_SIZE);
 
-            if(!CompileFilter(filterExpression, out bpfProgram, out errorString))
+            uint mask = 0;
+            if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))
             {
+                SafeNativeMethods.pcap_close(fakePcap);
                 return false;
             }
 
             FreeBpfProgram(bpfProgram);
 
+            SafeNativeMethods.pcap_close(fakePcap);
             return true;
         }
 
@@ -468,7 +478,7 @@ namespace SharpPcap
             string errorString;
 
             // attempt to compile the program
-            if(!CompileFilter(filterExpression, out bpfProgram, out errorString))
+            if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
             {
                 string err = "Can't compile filter: " + errorString;
                 throw new PcapException(err);

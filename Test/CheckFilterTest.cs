@@ -11,20 +11,12 @@ namespace Test
         [Test]
         public void TestFilters()
         {
-            // find a device
-            List<PcapDevice> devices = Pcap.GetAllDevices();
-
-            Assert.IsFalse(devices.Count == 0, "No devices found, cannot perform test. Try running as root");
-
-            PcapDevice d = devices[0];
-            d.Open();
-
             // test a known failing filter
             string errorString;
-            Assert.IsFalse(d.CheckFilter("some bogus filter", out errorString));
+            Assert.IsFalse(PcapDevice.CheckFilter("some bogus filter", out errorString));
 
             // test a known working filter
-            Assert.IsTrue(d.CheckFilter("port 23", out errorString));
+            Assert.IsTrue(PcapDevice.CheckFilter("port 23", out errorString));
         }
     }
 }
