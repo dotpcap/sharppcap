@@ -318,64 +318,13 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Returns all pcap network devices available on this machine.
+        /// Depreciated: Backwards compatability wrapper around PcapDeviceList. Don't use this.
         /// </summary>
+        /// <returns>A List of PcapDevices</returns>
         public static List<PcapDevice> GetAllDevices()
         {
-            IntPtr ptrDevs = IntPtr.Zero; // pointer to a PCAP_IF struct
-            IntPtr next = IntPtr.Zero;    // pointer to a PCAP_IF struct
-            StringBuilder errbuf = new StringBuilder( 256 ); //will hold errors
-            List<PcapDevice> deviceList = new List<PcapDevice>();
-
-            /* Retrieve the device list */
-            int res = SafeNativeMethods.pcap_findalldevs(ref ptrDevs, errbuf);
-            if (res == -1)
-            {
-                string err = "Error in WinPcap.GetAllDevices(): " + errbuf;
-                throw new Exception( err );
-            }
-            else
-            {   // Go through device structs and add to list
-                next = ptrDevs;
-                while (next != IntPtr.Zero)
-                {
-                    //Marshal memory pointer into a struct
-                    PcapUnmanagedStructures.pcap_if pcap_if_unmanaged =
-                        (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(next,
-                                                        typeof(PcapUnmanagedStructures.pcap_if));
-                    PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
-                    deviceList.Add(new PcapDevice(pcap_if));
-                    next = pcap_if_unmanaged.Next;
-                }
-            }
-            SafeNativeMethods.pcap_freealldevs( ptrDevs );  // free buffers
-            return deviceList;
-        }
-
-        /// <summary>
-        /// Returns a PCAP_IF struct representing a pcap network device
-        /// </summary>
-        /// <param name="pcapName">The name of a device.<br>
-        /// Can be either in pcap device format or windows network
-        /// device format</param>
-        /// <returns></returns>
-        internal static PcapDevice GetPcapDeviceStruct(string pcapName)
-        {
-            if( !pcapName.StartsWith( PCAP_NAME_PREFIX ) )
-            {
-                pcapName = PCAP_NAME_PREFIX+pcapName;
-            }
-
-            List<PcapDevice> devices = GetAllDevices();
-            foreach(PcapDevice d in devices)
-            {
-                if(d.Name.Equals(pcapName))
-                {
-                    return d;
-                }
-            }
-
-            throw new Exception("Device not found: "+pcapName);
+            System.Diagnostics.Debug.WriteLine("List<PcapDevice> GetAllDevices() is depreciated.  Use Pcap.Devices instead.");
+            return new List<PcapDevice>(new PcapDeviceList());
         }
 
         public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
@@ -383,9 +332,15 @@ namespace SharpPcap
             return new PcapOfflineDevice( pcapFileName );
         }
 
+        /// <summary>
+        /// Depreciated: Backwards compatability wrapper around Pcap.Devices[string Name].  Don't use this.
+        /// </summary>
+        /// <param name="pcapDeviceName">The name of a device.</param>
+        /// <returns>A PcapDevice</returns>
         public static PcapDevice GetPcapDevice( string pcapDeviceName )
         {
-            return GetPcapDeviceStruct(pcapDeviceName);
+            System.Diagnostics.Debug.WriteLine("GetPcapDevoce(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
+            return new PcapDeviceList()[pcapDeviceName];
         }
     }
 }

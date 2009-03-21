@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Deprecate Pcap.GetAllDevices() and introduce a new type, PcapDeviceList that is a
+  ReadOnlyCollection<PcapDevice>. Patch from Phill L.
 - Add static bool PcapDevice.CheckFilter(string filterExpression, out string errorString) 
   to enable the checking of filters before setting them
 - Split capture thread out of PcapDevice.cs and into PcapDeviceCaptureLoop.cs

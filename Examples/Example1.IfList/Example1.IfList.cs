@@ -19,7 +19,7 @@ namespace SharpPcap.Test.Example1
             Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
+            PcapDeviceList devices = new PcapDeviceList();
 
             /*If no device exists, print error */
             if(devices.Count<1)
@@ -28,17 +28,13 @@ namespace SharpPcap.Test.Example1
                 return;
             }
             
-            Console.WriteLine();
-            Console.WriteLine("The following devices are available on this machine:");
-            Console.WriteLine("----------------------------------------------------");
-            Console.WriteLine();
+            Console.WriteLine("\nThe following devices are available on this machine:");
+            Console.WriteLine("----------------------------------------------------\n");
 
             /* Scan the list printing every entry */
             foreach(PcapDevice dev in devices)
-            {
-                Console.WriteLine(dev.ToString());
-                Console.WriteLine();
-            }
+                Console.WriteLine("{0}\n",dev.ToString());
+            
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }
