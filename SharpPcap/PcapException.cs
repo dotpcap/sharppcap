@@ -31,16 +31,31 @@ using System;
 namespace SharpPcap
 {
     /// <summary>
-    /// Summary description for PcapException.
+    /// General Pcap Exception.
     /// </summary>
     public class PcapException : Exception
     {
-        public PcapException()
+        internal PcapException() : base()
         {
         }
 
-        public PcapException(string msg):base(msg)
+        internal PcapException(string msg):base(msg)
         {
         }
     }
+
+    /// <summary>
+    /// A PcapDevice or dumpfile is not ready for capture operations.
+    /// </summary>
+    public class PcapDeviceNotReadyException : PcapException
+    {
+        internal PcapDeviceNotReadyException() : base()
+        {
+        }
+
+        internal PcapDeviceNotReadyException(string msg) : base(msg)
+        {
+        }
+    }
+
 }

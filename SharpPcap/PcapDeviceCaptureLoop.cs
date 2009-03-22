@@ -24,7 +24,7 @@ namespace SharpPcap
             if (!Started)
             {
                 if (!Opened)
-                    throw new Exception("Can't start capture, the pcap device is not opened.");
+                    throw new PcapDeviceNotReadyException("Can't start capture, the pcap device is not opened.");
 
                 shouldCaptureThreadStop = false;
                 captureThread = new Thread(new ThreadStart(this.CaptureThread));
@@ -91,7 +91,7 @@ namespace SharpPcap
                             SendCaptureStoppedEvent(true);
                             return;
                         default:    // This can only be triggered by a bug in libpcap.
-                            throw new Exception("Unknown pcap_loop exit status.");
+                            throw new PcapException("Unknown pcap_loop exit status.");
                     }
                 }
             }

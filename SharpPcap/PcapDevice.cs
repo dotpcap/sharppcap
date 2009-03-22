@@ -87,6 +87,14 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
+        /// </summary>
+        ~PcapDevice()
+        {
+            this.Close();
+        }
+
+        /// <summary>
         /// Fires whenever a new packet is received on this Pcap Device.<br>
         /// This event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
@@ -111,9 +119,9 @@ namespace SharpPcap
             get { return m_pcapIf.Name; }
         }
 
-        public virtual List<Pcap.PcapAddress> Addresses
+        public virtual ReadOnlyCollection<Pcap.PcapAddress> Addresses
         {
-            get { return m_pcapIf.Addresses; }
+            get { return new ReadOnlyCollection<Pcap.PcapAddress>(m_pcapIf.Addresses); }
         }
 
         /// <summary>
@@ -151,7 +159,7 @@ namespace SharpPcap
             get
             {
                 if(!Opened)
-                    throw new InvalidOperationException("Cannot get datalink, the pcap device is not opened");
+                    throw new PcapDeviceNotReadyException("Cannot get datalink, the pcap device is not opened");
                 return SafeNativeMethods.pcap_datalink(PcapHandle);
             }
         }
@@ -170,14 +178,16 @@ namespace SharpPcap
             set
             {
                 if(!Opened)
-                    throw new PcapException
+                    throw new PcapDeviceNotReadyException
                         ("Can't set PcapMode, the device is not opened");
 
                 m_pcapMode = value;
                 int mode = ( m_pcapMode==PcapMode.Capture ? 
                              Pcap.MODE_CAPT : 
                              Pcap.MODE_STAT);
-                SafeNativeMethods.pcap_setmode(this.PcapHandle ,mode);
+                int result = SafeNativeMethods.pcap_setmode(this.PcapHandle ,mode);
+                if (result < 0)
+                    throw new PcapException("Error setting PcapDevice mode. : " + LastError);
             }
         }
 
@@ -228,7 +238,7 @@ namespace SharpPcap
                 if ( PcapHandle == IntPtr.Zero)
                 {
                     string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
-                    throw new Exception( err );
+                    throw new PcapException( err );
                 }
             }
         }
@@ -295,7 +305,7 @@ namespace SharpPcap
             // so check for that here
             if(!Opened)
             {
-                throw new PcapException("Device must be opened via Open() prior to use");
+                throw new PcapDeviceNotReadyException("Device must be opened via Open() prior to use");
             }
 
             //Get a packet from winpcap
@@ -378,8 +388,7 @@ namespace SharpPcap
                                           out IntPtr bpfProgram,
                                           out string errorString)
         {
-            int res;
-            IntPtr err_ptr;
+            int result;
             string err = String.Empty;
 
             bpfProgram = IntPtr.Zero;
@@ -389,20 +398,15 @@ namespace SharpPcap
             bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
 
             //compile the expressions
-            res = SafeNativeMethods.pcap_compile(pcapHandle,
+            result = SafeNativeMethods.pcap_compile(pcapHandle,
                                                  bpfProgram,
                                                  filterExpression,
                                                  1,
                                                  mask);
 
-            if(res < 0)
+            if(result < 0)
             {
-                try
-                {
-                    err_ptr = SafeNativeMethods.pcap_geterr( pcapHandle );
-                    err = Marshal.PtrToStringAnsi( err_ptr );
-                }
-                catch {}
+                err = GetLastError(pcapHandle);
 
                 // free up the program memory
                 Marshal.FreeHGlobal(bpfProgram);            
@@ -523,8 +527,12 @@ namespace SharpPcap
         /// <param name="fileName"></param>
         public void DumpFlush()
         {
-            if(DumpOpened)
-                SafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
+            if (DumpOpened)
+            {
+                int result = SafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
+                if (result < 0)
+                    throw new PcapException("Error writing buffer to dumpfile. " + LastError);
+            }
         }
 
         /// <summary>
@@ -534,9 +542,9 @@ namespace SharpPcap
         public void Dump(byte[] p, PcapHeader h)
         {
             if(!Opened)
-                throw new InvalidOperationException("Cannot dump packet, device is not opened");
+                throw new PcapDeviceNotReadyException("Cannot dump packet, device is not opened");
             if(!DumpOpened)
-                throw new InvalidOperationException("Cannot dump packet, dump file is not opened");
+                throw new PcapDeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
             //Marshal packet
             IntPtr pktPtr;
@@ -642,7 +650,7 @@ namespace SharpPcap
             }
             else
             {
-                throw new PcapException("Can't send packet, the device is closed");
+                throw new PcapDeviceNotReadyException("Can't send packet, the device is closed");
             }
         }
 
@@ -655,16 +663,18 @@ namespace SharpPcap
             return q.Transmit( this, sync );
         }
 
+        private static string GetLastError(IntPtr deviceHandle)
+        {
+            IntPtr err_ptr = SafeNativeMethods.pcap_geterr(deviceHandle);
+            return Marshal.PtrToStringAnsi(err_ptr);
+        }
+
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
         public string LastError
         {
-            get
-            {
-                IntPtr err_ptr = SafeNativeMethods.pcap_geterr( PcapHandle );
-                return Marshal.PtrToStringAnsi( err_ptr );
-            }
+            get { return GetLastError(PcapHandle);  }
         }
 
         public override string ToString ()

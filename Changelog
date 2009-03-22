@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Add PcapDevices finalizer, call Close() in the destructor. Remove some duplicate
+  p/Invoke calls. Don't expose generic lists. Add some specific exceptions to avoid
+  throwing generic ones. Check some method results. Patch by Phillip L.
 - Fix bad spelling and grammar. Use LastError propery instead of duplicating pinvoke 
   calls. Patch by Phillip L.
 - Deprecate Pcap.GetAllDevices() and introduce a new type, PcapDeviceList that is a
