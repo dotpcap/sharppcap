@@ -370,16 +370,8 @@ namespace SharpPcap
             }
         }
 
-        /// <summary>
-        /// If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
+        // If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
         /// or unmanaged memory will be leaked
-        /// </summary>
-        /// <param name="filterExpression">
-        /// A <see cref="System.String"/>
-        /// </param>
-        /// <param name="bpfProgram">
-        /// A <see cref="IntPtr"/>
-        /// </param>
         private static bool CompileFilter(IntPtr pcapHandle,
                                           string filterExpression,
                                           uint mask,
@@ -468,40 +460,31 @@ namespace SharpPcap
         /// with this device. For more info on filter expression syntax, see:
         /// http://www.winpcap.org/docs/docs31/html/group__language.html
         /// </summary>
-        /// <param name="filterExpression">The filter expression to 
-        /// compile</param>
+        /// <param name="filterExpression">The filter expression to compile</param>
         public virtual void SetFilter(string filterExpression)
         {
             int res;
-            IntPtr err_ptr;
             IntPtr bpfProgram;
             string errorString;
 
             // attempt to compile the program
             if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
             {
-                string err = "Can't compile filter: " + errorString;
+                string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
                 throw new PcapException(err);
             }
 
             //associate the filter with this device
             res = SafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
 
-            // free the program whether or not we were successful in setting the filter
-            // we don't want to unmanaged memory if we throw
+            // Free the program whether or not we were successful in setting the filter
+            // we don't want to leak unmanaged memory if we throw an exception.
             FreeBpfProgram(bpfProgram);
 
             //watch for errors
             if(res < 0)
             {
-                try
-                {
-                    err_ptr = SafeNativeMethods.pcap_geterr(PcapHandle);
-                    errorString = Marshal.PtrToStringAnsi(err_ptr);
-                }
-                catch{}
-                errorString = "Can't set filter.\n" + errorString;
-
+                errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
                 throw new PcapException(errorString);
             }
         }

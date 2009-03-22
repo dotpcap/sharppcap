@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Fix bad spelling and grammar. Use LastError propery instead of duplicating pinvoke 
+  calls. Patch by Phillip L.
 - Deprecate Pcap.GetAllDevices() and introduce a new type, PcapDeviceList that is a
   ReadOnlyCollection<PcapDevice>. Patch from Phill L.
 - Add static bool PcapDevice.CheckFilter(string filterExpression, out string errorString) 
