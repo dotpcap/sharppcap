@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Re-add the NetworkDevice and IPHelper classes to SharpPcap/Win32 and into the
+  SharpPcap.Win32 namespace. Windows only users can use these classes at their own
+  risk of breaking portability if their code is executed on a non-Windows platform.
 - Add PcapDevices finalizer, call Close() in the destructor. Remove some duplicate
   p/Invoke calls. Don't expose generic lists. Add some specific exceptions to avoid
   throwing generic ones. Check some method results. Patch by Phillip L.

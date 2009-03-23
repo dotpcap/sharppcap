@@ -256,6 +256,8 @@
     <Compile Include="Packets\Util\ChecksumUtils.cs" />
     <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="PcapDeviceCaptureLoop.cs" />
+    <Compile Include="Win32\IPHelper.cs" />
+    <Compile Include="Win32\NetworkDevice.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
