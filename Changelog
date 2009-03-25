@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Throw a PcapDeviceNotReadyException() if a capture loop is started before the
+  PcapDevice is opened. Patch from Phillip L.
 - Re-add the NetworkDevice and IPHelper classes to SharpPcap/Win32 and into the
   SharpPcap.Win32 namespace. Windows only users can use these classes at their own
   risk of breaking portability if their code is executed on a non-Windows platform.

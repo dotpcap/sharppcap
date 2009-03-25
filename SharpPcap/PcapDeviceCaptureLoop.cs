@@ -68,12 +68,14 @@ namespace SharpPcap
 
         private void CaptureThread()
         {
-            SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
+            if (!Opened)
+                throw new PcapDeviceNotReadyException("Capture called before PcapDevice.Open()");
 
+            SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
+           
             while(!shouldCaptureThreadStop)
             {
-                
-                int res = SafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                 int res = SafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative
