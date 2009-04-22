@@ -1,5 +1,8 @@
 Changelog
 v2.0.3 - TBD
+- Re-remove the NetworkDevice and IPHelper classes from SharpPcap/Win32. It turns
+  out that System.Net.NetworkInformation's NetworkInterface can provide the
+  mac address for the network devices on the system.
 - Throw a PcapDeviceNotReadyException() if a capture loop is started before the
   PcapDevice is opened. Patch from Phillip L.
 - Re-add the NetworkDevice and IPHelper classes to SharpPcap/Win32 and into the
