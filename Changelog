@@ -1,5 +1,14 @@
 Changelog
 v2.0.3 - TBD
+- Fix a very difficult to debug race condition in PacketFactory. PacketFactory had a
+  private static lLen that was being set and used in static PacketFactory.dataToPacket().
+  This is a really bad thing because static PacketFactory.dataToPacket()
+  may be called by several threads at the same time. Depending on timing, the value
+  of PacketFactory.lLen be set by one call to dataToPacket() and modified by another
+  call to dataToPacket() before the first call uses the value. Because this is a
+  race condition it doesn't always reproduce and the failure case was an odd
+  error from the IPPacket.SourceAddress get accessor. Eliminate the race condition
+  by moving from a PacketFactory.lLen static variable to a method local lLen variable.
 - Re-remove the NetworkDevice and IPHelper classes from SharpPcap/Win32. It turns
   out that System.Net.NetworkInformation's NetworkInterface can provide the
   mac address for the network devices on the system.

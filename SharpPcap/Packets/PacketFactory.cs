@@ -25,9 +25,9 @@ namespace SharpPcap.Packets
         {
             int ethProtocol;
 
-            // record the length of the headers associated with this link layer type.
+            // retrieve the length of the headers associated with this link layer type.
             // this length is the offset to the header embedded in the packet.
-            lLen = LinkLayer.getLinkLayerLength(linkType);
+            int lLen = LinkLayer.getLinkLayerLength(linkType);
 
             // extract the protocol code for the type of header embedded in the 
             // link-layer of the packet
@@ -69,10 +69,5 @@ namespace SharpPcap.Packets
                     return new EthernetPacket(lLen, bytes, tv);
             }
         }
-
-        /// <summary> Length in bytes of the link-level headers that this factory is 
-        /// decoding packets for.
-        /// </summary>
-        private static int lLen;
     }
 }
