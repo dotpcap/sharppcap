@@ -1,6 +1,7 @@
 Changelog
 v2.0.3 - TBD
-- Fix a very difficult to debug race condition in PacketFactory. PacketFactory had a
+- Fix a very difficult to debug race condition in PacketFactory that was
+  brought out by having several devices capturing simultaneously. PacketFactory had a
   private static lLen that was being set and used in static PacketFactory.dataToPacket().
   This is a really bad thing because static PacketFactory.dataToPacket()
   may be called by several threads at the same time. Depending on timing, the value
