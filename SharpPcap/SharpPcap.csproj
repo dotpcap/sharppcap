@@ -232,6 +232,10 @@
     <Compile Include="Packets\Util\ChecksumUtils.cs" />
     <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="PcapDeviceCaptureLoop.cs" />
+    <Compile Include="PcapAddress.cs" />
+    <Compile Include="Sockaddr.cs" />
+    <Compile Include="PcapDeviceList.cs" />
+    <Compile Include="PcapInterface.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

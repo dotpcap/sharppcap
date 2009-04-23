@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Move Pcap.PcapAddress, Pcap.Sockaddr, Pcap.PcapInterface and PcapDevice classes into their
+  own files
 - Add the PcapDevice that generated the event to the PcapCaptureEventArgs
   and the PcapStatisticsEventArgs classes
 - Fix a very difficult to debug race condition in PacketFactory that was

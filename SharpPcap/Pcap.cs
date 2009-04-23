@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using SharpPcap.Containers;
 
 namespace SharpPcap
 {
@@ -71,206 +72,14 @@ namespace SharpPcap
         // Constants for address families
         // These are set in a Pcap static initializer because the values
         // differ between Windows and Linux
-        private static int      AF_INET;
-        private static int      AF_PACKET;
-        private static int      AF_INET6;
+        public readonly static int      AF_INET;
+        public readonly static int      AF_PACKET;
+        public readonly static int      AF_INET6;
 
         // Constants for pcap loop exit status.
         internal const int LOOP_USER_TERMINATED  = -2;
         internal const int LOOP_EXIT_WITH_ERROR  = -1;
         internal const int LOOP_COUNT_EXHAUSTED  =  0;
-
-        public class Sockaddr
-        {
-            public enum Type
-            {
-                AF_INET_AF_INET6,
-                HARDWARE,
-                UNKNOWN
-            }
-            public Type type;
-
-            public System.Net.IPAddress ipAddress;
-            public byte[] hardwareAddress;
-
-            private int _sa_family;
-            public int sa_family
-            {
-                get { return _sa_family; }
-            }
-
-            public Sockaddr(IntPtr sockaddrPtr)
-            {
-                // A sockaddr struct. We use this to determine the address family
-                PcapUnmanagedStructures.sockaddr saddr;
-
-                // Marshal memory pointer into a struct
-                saddr = (PcapUnmanagedStructures.sockaddr)Marshal.PtrToStructure(sockaddrPtr,
-                                                         typeof(PcapUnmanagedStructures.sockaddr));
-
-                // record the sa_family for informational purposes
-                _sa_family = saddr.sa_family;
-
-                byte[] addressBytes;
-                if(saddr.sa_family == AF_INET)
-                {
-                    type = Type.AF_INET_AF_INET6; 
-                    PcapUnmanagedStructures.sockaddr_in saddr_in = 
-                        (PcapUnmanagedStructures.sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
-                                                                                    typeof(PcapUnmanagedStructures.sockaddr_in));
-                    ipAddress = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
-                } else if(saddr.sa_family == AF_INET6)
-                {
-                    type = Type.AF_INET_AF_INET6;
-                    addressBytes = new byte[16];
-                    PcapUnmanagedStructures.sockaddr_in6 sin6 =
-                        (PcapUnmanagedStructures.sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
-                                                             typeof(PcapUnmanagedStructures.sockaddr_in6));
-                    Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
-                    ipAddress = new System.Net.IPAddress(addressBytes);
-                } else if(saddr.sa_family == AF_PACKET)
-                {
-                    type = Type.HARDWARE;
-
-                    PcapUnmanagedStructures.sockaddr_ll saddr_ll =
-                        (PcapUnmanagedStructures.sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
-                                                          typeof(PcapUnmanagedStructures.sockaddr_ll));
-
-                    hardwareAddress = new byte[saddr_ll.sll_halen];
-                    for(int x = 0; x < saddr_ll.sll_halen; x++)
-                    {
-                        hardwareAddress[x] = saddr_ll.sll_addr[x];
-                    }
-                } else
-                {
-                    type = Type.UNKNOWN;
-
-                    // place the sockaddr.sa_data into the hardware address just in case
-                    // someone wants access to the bytes
-                    hardwareAddress = new byte[saddr.sa_data.Length];
-                    for(int x = 0; x < saddr.sa_data.Length; x++)
-                    {
-                        hardwareAddress[x] = saddr.sa_data[x];
-                    }
-                }
-            }
-
-            public override string ToString()
-            {
-                if(type == Type.AF_INET_AF_INET6)
-                {
-                    return ipAddress.ToString();
-                } else if(type == Type.HARDWARE)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append("HW addr: ");
-                    for(int x = 0; x < hardwareAddress.Length; x++)
-                    {
-                        if(x == 0)
-                            sb.AppendFormat("{0}", hardwareAddress[x].ToString("x2"));
-                        else
-                            sb.AppendFormat(":{0}", hardwareAddress[x].ToString("x2"));
-                    }
-
-                    return sb.ToString();
-                } else if(type == Type.UNKNOWN)
-                {
-                    return String.Empty;
-                }
-
-                return String.Empty;
-            }
-        }
-
-        // managed version of pcap_addr
-        public class PcapAddress
-        {
-            public Sockaddr Addr;
-            public Sockaddr Netmask;
-            public Sockaddr Broadaddr;
-            public Sockaddr Dstaddr;
-
-            internal PcapAddress(PcapUnmanagedStructures.pcap_addr pcap_addr)
-            {
-                if(pcap_addr.Addr != IntPtr.Zero)
-                    Addr = new Sockaddr( pcap_addr.Addr );
-                if(pcap_addr.Netmask != IntPtr.Zero)
-                    Netmask = new Sockaddr( pcap_addr.Netmask );
-                if(pcap_addr.Broadaddr !=IntPtr.Zero)
-                    Broadaddr = new Sockaddr( pcap_addr.Broadaddr );
-                if(pcap_addr.Dstaddr != IntPtr.Zero)
-                    Dstaddr = new Sockaddr( pcap_addr.Dstaddr );
-            }
-
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-
-                if(Addr != null)
-                    sb.AppendFormat("Addr:      {0}\n", Addr.ToString());
-
-                if(Netmask != null)
-                    sb.AppendFormat("Netmask:   {0}\n", Netmask.ToString());
-
-                if(Broadaddr != null)
-                    sb.AppendFormat("Broadaddr: {0}\n", Broadaddr.ToString());
-
-                if(Dstaddr != null)
-                    sb.AppendFormat("Dstaddr:   {0}\n", Dstaddr.ToString());
-
-                return sb.ToString();
-            }
-        }
-
-        // managed version of pcap_if
-        // NOTE: we can't use pcap_if directly because the class contains
-        //       a pointer to pcap_if that will be freed when the
-        //       device memory is freed, so instead convert the unmanaged structure
-        //       to a managed one to avoid this issue
-        public class PcapInterface
-        {
-            public string            Name;        /* name to hand to "pcap_open_live()" */              
-            public string            Description; /* textual description of interface */
-            public List<PcapAddress> Addresses;
-            public uint              Flags;       /* PCAP_IF_ interface flags */
-
-            internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf)
-            {
-                Name = pcapIf.Name;
-                Description = pcapIf.Description;
-                Flags = pcapIf.Flags;
-
-                // retrieve addresses
-                Addresses = new List<PcapAddress>();
-                IntPtr address = pcapIf.Addresses;
-                while(address != IntPtr.Zero)
-                {
-                    //A sockaddr struct
-                    PcapUnmanagedStructures.pcap_addr addr;
-
-                    //Marshal memory pointer into a struct
-                    addr = (PcapUnmanagedStructures.pcap_addr)Marshal.PtrToStructure(address,
-                                                                                     typeof(PcapUnmanagedStructures.pcap_addr));
-
-                    Addresses.Add(new PcapAddress(addr));
-
-                    address = addr.Next; // move to the next address
-                }
-            }
-
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("Name: {0}\n", Name);
-                sb.AppendFormat("Description: {0}\n", Description);
-                foreach(PcapAddress addr in Addresses)
-                {
-                    sb.AppendFormat("Addresses:\n{0}\n", addr);
-                }
-                sb.AppendFormat("Flags: {0}\n", Flags);
-                return sb.ToString();
-            }
-        }
 
         public static string Version
         {
