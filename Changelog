@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Add the PcapDevice that generated the event to the PcapCaptureEventArgs
+  and the PcapStatisticsEventArgs classes
 - Fix a very difficult to debug race condition in PacketFactory that was
   brought out by having several devices capturing simultaneously. PacketFactory had a
   private static lLen that was being set and used in static PacketFactory.dataToPacket().

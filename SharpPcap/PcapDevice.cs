@@ -334,7 +334,7 @@ namespace SharpPcap
 
         protected virtual Packet MarshalPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
-            Packet p = new Packet();
+            Packet p;
             PcapUnmanagedStructures.pcap_pkthdr pkt_header =
                 (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure(header,
                                                                              typeof(PcapUnmanagedStructures.pcap_pkthdr));
@@ -357,7 +357,7 @@ namespace SharpPcap
                 if(OnPacketArrival != null )
                 {
                     //Invoke the packet arrival event                                           
-                    OnPacketArrival(this, new PcapCaptureEventArgs(p));
+                    OnPacketArrival(this, new PcapCaptureEventArgs(p, this));
                 }
             }
             //else mode is MODE_STAT
@@ -366,7 +366,7 @@ namespace SharpPcap
                 if(OnPcapStatistics != null)
                 {
                     //Invoke the pcap statistics event
-                    OnPcapStatistics(this, new PcapStatisticsEventArgs(p));
+                    OnPcapStatistics(this, new PcapStatisticsEventArgs(p, this));
                 }
             }
         }
