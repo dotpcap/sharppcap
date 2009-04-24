@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Packets;
@@ -23,7 +24,7 @@ namespace Test
             UDPPacket packet = new UDPPacket(lLen, bytes);
 
             //Ethernet Fields 
-            packet.DestinationHwAddress = "001122334455";
+            packet.DestinationHwAddress = PhysicalAddress.Parse("001122334455");
             // NOTE: the source hw address will be filled in by the network stack or the
             //       network hardware
 //          packet.SourceHwAddress = device.MacAddress;

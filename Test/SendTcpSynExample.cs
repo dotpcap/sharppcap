@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Packets;
@@ -72,7 +73,7 @@ namespace Test
 
             //Ethernet fields
 //          tcp.SourceHwAddress = dev.MacAddress;           //Set the source mac of the local device
-            tcp.DestinationHwAddress = destMAC;     //Set the dest MAC of the gateway
+            tcp.DestinationHwAddress = PhysicalAddress.Parse(destMAC);     //Set the dest MAC of the gateway
             tcp.EthernetProtocol = EthernetPacket.EtherType.IP;
 
             //IP fields

@@ -1,5 +1,7 @@
 Changelog
 v2.0.3 - TBD
+- Switch some representations of mac addresses from strings to the
+  System.Net.NetworkInformation.PhysicalAddress class
 - Move Pcap.PcapAddress, Pcap.Sockaddr, Pcap.PcapInterface and PcapDevice classes into their
   own files
 - Add the PcapDevice that generated the event to the PcapCaptureEventArgs

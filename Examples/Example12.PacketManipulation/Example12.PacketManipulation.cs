@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Packets;
@@ -94,8 +95,8 @@ namespace Example12.PacketManipulation
                 Console.WriteLine("Original Eth packet: " + eth.ToColoredString(false));
 
                 //Manipulate ethernet parameters
-                eth.SourceHwAddress = "00:11:22:33:44:55";
-                eth.DestinationHwAddress = "00:99:88:77:66:55";
+                eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
+                eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
                 if (e.Packet is IPPacket)
                 {

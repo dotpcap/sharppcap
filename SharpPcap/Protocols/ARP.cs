@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using SharpPcap.Packets;
 using SharpPcap.Util;
 
@@ -185,7 +186,7 @@ namespace SharpPcap.Protocols
             arp.ARPOperation = ARPFields_Fields.ARP_OP_REQ_CODE;
             arp.ARPTargetHwAddress = "00:00:00:00:00:00";
             arp.ARPTargetProtoAddress = destIP;
-            arp.DestinationHwAddress = "ff:ff:ff:ff:ff:ff";
+            arp.DestinationHwAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
             return arp;
         }
 
@@ -200,7 +201,7 @@ namespace SharpPcap.Protocols
             arp.ARPSenderHwAddress = localMAC;
             arp.ARPSenderProtoAddress = localIP;
             // ether fields
-            arp.SourceHwAddress = localMAC;
+            arp.SourceHwAddress = PhysicalAddress.Parse(localMAC);
             arp.EthernetProtocol = EthernetPacket.EtherType.ARP;
             return arp;
         }

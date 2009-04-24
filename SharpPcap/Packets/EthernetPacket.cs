@@ -5,6 +5,7 @@
 /// *************************************************************************
 /// </summary>
 using System;
+using System.Net.NetworkInformation;
 using SharpPcap.Packets.Util;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
@@ -287,57 +288,56 @@ namespace SharpPcap.Packets
                 return EthernetData;
             }
         }
-        /// <summary> Fetch the MAC address of the host where the packet originated from.</summary>
-        public virtual System.String SourceHwAddress
-        {
-            get
-            {
-                return MACAddress.extract(EthernetFields_Fields.ETH_SRC_POS, _bytes);
-            }
-            set
-            {
-                MACAddress.insert(value, _bytes, EthernetFields_Fields.ETH_SRC_POS);
-            }
-        }
 
-        /// <summary> Set the MAC address of the host where the packet originated from.</summary>
-        public virtual long SourceHwAddressAsLong
-        {
-            get
-            {
-                string mac = MACAddress.extract(EthernetFields_Fields.ETH_SRC_POS, _bytes);
-                return Int64.Parse(mac.Replace(":", ""), System.Globalization.NumberStyles.HexNumber);
-            }
-            set
-            {
-                ArrayHelper.insertLong(_bytes, value, EthernetFields_Fields.ETH_SRC_POS, MACAddress.WIDTH);
-            }
-        }
+        private static int macAddressLength = 6;
 
         /// <summary> Fetch the MAC address of the host where the packet originated from.</summary>
-        public virtual System.String DestinationHwAddress
+        public virtual PhysicalAddress SourceHwAddress
         {
             get
             {
-                return MACAddress.extract(EthernetFields_Fields.ETH_DST_POS, _bytes);
+                byte[] hwAddress = new byte[macAddressLength];
+                Array.Copy(_bytes, EthernetFields_Fields.ETH_SRC_POS,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                MACAddress.insert(value, _bytes, EthernetFields_Fields.ETH_DST_POS);
+                byte[] hwAddress = value.GetAddressBytes();
+                if(hwAddress.Length != macAddressLength)
+                {
+                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                                                               + " not equal to the expected length of "
+                                                               + macAddressLength);
+                }
+
+                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_SRC_POS,
+                           hwAddress.Length);
             }
         }
 
-        /// <summary> Set the MAC address of the host where the packet originated from.</summary>
-        public virtual long DestinationHwAddressAsLong
+        /// <summary> Fetch the MAC address of the host where the packet originated from.</summary>
+        public virtual PhysicalAddress DestinationHwAddress
         {
             get
             {
-                string mac = MACAddress.extract(EthernetFields_Fields.ETH_DST_POS, _bytes);
-                return Int64.Parse(mac.Replace(":", ""), System.Globalization.NumberStyles.HexNumber);
+                byte[] hwAddress = new byte[macAddressLength];
+                Array.Copy(_bytes, EthernetFields_Fields.ETH_DST_POS,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                ArrayHelper.insertLong(_bytes, value, EthernetFields_Fields.ETH_DST_POS, MACAddress.WIDTH);
+                byte[] hwAddress = value.GetAddressBytes();
+                if(hwAddress.Length != macAddressLength)
+                {
+                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                                                               + " not equal to the expected length of "
+                                                               + macAddressLength);
+                }
+
+                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_DST_POS,
+                           hwAddress.Length);
             }
         }
 

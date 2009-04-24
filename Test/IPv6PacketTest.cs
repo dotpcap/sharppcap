@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using NUnit.Framework;
 
 using SharpPcap;
@@ -17,8 +18,8 @@ namespace Test
             Console.WriteLine(p.ToString());
 
             EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual("00:a0:cc:d9:41:75", e.SourceHwAddress);
-            Assert.AreEqual("33:33:00:00:00:02", e.DestinationHwAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
 
             IPPacket ip = (IPPacket)p;
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
