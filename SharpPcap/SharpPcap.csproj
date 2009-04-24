@@ -135,9 +135,6 @@
     <Compile Include="Packets\LinkLayers.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\MACAddress.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\Packet.cs">
       <SubType>Code</SubType>
     </Compile>

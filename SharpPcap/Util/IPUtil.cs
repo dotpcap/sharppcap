@@ -239,28 +239,6 @@ namespace SharpPcap.Util
         public static string REGEX_IP_AND_MASK_BITS = "(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})/(\\d{1,2})";
         public static string REGEX_IP_ADDR = "^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$";
 
-        public static long MacToLong(String mac)
-        {
-            mac = mac.Replace("0x", "").Replace(":", "").Replace("-","").Replace(" ", "");
-            return System.Convert.ToInt64(mac, 16);
-        }
-
-        public static string MacToString(long mac)
-        {
-            return SharpPcap.Packets.MACAddress.extract(mac);
-        }
-
-        public static string MacToString(byte[] mac)
-        {
-            return SharpPcap.Packets.MACAddress.extract(0, mac);
-        }
-
-        public static string MacFormat(string mac)
-        {
-            long m = MacToLong(mac);
-            return MacToString(m);
-        }
-
         public static short Ntoh(short val)
         {
             return IPAddress.NetworkToHostOrder(val);

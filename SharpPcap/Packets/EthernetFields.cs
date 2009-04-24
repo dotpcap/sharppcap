@@ -22,10 +22,13 @@ namespace SharpPcap.Packets
         public readonly static int ETH_HEADER_LEN; // == 14
         static EthernetFields_Fields()
         {
-            ETH_SRC_POS = MACAddress.WIDTH;
-            ETH_CODE_POS = MACAddress.WIDTH * 2;
+            ETH_SRC_POS = EthernetFields_Fields.MAC_ADDRESS_LENGTH;
+            ETH_CODE_POS = EthernetFields_Fields.MAC_ADDRESS_LENGTH * 2;
             ETH_HEADER_LEN = EthernetFields_Fields.ETH_CODE_POS + EthernetFields_Fields.ETH_CODE_LEN;
         }
+
+        // size of an ethernet mac address in bytes
+        public readonly static int MAC_ADDRESS_LENGTH = 6;
     }
     public interface EthernetFields
     {

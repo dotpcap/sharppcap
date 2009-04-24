@@ -48,14 +48,16 @@ namespace SharpPcap.Packets
         {
             // NOTE: We use IPv4Fields_Fields.IP_ADDRESS_WIDTH because arp packets are
             //       only used in IPv4 networks. Neighbor discovery is used with IPv6
+            //FIXME: we really should use the sizes given by the length fields to determine
+            // the position offsets here instead of assuming the hw address is an ethernet mac address
             ARP_PR_TYPE_POS = ARPFields_Fields.ARP_HW_TYPE_POS + ARPFields_Fields.ARP_ADDR_TYPE_LEN;
             ARP_HW_LEN_POS = ARPFields_Fields.ARP_PR_TYPE_POS + ARPFields_Fields.ARP_ADDR_TYPE_LEN;
             ARP_PR_LEN_POS = ARPFields_Fields.ARP_HW_LEN_POS + ARPFields_Fields.ARP_ADDR_SIZE_LEN;
             ARP_OP_POS = ARPFields_Fields.ARP_PR_LEN_POS + ARPFields_Fields.ARP_ADDR_SIZE_LEN;
             ARP_S_HW_ADDR_POS = ARPFields_Fields.ARP_OP_POS + ARPFields_Fields.ARP_OP_LEN;
-            ARP_S_PR_ADDR_POS = ARPFields_Fields.ARP_S_HW_ADDR_POS + MACAddress.WIDTH;
+            ARP_S_PR_ADDR_POS = ARPFields_Fields.ARP_S_HW_ADDR_POS + EthernetFields_Fields.MAC_ADDRESS_LENGTH;
             ARP_T_HW_ADDR_POS = ARPFields_Fields.ARP_S_PR_ADDR_POS + IPv4Fields_Fields.IP_ADDRESS_WIDTH;
-            ARP_T_PR_ADDR_POS = ARPFields_Fields.ARP_T_HW_ADDR_POS + MACAddress.WIDTH;
+            ARP_T_PR_ADDR_POS = ARPFields_Fields.ARP_T_HW_ADDR_POS + EthernetFields_Fields.MAC_ADDRESS_LENGTH;
             ARP_HEADER_LEN = ARPFields_Fields.ARP_T_PR_ADDR_POS + IPv4Fields_Fields.IP_ADDRESS_WIDTH;
         }
     }

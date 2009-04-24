@@ -1,5 +1,10 @@
 Changelog
 v2.0.3 - TBD
+- Remove some last usage of the MACAddress class and replace it with
+  System.Net.NetworkInformation.PhysicalAddress. Remove some helper methods
+  in IPUtil that were performing conversion to/from strings and mac addresses.
+  Remove some ARPPacket methods for setting hardware addresses from long values,
+  the set accessors for these variables works just fine.
 - Switch some representations of mac addresses from strings to the
   System.Net.NetworkInformation.PhysicalAddress class
 - Move Pcap.PcapAddress, Pcap.Sockaddr, Pcap.PcapInterface and PcapDevice classes into their

@@ -5,6 +5,7 @@
 /// *************************************************************************
 /// </summary>
 using System;
+using System.Net.NetworkInformation;
 using SharpPcap.Packets.Util;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
@@ -88,15 +89,6 @@ namespace SharpPcap.Packets
             set
             {
                 ArrayHelper.insertLong(Bytes, value, _ethOffset + ARPFields_Fields.ARP_OP_POS, ARPFields_Fields.ARP_OP_LEN);
-            }
-        }
-
-        /// <summary> Fetch the hardware source address.</summary>
-        virtual public long ARPSenderHwAddressAsLong
-        {
-            get
-            {
-                return ArrayHelper.extractLong(Bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
             }
         }
 
@@ -185,41 +177,63 @@ namespace SharpPcap.Packets
         }
 
         /// <summary> Gets/Sets the hardware source address.</summary>
-        public virtual System.String ARPSenderHwAddress
+        public virtual PhysicalAddress ARPSenderHwAddress
         {
             get
             {
-                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, Bytes);
+                //FIXME: this code is broken because it assumes that the address position is
+                // a fixed position
+                byte[] hwAddress = new byte[ARPHwLength];
+                Array.Copy(Bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, Bytes);
-            }
-        }
+                byte[] hwAddress = value.GetAddressBytes();
 
-        /// <summary> Sets the hardware source address.</summary>
-        public virtual void setARPSenderHwAddress(long addr)
-        {
-            ArrayHelper.insertLong(Bytes, addr, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, 6);
+                // for now we only support ethernet addresses even though the arp protocol
+                // makes provisions for varying length addresses
+                if(hwAddress.Length != EthernetFields_Fields.MAC_ADDRESS_LENGTH)
+                {
+                    throw new System.InvalidOperationException("expected physical address length of "
+                                                               + EthernetFields_Fields.MAC_ADDRESS_LENGTH
+                                                               + " but it was "
+                                                               + hwAddress.Length);
+                }
+
+                Array.Copy(hwAddress, 0, Bytes, _ethOffset + ARPFields_Fields.ARP_S_HW_ADDR_POS, hwAddress.Length);
+            }
         }
 
         /// <summary> Gets/Sets the hardware destination address.</summary>
-        public virtual String ARPTargetHwAddress
+        public virtual PhysicalAddress ARPTargetHwAddress
         {
             get
             {
-                return MACAddress.extract(_ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, Bytes);
+                //FIXME: this code is broken because it assumes that the address position is
+                // a fixed position
+                byte[] hwAddress = new byte[ARPHwLength];
+                Array.Copy(Bytes, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                MACAddress.insert(value, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, Bytes);
-            }
-        }
+                byte[] hwAddress = value.GetAddressBytes();
 
-        /// <summary> Sets the hardware destination address.</summary>
-        public virtual void setARPTargetHwAddress(long addr)
-        {
-            ArrayHelper.insertLong(Bytes, addr, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, 6);
+                // for now we only support ethernet addresses even though the arp protocol
+                // makes provisions for varying length addresses
+                if(hwAddress.Length != EthernetFields_Fields.MAC_ADDRESS_LENGTH)
+                {
+                    throw new System.InvalidOperationException("expected physical address length of "
+                                                               + EthernetFields_Fields.MAC_ADDRESS_LENGTH
+                                                               + " but it was "
+                                                               + hwAddress.Length);
+                }
+
+                Array.Copy(hwAddress, 0, Bytes, _ethOffset + ARPFields_Fields.ARP_T_HW_ADDR_POS, hwAddress.Length);
+            }
         }
 
         /// <summary> Fetch data portion of the arp header.</summary>

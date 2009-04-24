@@ -471,7 +471,7 @@ namespace SharpPcap.Packets
             if (ipv4 != null)
                 return ipv4.ComputeIPChecksum(update);
             else if (ipv6 != null)
-                return 0;
+                return 0; // ipv6 packets don't contain a checksum
             else
                 throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
         }

@@ -112,7 +112,7 @@ namespace SharpPcap.Protocols
         /// </summary>
         /// <param name="destIP">The IP address to resolve</param>
         /// <returns>The MAC address that matches to the given IP address</returns>
-        public string Resolve(System.Net.IPAddress destIP)
+        public PhysicalAddress Resolve(System.Net.IPAddress destIP)
         {
             if(DeviceName==null)
                 throw new Exception("Can't resolve host: A network device must be specified");
@@ -126,7 +126,7 @@ namespace SharpPcap.Protocols
         /// <param name="destIP">The IP address to resolve</param>
         /// <param name="deviceName">The local network device name on which to send the ARP request</param>
         /// <returns>The MAC address that matches to the given IP address</returns>
-        public string Resolve(System.Net.IPAddress destIP, string deviceName)
+        public PhysicalAddress Resolve(System.Net.IPAddress destIP, string deviceName)
         {
             string localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
@@ -146,10 +146,10 @@ namespace SharpPcap.Protocols
 #endif
 
             //Build a new ARP request packet
-            ARPPacket request = BuildRequest(destIP, localMAC, localIP);
+            ARPPacket request = BuildRequest(destIP, PhysicalAddress.Parse(localMAC), localIP);
 
             //create a "tcpdump" filter for allowing only arp replies to be read
-            String arpFilter = "arp and ether dst " + IPUtil.MacFormat(localMAC);
+            String arpFilter = "arp and ether dst " + localMAC.ToString();
 
             //open the device with 20ms timeout
             device.Open(true, 20);
@@ -179,18 +179,18 @@ namespace SharpPcap.Protocols
         }
 
         private ARPPacket BuildRequest(System.Net.IPAddress destIP,
-                                       string localMAC,
+                                       PhysicalAddress localMAC,
                                        System.Net.IPAddress localIP)
         {
             ARPPacket arp = BuildARP(localMAC, localIP);
             arp.ARPOperation = ARPFields_Fields.ARP_OP_REQ_CODE;
-            arp.ARPTargetHwAddress = "00:00:00:00:00:00";
+            arp.ARPTargetHwAddress = PhysicalAddress.Parse("00-00-00-00-00-00");
             arp.ARPTargetProtoAddress = destIP;
             arp.DestinationHwAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
             return arp;
         }
 
-        private ARPPacket BuildARP(string localMAC, System.Net.IPAddress localIP)
+        private ARPPacket BuildARP(PhysicalAddress localMAC, System.Net.IPAddress localIP)
         {
             ARPPacket arp = new ARPPacket(14, new byte[60]);
             // arp fields
@@ -201,7 +201,7 @@ namespace SharpPcap.Protocols
             arp.ARPSenderHwAddress = localMAC;
             arp.ARPSenderProtoAddress = localIP;
             // ether fields
-            arp.SourceHwAddress = PhysicalAddress.Parse(localMAC);
+            arp.SourceHwAddress = localMAC;
             arp.EthernetProtocol = EthernetPacket.EtherType.ARP;
             return arp;
         }
