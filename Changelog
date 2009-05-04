@@ -1,5 +1,7 @@
 Changelog
-v2.0.3 - TBD
+v2.1.0 - 20090504
+- Change version to 2.1.0 in preparation for release. The minor version bump from 0
+  to 1 is due to api changes in this release.
 - Use System.Net.NetworkInformation to help retrieve mac addresses for devices.
   Adapter mac addresses are one area where Pcap and WinPcap differ and where there
   are also differences across multiple platforms.
