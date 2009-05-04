@@ -31,6 +31,17 @@ releaseDirectory=${releaseDirectory}/Release
 mkdir ${debugDirectory}
 mkdir ${releaseDirectory}
 
+# remove any existing files
+rm SharpPcap/bin/Debug/*
+rm SharpPcap/bin/Release/*
+rmdir SharpPcap/bin/Debug
+rmdir SharpPcap/bin/Release
+rmdir SharpPcap/bin
+
+# build the code
+mdtool build --buildfile:SharpPcap.sln --configuration:Debug
+mdtool build --buildfile:SharpPcap.sln --configuration:Release
+
 # copy the assembly files over
 cp SharpPcap/bin/Debug/SharpPcap.dll ${debugDirectory}
 cp SharpPcap/bin/Release/SharpPcap.dll ${releaseDirectory}
