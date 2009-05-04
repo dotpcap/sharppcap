@@ -1,3 +1,5 @@
+Generating release packages and updating source control(svn)
+
 - Check that the version set in AssemblyInfo.cs is correct for the next release
 - Make sure ChangeLog has been updated to reflect this version ahead of the
   list of changes that are going into that release.
@@ -10,3 +12,29 @@
            https://sharppcap.svn.sourceforge.net/svnroot/sharppcap/tags/SharpPcap_X_Y_Z
 - Run make_src_release with the tag name and release name
 - Run make_bin_release with the release name
+
+
+Pushing changes out to the world
+
+- Log into the sourceforge website and go to 'Project admin' and click on 'Add release'
+- Use a release name of the version, ie, "2.1.0" as the new release name
+- Copy and paste the changes since the last release into the ChangeLog textbox and
+  check off 'preserve my pre-formatted text"
+- Click 'Submit/refresh' to save the changes
+- In another tab/browser, log into https://frs.sourceforge.net/webupload with
+  your sourceforge username and password
+- Upload the bin and src packages built by make_bin_release and make_src_release
+- Go back to the tab with the new release and click 'Add files and/or refresh view' button
+- Check off the two files you uploaded and click the 'Add files and/or refresh view' button
+- For the binary package select a 'Platform-Independent' Processor and for the File Type
+  select 'Other binary package'
+- Click on update/refresh for that package
+- For the source package select 'Platform-Independent' Processor and for the File Type
+  select 'Source .zip'
+- Click on update/refresh for that package
+
+- If everything looks good go to Step 4 and check off the 'I'm sure box' and click on
+  the 'Send Notice' button to notify people that the new version has been released
+
+- NOTE: The release page can be updated later so if there are mistakes they can be
+        corrected and should take effect when the particular section is saved.
