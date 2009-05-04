@@ -38,6 +38,27 @@ namespace SharpPcap
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
             SafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
+
+            // go through the network interfaces to populate the mac address
+            // for each of the devices
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            foreach(PcapDevice device in Items)
+            {
+                Console.WriteLine("device.Name is {0}", device.Name);
+
+                foreach(NetworkInterface adapter in nics)
+                {
+                    Console.WriteLine("adapter.Id of {0}", adapter.Id);
+                    Console.WriteLine("adapter.GetPhysicalAddress() {0}", adapter.GetPhysicalAddress().ToString());
+
+                    // if the name and id match then we have found the NetworkInterface
+                    // that matches the PcapDevice
+                    if(String.Compare(device.Name, adapter.Id) == 0)
+                    {
+                        device.Interface.MacAddress = adapter.GetPhysicalAddress();
+                    }
+                }
+            }
         }
 
         #region PcapDevice Indexers

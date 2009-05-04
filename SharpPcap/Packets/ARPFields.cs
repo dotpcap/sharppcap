@@ -9,6 +9,9 @@ namespace SharpPcap.Packets
     /// <summary> IP protocol field encoding information.
     /// 
     /// </summary>
+    /// FIXME: These fields are partially broken because they assume the offset for
+    /// several fields and the offset is actually based on the accumulated offset
+    /// into the structure determined by the fields that indicate sizes
     public struct ARPFields_Fields{
         /// <summary> Type code for ethernet addresses.</summary>
         public readonly static int ARP_ETH_ADDR_CODE = 0x0001;

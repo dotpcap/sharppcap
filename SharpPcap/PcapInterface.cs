@@ -1,10 +1,10 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 using System.Runtime.InteropServices;
-using SharpPcap.Containers;
+using SharpPcap;
 
-namespace SharpPcap
+namespace SharpPcap.Containers
 {
     // managed version of pcap_if
     // NOTE: we can't use pcap_if directly because the class contains
@@ -17,6 +17,46 @@ namespace SharpPcap
         public string            Description; /* textual description of interface */
         public List<PcapAddress> Addresses;
         public uint              Flags;       /* PCAP_IF_ interface flags */
+
+        private PcapAddress m_macAddress;
+        public System.Net.NetworkInformation.PhysicalAddress MacAddress
+        {
+            get
+            {
+                return m_macAddress.Addr.hardwareAddress;
+            }
+
+            set
+            {
+                // do we already have a hardware address for this device?
+                if(m_macAddress != null)
+                {
+#if false
+                    Console.WriteLine("Overwriting hardware address "
+                                      + m_macAddress.Addr.hardwareAddress.ToString()
+                                      + " with " +
+                                      value.ToString());
+#endif
+                    // overwrite the value with the new value
+                    m_macAddress.Addr.hardwareAddress = value;
+                } else
+                {
+#if false
+                    Console.WriteLine("Creating new PcapAddress entry for this hardware address");
+#endif
+                    // create a new entry for the mac address
+                    PcapAddress newAddress = new PcapAddress();
+                    newAddress.Addr.type = Sockaddr.Type.HARDWARE;
+                    newAddress.Addr.hardwareAddress = value;
+
+                    // add the address to our addresses list
+                    Addresses.Add(newAddress);
+
+                    // m_macAddress should point to this hardware address
+                    m_macAddress = newAddress;
+                }
+            }
+        }
 
         internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf)
         {
@@ -36,7 +76,22 @@ namespace SharpPcap
                 addr = (PcapUnmanagedStructures.pcap_addr)Marshal.PtrToStructure(address,
                                                                                  typeof(PcapUnmanagedStructures.pcap_addr));
 
-                Addresses.Add(new PcapAddress(addr));
+                PcapAddress newAddress = new PcapAddress(addr);
+                Addresses.Add(newAddress);
+
+                // is this a hardware address?
+                // if so we should set our internal m_macAddress member variable
+                if(newAddress.Addr.type == Sockaddr.Type.HARDWARE)
+                {
+                    if(m_macAddress == null)
+                    {
+                        m_macAddress = newAddress;
+                    } else
+                    {
+                        throw new System.InvalidOperationException("found multiple hardware addresses, existing addr "
+                                                                   + MacAddress.ToString() + ", new address " + newAddress.Addr.hardwareAddress.ToString());
+                    }
+                }
 
                 address = addr.Next; // move to the next address
             }

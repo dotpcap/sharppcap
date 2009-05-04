@@ -1,6 +1,6 @@
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Net.NetworkInformation;
 
 namespace SharpPcap.Containers
 {
@@ -15,7 +15,7 @@ namespace SharpPcap.Containers
         public Type type;
 
         public System.Net.IPAddress ipAddress;
-        public byte[] hardwareAddress;
+        public PhysicalAddress hardwareAddress;
 
         private int _sa_family;
         public int sa_family
@@ -60,22 +60,24 @@ namespace SharpPcap.Containers
                     (PcapUnmanagedStructures.sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
                                                       typeof(PcapUnmanagedStructures.sockaddr_ll));
 
-                hardwareAddress = new byte[saddr_ll.sll_halen];
+                byte[] hardwareAddressBytes = new byte[saddr_ll.sll_halen];
                 for(int x = 0; x < saddr_ll.sll_halen; x++)
                 {
-                    hardwareAddress[x] = saddr_ll.sll_addr[x];
+                    hardwareAddressBytes[x] = saddr_ll.sll_addr[x];
                 }
+                hardwareAddress = new PhysicalAddress(hardwareAddressBytes); // copy into the PhysicalAddress class
             } else
             {
                 type = Type.UNKNOWN;
 
                 // place the sockaddr.sa_data into the hardware address just in case
                 // someone wants access to the bytes
-                hardwareAddress = new byte[saddr.sa_data.Length];
+                byte[] hardwareAddressBytes = new byte[saddr.sa_data.Length];
                 for(int x = 0; x < saddr.sa_data.Length; x++)
                 {
-                    hardwareAddress[x] = saddr.sa_data[x];
+                    hardwareAddressBytes[x] = saddr.sa_data[x];
                 }
+                hardwareAddress = new PhysicalAddress(hardwareAddressBytes);
             }
         }
 
@@ -86,17 +88,7 @@ namespace SharpPcap.Containers
                 return ipAddress.ToString();
             } else if(type == Type.HARDWARE)
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("HW addr: ");
-                for(int x = 0; x < hardwareAddress.Length; x++)
-                {
-                    if(x == 0)
-                        sb.AppendFormat("{0}", hardwareAddress[x].ToString("x2"));
-                    else
-                        sb.AppendFormat(":{0}", hardwareAddress[x].ToString("x2"));
-                }
-
-                return sb.ToString();
+                return "HW addr: " + hardwareAddress.ToString();
             } else if(type == Type.UNKNOWN)
             {
                 return String.Empty;

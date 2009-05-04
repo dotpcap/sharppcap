@@ -11,6 +11,9 @@ namespace SharpPcap.Containers
         public Sockaddr Broadaddr;
         public Sockaddr Dstaddr;
 
+        internal PcapAddress()
+        { }
+
         internal PcapAddress(PcapUnmanagedStructures.pcap_addr pcap_addr)
         {
             if(pcap_addr.Addr != IntPtr.Zero)

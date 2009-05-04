@@ -38,7 +38,6 @@ namespace SharpPcap.Protocols
     /// </summary>
     public class ARP
     {
-        private string                  _localMAC;
         private System.Net.IPAddress    _localIP;
         private string                  _deviceName;
 
@@ -58,11 +57,13 @@ namespace SharpPcap.Protocols
             DeviceName=deviceName;
         }
 
+        private PhysicalAddress          _localMAC;
+
         /// <summary>
         /// The source MAC address to be used for ARP requests.
         /// If null, the local device MAC address is used
         /// </summary>
-        public string LocalMAC
+        public PhysicalAddress LocalMAC
         {
             get
             {
@@ -128,25 +129,27 @@ namespace SharpPcap.Protocols
         /// <returns>The MAC address that matches to the given IP address</returns>
         public PhysicalAddress Resolve(System.Net.IPAddress destIP, string deviceName)
         {
-            string localMAC = LocalMAC;
+            PhysicalAddress localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
             //NetworkDevice device = new NetworkDevice(DeviceName);
             PcapDevice device = Pcap.GetPcapDevice(DeviceName);
 
-            //FIXME: PcapDevices don't have IpAddress and MacAddress values
+            //FIXME: PcapDevices don't have IpAddress
             //       These were present under Windows specific network adapters
             //       and may be present in pcap in the future with pcap-ng
+            // if no local ip address is specified use the one from the
+            // local device
 #if false
-            //if no local IP and MAC addresses specified, use the ones
-            //configured on the local device
-            if(localIP==null)
+            if(localIP == null)
                 localIP = device.IpAddress;
-            if(LocalMAC==null)
-                localMAC = device.MacAddress;
 #endif
 
+            // if no local mac address is specified use the one from the device
+            if(LocalMAC == null)
+                localMAC = device.Interface.MacAddress;
+
             //Build a new ARP request packet
-            ARPPacket request = BuildRequest(destIP, PhysicalAddress.Parse(localMAC), localIP);
+            ARPPacket request = BuildRequest(destIP, localMAC, localIP);
 
             //create a "tcpdump" filter for allowing only arp replies to be read
             String arpFilter = "arp and ether dst " + localMAC.ToString();

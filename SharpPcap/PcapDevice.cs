@@ -27,10 +27,10 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
+using System.Text;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Net.NetworkInformation;
 using SharpPcap.Containers;
 using SharpPcap.Packets;
 
@@ -111,7 +111,7 @@ namespace SharpPcap
         /// Fired when the capture process of this pcap device is stopped
         /// </summary>
         public event Pcap.PcapCaptureStoppedEvent OnCaptureStopped;
-        
+
         /// <summary>
         /// Gets the pcap name of this network device
         /// </summary>
@@ -293,7 +293,7 @@ namespace SharpPcap
         /// Gets the next packet captured on this device
         /// </summary>
         /// <param name="p">A packet reference</param>
-        /// <returns>A reference to a packet object</returns
+        /// <returns>A reference to a packet object</returns>
         public virtual int GetNextPacket(out Packet p)
         {
             //Pointer to a packet info struct
@@ -680,9 +680,7 @@ namespace SharpPcap
 
         public override string ToString ()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("interface: {0}\n", m_pcapIf.ToString());
-            return sb.ToString();
+            return "interface: " + m_pcapIf.ToString() + "\n";
         }
     }
 }

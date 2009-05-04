@@ -1,5 +1,28 @@
 Changelog
 v2.0.3 - TBD
+- Use System.Net.NetworkInformation to help retrieve mac addresses for devices.
+  Adapter mac addresses are one area where Pcap and WinPcap differ and where there
+  are also differences across multiple platforms.
+
+  Modify Sockaddr.hardwareAddress to be a
+  System.Net.NetworkInformation.PhysicalAddress instead of a byte[].
+
+  Add code to PcapDeviceList() to retrieve the list of
+  NetworkInterfaces and use the PhysicalAddress value to update the
+  PcapInterface.MacAddress value.
+
+  Add a PcapAddress m_macAddress member to PcapInterface. If the
+  PcapInterface has a hardware address in its List<PcapAddress>
+  Addresses m_macAddress will be a reference to this entry.
+
+  Add a PhysicalAddress MacAddress accessor to PcapInterface. This makes
+  it easy for the user to get the mac address of a device without having
+  to search through the address list. The get accessor returns the
+  PcapAddress.Addr.hardwareAddress, which is now a PhysicalAddress since
+  Addr is a Sockaddr. The set accessor either updates the existing entry
+  if m_macAddress is not null, or, if m_macAddress is null, it creates a
+  new PcapAddress entry, adds it to the PcapInterface's Addresses and
+  then points m_macAddress at the new entry.
 - Remove some last usage of the MACAddress class and replace it with
   System.Net.NetworkInformation.PhysicalAddress. Remove some helper methods
   in IPUtil that were performing conversion to/from strings and mac addresses.
