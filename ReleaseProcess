@@ -1,0 +1,12 @@
+- Check that the version set in AssemblyInfo.cs is correct for the next release
+- Make sure ChangeLog has been updated to reflect this version ahead of the
+  list of changes that are going into that release.
+- Rebuild project
+- Run the unit tests in Test/, they should all pass (or you should know why
+  a given test isn't passing)
+- Make sure all outstanding changes are checked in
+- Tag trunk as the release, ex.
+  svn copy https://sharppcap.svn.sourceforge.net/svnroot/sharppcap/trunk \
+           https://sharppcap.svn.sourceforge.net/svnroot/sharppcap/tags/SharpPcap_X_Y_Z
+- Run make_src_release with the tag name and release name
+- Run make_bin_release with the release name
