@@ -46,8 +46,7 @@ namespace SharpPcap.Containers
 #endif
                     // create a new entry for the mac address
                     PcapAddress newAddress = new PcapAddress();
-                    newAddress.Addr.type = Sockaddr.Type.HARDWARE;
-                    newAddress.Addr.hardwareAddress = value;
+                    newAddress.Addr = new Sockaddr(value);
 
                     // add the address to our addresses list
                     Addresses.Add(newAddress);

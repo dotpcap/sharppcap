@@ -44,16 +44,16 @@ namespace SharpPcap
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
             foreach(PcapDevice device in Items)
             {
-                Console.WriteLine("device.Name is {0}", device.Name);
+//                Console.WriteLine("device.Name is {0}", device.Name);
 
                 foreach(NetworkInterface adapter in nics)
                 {
-                    Console.WriteLine("adapter.Id of {0}", adapter.Id);
-                    Console.WriteLine("adapter.GetPhysicalAddress() {0}", adapter.GetPhysicalAddress().ToString());
+//                    Console.WriteLine("adapter.Id of {0}", adapter.Id);
+//                    Console.WriteLine("adapter.GetPhysicalAddress() {0}", adapter.GetPhysicalAddress().ToString());
 
                     // if the name and id match then we have found the NetworkInterface
                     // that matches the PcapDevice
-                    if(String.Compare(device.Name, adapter.Id) == 0)
+                    if(device.Name.EndsWith(adapter.Id))
                     {
                         device.Interface.MacAddress = adapter.GetPhysicalAddress();
                     }

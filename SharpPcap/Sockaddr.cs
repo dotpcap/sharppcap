@@ -14,13 +14,19 @@ namespace SharpPcap.Containers
         }
         public Type type;
 
-        public System.Net.IPAddress ipAddress;
-        public PhysicalAddress hardwareAddress;
+        public System.Net.IPAddress ipAddress;  // if type == AF_INET_AF_INET6
+        public PhysicalAddress hardwareAddress; // if type == HARDWARE
 
         private int _sa_family;
         public int sa_family
         {
             get { return _sa_family; }
+        }
+
+        public Sockaddr(PhysicalAddress hardwareAddress)
+        {
+            this.type = Type.HARDWARE;
+            this.hardwareAddress = hardwareAddress;
         }
 
         public Sockaddr(IntPtr sockaddrPtr)
