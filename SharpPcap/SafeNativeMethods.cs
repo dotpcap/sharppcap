@@ -136,7 +136,7 @@ namespace SharpPcap
 
         /// <summary>Returns a pointer to a string giving information about the version of the libpcap library being used; note that it contains more information than just a version number. </summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
-        internal extern static string /*const char **/  pcap_lib_version ();
+        internal extern static IntPtr /*const char **/  pcap_lib_version ();
         
         /// <summary>return the standard I/O stream of the 'savefile' opened by pcap_dump_open().</summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
