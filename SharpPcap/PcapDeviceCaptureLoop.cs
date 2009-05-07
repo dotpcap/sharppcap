@@ -50,6 +50,8 @@ namespace SharpPcap
                     captureThread = null;
                     throw new PcapException("captureThread was aborted after " + joinTimeout.ToString());
                 }
+
+                captureThread = null; // otherwise we will always return true from PcapDevice.Started
             }
         }
 

@@ -1,5 +1,8 @@
 Changelog
 v2.1.1 - TBD
+- Enable multiple Start/StopCapture() calls by properly setting PcapDevice.captureThread to
+  null in PcapDevice.StopCapture().
+  Bug reported by Makoto Nakamura.
 - Fix segfault when calling Pcap.Version by changing the signature of the pinvoke 
   or pcap_get_version() from 'string pcap_get_version()' to 'IntPtr pcap_get_version()'.
   Otherwise the .net runtime attempts to free the 'const char*' returned by pcap_get_version()
