@@ -74,14 +74,14 @@ namespace SharpPcap
                 throw new PcapDeviceNotReadyException("Capture called before PcapDevice.Open()");
 
             SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
-           
+
             while(!shouldCaptureThreadStop)
             {
-                 int res = SafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                int res = SafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative
-                if(res < 0)
+                if(res <= 0)
                 {
                     switch (res)    // Check pcap loop status results and notify upstream.
                     {
@@ -89,8 +89,18 @@ namespace SharpPcap
                             SendCaptureStoppedEvent(false);
                             return;
                         case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
-                            SendCaptureStoppedEvent(false);
-                            return;
+                        {
+                            // NOTE: pcap_dispatch() returns 0 when a timeout occurrs so to prevent timeouts
+                            //       from causing premature exiting from the capture loop we only consider
+                            //       exhausted events to cause an escape from the loop when they are from
+                            //       offline devices, ie. files read from disk
+                            if(this is PcapOfflineDevice)
+                            {
+                                SendCaptureStoppedEvent(false);
+                                return;
+                            }
+                            break;
+                        }
                         case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occoured whilst capturing.
                             SendCaptureStoppedEvent(true);
                             return;
@@ -100,7 +110,7 @@ namespace SharpPcap
                 }
             }
 
-            SendCaptureStoppedEvent(false);            
+            SendCaptureStoppedEvent(false);
         }
     }
 }
