@@ -34,7 +34,7 @@ namespace SharpPcap.Test.Example8
             } 
             catch(Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Caught exception when opening file" + e.ToString());
                 return;
             }
 
