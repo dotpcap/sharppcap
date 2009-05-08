@@ -1,5 +1,5 @@
 Changelog
-v2.1.1 - TBD
+v2.1.1 - 20090508
 - Terminate the capture loop when no more packets can be read from a PcapOfflineDevice, a
   file on disk. Change enables example 8 run to completion instead of hanging on the
   device.Capture() call.
@@ -12,6 +12,7 @@ v2.1.1 - TBD
   Otherwise the .net runtime attempts to free the 'const char*' returned by pcap_get_version()
   and we get a segfault. Add a unit test that retrieves Pcap.Version.
   Bug reported by Makoto Nakamura.
+
 v2.1.0 - 20090504
 - Change version to 2.1.0 in preparation for release. The minor version bump from 0
   to 1 is due to api changes in this release.
