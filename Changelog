@@ -1,4 +1,7 @@
 Changelog
+v2.1.2 - TDB
+- Assign svn:eol-style native to newly created files. This reduces conflicts due to line
+  ending characters when editing files between Windows and Linux/Unix
 v2.1.1 - 20090508
 - Terminate the capture loop when no more packets can be read from a PcapOfflineDevice, a
   file on disk. Change enables example 8 run to completion instead of hanging on the
