@@ -218,7 +218,7 @@ namespace SharpPcap
         /// <param name="promiscuous_mode">A value indicating wether to open the
         ///  device in promiscuous mode (true = capture *all* packets on the network,
         ///  including packets not for me)</param>
-        /// <param name="read_timeout">The timeout in miliseconds to wait for a  packet arrival</param>
+        /// <param name="read_timeout">The timeout in miliseconds to wait for a  packet arrival.</param>
         public virtual void Open(bool promiscuous_mode, int read_timeout)
         {
             short mode = 0;
@@ -240,6 +240,48 @@ namespace SharpPcap
                 {
                     string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
                     throw new PcapException( err );
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
+        /// </summary>
+        private const int disableBlocking = 0;
+        private const int enableBlocking = 1;
+        public bool NonBlockingMode
+        {
+            get
+            {
+                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+                int ret = SafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
+
+                // Errorbuf is only filled when ret = -1
+                if (ret == -1)
+                {
+                    string err = "Unable to set get blocking" + errbuf.ToString();
+                    throw new PcapException(err);
+                }
+
+                if(ret == enableBlocking)
+                    return true;
+                return false;
+            }
+            set 
+            {
+                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+
+                int block = disableBlocking;
+                if (value)
+                    block = enableBlocking;
+
+                int ret = SafeNativeMethods.pcap_setnonblock(PcapHandle, block, errbuf);
+
+                // Errorbuf is only filled when ret = -1
+                if (ret == -1)
+                {
+                    string err = "Unable to set non blocking" + errbuf.ToString();
+                    throw new PcapException(err);
                 }
             }
         }

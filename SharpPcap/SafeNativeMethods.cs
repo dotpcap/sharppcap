@@ -166,6 +166,18 @@ namespace SharpPcap
         internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
 
         /// <summary>
+        /// Set nonblocking mode. pcap_loop() and pcap_next() doesnt work in  nonblocking mode!
+        /// </summary>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Auto)]
+        internal extern static int pcap_setnonblock(IntPtr /* pcap_if_t** */ adaptHandle, int nonblock, StringBuilder /* char* */ errbuf);
+
+        /// <summary>
+        /// Get nonblocking mode, returns allways 0 for savefiles.
+        /// </summary>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Auto)]
+        internal extern static int pcap_getnonblock(IntPtr /* pcap_if_t** */ adaptHandle, StringBuilder /* char* */ errbuf);
+
+        /// <summary>
         /// Read packets until cnt packets are processed or an error occurs.
         /// </summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]

@@ -1,5 +1,8 @@
 Changelog
 v2.1.2 - TDB
+- Add support for setting/clearing non-blocking mode on PcapDevices via the
+  PcapDevice.NonBlockingMode accessor
+  Patch from Stefan Agner.
 - Assign svn:eol-style native to newly created files. This reduces conflicts due to line
   ending characters when editing files between Windows and Linux/Unix
 v2.1.1 - 20090508
