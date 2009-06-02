@@ -13,10 +13,11 @@ namespace SharpPcap.Containers
     //       to a managed one to avoid this issue
     public class PcapInterface
     {
-        public string            Name;        /* name to hand to "pcap_open_live()" */              
-        public string            Description; /* textual description of interface */
+        public string            Name;         /* name to hand to "pcap_open_live()" */              
+        public string            FriendlyName; /* Human readable interface name from System.Net.NetworkInformation.NetworkInterface.Name */
+        public string            Description;  /* textual description of interface */
         public List<PcapAddress> Addresses;
-        public uint              Flags;       /* PCAP_IF_ interface flags */
+        public uint              Flags;        /* PCAP_IF_ interface flags */
 
         private PcapAddress m_macAddress;
         public System.Net.NetworkInformation.PhysicalAddress MacAddress
@@ -100,6 +101,11 @@ namespace SharpPcap.Containers
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Name: {0}\n", Name);
+            if(FriendlyName != null)
+            {
+                sb.AppendFormat("FriendlyName: {0}\n", FriendlyName);
+            }
+
             sb.AppendFormat("Description: {0}\n", Description);
             foreach(PcapAddress addr in Addresses)
             {

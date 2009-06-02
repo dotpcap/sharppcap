@@ -56,6 +56,7 @@ namespace SharpPcap
                     if(device.Name.EndsWith(adapter.Id))
                     {
                         device.Interface.MacAddress = adapter.GetPhysicalAddress();
+                        device.Interface.FriendlyName = adapter.Name;
                     }
                 }
             }
