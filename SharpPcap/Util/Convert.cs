@@ -75,15 +75,11 @@ namespace SharpPcap.Util
 
         public static string BytesToHex(byte[] bytes, int start, int len)
         {
-            string hex = "";
-            string byte_hex;
+            string hex = string.Empty;
 
-            for(int i=start; i<len; i++)
+            for (int i = start; i < (len + start); i++)
             {
-                byte_hex = bytes[i].ToString("X");
-                if (byte_hex.Length==1) 
-                    byte_hex="0"+byte_hex;
-                hex += byte_hex;
+                hex += bytes[i].ToString("X2");
             }
             return hex;
         }

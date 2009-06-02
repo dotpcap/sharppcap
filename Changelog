@@ -1,5 +1,8 @@
 Changelog
 v2.1.2 - TDB
+- Convert.BytesToHex() wasn't taking the starting index into consideration. Bug
+  and patch reported by Evan Plaice.
+- Simplify Convert.BytesToHex() using ToString("X2") 
 - Add string PcapInterface.FriendlyName that contains the
   System.Net.NetworkInformation.NetworkInterface.Name for the interface.
   This provides useful information on Windows as it contains a human readable
