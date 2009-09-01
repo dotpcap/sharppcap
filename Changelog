@@ -1,5 +1,7 @@
 Changelog
 v2.1.2 - TDB
+- Added byte[] TCPPacket.Options so users can retrieve the list of options
+  for a given tcp packet
 - Convert.BytesToHex() wasn't taking the starting index into consideration. Bug
   and patch reported by Evan Plaice.
 - Simplify Convert.BytesToHex() using ToString("X2") 

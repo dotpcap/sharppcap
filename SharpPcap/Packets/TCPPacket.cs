@@ -558,6 +558,38 @@ namespace SharpPcap.Packets
             OnOffsetChanged();
         }
 
+        public enum OptionTypes
+        {
+            EndOfList = 0x0,
+            Nop = 0x1,
+            MaximumSegmentSize = 0x2,
+            WindowScale = 0x3,
+            SelectiveAckSupported = 0x4,
+            Unknown5 = 0x5,
+            Unknown6 = 0x6,
+            Unknown7 = 0x7,
+            Timestamp = 0x8 // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_Timestamps
+        }
+
+        public byte[] Options
+        {
+            get
+            {
+                if(Urg)
+                {
+                    throw new System.NotImplementedException("Urg == true not implemented yet");
+                }
+
+                int optionsOffset = TCPFields_Fields.TCP_URG_POS + TCPFields_Fields.TCP_URG_LEN;
+                int optionsLength = TCPHeaderLength - optionsOffset;
+
+                byte[] optionBytes = new byte[optionsLength];
+                Array.Copy(Bytes, _ipOffset + optionsOffset, optionBytes, 0, optionsLength);
+
+                return optionBytes;
+            }
+        }
+
         /// <summary> Convert this TCP packet to a readable string.</summary>
         public override System.String ToString()
         {

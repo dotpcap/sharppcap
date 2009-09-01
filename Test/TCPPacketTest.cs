@@ -86,5 +86,29 @@ namespace Test
             //sanity check
             Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.TCPData));
         }
+
+        [Test]
+        public void TCPOptions()
+        {
+            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/tcp.pcap");
+            dev.Open();
+
+            Packet p;
+            p = dev.GetNextPacket();
+
+            Assert.IsNotNull(p);
+
+            Console.WriteLine(p.GetType());
+            Assert.IsTrue(p is TCPPacket);
+
+            TCPPacket t = (TCPPacket)p;
+
+            // verify that the options byte match what we expect
+            byte[] expectedOptions = new byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
+                                                  0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84 };
+            Assert.AreEqual(expectedOptions, t.Options);
+
+            dev.Close();
+        }
     }
 }
