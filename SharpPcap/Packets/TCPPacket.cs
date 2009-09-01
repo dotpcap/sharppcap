@@ -16,7 +16,7 @@ namespace SharpPcap.Packets
     /// 
     /// </summary>
     [Serializable]
-    public class TCPPacket : IPPacket, TCPFields
+    public class TCPPacket : IPPacket
     {
         /// <summary> Fetch the port number on the source host.</summary>
         virtual public int SourcePort

@@ -9,9 +9,9 @@ namespace SharpPcap.Packets
     /// <summary> IP protocol field encoding information.
     /// 
     /// </summary>
-    public struct TCPFields_Fields{
+    public struct TCPFields_Fields
+    {
         // flag bitmasks
-        
         public readonly static int TCP_CWR_MASK = 0x0080;
         public readonly static int TCP_ECN_MASK = 0x0040;
         public readonly static int TCP_URG_MASK = 0x0020;
@@ -63,20 +63,5 @@ namespace SharpPcap.Packets
             TCP_URG_POS = TCPFields_Fields.TCP_CSUM_POS + TCPFields_Fields.TCP_CSUM_LEN;
             TCP_HEADER_LEN = TCPFields_Fields.TCP_URG_POS + TCPFields_Fields.TCP_URG_LEN;
         }
-    }
-    public interface TCPFields
-    {
-        //UPGRADE_NOTE: Members of interface 'TCPFields' were extracted into structure 'TCPFields_Fields'. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1045'"
-        
-        
-        
-        // field lengths
-        
-        
-        // field positions
-        
-        
-        // complete header length 
-        
     }
 }
