@@ -1,5 +1,6 @@
 Changelog
 v2.1.2 - TDB
+- Migrated from svn to git using directions from http://blog.antoniac.name/2009/05/sourceforgenet-migrating-from-svn-to.html
 - Added byte[] TCPPacket.Options so users can retrieve the list of options
   for a given tcp packet
 - Convert.BytesToHex() wasn't taking the starting index into consideration. Bug
