@@ -129,6 +129,7 @@
     <Compile Include="UDPPacketTest.cs" />
     <Compile Include="CheckFilterTest.cs" />
     <Compile Include="PcapTest.cs" />
+    <Compile Include="SetFilterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
