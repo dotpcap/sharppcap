@@ -126,8 +126,23 @@ namespace SharpPcap
             public byte[] sll_addr;
         };
 
+        #region timeval
+        /// <summary>
+        /// Windows and Unix differ in their memory models and make it difficult to
+        /// support struct timeval in a single library, like this one, across
+        /// multiple platforms.
+        ///
+        /// See http://en.wikipedia.org/wiki/64bit#Specific_data_models
+        ///
+        /// The issue is that struct timeval { long tv_sec; long tv_usec; }
+        /// has different sizes on Linux 32 and 64bit but the same size on
+        /// Windows 32 and 64 bit
+        ///
+        /// Thanks to Jon Pryor for his help in figuring out both the issue with Linux
+        /// 32/64bit and the issue between Windows and Unix
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]    
-        public struct timeval
+        public struct timeval_unix
         {
             // NOTE: The use of IntPtr here is due to the issue with the timeval structure
             //       The timeval structure contains long values, which differ between 32 bit and
@@ -139,16 +154,43 @@ namespace SharpPcap
         };
 
         /// <summary>
+        /// Windows version of struct timeval, the longs are 32bit even on 64-bit versions of Windows
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]    
+        public struct timeval_windows
+        {
+            public Int32 tv_sec;
+            public Int32 tv_usec;
+        };
+        #endregion
+
+        #region pcap_pkthdr
+        /// <summary>
         /// Each packet in the dump file is prepended with this generic header.
         /// This gets around the problem of different headers for different
         /// packet interfaces.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_pkthdr 
+        public struct pcap_pkthdr_unix
         {
-            public timeval  ts;             /* time stamp */
-            public UInt32   caplen;         /* length of portion present */        public UInt32   len;            /* length this packet (off wire) */
+            public timeval_unix     ts;             /* time stamp */
+            public UInt32           caplen;         /* length of portion present */
+            public UInt32           len;            /* length this packet (off wire) */
         };
+
+        /// <summary>
+        /// Each packet in the dump file is prepended with this generic header.
+        /// This gets around the problem of different headers for different
+        /// packet interfaces.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct pcap_pkthdr_windows
+        {
+            public timeval_windows  ts;             /* time stamp */
+            public UInt32           caplen;         /* length of portion present */
+            public UInt32           len;            /* length this packet (off wire) */
+        };
+        #endregion
 
         /// <summary>
         /// Packet data bytes

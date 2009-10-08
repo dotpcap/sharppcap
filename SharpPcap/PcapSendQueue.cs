@@ -47,20 +47,25 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Add a packet to this send queue. 
+        /// Add a packet to this send queue. The PcapHeader defines the packet length.
         /// </summary>
         /// <param name="packet">The packet bytes to add</param>
         /// <param name="pcapHdr">The pcap header of the packet</param>
         /// <returns>True if success, else false</returns>
-        internal bool Add( byte[] packet, PcapUnmanagedStructures.pcap_pkthdr pcapHdr )
+        internal bool AddInternal( byte[] packet, PcapHeader pcapHdr )
         {
             if(m_queue==IntPtr.Zero)
             {
                 throw new PcapException("Can't add packet, this queue is disposed");
             }
 
-            if(pcapHdr.caplen==0)
-                pcapHdr.caplen = (uint)packet.Length;//set the length in the header field
+            // the header defines the size to send
+            if(pcapHdr.CaptureLength > packet.Length)
+            {
+                var error = string.Format("pcapHdr.CaptureLength of {0} > packet.Length {1}",
+                                          pcapHdr.CaptureLength, packet.Length);
+                throw new System.InvalidOperationException(error);
+            }
 
             //Marshal packet
             IntPtr pktPtr;
@@ -68,9 +73,7 @@ namespace SharpPcap
             Marshal.Copy(packet, 0, pktPtr, packet.Length);
 
             //Marshal header
-            IntPtr hdrPtr;
-            hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr)));
-            Marshal.StructureToPtr(pcapHdr, hdrPtr, true);
+            IntPtr hdrPtr = pcapHdr.MarshalToIntPtr();
 
             int res = SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
 
@@ -79,6 +82,7 @@ namespace SharpPcap
     
             return (res!=-1);
         }
+
         /// <summary>
         /// Add a packet to this send queue. 
         /// </summary>
@@ -87,8 +91,9 @@ namespace SharpPcap
         /// <returns>True if success, else false</returns>
         internal bool Add( byte[] packet, PcapHeader pcapHdr )
         {
-            return this.Add( packet, pcapHdr.m_pcap_pkthdr);
+            return this.AddInternal( packet, pcapHdr);
         }
+
         /// <summary>
         /// Add a packet to this send queue. 
         /// </summary>
@@ -96,9 +101,11 @@ namespace SharpPcap
         /// <returns>True if success, else false</returns>
         public bool Add( byte[] packet )
         {
-            PcapUnmanagedStructures.pcap_pkthdr hdr = new SharpPcap.PcapUnmanagedStructures.pcap_pkthdr();
-            return this.Add( packet, hdr );
+            PcapHeader hdr = new PcapHeader();
+            hdr.CaptureLength = (uint)packet.Length;
+            return this.AddInternal( packet, hdr );
         }
+
         /// <summary>
         /// Add a packet to this send queue. 
         /// </summary>
@@ -106,7 +113,7 @@ namespace SharpPcap
         /// <returns>True if success, else false</returns>
         public bool Add( Packet packet )
         {
-            return this.Add( packet.Bytes, packet.PcapHeader.m_pcap_pkthdr );
+            return this.AddInternal( packet.Bytes, packet.PcapHeader );
         }
         /// <summary>
         /// Add a packet to this send queue.
@@ -117,10 +124,10 @@ namespace SharpPcap
         /// <returns>True if success, else false</returns>
         public bool Add( byte[] packet, int seconds, int microseconds )
         {
-            PcapUnmanagedStructures.pcap_pkthdr hdr = new SharpPcap.PcapUnmanagedStructures.pcap_pkthdr();
-            hdr.ts.tv_sec = (IntPtr)seconds;
-            hdr.ts.tv_usec = (IntPtr)microseconds;
-            return this.Add( packet, hdr );
+            var header = new PcapHeader((ulong)seconds, (ulong)microseconds,
+                                        (uint)packet.Length, (uint)packet.Length);
+            
+            return this.Add( packet, header );
         }
 
         /// <summary>

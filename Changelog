@@ -1,5 +1,7 @@
 Changelog
 v2.1.2 - TDB
+- Fixed a crash when using SharpPcap on 64bit Windows. Cause was a marshalling issue with pcap_pkthdr due to
+  longs being 32bit on Windows. Thanks to Jon Pryor for help in debugging this.
 - Migrated from svn to git using directions from http://blog.antoniac.name/2009/05/sourceforgenet-migrating-from-svn-to.html
 - Added byte[] TCPPacket.Options so users can retrieve the list of options
   for a given tcp packet

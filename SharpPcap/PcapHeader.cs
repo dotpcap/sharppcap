@@ -20,6 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace SharpPcap
 {
@@ -29,25 +30,31 @@ namespace SharpPcap
     public class PcapHeader
     {
         /// <summary>
-        /// The underlying pcap_pkthdr structure
-        /// </summary>
-        internal PcapUnmanagedStructures.pcap_pkthdr m_pcap_pkthdr;
-
-        /// <summary>
         /// Constructs a new PcapHeader
         /// </summary>
         public PcapHeader()
         {
-            m_pcap_pkthdr = new PcapUnmanagedStructures.pcap_pkthdr();
         }
 
-        /// <summary>
-        /// Constructs a new PcapHeader
-        /// </summary>
-        /// <param name="m_pcap_pkthdr">The underlying pcap_pkthdr structure</param>
-        internal PcapHeader( PcapUnmanagedStructures.pcap_pkthdr m_pcap_pkthdr )
+        internal PcapHeader (IntPtr pcap_pkthdr)
         {
-            this.m_pcap_pkthdr = m_pcap_pkthdr;
+            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                var pkthdr = (PcapUnmanagedStructures.pcap_pkthdr_unix)Marshal.PtrToStructure(pcap_pkthdr,
+                                                                                              typeof(PcapUnmanagedStructures.pcap_pkthdr_unix));
+                this.CaptureLength = pkthdr.caplen;
+                this.PacketLength = pkthdr.len;
+                this.Seconds = (ulong)pkthdr.ts.tv_sec;
+                this.MicroSeconds = (ulong)pkthdr.ts.tv_usec;
+            } else
+            {
+                var pkthdr = (PcapUnmanagedStructures.pcap_pkthdr_windows)Marshal.PtrToStructure(pcap_pkthdr,
+                                                                                                 typeof(PcapUnmanagedStructures.pcap_pkthdr_windows));
+                this.CaptureLength = pkthdr.caplen;
+                this.PacketLength = pkthdr.len;
+                this.Seconds = (ulong)pkthdr.ts.tv_sec;
+                this.MicroSeconds = (ulong)pkthdr.ts.tv_usec;
+            }
         }
 
         /// <summary>
@@ -59,47 +66,52 @@ namespace SharpPcap
         /// <param name="captureLength">The length of the capture</param>
         public PcapHeader( ulong seconds, ulong microseconds, uint packetLength, uint captureLength )
         {
-            this.m_pcap_pkthdr.ts.tv_sec    =   (IntPtr)seconds;
-            this.m_pcap_pkthdr.ts.tv_usec   =   (IntPtr)microseconds;
-            this.m_pcap_pkthdr.len          =   packetLength;
-            this.m_pcap_pkthdr.caplen       =   captureLength;
+            this.Seconds = seconds;
+            this.MicroSeconds = microseconds;
+            this.PacketLength  = packetLength;
+            this.CaptureLength = captureLength;
         }
 
         /// <summary>
         /// The seconds value of the packet's timestamp
         /// </summary>
+        private ulong _seconds;
         public ulong Seconds
         {
-            get{return (ulong)m_pcap_pkthdr.ts.tv_sec;}
-            set{m_pcap_pkthdr.ts.tv_sec = (IntPtr)value;}
+            get { return _seconds; }
+            set { _seconds = value; }
         }
 
         /// <summary>
         /// The microseconds value of the packet's timestamp
         /// </summary>
+        private ulong _usec;
         public ulong MicroSeconds
         {
-            get{return (ulong)m_pcap_pkthdr.ts.tv_usec;}
-            set{m_pcap_pkthdr.ts.tv_usec = (IntPtr)value;}
+            get { return _usec; }
+            set { _usec = value; }
         }
 
         /// <summary>
         /// The actual length of the packet
         /// </summary>
+        private uint _packetlength;
         public uint PacketLength
         {
-            get {return m_pcap_pkthdr.len;}
-            set {m_pcap_pkthdr.len=value;}
+            get { return _packetlength; }
+            set { _packetlength = value; }
         }
+
         /// <summary>
         /// The length of the capture
         /// </summary>
+        private uint _capturelength;
         public uint CaptureLength
         {
-            get{return m_pcap_pkthdr.caplen;}
-            set{m_pcap_pkthdr.caplen=value;}
+            get { return _capturelength; }
+            set { _capturelength = value; }
         }
-        
+
         /// <summary>
         /// Return the DateTime value of this pcap header
         /// </summary>
@@ -112,6 +124,45 @@ namespace SharpPcap
                 time = time.AddMilliseconds(MicroSeconds / 1000); 
                 return time.ToLocalTime();
             }           
+        }
+
+        /// <summary>
+        /// Marshal this structure into the platform dependent version and return
+        /// and IntPtr to that memory
+        ///
+        /// NOTE: IntPtr MUST BE FREED via Marshal.FreeHGlobal()
+        /// </summary>
+        /// <returns>
+        /// A <see cref="IntPtr"/>
+        /// </returns>
+        public IntPtr MarshalToIntPtr()
+        {
+            IntPtr hdrPtr;
+
+            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                // setup the structure to marshal
+                var pkthdr = new PcapUnmanagedStructures.pcap_pkthdr_unix();
+                pkthdr.caplen = this.CaptureLength;
+                pkthdr.len = this.PacketLength;
+                pkthdr.ts.tv_sec = (IntPtr)this.Seconds;
+                pkthdr.ts.tv_usec = (IntPtr)this.MicroSeconds;
+
+                hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr_unix)));
+                Marshal.StructureToPtr(pkthdr, hdrPtr, true);                
+            } else
+            {
+                var pkthdr = new PcapUnmanagedStructures.pcap_pkthdr_windows();
+                pkthdr.caplen = this.CaptureLength;
+                pkthdr.len = this.PacketLength;
+                pkthdr.ts.tv_sec = (int)this.Seconds;
+                pkthdr.ts.tv_usec = (int)this.MicroSeconds;
+
+                hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr_windows)));
+                Marshal.StructureToPtr(pkthdr, hdrPtr, true);
+            }
+
+            return hdrPtr;
         }
     }
 }

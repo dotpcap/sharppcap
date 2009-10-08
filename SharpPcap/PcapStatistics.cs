@@ -31,17 +31,19 @@ namespace SharpPcap
         /// <summary>
         /// This holds time value
         /// </summary>
-        private PcapUnmanagedStructures.pcap_pkthdr m_pktHdr;
+        private PcapHeader m_pktHdr;
+
         /// <summary>
         /// This holds byte received and packets received
         /// </summary>
         private byte[]  m_pktData;
+
         /// <summary>
         /// Constructs a new Pcap Statistics strcuture
         /// </summary>
         /// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
         /// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-        internal PcapStatistics(PcapUnmanagedStructures.pcap_pkthdr pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
+        internal PcapStatistics(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
         {
             this.m_pktHdr   = pktHdr;
             this.m_pktData  = pktData.bytes;
@@ -49,7 +51,7 @@ namespace SharpPcap
 
         internal PcapStatistics(Packets.Packet p)
         {
-            this.m_pktHdr   = p.PcapHeader.m_pcap_pkthdr;
+            this.m_pktHdr   = p.PcapHeader;
             this.m_pktData  = p.Bytes;
         }
 
@@ -82,7 +84,7 @@ namespace SharpPcap
         {
             get
             {
-                return (ulong)m_pktHdr.ts.tv_sec;
+                return m_pktHdr.Seconds;
             }           
         }
 
@@ -93,7 +95,7 @@ namespace SharpPcap
         {
             get
             {
-                return (ulong)m_pktHdr.ts.tv_usec;
+                return m_pktHdr.MicroSeconds;
             }           
         }
 

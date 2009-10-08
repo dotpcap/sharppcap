@@ -372,16 +372,17 @@ namespace SharpPcap
         protected virtual Packet MarshalPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
             Packet p;
-            PcapUnmanagedStructures.pcap_pkthdr pkt_header =
-                (PcapUnmanagedStructures.pcap_pkthdr)Marshal.PtrToStructure(header,
-                                                                             typeof(PcapUnmanagedStructures.pcap_pkthdr));
-            byte[] pkt_data = new byte[pkt_header.caplen];
-            Marshal.Copy(data, pkt_data, 0, (int)pkt_header.caplen);
+
+            // marshal the header
+            PcapHeader pcapHeader = new PcapHeader(header);
+
+            byte[] pkt_data = new byte[pcapHeader.CaptureLength];
+            Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
             p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data,
-                                                   new Packets.Util.Timeval((ulong)pkt_header.ts.tv_sec,
-                                                                            (ulong)pkt_header.ts.tv_usec));
-            p.pcapHeader = new PcapHeader(pkt_header);
+                                                   new Packets.Util.Timeval(pcapHeader.Seconds,
+                                                                            pcapHeader.MicroSeconds));
+            p.pcapHeader = pcapHeader;
 
             return p;
         }
@@ -589,9 +590,7 @@ namespace SharpPcap
             Marshal.Copy(p, 0, pktPtr, p.Length);
 
             //Marshal header
-            IntPtr hdrPtr;
-            hdrPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_pkthdr)));
-            Marshal.StructureToPtr(h.m_pcap_pkthdr, hdrPtr, true);
+            IntPtr hdrPtr = h.MarshalToIntPtr();
 
             SafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
 
