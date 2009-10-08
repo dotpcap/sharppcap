@@ -63,8 +63,8 @@ namespace SharpPcap.Packets
         {
             get
             {
-                if(this.pcapHeader==null)
-                    this.pcapHeader=new PcapHeader();
+                if(this.pcapHeader == null)
+                    this.pcapHeader = new PcapHeader();
                 return this.pcapHeader;
             }
 
