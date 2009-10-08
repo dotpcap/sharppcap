@@ -29,5 +29,5 @@ mkdir -p ${baseOutputDirectory}
 outputName=SharpPcap-${releaseVersion}
 
 # create a zip file of the appropriate tag
-git archive --format=zip --remote=${gitRemotePublicPath} $3 > ${baseOutputDirectory}/${outputName}.zip
+git archive --format=zip --remote=${gitRemotePublicPath} $3 > ${baseOutputDirectory}/${outputName}.src.zip
 

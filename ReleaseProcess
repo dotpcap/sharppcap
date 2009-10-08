@@ -14,8 +14,6 @@ Generating release packages and updating source control(svn)
 
 
 Pushing changes out to the world
-
-New directions
 - Log into the sourceforge website and go to 'Project admin'->'File manager'
 - Click on the SharpPcap folder to expand it, right click and create a new folder
 - Right click on the new folder and pick 'Uploads here'
