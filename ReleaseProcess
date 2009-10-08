@@ -15,25 +15,13 @@ Generating release packages and updating source control(svn)
 
 Pushing changes out to the world
 
-- Log into the sourceforge website and go to 'Project admin' and click on 'Add release'
-- Use a release name of the version, ie, "2.1.0" as the new release name
-- Copy and paste the changes since the last release into the ChangeLog textbox and
-  check off 'preserve my pre-formatted text"
-- Click 'Submit/refresh' to save the changes
-- In another tab/browser, log into https://frs.sourceforge.net/webupload with
-  your sourceforge username and password
-- Upload the bin and src packages built by make_bin_release and make_src_release
-- Go back to the tab with the new release and click 'Add files and/or refresh view' button
-- Check off the two files you uploaded and click the 'Add files and/or refresh view' button
-- For the binary package select a 'Platform-Independent' Processor and for the File Type
-  select 'Other binary package'
-- Click on update/refresh for that package
-- For the source package select 'Platform-Independent' Processor and for the File Type
-  select 'Source .zip'
-- Click on update/refresh for that package
-
-- If everything looks good go to Step 4 and check off the 'I'm sure box' and click on
-  the 'Send Notice' button to notify people that the new version has been released
-
-- NOTE: The release page can be updated later so if there are mistakes they can be
-        corrected and should take effect when the particular section is saved.
+New directions
+- Log into the sourceforge website and go to 'Project admin'->'File manager'
+- Click on the SharpPcap folder to expand it, right click and create a new folder
+- Right click on the new folder and pick 'Uploads here'
+- Click on the 'Upload File' link and upload the release notes txt file
+- Right click on the release notes textfile and check off 'Release note'
+- Click on the 'Upload File' link up top and upload the src and bin zip files
+- Left click on the binary zip file and select the platforms, select all of them, select the
+  release notes file that was just uploaded
+- Left click on the source zip file and select the release notes file
