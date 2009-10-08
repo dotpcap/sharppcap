@@ -1,5 +1,11 @@
 Changelog
 v2.1.2 - TDB
+- Add very basic validation to IPv4Packet's constructor that throws a PcapException if
+  the validation fails. SharpPcap wasn't catching an IPv4 packet with a total length
+  less than the ip header length so the user could try operating on this invalid packet
+  and then get marshalling or other exceptions far after the reception of the packet.
+  Also implement a unit test for this case in InvalidPacketTest.cs.
+  Thanks to John Barett for nailing down the offending packet in Wireshark.
 - Fixed a crash when using SharpPcap on 64bit Windows. Cause was a marshalling issue with pcap_pkthdr due to
   longs being 32bit on Windows. Thanks to Jon Pryor for help in debugging this.
 - Migrated from svn to git using directions from http://blog.antoniac.name/2009/05/sourceforgenet-migrating-from-svn-to.html

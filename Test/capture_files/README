@@ -26,3 +26,7 @@ tcp_with_extra_bytes.pcap
 - A single tcp packet that has 6 extra bytes beyond the zero length tcp packet.
   Allows for testing that TCPPacket.TCPData returns the proper length in odd 
   situations.
+
+ip_packet_bogus_length.pcap
+- A single IP packet that has an invalid total length less than the length
+  of the header.

@@ -92,8 +92,8 @@ namespace SharpPcap.Packets
                 // set offset into _bytes of previous layers
                 _ipOffset = _ethOffset + IPHeaderLength;
             }
-
         }
+
         /// <summary> Fetch the packet IP header length.</summary>
         override public int HeaderLength
         {
@@ -287,6 +287,14 @@ namespace SharpPcap.Packets
             : base(lLen, bytes)
         {
             _ipOffset = _ethOffset + IPHeaderLength;
+
+            // perform some quick validation
+            if(IPTotalLength < IPHeaderLength)
+            {
+                var error = string.Format("IPTotalLength {0} < IPHeaderLength {1}",
+                                           IPTotalLength, IPHeaderLength);
+                throw new PcapException(error);
+            }
         }
 
         /// <summary> Create a new IP packet.</summary>
