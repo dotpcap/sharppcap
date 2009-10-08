@@ -1,5 +1,11 @@
 Changelog
 v2.1.2 - 20091007
+- Switch from throwing exceptions in the constructor to using
+  public virtual bool Packet.IsValid(out string errorString). Throwing from packet constructors
+  means that we can't use packet classes to build packets, the memory may be all zeros and invalid
+  and since the constructor would throw we wouldn't have the opportunity to make the
+  memory valid using the classes accessors. Hopefully this will resolve the invalid IPPacket issue
+  in a reasonable manner.
 - Add very basic validation to IPv4Packet's constructor that throws a PcapException if
   the validation fails. SharpPcap wasn't catching an IPv4 packet with a total length
   less than the ip header length so the user could try operating on this invalid packet

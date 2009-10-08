@@ -92,6 +92,18 @@ namespace SharpPcap.Packets
                 return null;
             }
         }
+
+        /// <summary>
+        /// Returns true if valid, false if not. errorString should be set if false
+        /// </summary>
+        /// <param name="errorString">
+        /// A <see cref="errorString"/>
+        /// </param>
+        public virtual bool IsValid(out string errorString)
+        {
+            errorString = string.Empty;
+            return true;
+        }
         
         internal PcapHeader pcapHeader;
     }

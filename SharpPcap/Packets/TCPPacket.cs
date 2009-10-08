@@ -18,6 +18,8 @@ namespace SharpPcap.Packets
     [Serializable]
     public class TCPPacket : IPPacket
     {
+        public const int HeaderMinimumLength = 20; // 20 bytes is the smallest tcp header
+
         /// <summary> Fetch the port number on the source host.</summary>
         virtual public int SourcePort
         {
@@ -685,25 +687,32 @@ namespace SharpPcap.Packets
             return RandomPacket(size, IPVersions.IPv4);
         }
 
+        private static int MinimumIPv4Bytes = LinkLayer.getLinkLayerLength(LinkLayers_Fields.EN10MB) + IPv4Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
+        private static int MinimumIPv6Bytes = LinkLayer.getLinkLayerLength(LinkLayers_Fields.EN10MB) + IPv6Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
+
         public static TCPPacket RandomPacket(IPVersions ipver)
         {
-            return RandomPacket(ipver==IPVersions.IPv6 ? 74:54, ipver);
+            return RandomPacket(ipver==IPVersions.IPv6 ? MinimumIPv6Bytes : MinimumIPv4Bytes, ipver);
+        }
+
+        public override bool IsValid(out string errorString)
+        {
+            return base.IsValid(out errorString);
         }
 
         public static TCPPacket RandomPacket(int size, IPVersions ipver)
         {
-            if(size<54)
-                throw new Exception("Size should be at least 54 (Eth + IP + TCP)");
-            if(ipver == IPVersions.IPv6 && size < 74)
-                throw new Exception("Size should be at least 74 (Eth + IPv6 + TCP)");
+            if(size < MinimumIPv4Bytes)
+                throw new Exception("Size should be at least " + MinimumIPv4Bytes + " (Eth + IP + TCP)");
+            if((ipver == IPVersions.IPv6) && (size < MinimumIPv6Bytes))
+                throw new Exception("Size should be at least " + MinimumIPv6Bytes + " (Eth + IPv6 + TCP)");
 
             byte[] bytes = new byte[size];
             SharpPcap.Util.Rand.Instance.GetBytes(bytes);
-            TCPPacket tcp = new TCPPacket(14, bytes, true);
+            TCPPacket tcp = new TCPPacket(LinkLayers_Fields.EN10MB, bytes, true);
             MakeValid(tcp, ipver);
             return tcp;
         }
-
 
         public static void MakeValid(TCPPacket tcp, IPVersions ipver)
         {
@@ -713,7 +722,11 @@ namespace SharpPcap.Packets
 
             if (ipver == IPVersions.IPv4)
             {
-                tcp.IPTotalLength = tcp.Bytes.Length - 14;            //Set the correct IP length
+                // the total length of the ip packet is the size of all of the bytes in the packet
+                // represented by tcp.Bytes, minus the link layer bytes
+                // NOTE: this includes the ip header bytes, which is how the IPv4 total bytes
+                // works
+                tcp.IPTotalLength = tcp.Bytes.Length - LinkLayers_Fields.EN10MB; //Set the correct IP length
                 tcp.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
             }
             else if (ipver == IPVersions.IPv6)
@@ -722,6 +735,7 @@ namespace SharpPcap.Packets
             }
             else
             {
+                throw new System.InvalidOperationException("unknown ipver of " + ipver);
             }
 
             //Calculate checksums

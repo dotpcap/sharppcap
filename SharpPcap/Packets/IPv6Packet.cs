@@ -24,6 +24,8 @@ namespace SharpPcap.Packets
     /// </summary>
     public class IPv6Packet : EthernetPacket
     {
+        public const int HeaderMinimumLength = 40;
+
         public static int ipVersion = 6;
 
         /// <summary>
@@ -381,6 +383,12 @@ namespace SharpPcap.Packets
             {
                 return AnsiEscapeSequences_Fields.WHITE;
             }
+        }
+
+        public override bool IsValid(out string errorString)
+        {
+            errorString = string.Empty;
+            return true;
         }
     }
 }

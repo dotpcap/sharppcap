@@ -10,14 +10,15 @@ namespace Test
     public class InvalidPacketTest
     {
         // Test behavior when a IPPacket with an invalid length is parsed
-        // We expect an exception to be thrown at the time of parsing, via PcapDevice.GetNextPacket()
+        //
+        // We expect to get an EthernetPacket since the IPPacket contained in the EthernetPacket
+        // isn't valid
         [Test]
         public void IPPacketInvalidLength()
         {
             PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/ip_packet_bogus_length.pcap");
             dev.Open();
 
-            bool caughtException = false;
             try
             {
                 Packet p;
@@ -25,21 +26,15 @@ namespace Test
                 while((p = dev.GetNextPacket()) != null)
                 {
                     Console.WriteLine("got packet");
-    
-                    Assert.IsTrue(p is TCPPacket);
+
+                    Assert.IsTrue(p is EthernetPacket);
 
                     packetIndex++;
                 }
-            } catch
-            {
-                // expected to end up here
-                caughtException = true;
             } finally
             {
                 dev.Close();
             }
-
-            Assert.IsTrue(caughtException, "We didn't catch the proper PcapException when parsing the invalid IPv4 packet");
         }
     }
 

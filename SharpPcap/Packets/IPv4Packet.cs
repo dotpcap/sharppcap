@@ -5,6 +5,8 @@ namespace SharpPcap.Packets
 {
     public class IPv4Packet : EthernetPacket
     {
+        public const int HeaderMinimumLength = 20;
+
         /// <summary> Type of service code constants for IP. Type of service describes 
         /// how a packet should be handled.
         /// <p>
@@ -48,6 +50,7 @@ namespace SharpPcap.Packets
                 IPVersion = value;
             }
         }
+
         /// <summary> Get the IP version code.</summary>
         virtual public int IPVersion
         {
@@ -101,7 +104,6 @@ namespace SharpPcap.Packets
             {
                 return IPHeaderLength;
             }
-
         }
 
         /// <summary> Fetch the unique ID of this IP datagram. The ID normally 
@@ -287,14 +289,6 @@ namespace SharpPcap.Packets
             : base(lLen, bytes)
         {
             _ipOffset = _ethOffset + IPHeaderLength;
-
-            // perform some quick validation
-            if(IPTotalLength < IPHeaderLength)
-            {
-                var error = string.Format("IPTotalLength {0} < IPHeaderLength {1}",
-                                           IPTotalLength, IPHeaderLength);
-                throw new PcapException(error);
-            }
         }
 
         /// <summary> Create a new IP packet.</summary>
@@ -516,6 +510,24 @@ namespace SharpPcap.Packets
                 headerForChecksum[headerForChecksum.Length - 1] = 0;
 
             return headerForChecksum;
+        }
+
+        public override bool IsValid(out string errorString)
+        {
+            errorString = string.Empty;
+
+            // validate the base class(es)
+            bool baseValid = base.IsValid(out errorString);
+
+            // perform some quick validation
+            if(IPTotalLength < IPHeaderLength)
+            {
+                errorString += string.Format("IPTotalLength {0} < IPHeaderLength {1}",
+                                            IPTotalLength, IPHeaderLength);
+                return false;
+            }
+
+            return baseValid;
         }
 
         public virtual bool IsValidTransportLayerChecksum(bool pseudoIPHeader)

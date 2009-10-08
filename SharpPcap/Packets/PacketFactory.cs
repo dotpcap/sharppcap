@@ -41,32 +41,82 @@ namespace SharpPcap.Packets
                 ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
             }
 
-            // try to recognize the ethernet type..
-            switch (ethProtocol)
+            string errorString;
+            Packet parsedPacket = null;
+            try
             {
-                // arp
-                case EthernetPacket.EtherType.ARP:
-                    return new ARPPacket(lLen, bytes, tv);
+                // try to recognize the ethernet type..
+                switch (ethProtocol)
+                {
+                    // arp
+                    case EthernetPacket.EtherType.ARP:
+                       parsedPacket = new ARPPacket(lLen, bytes, tv);
+                       break;
 
-                case EthernetPacket.EtherType.IPV6:
-                case EthernetPacket.EtherType.IP:
-                    // ethernet level code is recognized as IP, figure out what kind..
-                    int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
-                    switch (ipProtocol)
-                    {
-                        case (int)IPProtocol.IPProtocolType.ICMP: return new ICMPPacket(lLen, bytes, tv);
-                        case (int)IPProtocol.IPProtocolType.IGMP: return new IGMPPacket(lLen, bytes, tv);
-                        case (int)IPProtocol.IPProtocolType.TCP:  return new TCPPacket(lLen, bytes, tv);
-                        case (int)IPProtocol.IPProtocolType.UDP:  return new UDPPacket(lLen, bytes, tv);
+                    case EthernetPacket.EtherType.IPV6:
+                    case EthernetPacket.EtherType.IP:
+                        try
+                        {
+                            // ethernet level code is recognized as IP, figure out what kind..
+                            int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
+                            switch (ipProtocol)
+                            {
+                                case (int)IPProtocol.IPProtocolType.ICMP:
+                                    parsedPacket = new ICMPPacket(lLen, bytes, tv);
+                                    break;
+    
+                                case (int)IPProtocol.IPProtocolType.IGMP:
+                                    parsedPacket = new IGMPPacket(lLen, bytes, tv);
+                                    break;
+    
+                                case (int)IPProtocol.IPProtocolType.TCP:
+                                    parsedPacket = new TCPPacket(lLen, bytes, tv);
+                                    break;
+    
+                                case (int)IPProtocol.IPProtocolType.UDP:
+                                    parsedPacket = new UDPPacket(lLen, bytes, tv);
+                                    break;
+    
+                                // unidentified ip..
+                                default:
+                                    parsedPacket = new IPPacket(lLen, bytes, tv);
+                                    break;
+                            }
 
-                        // unidentified ip..
-                        default:
-                            return new IPPacket(lLen, bytes, tv);
-                    }
+                            // check that the parsed packet is valid
+                            if(!parsedPacket.IsValid(out errorString))
+                            {
+                                throw new PcapException(errorString);
+                            } else
+                            {
+                                return parsedPacket;
+                            }
+                        } catch
+                        {
+                            // error parsing the specific ip packet type, parse as a generic IPPacket
+                            parsedPacket = new IPPacket(lLen, bytes, tv);
 
-                // ethernet level code not recognized, default to anonymous packet..
-                default:
-                    return new EthernetPacket(lLen, bytes, tv);
+                            // check that the parsed packet is valid
+                            if(!parsedPacket.IsValid(out errorString))
+                            {
+                                throw new PcapException(errorString);
+                            } else
+                            {
+                                return parsedPacket;
+                            }
+                        }
+
+                    // ethernet level code not recognized, default to anonymous packet..
+                    default:
+                        parsedPacket = new EthernetPacket(lLen, bytes, tv);
+                        break;
+                }
+
+                return parsedPacket;
+            } catch
+            {
+                // we know we have at least an ethernet packet, so return that
+                return new EthernetPacket(lLen, bytes, tv);
             }
         }
     }

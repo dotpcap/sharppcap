@@ -501,6 +501,16 @@ namespace SharpPcap.Packets
 
         }
 
+        public override bool IsValid(out string errorString)
+        {
+            if(ipv4 != null)
+                return ipv4.IsValid(out errorString);
+            else if (ipv6 != null)
+               return ipv6.IsValid(out errorString);
+            else
+               throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+        }
+
         /// <summary> Fetch the header a byte array.</summary>
         virtual public byte[] IPHeader
         {
