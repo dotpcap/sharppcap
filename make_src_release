@@ -10,7 +10,8 @@
 function PrintUsage()
 {
   echo "example:";
-  echo "  ./make_src_release ~/sharppcap_releases 2.0.0 tags/SharpPcap_2_0_0";
+  echo "  ./make_src_release OutputDirectory VersionNumber TagName";
+  echo "  ./make_src_release ~/sharppcap_releases 2.0.0 SharpPcap_2_0_0";
 }
 
 if [ "$#" -ne 3 ]; then
@@ -20,18 +21,13 @@ fi
 
 baseOutputDirectory=$1
 releaseVersion=$2
-svnPathPostfix=$3
+gitRemotePublicPath=git://sharppcap.git.sourceforge.net/gitroot/sharppcap/sharppcap
 
 # setup some variables
-baseCheckoutDirectory=${baseOutputDirectory}/src
-mkdir ${baseCheckoutDirectory}
-svnPath=https://sharppcap.svn.sourceforge.net/svnroot/sharppcap/${svnPathPostfix}
-dirName=SharpPcap-${releaseVersion}
+baseOutputDirectory=${baseOutputDirectory}/src
+mkdir -p ${baseOutputDirectory}
+outputName=SharpPcap-${releaseVersion}
 
-# check out the files
-checkoutDirectory=${baseCheckoutDirectory}/${dirName}
-svn export ${svnPath} ${checkoutDirectory}
+# create a zip file of the appropriate tag
+git archive --format=zip --remote=${gitRemotePublicPath} $3 > ${baseOutputDirectory}/${outputName}.zip
 
-# create a zip file of the directory
-cd ${baseCheckoutDirectory}
-zip -r ${baseCheckoutDirectory}/${dirName}.src.zip ${dirName}
