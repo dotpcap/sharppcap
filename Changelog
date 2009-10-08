@@ -1,5 +1,5 @@
 Changelog
-v2.1.2 - TDB
+v2.1.2 - 20091007
 - Add very basic validation to IPv4Packet's constructor that throws a PcapException if
   the validation fails. SharpPcap wasn't catching an IPv4 packet with a total length
   less than the ip header length so the user could try operating on this invalid packet
