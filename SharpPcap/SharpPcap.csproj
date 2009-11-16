@@ -233,6 +233,7 @@
     <Compile Include="Sockaddr.cs" />
     <Compile Include="PcapDeviceList.cs" />
     <Compile Include="PcapInterface.cs" />
+    <Compile Include="Packets\EthernetPacketType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
