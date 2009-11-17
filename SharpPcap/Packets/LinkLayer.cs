@@ -19,47 +19,46 @@ namespace SharpPcap.Packets
         public static int getLinkLayerLength(int layerType)
         {
             switch (layerType)
-            {
-                
+            {                
                 case LinkLayers_Fields.ARCNET: 
                     return 6;
-                
+
                 case LinkLayers_Fields.SLIP: 
                     return 16;
-                
+
                 case LinkLayers_Fields.SLIP_BSDOS: 
                     return 24;
-                
+
                 case LinkLayers_Fields.NULL: 
                 case LinkLayers_Fields.LOOP: 
                     return 4;
-                
+
                 case LinkLayers_Fields.PPP: 
                 case LinkLayers_Fields.CHDLC: 
                 case LinkLayers_Fields.PPP_SERIAL: 
                     return 4;
-                
+
                 case LinkLayers_Fields.PPP_BSDOS: 
                     return 24;
-                
+
                 case LinkLayers_Fields.FDDI: 
                     return 21;
-                
+
                 case LinkLayers_Fields.IEEE802_11: 
                     return 22;
-                
+
                 case LinkLayers_Fields.ATM_RFC1483: 
                     return 8;
-                
+
                 case LinkLayers_Fields.RAW: 
                     return 0;
-                
+
                 case LinkLayers_Fields.ATM_CLIP: 
                     return 8;
-                
+
                 case LinkLayers_Fields.LINUX_SLL: 
                     return 16;
-                
+
                 case LinkLayers_Fields.EN10MB: 
                 default: 
                     return 14;
