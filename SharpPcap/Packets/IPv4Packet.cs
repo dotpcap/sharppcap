@@ -35,7 +35,7 @@ namespace SharpPcap.Packets
         public override void OnOffsetChanged()
         {
             base.OnOffsetChanged();
-            _ipOffset = _ethOffset + IPHeaderLength;
+            _ipOffset = _ethPayloadOffset + IPHeaderLength;
         }
 
         /// <summary> Get the IP version code.</summary>
@@ -57,14 +57,14 @@ namespace SharpPcap.Packets
             get
             {
                 return (ArrayHelper.extractInteger(Bytes,
-                                                   _ethOffset + IPv4Fields_Fields.IP_VER_POS,
+                                                   _ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS,
                                                    IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf;
             }
 
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(((value << 4) & 0xf0));
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(((value << 4) & 0xf0));
             }
 
         }
@@ -82,7 +82,7 @@ namespace SharpPcap.Packets
             get
             {
                 return (ArrayHelper.extractInteger(Bytes,
-                                                   _ethOffset + IPv4Fields_Fields.IP_VER_POS,
+                                                   _ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS,
                                                    IPv4Fields_Fields.IP_VER_LEN) & 0xf) * 4;
             }
 
@@ -90,10 +90,10 @@ namespace SharpPcap.Packets
             {
                 value /= 4;
                 // Clear low order bits and then set
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0xf0);
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(value & 0x0f);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0xf0);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)(value & 0x0f);
                 // set offset into _bytes of previous layers
-                _ipOffset = _ethOffset + IPHeaderLength;
+                _ipOffset = _ethPayloadOffset + IPHeaderLength;
             }
         }
 
@@ -119,14 +119,14 @@ namespace SharpPcap.Packets
             get
             {
                 return ArrayHelper.extractInteger(Bytes,
-                                                  _ethOffset + IPv4Fields_Fields.IP_ID_POS,
+                                                  _ethPayloadOffset + IPv4Fields_Fields.IP_ID_POS,
                                                   IPv4Fields_Fields.IP_ID_LEN);
             }
 
             set
             {
                 ArrayHelper.insertLong(Bytes, value,
-                                       _ethOffset + IPv4Fields_Fields.IP_ID_POS,
+                                       _ethPayloadOffset + IPv4Fields_Fields.IP_ID_POS,
                                        IPv4Fields_Fields.IP_ID_LEN);
             }
 
@@ -143,14 +143,14 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv4Fields_Fields.IP_FRAG_POS, IPv4Fields_Fields.IP_FRAG_LEN) & 0x1fff;
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS, IPv4Fields_Fields.IP_FRAG_LEN) & 0x1fff;
             }
 
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_FRAG_POS] &= (byte)(0xe0);
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_FRAG_POS] |= (byte)(((value >> 8) & 0x1f));
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_FRAG_POS + 1] = (byte)(value & 0xff);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS] &= (byte)(0xe0);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS] |= (byte)(((value >> 8) & 0x1f));
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS + 1] = (byte)(value & 0xff);
             }
 
         }
@@ -161,13 +161,13 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             _ethOffset + IPv4Fields_Fields.IP_SRC_POS, Bytes);
+                                             _ethPayloadOffset + IPv4Fields_Fields.IP_SRC_POS, Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, Bytes, _ethOffset + IPv4Fields_Fields.IP_SRC_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_SRC_POS, address.Length);
             }
         }
 
@@ -177,14 +177,14 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             _ethOffset + IPv4Fields_Fields.IP_DST_POS,
+                                             _ethPayloadOffset + IPv4Fields_Fields.IP_DST_POS,
                                              Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, Bytes, _ethOffset + IPv4Fields_Fields.IP_DST_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_DST_POS, address.Length);
             }
 
         }
@@ -194,7 +194,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractHeader(_ethOffset, IPHeaderLength, Bytes);
+                return PacketEncoding.extractHeader(_ethPayloadOffset, IPHeaderLength, Bytes);
             }
 
         }
@@ -221,7 +221,7 @@ namespace SharpPcap.Packets
                 //tamir: changed getLength() to specific getIPTotalLength() to fix
                 //confusion in subclasses overloading getLength()
                 int payloadLen = IPTotalLength - IPHeaderLength;
-                return PacketEncoding.extractData(_ethOffset, IPHeaderLength, Bytes, payloadLen);
+                return PacketEncoding.extractData(_ethPayloadOffset, IPHeaderLength, Bytes, payloadLen);
             }
 
         }
@@ -231,12 +231,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv4Fields_Fields.IP_CSUM_POS, IPv4Fields_Fields.IP_CSUM_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_CSUM_POS, IPv4Fields_Fields.IP_CSUM_LEN);
             }
 
             set
             {
-                SetChecksum(value, _ethOffset + IPv4Fields_Fields.IP_CSUM_POS);
+                SetChecksum(value, _ethPayloadOffset + IPv4Fields_Fields.IP_CSUM_POS);
             }
 
         }
@@ -265,7 +265,7 @@ namespace SharpPcap.Packets
                 }
                 else
                 {
-                    return (ChecksumUtils.OnesSum(Bytes, _ethOffset, IPHeaderLength) == 0xffff);
+                    return (ChecksumUtils.OnesSum(Bytes, _ethPayloadOffset, IPHeaderLength) == 0xffff);
                 }
             }
 
@@ -288,7 +288,7 @@ namespace SharpPcap.Packets
         public IPv4Packet(int lLen, byte[] bytes)
             : base(lLen, bytes)
         {
-            _ipOffset = _ethOffset + IPHeaderLength;
+            _ipOffset = _ethPayloadOffset + IPHeaderLength;
         }
 
         /// <summary> Create a new IP packet.</summary>
@@ -304,12 +304,12 @@ namespace SharpPcap.Packets
             get
             {
                 return ArrayHelper.extractInteger(Bytes,
-                                                  _ethOffset + IPv4Fields_Fields.IP_TOS_POS,
+                                                  _ethPayloadOffset + IPv4Fields_Fields.IP_TOS_POS,
                                                   IPv4Fields_Fields.IP_TOS_LEN);
             }
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_TOS_POS] = (byte)(value & 0xff);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_TOS_POS] = (byte)(value & 0xff);
             }
         }
 
@@ -332,13 +332,13 @@ namespace SharpPcap.Packets
             get
             {
                 return ArrayHelper.extractInteger(Bytes, 
-                                                  _ethOffset + IPv4Fields_Fields.IP_LEN_POS,
+                                                  _ethPayloadOffset + IPv4Fields_Fields.IP_LEN_POS,
                                                   IPv4Fields_Fields.IP_LEN_LEN);
             }
             set
             {
                 ArrayHelper.insertLong(Bytes, value,
-                                       _ethOffset + IPv4Fields_Fields.IP_LEN_POS,
+                                       _ethPayloadOffset + IPv4Fields_Fields.IP_LEN_POS,
                                        IPv4Fields_Fields.IP_LEN_LEN);
             }
         }
@@ -362,12 +362,12 @@ namespace SharpPcap.Packets
                 // fragment flags are the high 3 bits
                 //      int huh = ArrayHelper.extractInteger(_bytes, _ethOffset
                 //              + IP_FRAG_POS, IP_FRAG_LEN);
-                return (ArrayHelper.extractInteger(Bytes, _ethOffset + IPv4Fields_Fields.IP_FRAG_POS, IPv4Fields_Fields.IP_FRAG_LEN) >> 13) & 0x7;
+                return (ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS, IPv4Fields_Fields.IP_FRAG_LEN) >> 13) & 0x7;
             }
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_FRAG_POS] &= (byte)(0x1f);
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_FRAG_POS] |= (byte)(((value << 5) & 0xe0));
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS] &= (byte)(0x1f);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_FRAG_POS] |= (byte)(((value << 5) & 0xe0));
             }
         }
 
@@ -382,12 +382,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv4Fields_Fields.IP_TTL_POS,
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_TTL_POS,
                                                   IPv4Fields_Fields.IP_TTL_LEN);
             }
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_TTL_POS] = (byte)value;
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_TTL_POS] = (byte)value;
             }
         }
 
@@ -399,12 +399,12 @@ namespace SharpPcap.Packets
             get
             {
                 return (IPProtocol.IPProtocolType)ArrayHelper.extractInteger(Bytes,
-                                                                             _ethOffset + IPv4Fields_Fields.IP_CODE_POS,
+                                                                             _ethPayloadOffset + IPv4Fields_Fields.IP_CODE_POS,
                                                                              IPv4Fields_Fields.IP_CODE_LEN);
             }
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_CODE_POS] = (byte)value;
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_CODE_POS] = (byte)value;
             }
         }
 
@@ -454,7 +454,7 @@ namespace SharpPcap.Packets
         public int ComputeIPChecksum(bool update)
         {
             //copy the ip header
-            byte[] ip = ArrayHelper.copy(Bytes, _ethOffset, IPHeaderLength);
+            byte[] ip = ArrayHelper.copy(Bytes, _ethPayloadOffset, IPHeaderLength);
             //reset the checksum field (checksum is calculated when this field is zeroed)
             ArrayHelper.insertLong(ip, 0, IPv4Fields_Fields.IP_CSUM_POS, 2);
             //compute the one's complement sum of the ip header
@@ -492,7 +492,7 @@ namespace SharpPcap.Packets
 
             byte[] headerForChecksum = new byte[headerSize];
             // 0-7: ip src+dest addr
-            Array.Copy(Bytes, _ethOffset + IPv4Fields_Fields.IP_SRC_POS, headerForChecksum, 0, 8);
+            Array.Copy(Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_SRC_POS, headerForChecksum, 0, 8);
             // 8: always zero
             headerForChecksum[8] = 0;
             // 9: ip protocol
@@ -624,7 +624,7 @@ namespace SharpPcap.Packets
                 get
                 {
                     return ChecksumUtils.OnesSum(Enclosing_Instance.Bytes,
-                                                 Enclosing_Instance._ethOffset,
+                                                 Enclosing_Instance._ethPayloadOffset,
                                                  Enclosing_Instance.IPHeaderLength);
                 }
             }

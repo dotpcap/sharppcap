@@ -56,7 +56,7 @@ namespace SharpPcap.Packets
         public override void OnOffsetChanged( )
         {
             base.OnOffsetChanged( );
-          _ipv6Offset = _ethOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
+          _ipv6Offset = _ethPayloadOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
         }
 
         /// <summary>
@@ -71,15 +71,15 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return (ArrayHelper.extractInteger(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                return (ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                          IPv6Fields_Fields.LINE_ONE_LEN ) >> 28 ) & 0x0F;
             }
 
             set
             {
-                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                                 IPv6Fields_Fields.LINE_ONE_LEN ) & 0x0FFFFFFF ) | ( ( ( (ulong)value ) << 28 ) & 0xF0000000 );
-                ArrayHelper.insertLong(Bytes, (long)org, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
+                ArrayHelper.insertLong(Bytes, (long)org, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
             }
         }
 
@@ -106,15 +106,15 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return (ArrayHelper.extractInteger(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                return (ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                          IPv6Fields_Fields.LINE_ONE_LEN ) >> 20 ) & 0xFF;
             }
 
             set
             {
-                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                               IPv6Fields_Fields.LINE_ONE_LEN ) & 0xF00FFFFF ) | ( ( ( (ulong)value ) << 20 ) & 0x0FF00000 );
-                ArrayHelper.insertLong(Bytes, (long)org, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
+                ArrayHelper.insertLong(Bytes, (long)org, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
             }
         }
 
@@ -125,15 +125,15 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                                                    IPv6Fields_Fields.LINE_ONE_LEN ) & 0xFFFFF;
             }
 
             set
             {
-                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS,
+                ulong org = ((ulong)ArrayHelper.extractLong(Bytes, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS,
                              IPv6Fields_Fields.LINE_ONE_LEN ) & 0xFFF00000 ) | ( ( (ulong)value ) & 0x000FFFFF );
-                ArrayHelper.insertLong(Bytes, (long)org, _ethOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
+                ArrayHelper.insertLong(Bytes, (long)org, _ethPayloadOffset + IPv6Fields_Fields.LINE_ONE_POS, 4);
             }
         }
 
@@ -146,13 +146,13 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv6Fields_Fields.PAYLOAD_LENGTH_POS,
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv6Fields_Fields.PAYLOAD_LENGTH_POS,
                                                   IPv6Fields_Fields.PAYLOAD_LENGTH_LEN );
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ethOffset + IPv6Fields_Fields.PAYLOAD_LENGTH_POS,
+                ArrayHelper.insertLong(Bytes, value, _ethPayloadOffset + IPv6Fields_Fields.PAYLOAD_LENGTH_POS,
                                        IPv6Fields_Fields.PAYLOAD_LENGTH_LEN );
             }
         }
@@ -167,13 +167,13 @@ namespace SharpPcap.Packets
             get
             {
                 return (IPProtocol.IPProtocolType)ArrayHelper.extractInteger(Bytes,
-                                                                             _ethOffset + IPv6Fields_Fields.NEXT_HEADER_POS,
+                                                                             _ethPayloadOffset + IPv6Fields_Fields.NEXT_HEADER_POS,
                                                                              IPv6Fields_Fields.NEXT_HEADER_LEN );
             }
 
             set
             {
-                Bytes[_ethOffset + IPv6Fields_Fields.NEXT_HEADER_POS] = (byte)value;
+                Bytes[_ethPayloadOffset + IPv6Fields_Fields.NEXT_HEADER_POS] = (byte)value;
             }
         }
 
@@ -187,13 +187,13 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ethOffset + IPv6Fields_Fields.HOP_LIMIT_POS,
+                return ArrayHelper.extractInteger(Bytes, _ethPayloadOffset + IPv6Fields_Fields.HOP_LIMIT_POS,
                                                   IPv6Fields_Fields.HOP_LIMIT_LEN );
             }
 
             set
             {
-                Bytes[_ethOffset + IPv6Fields_Fields.HOP_LIMIT_POS] = (byte)value;
+                Bytes[_ethPayloadOffset + IPv6Fields_Fields.HOP_LIMIT_POS] = (byte)value;
             }
         }
 
@@ -205,14 +205,14 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetworkV6,
-                                             _ethOffset + IPv6Fields_Fields.SRC_ADDRESS_POS,
+                                             _ethPayloadOffset + IPv6Fields_Fields.SRC_ADDRESS_POS,
                                              Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, Bytes, _ethOffset + IPv6Fields_Fields.SRC_ADDRESS_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethPayloadOffset + IPv6Fields_Fields.SRC_ADDRESS_POS, address.Length);
             }
         }
 
@@ -224,14 +224,14 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetworkV6,
-                                             _ethOffset + IPv6Fields_Fields.DST_ADDRESS_POS,
+                                             _ethPayloadOffset + IPv6Fields_Fields.DST_ADDRESS_POS,
                                              Bytes);
             }
 
             set
             {
                 byte[] address = value.GetAddressBytes();
-                System.Array.Copy(address, 0, Bytes, _ethOffset + IPv6Fields_Fields.DST_ADDRESS_POS, address.Length);
+                System.Array.Copy(address, 0, Bytes, _ethPayloadOffset + IPv6Fields_Fields.DST_ADDRESS_POS, address.Length);
             }
         }
 
@@ -242,7 +242,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractHeader(_ethOffset, IPv6Fields_Fields.IPv6_HEADER_LEN, Bytes);
+                return PacketEncoding.extractHeader(_ethPayloadOffset, IPv6Fields_Fields.IPv6_HEADER_LEN, Bytes);
             }
         }
 
@@ -264,7 +264,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractData(_ethOffset, IPv6Fields_Fields.IPv6_HEADER_LEN, Bytes,
+                return PacketEncoding.extractData(_ethPayloadOffset, IPv6Fields_Fields.IPv6_HEADER_LEN, Bytes,
                                                   IPPayloadLength );
             }
         }
@@ -291,10 +291,10 @@ namespace SharpPcap.Packets
             BinaryWriter bw = new BinaryWriter(ms);
 
             // 0-16: ip src addr
-            bw.Write(Bytes, _ethOffset + IPv6Fields_Fields.SRC_ADDRESS_POS, IPv6Fields_Fields.SRC_ADDRESS_LEN);
+            bw.Write(Bytes, _ethPayloadOffset + IPv6Fields_Fields.SRC_ADDRESS_POS, IPv6Fields_Fields.SRC_ADDRESS_LEN);
 
             // 17-32: ip dst addr
-            bw.Write(Bytes, _ethOffset + IPv6Fields_Fields.DST_ADDRESS_POS, IPv6Fields_Fields.DST_ADDRESS_LEN);
+            bw.Write(Bytes, _ethPayloadOffset + IPv6Fields_Fields.DST_ADDRESS_POS, IPv6Fields_Fields.DST_ADDRESS_LEN);
 
             // 33-36: TCP length
             bw.Write( (UInt32) SharpPcap.Util.IPUtil.Hton( origHeader.Length ) );

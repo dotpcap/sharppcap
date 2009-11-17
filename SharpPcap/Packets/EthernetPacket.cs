@@ -150,7 +150,7 @@ namespace SharpPcap.Packets
 
         // offset from beginning of byte array where the data payload
         // (i.e. IP packet) starts. The size of the ethernet frame header.
-        protected internal int _ethOffset;
+        protected internal int _ethPayloadOffset;
 
         // time that the packet was captured off the wire
         protected internal Timeval _timeval;
@@ -158,21 +158,21 @@ namespace SharpPcap.Packets
 
         /// <summary> Construct a new ethernet packet.
         /// <p>
-        /// For the purpose of jpcap, when the type of ethernet packet is 
+        /// When the type of ethernet packet is 
         /// recognized as a protocol for which a class exists network library, 
         /// then a more specific class like IPPacket or ARPPacket is instantiated.
         /// The subclass can always be cast into a more generic form.
         /// </summary>
-        public EthernetPacket(int lLen, byte[] bytes)
+        public EthernetPacket(int byteOffsetToEthernetPayload, byte[] bytes)
         {
             _bytes = bytes;
-            _ethernetHeaderLength = lLen;
-            _ethOffset = lLen;
+            _ethernetHeaderLength = byteOffsetToEthernetPayload;
+            _ethPayloadOffset = byteOffsetToEthernetPayload;
         }
 
         /// <summary> Construct a new ethernet packet, including the capture time.</summary>
-        public EthernetPacket(int lLen, byte[] bytes, Timeval tv)
-            : this(lLen, bytes)
+        public EthernetPacket(int byteOffsetToEthernetPayload, byte[] bytes, Timeval tv)
+            : this(byteOffsetToEthernetPayload, bytes)
         {
             this._timeval = tv;
         }

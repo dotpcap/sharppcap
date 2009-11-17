@@ -26,7 +26,7 @@ namespace SharpPcap.Packets
             {
                 if (_igmpHeaderBytes == null)
                 {
-                    _igmpHeaderBytes = PacketEncoding.extractHeader(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes);
+                    _igmpHeaderBytes = PacketEncoding.extractHeader(_ethPayloadOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes);
                 }
                 return _igmpHeaderBytes;
             }
@@ -50,9 +50,9 @@ namespace SharpPcap.Packets
                 {
                     // set data length based on info in headers (note: tcpdump
                     //  can return extra junk bytes which bubble up to here
-                    int dataLen = Bytes.Length - _ethOffset - IGMPFields_Fields.IGMP_HEADER_LEN;
+                    int dataLen = Bytes.Length - _ethPayloadOffset - IGMPFields_Fields.IGMP_HEADER_LEN;
 
-                    _igmpDataBytes = PacketEncoding.extractData(_ethOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes, dataLen);
+                    _igmpDataBytes = PacketEncoding.extractData(_ethPayloadOffset, IGMPFields_Fields.IGMP_HEADER_LEN, Bytes, dataLen);
                 }
                 return _igmpDataBytes;
             }

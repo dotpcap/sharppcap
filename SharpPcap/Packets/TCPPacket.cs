@@ -5,9 +5,11 @@
 /// *************************************************************************
 /// </summary>
 using System;
+using System.Net;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
+
 namespace SharpPcap.Packets
 {
     /// <summary> A TCP packet.
@@ -402,20 +404,20 @@ namespace SharpPcap.Packets
         private const long serialVersionUID = 1L;
 
         /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int lLen, byte[] bytes)
-            : this(lLen, bytes, false)
+        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes)
+            : this(byteOffsetToEthernetPayload, bytes, false)
         {
         }
 
         /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int lLen, byte[] bytes, bool isEmpty)
-            : base(lLen, bytes)
+        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes, bool isEmpty)
+            : base(byteOffsetToEthernetPayload, bytes)
         {
         }
 
         /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int lLen, byte[] bytes, Timeval tv)
-            : this(lLen, bytes)
+        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes, Timeval tv)
+            : this(byteOffsetToEthernetPayload, bytes)
         {
             this._timeval = tv;
         }

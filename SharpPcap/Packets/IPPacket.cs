@@ -5,6 +5,7 @@
 /// *************************************************************************
 /// </summary>
 using System;
+using System.Net;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
 using Timeval = SharpPcap.Packets.Util.Timeval;
@@ -39,29 +40,29 @@ namespace SharpPcap.Packets
         protected internal int _ipOffset;
 
         /// <summary> Create a new IP packet. </summary>
-        public IPPacket(int lLen, byte[] bytes, IPVersions version)
-            : base(lLen, bytes)
+        public IPPacket(int byteOffsetToEthernetPayload, byte[] bytes, IPVersions version)
+            : base(byteOffsetToEthernetPayload, bytes)
         {
             IPVersion = version;
         }
 
         /// <summary> Create a new IP packet. </summary>
-        public IPPacket(int lLen, byte[] bytes)
-            : base(lLen, bytes)
+        public IPPacket(int byteOffsetToEthernetPayload, byte[] bytes)
+            : base(byteOffsetToEthernetPayload, bytes)
         {
             InitIPPacket(IPVersion);
         }
 
         /// <summary> Create a new IP packet.</summary>
-        public IPPacket(int lLen, byte[] bytes, Timeval tv)
-            : this(lLen, bytes)
+        public IPPacket(int byteOffsetToEthernetPayload, byte[] bytes, Timeval tv)
+            : this(byteOffsetToEthernetPayload, bytes)
         {
             this._timeval = tv;
         }
 
         /// <summary> Create a new IP packet.</summary>
-        public IPPacket(int lLen, byte[] bytes, Timeval tv, IPVersions version)
-            : this(lLen, bytes, version)
+        public IPPacket(int byteOffsetToEthernetPayload, byte[] bytes, Timeval tv, IPVersions version)
+            : this(byteOffsetToEthernetPayload, bytes, version)
         {
             this._timeval = tv;
         }
@@ -74,17 +75,17 @@ namespace SharpPcap.Packets
             if (version == IPVersions.IPv4)
             {
                 ipv4 = new IPv4Packet(EthernetHeaderLength, Bytes);
-                _ipOffset = _ethOffset + IPv4Fields_Fields.IP_HEADER_LEN;
+                _ipOffset = _ethPayloadOffset + IPv4Fields_Fields.IP_HEADER_LEN;
             }
             else if (version == IPVersions.IPv6)
             {
                 ipv6 = new IPv6Packet(EthernetHeaderLength, Bytes);
-                _ipOffset = _ethOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
+                _ipOffset = _ethPayloadOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
             }
             else
             {
                 //lame default
-                _ipOffset = _ethOffset;
+                _ipOffset = _ethPayloadOffset;
             }
         }
 
@@ -117,14 +118,14 @@ namespace SharpPcap.Packets
             get
             {
                 return (IPVersions)((ArrayHelper.extractInteger(Bytes,
-                                                                _ethOffset + IPv4Fields_Fields.IP_VER_POS,
+                                                                _ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS,
                                                                 IPv4Fields_Fields.IP_VER_LEN) >> 4) & 0xf);
             }
 
             set
             {
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
-                Bytes[_ethOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] &= (byte)(0x0f);
+                Bytes[_ethPayloadOffset + IPv4Fields_Fields.IP_VER_POS] |= (byte)((((int)value << 4) & 0xf0));
 
                 //version had changed, reinit packet
                 InitIPPacket(IPVersion);

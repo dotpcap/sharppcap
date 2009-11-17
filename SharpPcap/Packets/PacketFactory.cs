@@ -27,7 +27,7 @@ namespace SharpPcap.Packets
 
             // retrieve the length of the headers associated with this link layer type.
             // this length is the offset to the header embedded in the packet.
-            int lLen = LinkLayer.getLinkLayerLength(linkType);
+            int byteOffsetToEthernetPayload = LinkLayer.getLinkLayerLength(linkType);
 
             // extract the protocol code for the type of header embedded in the 
             // link-layer of the packet
@@ -50,7 +50,7 @@ namespace SharpPcap.Packets
                 {
                     // arp
                     case EthernetPacketType.ARP:
-                       parsedPacket = new ARPPacket(lLen, bytes, tv);
+                       parsedPacket = new ARPPacket(byteOffsetToEthernetPayload, bytes, tv);
                        break;
 
                     case EthernetPacketType.IPV6:
@@ -58,28 +58,28 @@ namespace SharpPcap.Packets
                         try
                         {
                             // ethernet level code is recognized as IP, figure out what kind..
-                            int ipProtocol = IPProtocol.extractProtocol(lLen, bytes);
+                            int ipProtocol = IPProtocol.extractProtocol(byteOffsetToEthernetPayload, bytes);
                             switch (ipProtocol)
                             {
                                 case (int)IPProtocol.IPProtocolType.ICMP:
-                                    parsedPacket = new ICMPPacket(lLen, bytes, tv);
+                                    parsedPacket = new ICMPPacket(byteOffsetToEthernetPayload, bytes, tv);
                                     break;
     
                                 case (int)IPProtocol.IPProtocolType.IGMP:
-                                    parsedPacket = new IGMPPacket(lLen, bytes, tv);
+                                    parsedPacket = new IGMPPacket(byteOffsetToEthernetPayload, bytes, tv);
                                     break;
     
                                 case (int)IPProtocol.IPProtocolType.TCP:
-                                    parsedPacket = new TCPPacket(lLen, bytes, tv);
+                                    parsedPacket = new TCPPacket(byteOffsetToEthernetPayload, bytes, tv);
                                     break;
     
                                 case (int)IPProtocol.IPProtocolType.UDP:
-                                    parsedPacket = new UDPPacket(lLen, bytes, tv);
+                                    parsedPacket = new UDPPacket(byteOffsetToEthernetPayload, bytes, tv);
                                     break;
     
                                 // unidentified ip..
                                 default:
-                                    parsedPacket = new IPPacket(lLen, bytes, tv);
+                                    parsedPacket = new IPPacket(byteOffsetToEthernetPayload, bytes, tv);
                                     break;
                             }
 
@@ -94,7 +94,7 @@ namespace SharpPcap.Packets
                         } catch
                         {
                             // error parsing the specific ip packet type, parse as a generic IPPacket
-                            parsedPacket = new IPPacket(lLen, bytes, tv);
+                            parsedPacket = new IPPacket(byteOffsetToEthernetPayload, bytes, tv);
 
                             // check that the parsed packet is valid
                             if(!parsedPacket.IsValid(out errorString))
@@ -108,7 +108,7 @@ namespace SharpPcap.Packets
 
                     // ethernet level code not recognized, default to anonymous packet..
                     default:
-                        parsedPacket = new EthernetPacket(lLen, bytes, tv);
+                        parsedPacket = new EthernetPacket(byteOffsetToEthernetPayload, bytes, tv);
                         break;
                 }
 
@@ -116,7 +116,7 @@ namespace SharpPcap.Packets
             } catch
             {
                 // we know we have at least an ethernet packet, so return that
-                return new EthernetPacket(lLen, bytes, tv);
+                return new EthernetPacket(byteOffsetToEthernetPayload, bytes, tv);
             }
         }
     }
