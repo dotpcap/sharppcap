@@ -23,7 +23,7 @@ namespace SharpPcap.Packets
         /// <summary> Convert captured packet data into an object.</summary>
         public static Packet dataToPacket(int linkType, byte[] bytes, Timeval tv)
         {
-            int ethProtocol;
+            EthernetPacketType ethProtocol;
 
             // retrieve the length of the headers associated with this link layer type.
             // this length is the offset to the header embedded in the packet.
@@ -34,11 +34,11 @@ namespace SharpPcap.Packets
             int offset = LinkLayer.getProtoOffset(linkType);
             if (offset == -1)
             {
-                // if there is no embedded protocol, assume IP?
-                ethProtocol = EthernetPacketType.IP;
+                // if there is no embedded protocol, assume IpV4
+                ethProtocol = EthernetPacketType.IpV4;
             } else
             {
-                ethProtocol = ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
+                ethProtocol = (EthernetPacketType)ArrayHelper.extractInteger(bytes, offset, EthernetFields_Fields.ETH_CODE_LEN);
             }
 
             string errorString;
@@ -49,12 +49,12 @@ namespace SharpPcap.Packets
                 switch (ethProtocol)
                 {
                     // arp
-                    case EthernetPacketType.ARP:
+                case EthernetPacketType.Arp:
                        parsedPacket = new ARPPacket(byteOffsetToEthernetPayload, bytes, tv);
                        break;
 
-                    case EthernetPacketType.IPV6:
-                    case EthernetPacketType.IP:
+                case EthernetPacketType.IpV6:
+                case EthernetPacketType.IpV4:
                         try
                         {
                             // ethernet level code is recognized as IP, figure out what kind..

@@ -74,7 +74,7 @@ namespace Test
             //Ethernet fields
 //          tcp.SourceHwAddress = dev.MacAddress;           //Set the source mac of the local device
             tcp.DestinationHwAddress = PhysicalAddress.Parse(destMAC);     //Set the dest MAC of the gateway
-            tcp.EthernetProtocol = EthernetPacketType.IP;
+            tcp.EthernetProtocol = EthernetPacketType.IpV4;
 
             //IP fields
             tcp.DestinationAddress = destIP;            //The IP of the destination host

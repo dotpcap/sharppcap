@@ -185,5 +185,33 @@ namespace Test
 
             dev.Close();
         }
+
+        [Test]
+        public void EthernetConstructorFromMacAddresses()
+        {
+            var srcHwAddressBytes = new Byte[EthernetFields_Fields.MAC_ADDRESS_LENGTH];
+            for(int i = 0; i < srcHwAddressBytes.Length; i++)
+            {
+                srcHwAddressBytes[i] = (byte)i;
+            }
+
+            var dstHwAddressBytes = new Byte[EthernetFields_Fields.MAC_ADDRESS_LENGTH];
+            for(int i = 0; i < dstHwAddressBytes.Length; i++)
+            {
+                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
+            }
+
+            var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
+            var dstHwAddress = new PhysicalAddress(dstHwAddressBytes);
+            var ethernetPacket = new EthernetPacket(srcHwAddress,
+                                                    dstHwAddress,
+                                                    EthernetPacketType.None,
+                                                    null);
+
+            Assert.AreEqual(ethernetPacket.Bytes.Length, 14);
+            //TODO: improve this here
+            Console.WriteLine("ethernetPacket.ToString() {0}",
+                              ethernetPacket.ToString());
+        }
     }
 }

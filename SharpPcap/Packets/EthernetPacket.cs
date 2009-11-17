@@ -86,16 +86,19 @@ namespace SharpPcap.Packets
 
         /// <summary> Fetch the ethernet protocol.</summary>
         /// <summary> Sets the ethernet protocol.</summary>
-        virtual public int EthernetProtocol
+        virtual public EthernetPacketType EthernetProtocol
         {
             get
             {
-                return ArrayHelper.extractInteger(_bytes, EthernetFields_Fields.ETH_CODE_POS, EthernetFields_Fields.ETH_CODE_LEN);
+                return (EthernetPacketType)ArrayHelper.extractInteger(_bytes,
+                                                                      EthernetFields_Fields.ETH_CODE_POS,
+                                                                      EthernetFields_Fields.ETH_CODE_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(_bytes, value, EthernetFields_Fields.ETH_CODE_POS, EthernetFields_Fields.ETH_CODE_LEN);
+                ArrayHelper.insertInt16(_bytes, (ushort)value,
+                                        EthernetFields_Fields.ETH_CODE_POS);
             }
         }
 
@@ -155,6 +158,36 @@ namespace SharpPcap.Packets
         // time that the packet was captured off the wire
         protected internal Timeval _timeval;
 
+
+        /// <summary>
+        /// Construct a new ethernet packet from source and destination mac addresses
+        /// </summary>
+        public EthernetPacket(PhysicalAddress SourceHwAddress,
+                              PhysicalAddress DestinationHwAddress,
+                              EthernetPacketType ethernetPacketType,
+                              byte[] EthernetPayload)
+        {
+            int ethernetPayloadLength = 0;
+            if(EthernetPayload != null)
+            {
+                ethernetPayloadLength = EthernetPayload.Length;
+            }
+
+            _bytes = new byte[EthernetFields_Fields.ETH_HEADER_LEN + ethernetPayloadLength];
+            _ethernetHeaderLength = EthernetFields_Fields.ETH_HEADER_LEN;
+            _ethPayloadOffset = _ethernetHeaderLength;
+
+            // if we have a payload, copy it into the byte array
+            if(EthernetPayload != null)
+            {
+                Array.Copy(EthernetPayload, 0, _bytes, EthernetFields_Fields.ETH_HEADER_LEN, EthernetPayload.Length);
+            }
+
+            // set the instance values
+            this.SourceHwAddress = SourceHwAddress;
+            this.DestinationHwAddress = DestinationHwAddress;
+            this.EthernetProtocol = ethernetPacketType;
+        }
 
         /// <summary> Construct a new ethernet packet.
         /// <p>
@@ -262,7 +295,7 @@ namespace SharpPcap.Packets
                 buffer.Append(AnsiEscapeSequences_Fields.RESET);
             buffer.Append(": ");
             buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
-            buffer.Append(" proto=0x" + System.Convert.ToString(EthernetProtocol, 16));
+            buffer.Append(" proto=0x" + System.Convert.ToString((ushort)EthernetProtocol, 16));
             buffer.Append(" l=" + EthernetHeaderLength); // + "," + data.length);
             buffer.Append(']');
 
