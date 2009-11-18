@@ -144,9 +144,6 @@
     <Compile Include="Packets\PacketFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\RawPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\TCPFields.cs">
       <SubType>Code</SubType>
     </Compile>
