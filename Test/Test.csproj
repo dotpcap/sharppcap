@@ -131,6 +131,7 @@
     <Compile Include="PcapTest.cs" />
     <Compile Include="SetFilterTest.cs" />
     <Compile Include="InvalidPacketTest.cs" />
+    <Compile Include="IPPacketTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -27,12 +27,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_SP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
         }
 
@@ -41,12 +41,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_DP_POS, TCPFields_Fields.TCP_PORT_LEN);
             }
         }
 
@@ -55,12 +55,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractLong(Bytes, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
+                return ArrayHelper.extractLong(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_SEQ_POS, TCPFields_Fields.TCP_SEQ_LEN);
             }
         }
 
@@ -69,12 +69,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractLong(Bytes, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
+                return ArrayHelper.extractLong(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_ACK_POS, TCPFields_Fields.TCP_ACK_LEN);
             }
         }
 
@@ -83,14 +83,14 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ((ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN) >> 12) & 0xf) * 4;
+                return ((ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN) >> 12) & 0xf) * 4;
             }
 
             set
             {
                 value = value / 4;
-                Bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] &= (byte)(0x0f);
-                Bytes[_ipOffset + TCPFields_Fields.TCP_FLAG_POS] |= (byte)(((value << 4) & 0xf0));
+                Bytes[_ipPayloadOffset + TCPFields_Fields.TCP_FLAG_POS] &= (byte)(0x0f);
+                Bytes[_ipPayloadOffset + TCPFields_Fields.TCP_FLAG_POS] |= (byte)(((value << 4) & 0xf0));
             }
         }
 
@@ -117,12 +117,12 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
             }
 
             set
             {
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_WIN_POS, TCPFields_Fields.TCP_WIN_LEN);
             }
         }
 
@@ -134,7 +134,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return GetTransportLayerChecksum(_ipOffset + TCPFields_Fields.TCP_CSUM_POS);
+                return GetTransportLayerChecksum(_ipPayloadOffset + TCPFields_Fields.TCP_CSUM_POS);
             }
 
             set
@@ -178,7 +178,7 @@ namespace SharpPcap.Packets
             {
                 if (!_allFlagsSet)
                 {
-                    _allFlags = ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
+                    _allFlags = ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
                     //tamir: added
                     _allFlagsSet = true;
                 }
@@ -188,7 +188,7 @@ namespace SharpPcap.Packets
             set
             {
 
-                ArrayHelper.insertLong(Bytes, value, _ipOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
+                ArrayHelper.insertLong(Bytes, value, _ipPayloadOffset + TCPFields_Fields.TCP_FLAG_POS, TCPFields_Fields.TCP_FLAG_LEN);
                 _allFlagsSet = false;
             }
 
@@ -358,7 +358,7 @@ namespace SharpPcap.Packets
             {
                 if (_tcpHeaderBytes == null)
                 {
-                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipOffset, TCPHeaderLength, Bytes);
+                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipPayloadOffset, TCPHeaderLength, Bytes);
                 }
                 return _tcpHeaderBytes;
             }
@@ -381,7 +381,7 @@ namespace SharpPcap.Packets
                 if (_tcpDataBytes == null)
                 {
                     _tcpDataBytes = new byte[PayloadDataLength];
-                    Array.Copy(Bytes, _ipOffset + TCPHeaderLength, _tcpDataBytes, 0, PayloadDataLength);
+                    Array.Copy(Bytes, _ipPayloadOffset + TCPHeaderLength, _tcpDataBytes, 0, PayloadDataLength);
                 }
                 return _tcpDataBytes;
             }
@@ -402,6 +402,51 @@ namespace SharpPcap.Packets
 
         /// <summary> </summary>
         private const long serialVersionUID = 1L;
+
+        /// <summary>
+        /// Create a new TCP packet from values
+        /// </summary>
+        public TCPPacket(IPPacket ipPacket,
+                         int sourcePort,
+                         int destinationPort,
+                         byte[] tcpPayload)
+            : base(EthernetFields_Fields.ETH_HEADER_LEN, ipPacket.Bytes, ipPacket.IPVersion)
+        {
+            int tcpHeaderLength = TCPFields_Fields.TCP_HEADER_LEN;
+            int tcpPayloadLength = (tcpPayload != null) ? tcpPayload.Length : 0;
+
+            int totalBytesRequired = 0;
+            totalBytesRequired += ipPacket.EthernetHeaderLength;
+            totalBytesRequired += ipPacket.IPHeaderLength;
+            totalBytesRequired += tcpHeaderLength;
+            totalBytesRequired += tcpPayloadLength;
+
+            byte[] newBytes = new byte[totalBytesRequired];
+
+            // copy the contents of the ip packet in, excluding the ip payload
+            // since this TCPPacket IS the new payload
+            Array.Copy(ipPacket.Bytes, newBytes,
+                       ipPacket.EthernetHeaderLength + ipPacket.IPHeaderLength);
+
+            // update the buffer that this packet is overlayed upon
+            this.Bytes = newBytes;
+
+            // set the port values
+            this.SourcePort = sourcePort;
+            this.DestinationPort = destinationPort;
+
+            // set the TCPHeaderLength
+            this.TCPHeaderLength = tcpHeaderLength;
+
+            // set the ippacket protocol to tcp
+            this.IPProtocol = SharpPcap.Packets.IPProtocol.IPProtocolType.TCP;
+
+            // copy the data payload in, if we were given one
+            if(tcpPayload != null)
+            {
+                TCPData = tcpPayload;
+            }
+        }
 
         /// <summary> Create a new TCP packet.</summary>
         public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes)
@@ -468,7 +513,7 @@ namespace SharpPcap.Packets
         {
             if (!_urgentPointerSet)
             {
-                _urgentPointer = ArrayHelper.extractInteger(Bytes, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
+                _urgentPointer = ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
                 _urgentPointerSet = true;
             }
             return _urgentPointer;
@@ -481,7 +526,7 @@ namespace SharpPcap.Packets
         /// </param>
         public void setUrgentPointer(int pointer)
         {
-            ArrayHelper.insertLong(Bytes, pointer, _ipOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
+            ArrayHelper.insertLong(Bytes, pointer, _ipPayloadOffset + TCPFields_Fields.TCP_URG_POS, TCPFields_Fields.TCP_URG_LEN);
             _urgentPointerSet = false;
         }
 
@@ -532,7 +577,7 @@ namespace SharpPcap.Packets
         /// <summary> Sets the data section of this tcp packet</summary>
         /// <param name="data">the data bytes
         /// </param>
-        public virtual void SetData(byte[] data)
+        private void SetData(byte[] data)
         {
             //reset cached tcp data
             _tcpDataBytes = null;
@@ -588,7 +633,7 @@ namespace SharpPcap.Packets
                 int optionsLength = TCPHeaderLength - optionsOffset;
 
                 byte[] optionBytes = new byte[optionsLength];
-                Array.Copy(Bytes, _ipOffset + optionsOffset, optionBytes, 0, optionsLength);
+                Array.Copy(Bytes, _ipPayloadOffset + optionsOffset, optionBytes, 0, optionsLength);
 
                 return optionBytes;
             }

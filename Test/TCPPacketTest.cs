@@ -110,5 +110,52 @@ namespace Test
 
             dev.Close();
         }
+
+        [Test]
+        public void TCPConstructorFromValues()
+        {
+            byte[] srcHwAddressBytes = new byte[EthernetFields_Fields.MAC_ADDRESS_LENGTH];
+            for(int i = 0; i < srcHwAddressBytes.Length; i++)
+            {
+                srcHwAddressBytes[i] = (byte)i;
+            }
+
+            byte[] dstHwAddressBytes = new byte[EthernetFields_Fields.MAC_ADDRESS_LENGTH];
+            for(int i = 0; i < dstHwAddressBytes.Length; i++)
+            {
+                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
+            }
+
+            var srcHwAddress = new System.Net.NetworkInformation.PhysicalAddress(srcHwAddressBytes);
+            var dstHwAddress = new System.Net.NetworkInformation.PhysicalAddress(dstHwAddressBytes);
+
+            var srcIpAddress = System.Net.IPAddress.Parse("127.0.0.1");
+            var dstIpAddress = System.Net.IPAddress.Parse("192.168.1.1");
+            var ipPayload = new byte[4];
+            ipPayload[0] = 10;
+            ipPayload[1] = 5;
+            ipPayload[2] = 2;
+            ipPayload[3] = 12;
+            var ethernetPacket = new EthernetPacket(srcHwAddress, dstHwAddress, EthernetPacketType.None, null);
+            var ipPacket = new IPPacket(IPPacket.IPVersions.IPv4,
+                                        IPProtocol.IPProtocolType.NONE,
+                                              srcIpAddress,
+                                              dstIpAddress,
+                                              ethernetPacket,
+                                              ipPayload);
+
+            int sourcePort = 1234;
+            int destinationPort = 5678;
+            byte[] tcpPayload = new byte[10];
+            for(int i = 0; i < tcpPayload.Length; i++)
+            {
+                tcpPayload[i] = (byte)(i * 2);
+            }
+
+            var tcpPacket = new TCPPacket(ipPacket, sourcePort, destinationPort,
+                                          tcpPayload);
+
+            Console.WriteLine("tcpPacket: {0}", tcpPacket.ToString());
+        }
     }
 }

@@ -37,7 +37,70 @@ namespace SharpPcap.Packets
 
         // offset from beginning of byte array where IP header ends (i.e.,
         //  size of ethernet frame header and IP header
-        protected internal int _ipOffset;
+        protected internal int _ipPayloadOffset;
+
+        public IPPacket(IPVersions ipVersion,
+                        IPProtocol.IPProtocolType ipProtocolType,
+                        IPAddress sourceAddress,
+                        IPAddress destinationAddress,
+                        EthernetPacket ethernetPacket,
+                        byte[] ipPacketPayload)
+            : base(EthernetFields_Fields.ETH_HEADER_LEN, null)
+        {
+            // determine how many bytes we need for this packet
+            int ipHeaderLength = ((ipVersion == IPVersions.IPv4) ? IPv4Fields_Fields.IP_HEADER_LEN : IPv6Fields_Fields.IPv6_HEADER_LEN);
+            int ipPayloadLength = (ipPacketPayload != null) ? ipPacketPayload.Length : 0;
+
+            int totalBytesRequired = 0;
+            totalBytesRequired += EthernetFields_Fields.ETH_HEADER_LEN;
+            totalBytesRequired += ipHeaderLength;
+            totalBytesRequired += ipPayloadLength;
+
+            // copy the ethernet packet header into the byte array
+            var bytes = new Byte[totalBytesRequired];
+            Array.Copy(ethernetPacket.EthernetHeader, bytes, ethernetPacket.EthernetHeader.Length);
+
+            // set the packet bytes to our new, correct length
+            // buffer
+            //
+            // NOTE: we cannot say: Bytes = bytes; because
+            //       the Bytes set property results in a call to
+            //       InitIPPacket with a parameter of IPVersion which
+            //       would result in the version being retrieved from
+            //       an offset into the byte array but we haven't
+            //       set the version in the byte array yet by setting
+            //       this.IPVersion to a value
+            base.Bytes = bytes;
+
+            // call InitIPPacket to instantiate a packet of the proper type
+            InitIPPacket(ipVersion);
+
+            // set the header length to the default value for our ip version
+            IPHeaderLength = ipHeaderLength;
+
+            // set the EthernetPacket type to the proper ip version
+            base.EthernetProtocol = (ipVersion == IPVersions.IPv4) ? EthernetPacketType.IpV4 : EthernetPacketType.IpV6;
+
+            // set the ip protocol type
+            this.IPProtocol = ipProtocolType;
+
+            // set the current instance to the proper ip version
+            this.IPVersion = ipVersion;
+
+            // update the source and destination addresses
+            this.SourceAddress = sourceAddress;
+            this.DestinationAddress = destinationAddress;
+
+            // and set the payload to the payload that was passed in
+            if(ipPacketPayload != null)
+            {
+                Array.Copy(ipPacketPayload, 0, Bytes, _ipPayloadOffset, ipPacketPayload.Length);
+                IPPayloadLength = ipPacketPayload.Length;
+            } else
+            {
+                IPPayloadLength = 0;
+            }
+        }
 
         /// <summary> Create a new IP packet. </summary>
         public IPPacket(int byteOffsetToEthernetPayload, byte[] bytes, IPVersions version)
@@ -75,17 +138,16 @@ namespace SharpPcap.Packets
             if (version == IPVersions.IPv4)
             {
                 ipv4 = new IPv4Packet(EthernetHeaderLength, Bytes);
-                _ipOffset = _ethPayloadOffset + IPv4Fields_Fields.IP_HEADER_LEN;
+                _ipPayloadOffset = _ethPayloadOffset + IPv4Fields_Fields.IP_HEADER_LEN;
             }
             else if (version == IPVersions.IPv6)
             {
                 ipv6 = new IPv6Packet(EthernetHeaderLength, Bytes);
-                _ipOffset = _ethPayloadOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
+                _ipPayloadOffset = _ethPayloadOffset + IPv6Fields_Fields.IPv6_HEADER_LEN;
             }
             else
             {
-                //lame default
-                _ipOffset = _ethPayloadOffset;
+                throw new System.InvalidOperationException("unknown IPVersions version of " + version);
             }
         }
 
@@ -384,7 +446,7 @@ namespace SharpPcap.Packets
 
         protected internal virtual void SetTransportLayerChecksum(int cs, int csPos)
         {
-            SetChecksum(cs, _ipOffset + csPos);
+            SetChecksum(cs, _ipPayloadOffset + csPos);
         }
 
         public virtual bool IsValidTransportLayerChecksum(bool pseudoIPHeader)
@@ -415,6 +477,16 @@ namespace SharpPcap.Packets
                     return ipv6.IPData;
                 else
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");
+            }
+
+            set
+            {
+                if (ipv4 != null)
+                    ipv4.IPData = value;
+                else if (ipv6 != null)
+                    ipv6.IPData = value;
+                else
+                    throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                
             }
         }
 

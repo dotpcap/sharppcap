@@ -264,8 +264,37 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return PacketEncoding.extractData(_ethPayloadOffset, IPv6Fields_Fields.IPv6_HEADER_LEN, Bytes,
-                                                  IPPayloadLength );
+                return PacketEncoding.extractData(_ethPayloadOffset,
+                                                  IPv6Fields_Fields.IPv6_HEADER_LEN,
+                                                  Bytes,
+                                                  IPPayloadLength);
+            }
+            set
+            {
+                // retrieve the current payload length
+                int currentIPPayloadLength = IPPayloadLength;
+
+                // compute the difference between the current and the
+                // requested payload lengths
+                int changeInLength = value.Length - currentIPPayloadLength;
+
+                // create a new buffer for the entire packet
+                byte[] newByteArray = new Byte[Bytes.Length + changeInLength];
+
+                // copy the old contents over to the new buffer, less
+                // the payload
+                Array.Copy(Bytes, newByteArray, Bytes.Length - currentIPPayloadLength);
+
+                // copy the new payload into place
+                Array.Copy(value, 0,
+                           newByteArray, Bytes.Length - currentIPPayloadLength,
+                           value.Length);
+
+                // update the Bytes to the new byte array
+                Bytes = newByteArray;
+
+                // update the IP length
+                IPPayloadLength = value.Length;
             }
         }
 

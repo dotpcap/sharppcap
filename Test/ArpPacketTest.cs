@@ -22,10 +22,10 @@ namespace Test
             Assert.AreEqual(senderIp, arpPacket.ARPSenderProtoAddress);
             Assert.AreEqual(targetIp, arpPacket.ARPTargetProtoAddress);
 
-            string senderMacAddress = "00:04:61:99:01:54";
-            string targetMacAddress = "00:00:00:00:00:00";
-            Assert.AreEqual(senderMacAddress, arpPacket.ARPSenderHwAddress);
-            Assert.AreEqual(targetMacAddress, arpPacket.ARPTargetHwAddress);
+            string senderMacAddress = "000461990154";
+            string targetMacAddress = "000000000000";
+            Assert.AreEqual(senderMacAddress, arpPacket.ARPSenderHwAddress.ToString());
+            Assert.AreEqual(targetMacAddress, arpPacket.ARPTargetHwAddress.ToString());
         }
 
         // arp response
@@ -40,10 +40,10 @@ namespace Test
             Assert.AreEqual(senderIp, arpPacket.ARPSenderProtoAddress);
             Assert.AreEqual(targetIp, arpPacket.ARPTargetProtoAddress);
 
-            string senderMacAddress = "00:21:6a:02:08:54";
-            string targetMacAddress = "00:04:61:99:01:54";
-            Assert.AreEqual(senderMacAddress, arpPacket.ARPSenderHwAddress);
-            Assert.AreEqual(targetMacAddress, arpPacket.ARPTargetHwAddress);
+            string senderMacAddress = "00216A020854";
+            string targetMacAddress = "000461990154";
+            Assert.AreEqual(senderMacAddress, arpPacket.ARPSenderHwAddress.ToString());
+            Assert.AreEqual(targetMacAddress, arpPacket.ARPTargetHwAddress.ToString());
         }
 
         [Test]

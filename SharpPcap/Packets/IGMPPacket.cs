@@ -68,7 +68,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_CODE_POS, IGMPFields_Fields.IGMP_CODE_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + IGMPFields_Fields.IGMP_CODE_POS, IGMPFields_Fields.IGMP_CODE_LEN);
             }
 
         }
@@ -77,7 +77,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_MRSP_POS, IGMPFields_Fields.IGMP_MRSP_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + IGMPFields_Fields.IGMP_MRSP_POS, IGMPFields_Fields.IGMP_MRSP_LEN);
             }
         }
 
@@ -86,7 +86,7 @@ namespace SharpPcap.Packets
         {
             get
             {
-                return ArrayHelper.extractInteger(Bytes, _ipOffset + IGMPFields_Fields.IGMP_CSUM_POS, IGMPFields_Fields.IGMP_CSUM_LEN);
+                return ArrayHelper.extractInteger(Bytes, _ipPayloadOffset + IGMPFields_Fields.IGMP_CSUM_POS, IGMPFields_Fields.IGMP_CSUM_LEN);
             }
 
         }
@@ -96,7 +96,7 @@ namespace SharpPcap.Packets
             get
             {
                 return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             _ipOffset + IGMPFields_Fields.IGMP_GADDR_POS,
+                                             _ipPayloadOffset + IGMPFields_Fields.IGMP_GADDR_POS,
                                              Bytes);
             }
 
@@ -168,7 +168,7 @@ namespace SharpPcap.Packets
             buffer.Append(", ");
             buffer.Append(GroupAddress + ": ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" l=" + IGMPFields_Fields.IGMP_HEADER_LEN + "," + (Bytes.Length - _ipOffset - IGMPFields_Fields.IGMP_HEADER_LEN));
+            buffer.Append(" l=" + IGMPFields_Fields.IGMP_HEADER_LEN + "," + (Bytes.Length - _ipPayloadOffset - IGMPFields_Fields.IGMP_HEADER_LEN));
             buffer.Append(']');
 
             return buffer.ToString();

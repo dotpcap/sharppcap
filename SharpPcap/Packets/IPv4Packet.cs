@@ -186,7 +186,6 @@ namespace SharpPcap.Packets
                 byte[] address = value.GetAddressBytes();
                 System.Array.Copy(address, 0, Bytes, _ethPayloadOffset + IPv4Fields_Fields.IP_DST_POS, address.Length);
             }
-
         }
 
         /// <summary> Fetch the IP header a byte array.</summary>
@@ -196,7 +195,6 @@ namespace SharpPcap.Packets
             {
                 return PacketEncoding.extractHeader(_ethPayloadOffset, IPHeaderLength, Bytes);
             }
-
         }
 
         /// <summary> Fetch the IP header as a byte array.</summary>
@@ -214,16 +212,36 @@ namespace SharpPcap.Packets
         {
             get
             {
-
-                // set data length based on info in headers (note: tcpdump
-                //  can return extra junk bytes which bubble up to here
-
-                //tamir: changed getLength() to specific getIPTotalLength() to fix
-                //confusion in subclasses overloading getLength()
-                int payloadLen = IPTotalLength - IPHeaderLength;
-                return PacketEncoding.extractData(_ethPayloadOffset, IPHeaderLength, Bytes, payloadLen);
+                return PacketEncoding.extractData(_ethPayloadOffset, IPHeaderLength, Bytes, IPPayloadLength);
             }
 
+            set
+            {
+                // retrieve the current payload length
+                int currentIPPayloadLength = IPPayloadLength;
+
+                // compute the difference between the current and the
+                // requested payload lengths
+                int changeInLength = value.Length - currentIPPayloadLength;
+
+                // create a new buffer for the entire packet
+                byte[] newByteArray = new Byte[Bytes.Length + changeInLength];
+
+                // copy the old contents over to the new buffer, less
+                // the payload
+                Array.Copy(Bytes, newByteArray, Bytes.Length - currentIPPayloadLength);
+
+                // copy the new payload into place
+                Array.Copy(value, 0,
+                           newByteArray, Bytes.Length - currentIPPayloadLength,
+                           value.Length);
+
+                // update the Bytes to the new byte array
+                Bytes = newByteArray;
+
+                // update the IP length
+                IPPayloadLength = value.Length;
+            }
         }
 
         /// <summary> Fetch the header checksum.</summary>
@@ -348,6 +366,11 @@ namespace SharpPcap.Packets
             get
             {
                 return IPTotalLength - IPv4Fields_Fields.IP_HEADER_LEN;
+            }
+
+            set
+            {
+                IPTotalLength = value + IPv4Fields_Fields.IP_HEADER_LEN;
             }
         }
 
