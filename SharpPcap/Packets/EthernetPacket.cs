@@ -147,8 +147,8 @@ namespace SharpPcap.Packets
             {
                 _bytes = value;
             }
-
         }
+
         // store the data here, all subclasses can offset into this
         private byte[] _bytes;
 
@@ -297,7 +297,7 @@ namespace SharpPcap.Packets
                 buffer.Append(AnsiEscapeSequences_Fields.RESET);
             buffer.Append(": ");
             buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
-            buffer.Append(" proto=0x" + System.Convert.ToString((ushort)EthernetProtocol, 16));
+            buffer.Append(" proto=" + EthernetProtocol.ToString() + " (0x" + System.Convert.ToString((ushort)EthernetProtocol, 16) + ")");
             buffer.Append(" l=" + EthernetHeaderLength); // + "," + data.length);
             buffer.Append(']');
 
