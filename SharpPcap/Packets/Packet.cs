@@ -1,9 +1,8 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 using System;
 using Timeval = SharpPcap.Packets.Util.Timeval;
 namespace SharpPcap.Packets
@@ -13,12 +12,13 @@ namespace SharpPcap.Packets
     /// This class currently contains no implementation because only ethernet 
     /// is supported. In other words, all instances of packets returned by 
     /// packet factory will always be at least as specific as EthernetPacket.
+    /// </p>
     /// <p>
     /// On large ethernet networks, I sometimes see packets which don't have 
     /// link-level ethernet headers. If and when I figure out what these are, 
     /// maybe this class will be the root node of a packet hierarchy derived 
     /// from something other than ethernet.
-    /// 
+    /// </p>
     /// </summary>
     [Serializable]
     public class Packet
@@ -96,9 +96,7 @@ namespace SharpPcap.Packets
         /// <summary>
         /// Returns true if valid, false if not. errorString should be set if false
         /// </summary>
-        /// <param name="errorString">
-        /// A <see cref="errorString"/>
-        /// </param>
+        /// <param name="errorString"></param>
         public virtual bool IsValid(out string errorString)
         {
             errorString = string.Empty;

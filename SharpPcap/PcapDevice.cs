@@ -67,8 +67,7 @@ namespace SharpPcap
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
-        /// the pcap device
-        /// <summary>
+        /// the pcap device</param>
         internal PcapDevice( PcapInterface pcapIf )
         {
             m_pcapIf = pcapIf;
@@ -90,13 +89,13 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Fires whenever a new packet is received on this Pcap Device.<br>
+        /// Fires whenever a new packet is received on this Pcap Device.<br/>
         /// This event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
         public event Pcap.PacketArrivalEvent OnPacketArrival;
 
         /// <summary>
-        /// Fires whenever a new pcap statistics is available for this Pcap Device.<br>
+        /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
         /// This event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
         public event Pcap.PcapStatisticsEvent OnPcapStatistics;
@@ -549,7 +548,6 @@ namespace SharpPcap
         /// <summary>
         /// Closes the opened dump file
         /// </summary>
-        /// <param name="fileName"></param>
         public void DumpClose()
         {
             if(DumpOpened)
@@ -562,7 +560,6 @@ namespace SharpPcap
         /// <summary>
         /// Flushes all write buffers of the opened dump file
         /// </summary>
-        /// <param name="fileName"></param>
         public void DumpFlush()
         {
             if (DumpOpened)

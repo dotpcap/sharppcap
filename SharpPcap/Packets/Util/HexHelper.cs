@@ -1,15 +1,10 @@
-// $Id: HexHelper.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 namespace SharpPcap.Packets.Util
 {
-    
-    
     /// <summary> Functions for formatting and printing binary data in hexadecimal.
     /// 
     /// </summary>

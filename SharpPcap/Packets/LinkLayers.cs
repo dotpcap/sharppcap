@@ -1,26 +1,27 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 namespace SharpPcap.Packets
 {
     /// <summary> Link-layer type codes.
     /// <p>
     /// Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
+    /// </p>
     /// <p>
     /// The link-layer type is used to determine what data-structure the 
     /// IP protocol bits will be encapsulated inside of.
+    /// </p>
     /// <p>
     /// On a 10/100mbps network, packets are encapsulated inside of ethernet.
     /// 14-byte ethernet headers which contain MAC addresses and an ethernet type 
     /// field.
+    /// </p>
     /// <p>
     /// On ethernet over ppp, the link-layer type is raw, and packets 
-    /// are not encapsulated in any ethernet header. 
-    /// <p>
-    /// 
+    /// are not encapsulated in any ethernet header.
+    /// </p>
     /// </summary>
     public struct LinkLayers_Fields{
         /// <summary> no link-layer encapsulation </summary>

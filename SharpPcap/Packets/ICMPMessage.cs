@@ -1,9 +1,8 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 namespace SharpPcap.Packets
 {
     /// <summary> ICMP message utility class.

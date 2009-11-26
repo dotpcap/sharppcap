@@ -120,7 +120,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="packet">The packet to add</param>
         /// <param name="seconds">The 'seconds' part of the packet's timestamp</param>
-        /// <param name="miliseconds">The 'microseconds' part of the packet's timestamp</param>
+        /// <param name="microseconds">The 'microseconds' part of the packet's timestamp</param>
         /// <returns>True if success, else false</returns>
         public bool Add( byte[] packet, int seconds, int microseconds )
         {
@@ -136,7 +136,7 @@ namespace SharpPcap
         /// <param name="device">The PcapDevice on which to send the queue</param>
         /// <param name="synchronize">determines if the send operation must be synchronized: 
         /// if it is non-zero, the packets are sent respecting the timestamps, 
-        /// otherwise they are sent as fast as possible
+        /// otherwise they are sent as fast as possible.</param>
         /// <returns></returns>
         public int Transmit( PcapDevice device, bool synchronize)
         {

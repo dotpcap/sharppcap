@@ -1,9 +1,8 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 using System;
 using System.Net;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
@@ -16,7 +15,7 @@ namespace SharpPcap.Packets
     /// <p>
     /// Extends an ethernet packet, adding IP header information and an IP 
     /// data payload. 
-    ///
+    /// </p>
     /// </summary>
     [Serializable]
     public class IPPacket : EthernetPacket

@@ -1,11 +1,8 @@
-// $Id: AnsiEscapeSequences.cs,v 1.1.1.1 2007-07-03 10:15:18 tamirgal Exp $
-
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 namespace SharpPcap.Packets.Util
 {
     
@@ -13,10 +10,11 @@ namespace SharpPcap.Packets.Util
     /// <p>
     /// This file contains control sequences to print color text on a text 
     /// console capable of interpreting and displaying control sequences.
+    /// </p>
     /// <p>
     /// A capable console would be 
     /// unix bash, os/2 shell, or command.com w/ ansi.sys loaded
-    /// 
+    /// </p>
     /// </summary>
     /// <author>  Chris Cheetham
     /// </author>

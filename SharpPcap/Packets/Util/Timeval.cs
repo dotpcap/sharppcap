@@ -1,13 +1,12 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 using System;
 namespace SharpPcap.Packets.Util
 {
-    /// <summary> POSIX.4 timeval
+    /// <summary> POSIX.4 timeval</summary>
     [Serializable]
     public class Timeval
     {

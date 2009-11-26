@@ -34,10 +34,6 @@ namespace SharpPcap.Util
 {
     public class IPUtil
     {
-        /// <param name="ipAndMaskBits">
-        /// </param>
-        /// <returns>
-        /// </returns>
         public static System.String ExtractIp(System.String ipRange)
         {
             if (IsRangeWithMaskBits(ipRange))
@@ -59,10 +55,6 @@ namespace SharpPcap.Util
             }
         }
         
-        /// <param name="ipAndMaskBits">
-        /// </param>
-        /// <returns>
-        /// </returns>
         public static int ExtractMaskBits(System.String ipRange)
         {
             if (IsRangeWithMaskBits(ipRange))

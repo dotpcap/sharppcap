@@ -1,9 +1,8 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 using System;
 using AnsiEscapeSequences_Fields = SharpPcap.Packets.Util.AnsiEscapeSequences_Fields;
 using ArrayHelper = SharpPcap.Packets.Util.ArrayHelper;
@@ -14,7 +13,7 @@ namespace SharpPcap.Packets
     /// <summary> An ICMP packet.
     /// <p>
     /// Extends an IP packet, adding an ICMP header and ICMP data payload.
-    /// 
+    /// </p>
     /// </summary>
     [Serializable]
     public class ICMPPacket : IPPacket, ICMPFields

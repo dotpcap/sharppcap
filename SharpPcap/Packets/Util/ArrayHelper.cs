@@ -1,9 +1,8 @@
-/// <summary>************************************************************************
-/// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
-/// Distributed under the Mozilla Public License                            *
-/// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
-/// *************************************************************************
-/// </summary>
+// ************************************************************************
+// Copyright (C) 2001, Patrick Charles and Jonas Lehmann                   *
+// Distributed under the Mozilla Public License                            *
+// http://www.mozilla.org/NPL/MPL-1.1.txt                                *
+// *************************************************************************
 using System;
 namespace SharpPcap.Packets.Util
 {
@@ -50,20 +49,15 @@ namespace SharpPcap.Packets.Util
         /// </param>
         /// <param name="cnt">the number of bytes which contain the integer.
         /// </param>
-        /// <returns> the long, or <b>0</b> if the index/length to use 
-        /// would cause an ArrayOutOfBoundsException
+        /// <returns> the long, or throws an ArrayOutOfBoundsException
         /// </returns>
         public static long extractLong(byte[] bytes, int pos, int cnt)
         {
-            // commented out because it seems like it might mask a fundamental 
-            // problem, if the caller is referencing positions out of bounds and 
-            // silently getting back '0'.
-            //   if((pos + cnt) > bytes.length) return 0;
-            long value_Renamed = 0;
+            long val = 0;
             for (int i = 0; i < cnt; i++)
-                value_Renamed |= ((bytes[pos + cnt - i - 1] & 0xffL) << 8 * i);
+                val |= ((bytes[pos + cnt - i - 1] & 0xffL) << 8 * i);
             
-            return value_Renamed;
+            return val;
         }
         
         /// <summary> Extract an integer from a byte array.
@@ -84,11 +78,11 @@ namespace SharpPcap.Packets.Util
             // problem, if the caller is referencing positions out of bounds and 
             // silently getting back '0'.
             // if((pos + cnt) > bytes.length) return 0;
-            int value_Renamed = 0;
+            int val = 0;
             for (int i = 0; i < cnt; i++)
-                value_Renamed |= ((bytes[pos + cnt - i - 1] & 0xff) << 8 * i);
+                val |= ((bytes[pos + cnt - i - 1] & 0xff) << 8 * i);
             
-            return value_Renamed;
+            return val;
         }
         
         /// <summary> Insert data contained in a long integer into an array.
@@ -96,45 +90,45 @@ namespace SharpPcap.Packets.Util
         /// </summary>
         /// <param name="bytes">an array.
         /// </param>
-        /// <param name="value">the long to insert into the array.
+        /// <param name="val">the long to insert into the array.
         /// </param>
         /// <param name="pos">the starting position into which the long is inserted.
         /// </param>
         /// <param name="cnt">the number of bytes to insert.
         /// </param>
-        public static void  insertLong(byte[] bytes, long value_Renamed, int pos, int cnt)
+        public static void  insertLong(byte[] bytes, long val, int pos, int cnt)
         {
             for (int i = 0; i < cnt; i++)
             {
-                bytes[pos + cnt - i - 1] = (byte) (value_Renamed & 0xff);
-                value_Renamed >>= 8;
+                bytes[pos + cnt - i - 1] = (byte) (val & 0xff);
+                val >>= 8;
             }
         }
         
-        public static void  insertInt32(byte[] bytes, int value_Renamed, int pos)
+        public static void  insertInt32(byte[] bytes, int val, int pos)
         {
-            insertLong(bytes, value_Renamed, pos, 4);
+            insertLong(bytes, val, pos, 4);
         }
         
-        public static void  insertInt16(byte[] bytes, int value_Renamed, int pos)
+        public static void  insertInt16(byte[] bytes, int val, int pos)
         {
-            insertLong(bytes, value_Renamed, pos, 2);
+            insertLong(bytes, val, pos, 2);
         }
         
         /// <summary> Convert a long integer into an array of bytes.
         /// 
         /// </summary>
-        /// <param name="value">the long to convert.
+        /// <param name="val">the long to convert.
         /// </param>
         /// <param name="cnt">the number of bytes to convert.
         /// </param>
-        public static byte[] toBytes(long value_Renamed, int cnt)
+        public static byte[] toBytes(long val, int cnt)
         {
             byte[] bytes = new byte[cnt];
             for (int i = 0; i < cnt; i++)
             {
-                bytes[cnt - i - 1] = (byte) (value_Renamed & 0xff);
-                value_Renamed >>= 8;
+                bytes[cnt - i - 1] = (byte) (val & 0xff);
+                val >>= 8;
             }
             
             return bytes;
@@ -144,38 +138,38 @@ namespace SharpPcap.Packets.Util
         /// (i.e. this does the same thing as toBytes() but returns an array 
         /// in reverse order from the array returned in toBytes().
         /// </summary>
-        /// <param name="value">the long to convert.
+        /// <param name="val">the long to convert.
         /// </param>
         /// <param name="cnt">the number of bytes to convert.
         /// </param>
-        public static byte[] toBytesLittleEndian(long value_Renamed, int cnt)
+        public static byte[] toBytesLittleEndian(long val, int cnt)
         {
             byte[] bytes = new byte[cnt];
             for (int i = 0; i < cnt; i++)
             {
-                bytes[i] = (byte) (value_Renamed & 0xff);
-                value_Renamed >>= 8;
+                bytes[i] = (byte) (val & 0xff);
+                val >>= 8;
             }
             
             return bytes;
         }
         
-        public static void  fillBytes(byte[] byteArray, long value_Renamed, int cnt, int index)
+        public static void  fillBytes(byte[] byteArray, long val, int cnt, int index)
         {
             
             for (int i = 0; i < cnt; i++)
             {
-                byteArray[cnt - i - 1 + index] = (byte) (value_Renamed & 0xff);
-                value_Renamed >>= 8;
+                byteArray[cnt - i - 1 + index] = (byte) (val & 0xff);
+                val >>= 8;
             }
         }
         
-        public static void  fillBytesLittleEndian(byte[] byteArray, long value_Renamed, int cnt, int index)
+        public static void  fillBytesLittleEndian(byte[] byteArray, long val, int cnt, int index)
         {
             for (int i = 0; i < cnt; i++)
             {
-                byteArray[index + i] = (byte) (value_Renamed & 0xff);
-                value_Renamed >>= 8;
+                byteArray[index + i] = (byte) (val & 0xff);
+                val >>= 8;
             }
         }
         

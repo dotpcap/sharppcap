@@ -45,6 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpPcap</RootNamespace>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -62,6 +63,7 @@
     <ErrorReport>prompt</ErrorReport>
     <OutputType>Library</OutputType>
     <RootNamespace>SharpPcap</RootNamespace>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

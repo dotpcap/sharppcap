@@ -1,14 +1,12 @@
-﻿/// <summary>
-/// Patch to SharpPcap
-///   David Bond 1/18/2009
-///   Mokon@Mokon.Net
-///   www.Mokon.Net
-/// License
-///   Distributed under the Mozilla Public License
-///   http://www.mozilla.org/NPL/MPL-1.1.txt
-/// Project
-///   https://sourceforge.net/projects/sharppcap/
-/// </summary>
+// Patch to SharpPcap
+//   David Bond 1/18/2009
+//   Mokon@Mokon.Net
+//   www.Mokon.Net
+// License
+//   Distributed under the Mozilla Public License
+//   http://www.mozilla.org/NPL/MPL-1.1.txt
+// Project
+//   https://sourceforge.net/projects/sharppcap/
 
 namespace SharpPcap.Packets
 {
