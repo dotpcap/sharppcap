@@ -35,7 +35,7 @@ namespace SharpPcap
         /// </summary>
         public virtual bool Started
         {
-            get{ return (captureThread != null); }
+            get { return (captureThread != null); }
         }
 
         /// <summary>
