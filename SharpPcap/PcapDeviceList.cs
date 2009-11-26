@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Linq;
 using SharpPcap.Containers;
 
 namespace SharpPcap
@@ -32,13 +33,34 @@ namespace SharpPcap
     /// <summary>
     /// List of available Pcap Interfaces.
     /// </summary>
-    public class PcapDeviceList : ReadOnlyCollection<PcapDevice> {
+    public class PcapDeviceList : ReadOnlyCollection<PcapDevice>
+    {
+        private static PcapDeviceList instance;
+        public static PcapDeviceList Instance
+        {
+            get
+            {
+                if(instance == null)
+                {
+                    instance = new PcapDeviceList();
+                }
+
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
-        public PcapDeviceList() : base(new List<PcapDevice>())
+        private PcapDeviceList() : base(new List<PcapDevice>())
         {
+            Refresh();
+        }
+
+        private List<PcapDevice> GetDevices()
+        {
+            var deviceList = new List<PcapDevice>();
+
             IntPtr devicePtr = IntPtr.Zero;
             StringBuilder errorBuffer = new StringBuilder(256);
 
@@ -55,7 +77,7 @@ namespace SharpPcap
                     (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
                                                     typeof(PcapUnmanagedStructures.pcap_if));
                 PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
-                base.Items.Add(new PcapDevice(pcap_if));
+                deviceList.Add(new PcapDevice(pcap_if));
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
             SafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
@@ -76,6 +98,85 @@ namespace SharpPcap
                     }
                 }
             }
+
+            return deviceList;
+        }
+
+        /// <summary>
+        /// Refresh the device list
+        /// </summary>
+        public void Refresh()
+        {
+            lock(this)
+            {
+                // retrieve the current device list
+                var newDeviceList = GetDevices();
+
+                // update existing devices with values in the new list
+                foreach(var newItem in newDeviceList)
+                {
+                    foreach(var existingItem in base.Items)
+                    {
+                        if(newItem.Name == existingItem.Name)
+                        {
+                            // copy the flags and addresses over
+                            existingItem.Interface.Flags = newItem.Interface.Flags;
+                            existingItem.Interface.Addresses = newItem.Interface.Addresses;
+
+                            break; // break out of the foreach(existingItem)
+                        }
+                    }
+                }
+
+                // find items the current list is missing
+                foreach(var newItem in newDeviceList)
+                {
+                    bool found = false;
+                    foreach(var existingItem in base.Items)
+                    {
+                        if(existingItem.Name == newItem.Name)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // add items that we were missing
+                    if(!found)
+                    {
+                        base.Items.Add(newItem);
+                    }
+                }
+
+                // find items that we have that the current list is missing
+                var itemsToRemove = new List<PcapDevice>();
+                foreach(var existingItem in base.Items)
+                {
+                    bool found = false;
+
+                    foreach(var newItem in newDeviceList)
+                    {
+                        if(existingItem.Name == newItem.Name)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // add the PcapDevice we didn't see in the new list
+                    if(!found)
+                    {
+                        itemsToRemove.Add(existingItem);
+                    }
+                }
+
+                // remove the items outside of the foreach() to avoid
+                // enumeration errors
+                foreach(var itemToRemove in itemsToRemove)
+                {
+                    base.Items.Remove(itemToRemove);
+                }
+            }
         }
 
         #region PcapDevice Indexers
@@ -84,13 +185,18 @@ namespace SharpPcap
         {
             get
             {
-                List<PcapDevice> devices = (List<PcapDevice>)base.Items;
-                PcapDevice dev = devices.Find(delegate(PcapDevice i) { return i.Name == Name; });
-                PcapDevice result = dev ?? devices.Find(delegate(PcapDevice i) { return i.Description == Name; });
+                // lock to prevent issues with multi-threaded access
+                // with other methods
+                lock(this)
+                {
+                    List<PcapDevice> devices = (List<PcapDevice>)base.Items;
+                    PcapDevice dev = devices.Find(delegate(PcapDevice i) { return i.Name == Name; });
+                    PcapDevice result = dev ?? devices.Find(delegate(PcapDevice i) { return i.Description == Name; });
 
-                if (result == null)
-                    throw new IndexOutOfRangeException();
-                return result;
+                    if (result == null)
+                        throw new IndexOutOfRangeException();
+                    return result;
+                }
             }
         }
         #endregion

@@ -126,7 +126,7 @@ namespace SharpPcap
         public static List<PcapDevice> GetAllDevices()
         {
             System.Diagnostics.Debug.WriteLine("List<PcapDevice> GetAllDevices() is depreciated.  Use Pcap.Devices instead.");
-            return new List<PcapDevice>(new PcapDeviceList());
+            return new List<PcapDevice>(PcapDeviceList.Instance);
         }
 
         public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
@@ -142,7 +142,7 @@ namespace SharpPcap
         public static PcapDevice GetPcapDevice( string pcapDeviceName )
         {
             System.Diagnostics.Debug.WriteLine("GetPcapDevoce(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
-            return new PcapDeviceList()[pcapDeviceName];
+            return PcapDeviceList.Instance[pcapDeviceName];
         }
     }
 }
