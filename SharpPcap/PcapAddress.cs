@@ -27,10 +27,10 @@ namespace SharpPcap.Containers
     // managed version of pcap_addr
     public class PcapAddress
     {
-        public Sockaddr Addr;
-        public Sockaddr Netmask;
-        public Sockaddr Broadaddr;
-        public Sockaddr Dstaddr;
+        public Sockaddr Addr { get; internal set; }
+        public Sockaddr Netmask { get; internal set; }
+        public Sockaddr Broadaddr { get; internal set; }
+        public Sockaddr Dstaddr {get; internal set; }
 
         internal PcapAddress()
         { }

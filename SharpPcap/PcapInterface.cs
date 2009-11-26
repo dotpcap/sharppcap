@@ -33,11 +33,30 @@ namespace SharpPcap.Containers
     //       to a managed one to avoid this issue
     public class PcapInterface
     {
-        public string            Name;         /* name to hand to "pcap_open_live()" */              
-        public string            FriendlyName; /* Human readable interface name from System.Net.NetworkInformation.NetworkInterface.Name */
-        public string            Description;  /* textual description of interface */
-        public List<PcapAddress> Addresses;
-        public uint              Flags;        /* PCAP_IF_ interface flags */
+        /// <value>
+        /// Name of the interface. Used internally when passed to pcap_open_live()
+        /// </value>
+        public string Name { get; internal set; }
+
+        /// <value>
+        /// Human readable interface name derived from System.Net.NetworkInformation.NetworkInterface.Name
+        /// </value>
+        public string FriendlyName { get; internal set; }
+
+        /// <value>
+        /// Text description of the interface as given by pcap/winpcap
+        /// </value>
+        public string Description { get; internal set; }
+
+        /// <value>
+        /// Addresses associated with this device
+        /// </value>
+        public List<PcapAddress> Addresses { get; internal set; }
+
+        /// <value>
+        /// Pcap interface flags
+        /// </value>
+        public uint Flags { get; internal set; }
 
         private PcapAddress m_macAddress;
         public System.Net.NetworkInformation.PhysicalAddress MacAddress
@@ -47,7 +66,7 @@ namespace SharpPcap.Containers
                 return m_macAddress.Addr.hardwareAddress;
             }
 
-            set
+            internal set
             {
                 // do we already have a hardware address for this device?
                 if(m_macAddress != null)

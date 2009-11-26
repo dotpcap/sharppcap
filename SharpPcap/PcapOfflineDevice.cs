@@ -32,6 +32,7 @@ namespace SharpPcap
     public class PcapOfflineDevice : PcapDevice
     {
         private string m_pcapFile;
+
         /// <summary>
         /// The description of this device
         /// </summary>
@@ -78,7 +79,7 @@ namespace SharpPcap
         /// </summary>
         public string FileName
         {
-            get{ return System.IO.Path.GetFileName( this.Name );}
+            get { return System.IO.Path.GetFileName( this.Name );}
         }
 
         /// <summary>
