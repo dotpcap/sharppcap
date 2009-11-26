@@ -50,6 +50,10 @@ cp SharpPcap/bin/Release/SharpPcap.dll ${releaseDirectory}
 cp SharpPcap/SharpPcap.dll.config ${debugDirectory}
 cp SharpPcap/SharpPcap.dll.config ${releaseDirectory}
 
+# copy the xml documentation files
+cp SharpPcap/bin/Debug/SharpPcap.xml ${debugDirectory}
+cp SharpPcap/bin/Release/SharpPcap.xml ${releaseDirectory}
+
 # make a zip file of the binary files
 cd ${binDirectory}
 zip -r ${binDirectory}/${dirName}.bin.zip ${dirName}
