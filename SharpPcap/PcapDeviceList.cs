@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Linq;
 using SharpPcap.Containers;
 
 namespace SharpPcap
