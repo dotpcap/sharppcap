@@ -19,7 +19,7 @@ namespace SharpPcap.Test.Example1
             Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
             /* Retrieve the device list */
-            PcapDeviceList devices = new PcapDeviceList();
+            PcapDeviceList devices = PcapDeviceList.Instance;
 
             /*If no device exists, print error */
             if(devices.Count<1)
