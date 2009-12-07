@@ -56,7 +56,7 @@ namespace SharpPcap
             Refresh();
         }
 
-        private List<PcapDevice> GetDevices()
+        private static List<PcapDevice> GetDevices()
         {
             var deviceList = new List<PcapDevice>();
 
@@ -84,7 +84,7 @@ namespace SharpPcap
             // go through the network interfaces to populate the mac address
             // for each of the devices
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-            foreach(PcapDevice device in Items)
+            foreach(PcapDevice device in deviceList)
             {
                 foreach(NetworkInterface adapter in nics)
                 {
