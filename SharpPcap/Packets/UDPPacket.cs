@@ -307,11 +307,23 @@ namespace SharpPcap.Packets
             buffer.Append(": ");
             buffer.Append(SourceAddress);
             buffer.Append('.');
-            buffer.Append(IPPort.getName(SourcePort));
+            if(Enum.IsDefined(typeof(IPPorts), SourcePort))
+            {
+                buffer.Append((IPPorts)SourcePort);
+            } else
+            {
+                buffer.Append(SourcePort);
+            }
             buffer.Append(" -> ");
             buffer.Append(DestinationAddress);
             buffer.Append('.');
-            buffer.Append(IPPort.getName(DestinationPort));
+            if(Enum.IsDefined(typeof(IPPorts), DestinationPort))
+            {
+                buffer.Append((IPPorts)DestinationPort);
+            } else
+            {
+                buffer.Append(DestinationPort);
+            }
             buffer.Append(" l=" + UDPFields_Fields.UDP_HEADER_LEN + "," + (Length - UDPFields_Fields.UDP_HEADER_LEN));
             buffer.Append(']');
 

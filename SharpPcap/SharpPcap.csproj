@@ -122,9 +122,6 @@
     <Compile Include="Packets\IPPacket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Packets\IPPort.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Packets\IPPorts.cs">
       <SubType>Code</SubType>
     </Compile>
