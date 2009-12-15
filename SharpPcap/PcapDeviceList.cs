@@ -49,6 +49,21 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Caution: Use the singlton instance unless you know why you need to call this.
+        /// One use is for multiple filters on the same physical device. The work around
+        /// is to simply open the same physical device multiple times, one for each
+        /// filter by calling this routine and picking the same device out of each
+        /// PcapDeviceList.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PcapDeviceList"/>
+        /// </returns>
+        public static PcapDeviceList New()
+        {
+            return new PcapDeviceList();
+        }
+
+        /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
         private PcapDeviceList() : base(new List<PcapDevice>())
