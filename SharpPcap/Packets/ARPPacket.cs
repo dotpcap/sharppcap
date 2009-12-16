@@ -272,6 +272,9 @@ namespace SharpPcap.Packets
             //buffer.append(" l=" + header.length + "," + data.length);
             buffer.Append(']');
 
+            // append the base string output
+            buffer.Append(base.ToColoredString(colored));
+
             return buffer.ToString();
         }
     }
