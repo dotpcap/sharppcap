@@ -230,6 +230,7 @@
     <Compile Include="PcapDeviceList.cs" />
     <Compile Include="PcapInterface.cs" />
     <Compile Include="Packets\EthernetPacketType.cs" />
+    <Compile Include="Packets\RawPacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
