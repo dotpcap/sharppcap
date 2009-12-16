@@ -307,7 +307,7 @@ namespace SharpPcap.Packets
             buffer.Append(": ");
             buffer.Append(SourceAddress);
             buffer.Append('.');
-            if(Enum.IsDefined(typeof(IPPorts), SourcePort))
+            if(Enum.IsDefined(typeof(IPPorts), (ushort)SourcePort))
             {
                 buffer.Append((IPPorts)SourcePort);
             } else
@@ -317,7 +317,7 @@ namespace SharpPcap.Packets
             buffer.Append(" -> ");
             buffer.Append(DestinationAddress);
             buffer.Append('.');
-            if(Enum.IsDefined(typeof(IPPorts), DestinationPort))
+            if(Enum.IsDefined(typeof(IPPorts), (ushort)DestinationPort))
             {
                 buffer.Append((IPPorts)DestinationPort);
             } else
