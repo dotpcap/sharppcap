@@ -148,13 +148,13 @@ namespace SharpPcap
         /// <summary>
         /// Return the pcap link layer value of an adapter. 
         /// </summary>
-        public virtual int PcapDataLink
+        public virtual LinkLayers PcapDataLink
         {
             get
             {
                 if(!Opened)
                     throw new PcapDeviceNotReadyException("Cannot get datalink, the pcap device is not opened");
-                return SafeNativeMethods.pcap_datalink(PcapHandle);
+                return (LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
             }
         }
 
@@ -236,7 +236,7 @@ namespace SharpPcap
                 }
             }
         }
-        
+
         /// <summary>
         /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
         /// </summary>
@@ -323,7 +323,7 @@ namespace SharpPcap
                 throw new PcapException("Error receiving packet.");
             return p;
         }
-        
+
         /// <summary>
         /// Gets the next packet captured on this device
         /// </summary>
@@ -481,7 +481,7 @@ namespace SharpPcap
                                        out string errorString)
         {
             IntPtr bpfProgram;
-            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead(LinkLayers_Fields.EN10MB, Pcap.MAX_PACKET_SIZE);
+            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)LinkLayers.Ethernet10Mb, Pcap.MAX_PACKET_SIZE);
 
             uint mask = 0;
             if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))

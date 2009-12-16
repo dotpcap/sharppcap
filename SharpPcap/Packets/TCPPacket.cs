@@ -660,7 +660,7 @@ namespace SharpPcap.Packets
             buffer.Append(": ");
             buffer.Append(SourceAddress);
             buffer.Append('.');
-            if(Enum.IsDefined(typeof(IPPorts), SourcePort))
+            if(Enum.IsDefined(typeof(IPPorts), (ushort)SourcePort))
             {
                 buffer.Append((IPPorts)SourcePort);
             } else
@@ -670,7 +670,7 @@ namespace SharpPcap.Packets
             buffer.Append(" -> ");
             buffer.Append(DestinationAddress);
             buffer.Append('.');
-            if(Enum.IsDefined(typeof(IPPorts), DestinationPort))
+            if(Enum.IsDefined(typeof(IPPorts), (ushort)DestinationPort))
             {
                 buffer.Append((IPPorts)DestinationPort);
             } else
@@ -745,8 +745,8 @@ namespace SharpPcap.Packets
             return RandomPacket(size, IPVersions.IPv4);
         }
 
-        private static int MinimumIPv4Bytes = LinkLayer.getLinkLayerLength(LinkLayers_Fields.EN10MB) + IPv4Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
-        private static int MinimumIPv6Bytes = LinkLayer.getLinkLayerLength(LinkLayers_Fields.EN10MB) + IPv6Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
+        private static int MinimumIPv4Bytes = LinkLayer.LinkLayerLength(LinkLayers.Ethernet10Mb) + IPv4Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
+        private static int MinimumIPv6Bytes = LinkLayer.LinkLayerLength(LinkLayers.Ethernet10Mb) + IPv6Packet.HeaderMinimumLength + TCPPacket.HeaderMinimumLength;
 
         public static TCPPacket RandomPacket(IPVersions ipver)
         {
@@ -767,7 +767,9 @@ namespace SharpPcap.Packets
 
             byte[] bytes = new byte[size];
             SharpPcap.Util.Rand.Instance.GetBytes(bytes);
-            TCPPacket tcp = new TCPPacket(LinkLayers_Fields.EN10MB, bytes, true);
+            TCPPacket tcp = new TCPPacket(LinkLayer.ProtocolOffset(LinkLayers.Ethernet10Mb),
+                                          bytes,
+                                          true);
             MakeValid(tcp, ipver);
             return tcp;
         }
@@ -784,7 +786,7 @@ namespace SharpPcap.Packets
                 // represented by tcp.Bytes, minus the link layer bytes
                 // NOTE: this includes the ip header bytes, which is how the IPv4 total bytes
                 // works
-                tcp.IPTotalLength = tcp.Bytes.Length - LinkLayers_Fields.EN10MB; //Set the correct IP length
+                tcp.IPTotalLength = tcp.Bytes.Length - LinkLayer.ProtocolOffset(LinkLayers.Ethernet10Mb); //Set the correct IP length
                 tcp.IPHeaderLength = IPv4Fields_Fields.IP_HEADER_LEN;
             }
             else if (ipver == IPVersions.IPv6)

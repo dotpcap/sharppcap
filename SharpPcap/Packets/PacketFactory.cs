@@ -14,23 +14,23 @@ namespace SharpPcap.Packets
     public class PacketFactory
     {
         /// <summary> Convert captured packet data into an object.</summary>
-        public static Packet dataToPacket(int linkType, byte[] bytes)
+        public static Packet dataToPacket(LinkLayers linkType, byte[] bytes)
         {
             return dataToPacket(linkType, bytes, new Timeval(0, 0));
         }
 
         /// <summary> Convert captured packet data into an object.</summary>
-        public static Packet dataToPacket(int linkType, byte[] bytes, Timeval tv)
+        public static Packet dataToPacket(LinkLayers linkType, byte[] bytes, Timeval tv)
         {
             EthernetPacketType ethProtocol;
 
             // retrieve the length of the headers associated with this link layer type.
             // this length is the offset to the header embedded in the packet.
-            int byteOffsetToEthernetPayload = LinkLayer.getLinkLayerLength(linkType);
+            int byteOffsetToEthernetPayload = LinkLayer.LinkLayerLength(linkType);
 
             // extract the protocol code for the type of header embedded in the 
             // link-layer of the packet
-            int offset = LinkLayer.getProtoOffset(linkType);
+            int offset = LinkLayer.ProtocolOffset(linkType);
             if (offset == -1)
             {
                 // if there is no embedded protocol, assume IpV4
