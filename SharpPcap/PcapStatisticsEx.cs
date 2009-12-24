@@ -26,7 +26,7 @@ namespace SharpPcap
     /// <summary>
     /// Holds network statistics for a Pcap Devices
     /// </summary>
-    public class PcapStatistics
+    public class PcapStatisticsEx
     {
         /// <summary>
         /// This holds time value
@@ -43,13 +43,13 @@ namespace SharpPcap
         /// </summary>
         /// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
         /// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-        internal PcapStatistics(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
+        internal PcapStatisticsEx(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
         {
             this.m_pktHdr   = pktHdr;
             this.m_pktData  = pktData.bytes;
         }
 
-        internal PcapStatistics(Packets.Packet p)
+        internal PcapStatisticsEx(Packets.Packet p)
         {
             this.m_pktHdr   = p.PcapHeader;
             this.m_pktData  = p.Bytes;

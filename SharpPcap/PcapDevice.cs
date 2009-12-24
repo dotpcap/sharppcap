@@ -98,7 +98,7 @@ namespace SharpPcap
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
         /// This event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
-        public event Pcap.PcapStatisticsEvent OnPcapStatistics;
+        public event Pcap.PcapStatisticsExEvent OnPcapStatistics;
 
         /// <summary>
         /// Fired when the capture process of this pcap device is stopped
@@ -304,7 +304,7 @@ namespace SharpPcap
             }
             if ( OnPcapStatistics != null)
             {
-                foreach(Pcap.PcapStatisticsEvent pse in OnPcapStatistics.GetInvocationList())
+                foreach(Pcap.PcapStatisticsExEvent pse in OnPcapStatistics.GetInvocationList())
                 {
                     OnPcapStatistics -= pse;
                 }
@@ -474,7 +474,7 @@ namespace SharpPcap
                 if(OnPcapStatistics != null)
                 {
                     //Invoke the pcap statistics event
-                    OnPcapStatistics(this, new PcapStatisticsEventArgs(p, this));
+                    OnPcapStatistics(this, new PcapStatisticsExEventArgs(p, this));
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace SharpPcap
         /// <summary>
         /// A delegate for delivering network statistics
         /// </summary>
-        public delegate void PcapStatisticsEvent(object sender, PcapStatisticsEventArgs e);
+        public delegate void PcapStatisticsExEvent(object sender, PcapStatisticsExEventArgs e);
 
         /// <summary>
         /// A delegate for notifying of a capture stopped event

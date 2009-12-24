@@ -185,7 +185,7 @@
     <Compile Include="PcapSendQueue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapStatistics.cs">
+    <Compile Include="PcapStatisticsEx.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Protocols\ARP.cs">
