@@ -44,13 +44,20 @@ namespace SharpPcap.Containers
             get { return _sa_family; }
         }
 
+        /// <summary>
+        /// Create a Sockaddr from a PhysicalAddress which is presumed to
+        /// be a hardware address
+        /// </summary>
+        /// <param name="hardwareAddress">
+        /// A <see cref="PhysicalAddress"/>
+        /// </param>
         public Sockaddr(PhysicalAddress hardwareAddress)
         {
             this.type = Type.HARDWARE;
             this.hardwareAddress = hardwareAddress;
         }
 
-        public Sockaddr(IntPtr sockaddrPtr)
+        internal Sockaddr(IntPtr sockaddrPtr)
         {
             // A sockaddr struct. We use this to determine the address family
             PcapUnmanagedStructures.sockaddr saddr;
