@@ -27,7 +27,7 @@ namespace SharpPcap.Test.Example3
                 Console.WriteLine("No device found on this machine");
                 return;
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
@@ -73,6 +73,9 @@ namespace SharpPcap.Test.Example3
 
             Console.WriteLine("-- Capture stopped.");
 
+            // print out the device statistics
+            Console.WriteLine(device.Statistics().ToString());
+
             //Close the pcap device
             device.Close();
         }
@@ -86,6 +89,7 @@ namespace SharpPcap.Test.Example3
             uint len = e.Packet.PcapHeader.PacketLength;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
+            Console.WriteLine(e.Packet.ToColoredString(true));
         }
     }
 }
