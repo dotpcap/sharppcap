@@ -135,5 +135,16 @@ namespace SharpPcap
         {
             throw new PcapException("It is not possible to set a capture filter on an offline device");
         }
+
+        /// <summary>
+        /// Statistics are not supported for savefiles
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PcapStatistics"/>
+        /// </returns>
+        public override PcapStatistics Statistics ()
+        {
+            throw new PcapException("No statistics are stored in savefiles");
+        }
     }
 }

@@ -232,6 +232,8 @@
     <Compile Include="Packets\EthernetPacketType.cs" />
     <Compile Include="Packets\RawPacket.cs" />
     <Compile Include="PcapDeviceNotReadyException.cs" />
+    <Compile Include="PcapStatistics.cs" />
+    <Compile Include="PcapStatisticsException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

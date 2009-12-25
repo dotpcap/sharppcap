@@ -767,7 +767,31 @@ namespace SharpPcap
             return q.Transmit( this, sync );
         }
 
-        private static string GetLastError(IntPtr deviceHandle)
+        /// <summary>
+        /// Retrieves pcap statistics
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PcapStatistics"/>
+        /// </returns>
+        public virtual PcapStatistics Statistics()
+        {
+            // can only call PcapStatistics on an open device
+            if(!Opened)
+                throw new PcapDeviceNotReadyException("device not open");
+
+            return new PcapStatistics(this.m_pcapAdapterHandle);
+        }
+
+        /// <summary>
+        /// Retrieve the last error string for a given pcap_t* device
+        /// </summary>
+        /// <param name="deviceHandle">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        internal static string GetLastError(IntPtr deviceHandle)
         {
             IntPtr err_ptr = SafeNativeMethods.pcap_geterr(deviceHandle);
             return Marshal.PtrToStringAnsi(err_ptr);

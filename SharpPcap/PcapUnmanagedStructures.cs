@@ -225,6 +225,66 @@ namespace SharpPcap
             public IntPtr /* char **/ ptrBuff;  
         };
 
+        /// <summary>
+        /// Define the return values from int pcap_stats()
+        /// </summary>
+        internal enum PcapStatReturnValue : int
+        {
+            Success = 0,
+            Error = -1
+        }
+
+        /// <summary>
+        /// Unix version of 'struct pcap_stat'
+        /// Uses the same trick as timeval_unix
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct pcap_stat_unix
+        {
+            /// <summary>
+            /// Packets received
+            /// </summary>
+            public IntPtr ps_recv;
+
+            /// <summary>
+            /// Packets dropped
+            /// </summary>
+            public IntPtr ps_drop;
+
+            /// <summary>
+            /// Drops by interface (maybe not yet supported)
+            /// </summary>
+            public IntPtr ps_ifdrop;
+        }
+
+        /// <summary>
+        /// Windows version of 'struct pcap_stat'
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct pcap_stat_windows
+        {
+            /// <summary>
+            /// Packets received
+            /// </summary>
+            public uint ps_recv;
+
+            /// <summary>
+            /// Packets dropped
+            /// </summary>
+            public uint ps_drop;
+
+            /// <summary>
+            /// Drops by interface (maybe not yet supported)
+            /// </summary>
+            public uint ps_ifdrop;
+
+            /// <summary>
+            /// Packets that reach the application
+            /// WIN32 only, based on struct pcap_stat in pcap.h
+            /// </summary>
+            public uint bs_capt;
+        }
+
         #endregion Unmanaged Structs Implementation
     }
 }

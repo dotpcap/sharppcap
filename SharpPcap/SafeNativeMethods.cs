@@ -224,5 +224,21 @@ namespace SharpPcap
         /// </returns>
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_get_selectable_fd(IntPtr /* pcap_t* */ adaptHandle);
+
+        /// <summary>
+        /// Fills in the pcap_stat structure passed to the function
+        /// based on the pcap_t adapter
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="stat">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL)]
+        internal extern static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
     }
 }
