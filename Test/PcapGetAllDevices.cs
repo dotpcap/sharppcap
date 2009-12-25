@@ -15,8 +15,8 @@ namespace Test
 
             if(devices.Count == 0)
             {
-                Console.WriteLine("No pcap supported devices found, are you running" +
-                                  " as a user with access to adapters (root on Linux)?");
+                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                                                           " as a user with access to adapters (root on Linux)?");
             } else
             {
                 Console.WriteLine("Found {0} devices", devices.Count);

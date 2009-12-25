@@ -19,7 +19,6 @@ namespace Test
             {
                 var error = "No pcap supported devices found, are you running" +
                             " as a user with access to adapters (root on Linux)?";
-                Console.WriteLine(error);
                 throw new System.InvalidOperationException(error);
             } else
             {
@@ -65,7 +64,6 @@ namespace Test
             {
                 var error = "No pcap supported devices found, are you running" +
                             " as a user with access to adapters (root on Linux)?";
-                Console.WriteLine(error);
                 throw new System.InvalidOperationException(error);
             } else
             {
