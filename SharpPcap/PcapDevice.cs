@@ -507,10 +507,10 @@ namespace SharpPcap
 
             //compile the expressions
             result = SafeNativeMethods.pcap_compile(pcapHandle,
-                                                 bpfProgram,
-                                                 filterExpression,
-                                                 1,
-                                                 mask);
+                                                    bpfProgram,
+                                                    filterExpression,
+                                                    1,
+                                                    mask);
 
             if(result < 0)
             {
@@ -578,6 +578,13 @@ namespace SharpPcap
             int res;
             IntPtr bpfProgram;
             string errorString;
+
+            // pcap_setfilter() requires a valid pcap_t which isn't present if
+            // the device hasn't been opened
+            if(!Opened)
+            {
+                throw new PcapDeviceNotReadyException("device is not open");
+            }
 
             // attempt to compile the program
             if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
