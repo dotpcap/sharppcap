@@ -71,6 +71,12 @@ namespace SharpPcap
             Refresh();
         }
 
+        /// <summary>
+        /// Retrieve a list of the current PcapDevices
+        /// </summary>
+        /// <returns>
+        /// A <see cref="List"/>
+        /// </returns>
         private static List<PcapDevice> GetDevices()
         {
             var deviceList = new List<PcapDevice>();
