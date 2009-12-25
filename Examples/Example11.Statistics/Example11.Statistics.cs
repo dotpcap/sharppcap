@@ -51,7 +51,7 @@ namespace SharpPcap.Test.Example11
 
             //Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 
-                new Pcap.PcapStatisticsEvent( device_PcapOnPcapStatistics );
+                new Pcap.PcapStatisticsExEvent( device_PcapOnPcapStatistics );
 
             //Open the device for capturing
             //true -- means promiscuous mode
@@ -89,7 +89,7 @@ namespace SharpPcap.Test.Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_PcapOnPcapStatistics(object sender, PcapStatisticsEventArgs e)
+        private static void device_PcapOnPcapStatistics(object sender, PcapStatisticsExEventArgs e)
         {
             /* Calculate the delay in microseconds from the last sample. */
             /* This value is obtained from the timestamp that's associated with the sample. */
