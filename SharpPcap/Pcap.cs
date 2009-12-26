@@ -36,9 +36,10 @@ namespace SharpPcap
         public delegate void PacketArrivalEvent(object sender, PcapCaptureEventArgs e);
 
         /// <summary>
-        /// A delegate for delivering network statistics
+        /// A delegate for delivering network statistics when using winpcap in
+        /// statistics mode
         /// </summary>
-        public delegate void PcapStatisticsExEvent(object sender, PcapStatisticsExEventArgs e);
+        public delegate void PcapStatisticsModeEvent(object sender, PcapStatisticsModeEventArgs e);
 
         /// <summary>
         /// A delegate for notifying of a capture stopped event
