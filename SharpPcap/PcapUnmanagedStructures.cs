@@ -86,12 +86,15 @@ namespace SharpPcap
             public UInt16       sa_port;        /* port */
             public in_addr      sin_addr;       /* address */
 
-            // TODO: would be great to be able to have the compiler take care of this for us
-            //       but I'm not sure how to
+            // TODO: I'm not sure that we can define a fixed field in another easier to
+            //       understand way
 
             // pad the size of sockaddr_in out to 16 bytes
             [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
+// Disable warnings around this unused field
+#pragma warning disable 0169
             private byte[]       pad;
+#pragma warning restore 0169
         };
 
         /// <summary>
