@@ -53,11 +53,11 @@ namespace SharpPcap
 
         }
 
-        public PcapStatisticsEx Statistics
+        public PcapStatisticsModePacket Statistics
         {
             get
             {
-                return new PcapStatisticsEx(base.Packet);
+                return new PcapStatisticsModePacket(base.Packet);
             }
         }
     }

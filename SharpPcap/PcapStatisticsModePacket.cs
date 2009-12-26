@@ -24,9 +24,10 @@ using System;
 namespace SharpPcap
 {
     /// <summary>
-    /// Holds network statistics for a Pcap Devices
+    /// Holds network statistics entry from winpcap when in statistics mode
+    /// See http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut9.html
     /// </summary>
-    public class PcapStatisticsEx
+    public class PcapStatisticsModePacket
     {
         /// <summary>
         /// This holds time value
@@ -43,13 +44,13 @@ namespace SharpPcap
         /// </summary>
         /// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
         /// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-        internal PcapStatisticsEx(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
+        internal PcapStatisticsModePacket(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
         {
             this.m_pktHdr   = pktHdr;
             this.m_pktData  = pktData.bytes;
         }
 
-        internal PcapStatisticsEx(Packets.Packet p)
+        internal PcapStatisticsModePacket(Packets.Packet p)
         {
             this.m_pktHdr   = p.PcapHeader;
             this.m_pktData  = p.Bytes;
