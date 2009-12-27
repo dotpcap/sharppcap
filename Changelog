@@ -1,4 +1,58 @@
 Changelog
+v2.2.0 - 20091226
+- API changes:
+   - Add support for pcap_stats() via PcapDevice.Statistics() that returns an instance
+     of PcapStatistics.
+   - Move EtherType out of class EthernetPacket and into EthernetPacketType.cs, changing
+     its name to public enum EthernetPacketType : ushort. Synchronize it with Pcap.Net
+   - Switch PcapDeviceList to a singleton. Access the PcapDeviceList via
+     PcapDeviceList.Instance. Change fixes an issue seen by Matthew Brown where
+     a capture was started on a PcapDevice but because the PcapDevice was retrieved
+     again before calling PcapDevice.StopCapture() the StopCapture call was on
+     different PcapDevice instance which had no record of capture being started.
+     With a static PcapDeviceList, retrieving a list of PcapDevices will almost
+     always return the same instances of PcapDevices, except if devices are removed
+     or added.
+   - Add a method to bypass the PcapDeviceList singleton, PcapDeviceList.New()
+     for cases when the user wants to open the same physical device multiple times
+     in order to apply multiple filters to the same physical device.
+   - Rework RawaPacket and add RawPacket methods to PcapDevice that allow the user
+     to retrieve an unprocessed packet.
+   - Make Sockadd(IntPtr sockaddrPtr) constructor internal
+   - Rewrite class Timeval to match the improved version in Packet.Net.
+   - Removed the IPPort class, the strings were just copies of the IPPorts values
+   - Change IPPorts to use an enum of type ushort and rework the port names to include
+     only the most frequently used ports. We'll add more ports as users request them.
+   - Rewrite public struct LinkLayers_Fields to public enum LinkLayers and correct
+     the capitalization of the enum values.
+
+- PcapDevice.SetFilter() now checks if the device is open before calling lower level
+  functions that rely on an open device. A PcapDeviceNotReadyException is thrown
+  in the case when the device isn't open instead of a segfault.
+
+- Fix a bug in PcapDeviceList.GetDevices() pointed out by Ashley Ross. Fixes an issue
+  where the devices in the device list would lack the supplimental NetworkInterface
+  information until subsequent refreshes.
+
+- XML source code documentation is now enabled and the .xml file is included
+  in the binary release package.
+
+- XML source code documentation improvements to several classes and methods.
+
+- Access to properties in PcapInterface, PcapAddress and PcapOfflineDevice has
+  been tightened up to only allow read-only access to most properties. These
+  properties cannot be modified via SharpPcap and letting a user modify them is
+  just asking for trouble since SharpPcap uses some values for comparisons.
+
+- Add value constructors to EthernetPacket, IPPacket and TCPPacket so these
+  packets may be constructed using values. This should simplify the creation
+  of packets from scratch. Longer term plans are to move the packet parsing and
+  generation code to the Packet.Net project, http://packetnet.sf.net 
+
+- Upgrade the internal copy of NUnit from 2.2.8 to 2.4.7
+
+- Whitespace fixes to indentation in several files.
+
 v2.1.2 - 20091007
 - Switch from throwing exceptions in the constructor to using
   public virtual bool Packet.IsValid(out string errorString). Throwing from packet constructors
@@ -30,6 +84,7 @@ v2.1.2 - 20091007
   Patch from Stefan Agner.
 - Assign svn:eol-style native to newly created files. This reduces conflicts due to line
   ending characters when editing files between Windows and Linux/Unix
+
 v2.1.1 - 20090508
 - Terminate the capture loop when no more packets can be read from a PcapOfflineDevice, a
   file on disk. Change enables example 8 run to completion instead of hanging on the
