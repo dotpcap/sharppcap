@@ -17,11 +17,12 @@ Generating release packages and updating source control (git)
 
 Pushing changes out to the world
 - Log into the sourceforge website and go to 'Project admin'->'File manager'
-- Click on the SharpPcap folder to expand it, right click and create a new folder
-- Right click on the new folder and pick 'Uploads here'
-- Click on the 'Upload File' link and upload the release notes txt file
-- Right click on the release notes textfile and check off 'Release note'
-- Click on the 'Upload File' link up top and upload the src and bin zip files
+- Click on the SharpPcap folder to expand it, left click on the gear icon next to 'SharpPcap'
+  and create a new folder with a name of the version, like '4.0.0'
+- Left click on the new folder's gear icon and pick 'Upload here'
+- Upload the release notes txt file
+- Left click on the release notes textfile and check off 'Release note' and click on 'Save'
+- Left click on the new folder's gear icon and upload the src and bin zip files
 - Left click on the binary zip file and select the platforms, select all of them, select the
   release notes file that was just uploaded
 - Left click on the source zip file and select the release notes file
