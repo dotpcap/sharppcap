@@ -9,6 +9,8 @@ Generating release packages and updating source control(svn)
 - Make sure all outstanding changes are checked in
 - Tag trunk as the release, ex.
   git tag -a SharpPcap_X_Y_Z
+- Push tags to the server
+  git push --tags
 - Run make_src_release with the tag name and release name
 - Run make_bin_release with the release name
 
