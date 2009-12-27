@@ -1,4 +1,4 @@
-Generating release packages and updating source control(svn)
+Generating release packages and updating source control (git)
 
 - Check that the version set in AssemblyInfo.cs is correct for the next release
 - Make sure ChangeLog has been updated to reflect this version ahead of the
