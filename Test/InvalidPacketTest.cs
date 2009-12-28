@@ -16,7 +16,7 @@ namespace Test
         [Test]
         public void IPPacketInvalidLength()
         {
-            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/ip_packet_bogus_length.pcap");
+            var dev = new PcapOfflineDevice("../../capture_files/ip_packet_bogus_length.pcap");
             dev.Open();
 
             try
