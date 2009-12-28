@@ -138,6 +138,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="PcapOfflineDevice"/>
         /// </returns>
+        /// </summary>
         public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
         {
             return new PcapOfflineDevice( pcapFileName );
