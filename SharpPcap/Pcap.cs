@@ -130,6 +130,14 @@ namespace SharpPcap
             return new List<PcapDevice>(PcapDeviceList.Instance);
         }
 
+        /// <summary>
+        /// Depreciated: Backwards compatability wrapper around new PcapOfflineDevice(string PcapFileName). Don't use this.
+        /// <param name="pcapFileName">
+        /// A <see cref="System.String"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="PcapOfflineDevice"/>
+        /// </returns>
         public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
         {
             return new PcapOfflineDevice( pcapFileName );
@@ -142,7 +150,7 @@ namespace SharpPcap
         /// <returns>A PcapDevice</returns>
         public static PcapDevice GetPcapDevice( string pcapDeviceName )
         {
-            System.Diagnostics.Debug.WriteLine("GetPcapDevoce(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
+            System.Diagnostics.Debug.WriteLine("GetPcapDevice(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
             return PcapDeviceList.Instance[pcapDeviceName];
         }
     }

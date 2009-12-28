@@ -44,7 +44,7 @@ namespace SharpPcap
         /// pcap files
         /// </summary>
         /// <param name="pcapFile"></param>
-        internal PcapOfflineDevice(string pcapFile)
+        public PcapOfflineDevice(string pcapFile)
         {
             m_pcapFile = pcapFile;
         }
