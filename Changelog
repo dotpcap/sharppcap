@@ -1,4 +1,12 @@
 Changelog
+v2.3.0
+- Expose PcapOfflineDevice(string pcapFileName) constructor and document the
+  Pcap.GetPcapOfflineDevice() method.
+- Update tests and examples to use the new PcapOfflineDevice() constructor
+- IPPacket add caching of the source and destination addresses
+- Re-add support for the winpcap extension method, pcap_setbuff() that let's the application
+  define the kernel adapter buffer size
+
 v2.2.0 - 20091226
 - API changes:
    - Add support for pcap_stats() via PcapDevice.Statistics() that returns an instance
