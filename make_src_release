@@ -9,8 +9,10 @@
 
 function PrintUsage()
 {
-  echo "example:";
+  echo "usage:";
   echo "  ./make_src_release OutputDirectory VersionNumber TagName";
+  echo "";
+  echo "example:";
   echo "  ./make_src_release ~/sharppcap_releases 2.0.0 SharpPcap_2_0_0";
 }
 
