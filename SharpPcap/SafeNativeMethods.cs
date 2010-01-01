@@ -240,5 +240,23 @@ namespace SharpPcap
         /// </returns>
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
+
+        /// <summary>
+        /// WinPcap specific method for setting the kernel buffer size
+        /// associated with this adapter. The old buffer is discarded
+        /// when the buffer size is changed.
+        /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="bufferSizeInBytes">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL)]
+        internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
     }
 }

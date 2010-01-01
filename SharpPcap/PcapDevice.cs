@@ -172,8 +172,10 @@ namespace SharpPcap
             set
             {
                 if(!Opened)
+                {
                     throw new PcapDeviceNotReadyException
                         ("Can't set PcapMode, the device is not opened");
+                }
 
                 m_pcapMode = value;
                 int mode = ( m_pcapMode==PcapMode.Capture ? 
@@ -787,6 +789,37 @@ namespace SharpPcap
                 throw new PcapDeviceNotReadyException("device not open");
 
             return new PcapStatistics(this.m_pcapAdapterHandle);
+        }
+
+        /// <value>
+        /// Set the kernel value buffer size in bytes
+        /// WinPcap extension
+        /// </value>
+        public int KernelBufferSize
+        {
+            set
+            {
+                // setting the kernel buffer size is a WinPcap extension
+                if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
+                   (Environment.OSVersion.Platform != PlatformID.Win32Windows))
+                {
+                    throw new System.InvalidOperationException("only supported in winpcap");
+                }
+
+                // make sure the device is open
+                if(!Opened)
+                {
+                    throw new PcapDeviceNotReadyException
+                        ("Can't set PcapMode, the device is not opened");
+                }
+
+                int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
+                                                            value);
+                if(retval != 0)
+                {
+                    throw new System.InvalidOperationException("pcap_setbuff() failed");
+                }
+            }   
         }
 
         /// <summary>
