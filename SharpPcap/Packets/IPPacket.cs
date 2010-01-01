@@ -296,6 +296,11 @@ namespace SharpPcap.Packets
         }
 
 
+        /// <value>
+        /// 
+        /// </value>
+        private System.Net.IPAddress sourceAddressCache;
+        private System.Net.IPAddress destinationAddressCache;
 
         // some convience mapping methods since there are fields that match exactly between
         // ipv4 and ipv6
@@ -304,20 +309,28 @@ namespace SharpPcap.Packets
         {
             get
             {
+                if(sourceAddressCache != null)
+                    return sourceAddressCache;
+
                 if(ipv4 != null)
                 {
-                    return ipv4.SourceAddress;
+                    sourceAddressCache =  ipv4.SourceAddress;
                 } else if(ipv6 != null)
                 {
-                    return ipv6.SourceAddress;
+                    sourceAddressCache = ipv6.SourceAddress;
                 } else
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
+
+                return new System.Net.IPAddress(sourceAddressCache.GetAddressBytes());
             }
 
             set
             {
+                // cache the new value
+                sourceAddressCache = value;
+
                 if(IPVersion == IPVersions.IPv4)
                 {
                     ipv4.SourceAddress = value;
@@ -336,20 +349,28 @@ namespace SharpPcap.Packets
         {
             get
             {
+                if(destinationAddressCache != null)
+                    return destinationAddressCache;
+
                 if(ipv4 != null)
                 {
-                    return ipv4.DestinationAddress;
+                    destinationAddressCache = ipv4.DestinationAddress;
                 } else if(ipv6 != null)
                 {
-                    return ipv6.DestinationAddress;
+                    destinationAddressCache = ipv6.DestinationAddress;
                 } else
                 {
                     throw new System.InvalidOperationException("ipv4 and ipv6 are both null");                    
                 }
+
+                return new System.Net.IPAddress(destinationAddressCache.GetAddressBytes());
             }
 
             set
             {
+                // cache the new value
+                destinationAddressCache = value;
+
                 if(ipv4 != null)
                 {
                     ipv4.DestinationAddress = value;
