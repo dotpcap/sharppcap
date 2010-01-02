@@ -180,15 +180,6 @@ namespace SharpPcap
         internal extern static int pcap_datalink(IntPtr /* pcap_t* */ adaptHandle);
 
         /// <summary>
-        /// Set the working mode of the interface p to mode. 
-        /// Valid values for mode are MODE_CAPT (default capture mode) 
-        /// and MODE_STAT (statistical mode). See the tutorial 
-        /// "\ref wpcap_tut9" for details about statistical mode. 
-        /// </summary>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
-        internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
-
-        /// <summary>
         /// Set nonblocking mode. pcap_loop() and pcap_next() doesnt work in  nonblocking mode!
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Auto)]
@@ -241,6 +232,17 @@ namespace SharpPcap
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
 
+        #region WinPcap specific
+        /// <summary>
+        /// Set the working mode of the interface p to mode. 
+        /// Valid values for mode are MODE_CAPT (default capture mode) 
+        /// and MODE_STAT (statistical mode). See the tutorial 
+        /// "\ref wpcap_tut9" for details about statistical mode.
+        /// WinPcap specific method
+        /// </summary>
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
+
         /// <summary>
         /// WinPcap specific method for setting the kernel buffer size
         /// associated with this adapter. The old buffer is discarded
@@ -258,5 +260,6 @@ namespace SharpPcap
         /// </returns>
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
+        #endregion        
     }
 }
