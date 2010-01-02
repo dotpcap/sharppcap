@@ -123,17 +123,17 @@ namespace SharpPcap
         /// </summary>
         public virtual string Description
         {
-            get{ return m_pcapIf.Description; }
+            get { return m_pcapIf.Description; }
         }
 
         public virtual uint Flags
         {
-            get{ return m_pcapIf.Flags; }
+            get { return m_pcapIf.Flags; }
         }
 
         public virtual bool Loopback
         {
-            get{ return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
+            get { return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
         }
 
         /// <summary>
@@ -141,8 +141,8 @@ namespace SharpPcap
         /// </summary>
         internal virtual IntPtr PcapHandle
         {
-            get{return m_pcapAdapterHandle;}
-            set{m_pcapAdapterHandle=value;}
+            get { return m_pcapAdapterHandle; }
+            set { m_pcapAdapterHandle = value; }
         }
 
         /// <summary>
@@ -152,8 +152,7 @@ namespace SharpPcap
         {
             get
             {
-                if(!Opened)
-                    throw new PcapDeviceNotReadyException("Cannot get datalink, the pcap device is not opened");
+                ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
                 return (LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
             }
         }
@@ -166,16 +165,20 @@ namespace SharpPcap
             get{return (PcapHandle != IntPtr.Zero);}
         }
 
+        /// <value>
+        /// WinPcap specific property
+        /// </value>
         public virtual PcapMode Mode
         {
-            get{return m_pcapMode;}
+            get
+            {
+                return m_pcapMode;
+            }
+
             set
             {
-                if(!Opened)
-                {
-                    throw new PcapDeviceNotReadyException
-                        ("Can't set PcapMode, the device is not opened");
-                }
+                ThrowIfNotWinPcap();
+                ThrowIfNotOpen("Mode");
 
                 m_pcapMode = value;
                 int mode = ( m_pcapMode==PcapMode.Capture ? 
@@ -185,6 +188,14 @@ namespace SharpPcap
                 if (result < 0)
                     throw new PcapException("Error setting PcapDevice mode. : " + LastError);
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating wether pcap dump file is already associated with this device
+        /// </summary>
+        public bool DumpOpened
+        {
+            get { return m_pcapDumpHandle!=IntPtr.Zero; }
         }
 
         /// <summary>
@@ -341,10 +352,7 @@ namespace SharpPcap
 
             // using an invalid PcapHandle can result in an unmanaged segfault
             // so check for that here
-            if(!Opened)
-            {
-                throw new PcapDeviceNotReadyException("Device must be opened via Open() prior to use");
-            }
+            ThrowIfNotOpen("Device must be opened via Open() prior to use");
 
             //Get a packet from winpcap
             res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
@@ -394,10 +402,7 @@ namespace SharpPcap
 
             // using an invalid PcapHandle can result in an unmanaged segfault
             // so check for that here
-            if(!Opened)
-            {
-                throw new PcapDeviceNotReadyException("Device must be opened via Open() prior to use");
-            }
+            ThrowIfNotOpen("Device must be opened via Open() prior to use");
 
             //Get a packet from winpcap
             res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
@@ -583,10 +588,7 @@ namespace SharpPcap
 
             // pcap_setfilter() requires a valid pcap_t which isn't present if
             // the device hasn't been opened
-            if(!Opened)
-            {
-                throw new PcapDeviceNotReadyException("device is not open");
-            }
+            ThrowIfNotOpen("device is not open");
 
             // attempt to compile the program
             if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
@@ -656,8 +658,7 @@ namespace SharpPcap
         /// <param name="p">The packet to write</param>
         public void Dump(byte[] p, PcapHeader h)
         {
-            if(!Opened)
-                throw new PcapDeviceNotReadyException("Cannot dump packet, device is not opened");
+            ThrowIfNotOpen("Cannot dump packet, device is not opened");
             if(!DumpOpened)
                 throw new PcapDeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
@@ -691,14 +692,6 @@ namespace SharpPcap
         public void Dump(Packet p)
         {
             Dump(p.Bytes, p.PcapHeader);
-        }
-
-        /// <summary>
-        /// Gets a value indicating wether pcap dump file is already associated with this device
-        /// </summary>
-        public bool DumpOpened
-        {
-            get{return m_pcapDumpHandle!=IntPtr.Zero;}
         }
 
         /// <summary>
@@ -737,33 +730,28 @@ namespace SharpPcap
         /// <param name="size">The number of bytes to send</param>
         public void SendPacket(byte[] p, int size)
         {
-            if ( Opened )
+            ThrowIfNotOpen("Can't send packet, the device is closed");
+
+            if (size > p.Length)
             {
-                if (size > p.Length)
-                {
-                    throw new ArgumentException("Invalid packetSize value: "+size+
-                    "\nArgument size is larger than the total size of the packet.");
-                }
-
-                if (p.Length > Pcap.MAX_PACKET_SIZE) 
-                {
-                    throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
-                }
-
-                IntPtr p_packet = IntPtr.Zero;          
-                p_packet = Marshal.AllocHGlobal( size );
-                Marshal.Copy(p, 0, p_packet, size);     
-
-                int res = SafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
-                Marshal.FreeHGlobal(p_packet);
-                if(res < 0)
-                {
-                    throw new PcapException("Can't send packet: " + LastError);
-                }
+                throw new ArgumentException("Invalid packetSize value: "+size+
+                "\nArgument size is larger than the total size of the packet.");
             }
-            else
+
+            if (p.Length > Pcap.MAX_PACKET_SIZE) 
             {
-                throw new PcapDeviceNotReadyException("Can't send packet, the device is closed");
+                throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
+            }
+
+            IntPtr p_packet = IntPtr.Zero;          
+            p_packet = Marshal.AllocHGlobal( size );
+            Marshal.Copy(p, 0, p_packet, size);     
+
+            int res = SafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
+            Marshal.FreeHGlobal(p_packet);
+            if(res < 0)
+            {
+                throw new PcapException("Can't send packet: " + LastError);
             }
         }
 
@@ -785,8 +773,7 @@ namespace SharpPcap
         public virtual PcapStatistics Statistics()
         {
             // can only call PcapStatistics on an open device
-            if(!Opened)
-                throw new PcapDeviceNotReadyException("device not open");
+            ThrowIfNotOpen("device not open");
 
             return new PcapStatistics(this.m_pcapAdapterHandle);
         }
@@ -799,19 +786,8 @@ namespace SharpPcap
         {
             set
             {
-                // setting the kernel buffer size is a WinPcap extension
-                if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
-                   (Environment.OSVersion.Platform != PlatformID.Win32Windows))
-                {
-                    throw new System.InvalidOperationException("only supported in winpcap");
-                }
-
-                // make sure the device is open
-                if(!Opened)
-                {
-                    throw new PcapDeviceNotReadyException
-                        ("Can't set PcapMode, the device is not opened");
-                }
+                ThrowIfNotWinPcap();
+                ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
 
                 int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
                                                             value);
@@ -848,6 +824,34 @@ namespace SharpPcap
         public override string ToString ()
         {
             return "interface: " + m_pcapIf.ToString() + "\n";
+        }
+
+        /// <summary>
+        /// Helper method for ensuring we are running in winpcap. Throws
+        /// a PcapWinPcapRequiredException() if not on a windows platform
+        /// </summary>
+        private void ThrowIfNotWinPcap()
+        {
+            if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
+               (Environment.OSVersion.Platform != PlatformID.Win32Windows))
+            {
+                throw new PcapWinPcapRequiredException("only supported in winpcap");
+            }
+        }
+
+        /// <summary>
+        /// Helper method for checking that the adapter is open, throws an
+        /// exception with a string of ExceptionString if the device isn't open
+        /// </summary>
+        /// <param name="ExceptionString">
+        /// A <see cref="System.String"/>
+        /// </param>
+        private void ThrowIfNotOpen(string ExceptionString)
+        {
+            if(!Opened)
+            {
+                throw new PcapDeviceNotReadyException(ExceptionString);
+            }
         }
     }
 }

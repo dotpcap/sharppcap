@@ -79,7 +79,7 @@ namespace SharpPcap
         /// </summary>
         public string FileName
         {
-            get { return System.IO.Path.GetFileName( this.Name );}
+            get { return System.IO.Path.GetFileName( this.Name ); }
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SharpPcap
             if ( adapterHandle == IntPtr.Zero)
             {
                 string err = "Unable to open offline adapter: " + errbuf.ToString();
-                throw new Exception( err );
+                throw new PcapException( err );
             }
 
             //set the local handle
@@ -133,7 +133,7 @@ namespace SharpPcap
         /// </summary>
         public override void SetFilter( string filter )
         {
-            throw new PcapException("It is not possible to set a capture filter on an offline device");
+            throw new PcapNotSupportedOnOfflineDeviceException("It is not possible to set a capture filter on an offline device");
         }
 
         /// <summary>
