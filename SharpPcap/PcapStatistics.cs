@@ -8,17 +8,17 @@ namespace SharpPcap
         /// <value>
         /// Number of packets received
         /// </value>
-        public int ReceivedPackets { get; set; }
+        public uint ReceivedPackets { get; set; }
 
         /// <value>
         /// Number of packets dropped
         /// </value>
-        public int DroppedPackets { get; set; }
+        public uint DroppedPackets { get; set; }
 
         /// <value>
         /// Number of interface dropped packets
         /// </value>
-        public int InterfaceDroppedPackets { get; set; }
+        public uint InterfaceDroppedPackets { get; set; }
 
         /// <summary>
         /// Retrieve pcap statistics from the adapter
@@ -67,19 +67,23 @@ namespace SharpPcap
                                                                                                  typeof(PcapUnmanagedStructures.pcap_stat_unix));
 
                 // copy the values
-                this.ReceivedPackets = (int)managedStat.ps_recv;
-                this.DroppedPackets = (int)managedStat.ps_drop;
-                this.InterfaceDroppedPackets = (int)managedStat.ps_ifdrop;                
+                this.ReceivedPackets = (uint)managedStat.ps_recv;
+                this.DroppedPackets = (uint)managedStat.ps_drop;
+//                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             } else
             {
                 var managedStat = (PcapUnmanagedStructures.pcap_stat_windows)Marshal.PtrToStructure(stat,
                                                                                                     typeof(PcapUnmanagedStructures.pcap_stat_windows));
 
                 // copy the values
-                this.ReceivedPackets = (int)managedStat.ps_recv;
-                this.DroppedPackets = (int)managedStat.ps_drop;
-                this.InterfaceDroppedPackets = (int)managedStat.ps_ifdrop;
+                this.ReceivedPackets = (uint)managedStat.ps_recv;
+                this.DroppedPackets = (uint)managedStat.ps_drop;
+//                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             }
+
+            // NOTE: Not supported on unix or winpcap, no need to
+            //       put a bogus value in this field
+            this.InterfaceDroppedPackets = 0;
 
             // free the stats
             Marshal.FreeHGlobal(stat);
