@@ -60,7 +60,7 @@ namespace SharpPcap
         private IntPtr      m_pcapAdapterHandle = IntPtr.Zero;
         private IntPtr      m_pcapDumpHandle    = IntPtr.Zero;
         private PcapMode    m_pcapMode          = PcapMode.Capture;
-        private int         m_pcapPacketCount   = Pcap.INFINITE;//Infinite
+        private int         m_pcapPacketCount   = Pcap.INFINITE;
         private int         m_mask  = 0; //for filter expression
 
         /// <summary>

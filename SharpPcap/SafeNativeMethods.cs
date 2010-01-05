@@ -232,6 +232,24 @@ namespace SharpPcap
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
 
+        #region libpcap specific
+        /// <summary>
+        /// Returns the file descriptor number from which captured packets are read,
+        /// if a network device was opened with pcap_create() and pcap_activate() or
+        /// with pcap_open_live(), or -1, if a ``savefile'' was opened with
+        /// pcap_open_offline()
+        /// Libpcap specific method
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL)]
+        internal extern static int pcap_fileno(IntPtr /* pcap_t* p */ adapter);
+        #endregion
+
         #region WinPcap specific
         /// <summary>
         /// Set the working mode of the interface p to mode. 

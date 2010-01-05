@@ -1,4 +1,22 @@
 Changelog
+v2.4.0 - TDB
+- Fix a long standing bug on mono/unix platforms where the capture loop wasn't
+  stopping when capturing on inactive or very low traffic adapters. The issue is that
+  pcap_dispatch()/pcap_next()/pcap_next_ex()/pcap_loop() call read() on a
+  device without a timeout. The read sleeps until a packet arrives or a signal
+  occurs, which may be a long time or forever on certain adapters as they may be
+  inactive or on low activity networks etc. When the user attempts to stop the
+  capturing the Thread.Join() waiting for the capture thread will timeout because
+  the read() is still sleeping.
+
+  Avoid the issue entirely when Mono.Posix is available by using Mono.Unix.Native.Syscall.poll()
+  to check for available data. If data is available we call pcap_dispatch()/pcap_next()/...
+  and if not we loop, checking to see if the capture thread has been asked to terminate.
+
+  If Mono.Posix isn't available we fall back to the old way where we hope that a packet
+  arrives. This may hang an application on shutdown though if teh capture thread isn't terminated
+  but there isn't a real easy way to work around that that I'm aware of.
+  
 v2.3.0 - 20100101
 - Expose PcapOfflineDevice(string pcapFileName) constructor and document the
   Pcap.GetPcapOfflineDevice() method.
