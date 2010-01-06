@@ -7,7 +7,6 @@
     <ProjectGuid>{7E5902D4-B114-4797-A8BB-22F621879B3F}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example7.DumpToFile</AssemblyName>

@@ -7,7 +7,6 @@
     <ProjectGuid>{2B5462B9-068B-46E8-B139-E3B9211A48B1}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example3.BasicCap</AssemblyName>

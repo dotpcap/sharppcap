@@ -7,7 +7,6 @@
     <ProjectGuid>{5A500C6C-2195-471E-9B15-11A0AE1E0AC8}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example8.ReadFile</AssemblyName>

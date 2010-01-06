@@ -7,7 +7,6 @@
     <ProjectGuid>{0C90249C-27B2-405D-A375-4729E8420AFD}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example5.PcapFilter</AssemblyName>

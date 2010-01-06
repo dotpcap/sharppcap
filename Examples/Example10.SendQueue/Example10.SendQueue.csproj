@@ -7,7 +7,6 @@
     <ProjectGuid>{BBF3DECE-E4F5-44BE-BE8C-3016202B17ED}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example10.SendQueue</AssemblyName>

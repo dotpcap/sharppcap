@@ -7,7 +7,6 @@
     <ProjectGuid>{E8EDD26F-B03A-4CDD-B80C-664C7792F56E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example9.SendPacket</AssemblyName>

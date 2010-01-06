@@ -7,7 +7,6 @@
     <ProjectGuid>{EF2ADF08-1333-45D4-BD63-8526CDB22E6D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example12.PacketManipulation</AssemblyName>

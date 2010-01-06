@@ -7,7 +7,6 @@
     <ProjectGuid>{853D91B2-F70A-4BDA-9297-E9316F50807E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>App.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Example11.Statistics</AssemblyName>
