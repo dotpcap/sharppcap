@@ -206,7 +206,6 @@ namespace SharpPcap.Packets
             {
                 return IPHeader;
             }
-
         }
 
         /// <summary> Fetch the IP data as a byte array.</summary>
@@ -288,7 +287,6 @@ namespace SharpPcap.Packets
                     return (ChecksumUtils.OnesSum(Bytes, _ethPayloadOffset, IPHeaderLength) == 0xffff);
                 }
             }
-
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
