@@ -830,7 +830,7 @@ namespace SharpPcap
         /// Helper method for ensuring we are running in winpcap. Throws
         /// a PcapWinPcapRequiredException() if not on a windows platform
         /// </summary>
-        private void ThrowIfNotWinPcap()
+        internal static void ThrowIfNotWinPcap()
         {
             if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
                (Environment.OSVersion.Platform != PlatformID.Win32Windows))

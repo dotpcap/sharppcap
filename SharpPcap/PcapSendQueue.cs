@@ -27,20 +27,23 @@ using SharpPcap.Packets;
 namespace SharpPcap
 {
     /// <summary>
-    /// Summary description for PcapSendQueue.
+    /// Interface to the WinPcap send queue extension methods
     /// </summary>
     public class PcapSendQueue
     {
         IntPtr m_queue = IntPtr.Zero;
 
         /// <summary>
-        /// Creates and allocates a new PcapSendQueue and 
+        /// Creates and allocates a new PcapSendQueue
         /// </summary>
         /// <param name="memSize">
         /// The maximun amount of memory (in bytes) 
         /// to allocate for the queue</param>
         public PcapSendQueue(int memSize)
         {
+            // ensure that we are running under winpcap
+            PcapDevice.ThrowIfNotWinPcap();
+
             m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)
                 throw new PcapException("Error creating PcapSendQueue");
