@@ -199,7 +199,7 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Open the device with default values of: promiscuous_mode=false, read_timeout=1000
+        /// Open the device with default values of: promiscuous_mode = false, read_timeout = 1000
         /// To start capturing call the 'StartCapture' function
         /// </summary>
         public virtual void Open()
