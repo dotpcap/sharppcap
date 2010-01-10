@@ -4,15 +4,8 @@ using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example6
 {
-    /// <summary>
-    /// Basic capture example
-    /// </summary>
     public class DumpTCP
     {
-        /// <summary>
-        /// Basic capture example
-        /// </summary>
-        [STAThread]
         public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;
@@ -21,7 +14,7 @@ namespace SharpPcap.Test.Example6
             Console.WriteLine();
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
+            var devices = PcapDeviceList.Instance;
 
             /*If no device exists, print error */
             if(devices.Count<1)

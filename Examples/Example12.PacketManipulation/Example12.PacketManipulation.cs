@@ -14,7 +14,6 @@ namespace Example12.PacketManipulation
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread]
         static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;
@@ -23,7 +22,7 @@ namespace Example12.PacketManipulation
             Console.WriteLine();
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
+            var devices = PcapDeviceList.Instance;
 
             /*If no device exists, print error */
             if(devices.Count<1)

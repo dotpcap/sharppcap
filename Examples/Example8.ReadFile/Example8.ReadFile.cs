@@ -3,15 +3,8 @@ using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example8
 {
-    /// <summary>
-    /// Basic capture example
-    /// </summary>
     public class DumpTCP
     {
-        /// <summary>
-        /// Basic capture example
-        /// </summary>
-        [STAThread]
         public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;

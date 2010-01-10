@@ -46,7 +46,7 @@ namespace SharpPcap.Test.Example2
             Console.WriteLine();
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = Pcap.GetAllDevices();
+            var devices = PcapDeviceList.Instance;
 
             /*If no device exists, print error */
             if(devices.Count<1)

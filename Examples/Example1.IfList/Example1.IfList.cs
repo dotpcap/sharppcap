@@ -11,7 +11,6 @@ namespace SharpPcap.Test.Example1
         /// <summary>
         /// Obtaining the device list
         /// </summary>
-        [STAThread]
         public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;

@@ -8,10 +8,6 @@ namespace SharpPcap.Test.Example3
     /// </summary>
     public class BasicCap
     {
-        /// <summary>
-        /// Basic capture example
-        /// </summary>
-        [STAThread]
         public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;
@@ -19,7 +15,7 @@ namespace SharpPcap.Test.Example3
             Console.WriteLine("SharpPcap {0}, Example3.BasicCap.cs", ver);
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
+            var devices = PcapDeviceList.Instance;
 
             /*If no device exists, print error */
             if(devices.Count<1)
@@ -89,7 +85,7 @@ namespace SharpPcap.Test.Example3
             uint len = e.Packet.PcapHeader.PacketLength;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
-            Console.WriteLine(e.Packet.ToColoredString(true));
+            Console.WriteLine(e.Packet.ToString());
         }
     }
 }

@@ -5,14 +5,13 @@ using SharpPcap.Packets;
 namespace SharpPcap.Test.Example10
 {
     /// <summary>
-    /// Basic capture example with no callback
+    /// Example using the WinPcap specific feature of send queues
     /// </summary>
     public class SendQueues
     {
         /// <summary>
         /// Basic capture example
         /// </summary>
-        [STAThread]
         public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;
@@ -24,11 +23,12 @@ namespace SharpPcap.Test.Example10
             string capFile = Console.ReadLine();
 
             PcapDevice device;
-            
+
             try
             {
                 //Get an offline file pcap device
-                device = SharpPcap.Pcap.GetPcapOfflineDevice( capFile );
+                device = new PcapOfflineDevice(capFile);
+
                 //Open the device for capturing
                 device.Open();
             } 
@@ -73,7 +73,7 @@ namespace SharpPcap.Test.Example10
 
             int i=0;
 
-            List<PcapDevice> devices = SharpPcap.Pcap.GetAllDevices();
+            var devices = PcapDeviceList.Instance;
             /* Scan the list printing every entry */
             foreach(PcapDevice dev in devices)
             {
