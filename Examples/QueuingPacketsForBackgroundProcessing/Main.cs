@@ -55,12 +55,11 @@ namespace QueuingPacketsForBackgroundProcessing
         /// </summary>
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-
-            /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}", ver);
 
-            /* If no device exists, print error */
+            // If no device exists, print error
             if(PcapDeviceList.Instance.Count < 1)
             {
                 Console.WriteLine("No device found on this machine");
@@ -74,10 +73,9 @@ namespace QueuingPacketsForBackgroundProcessing
 
             int i=0;
 
-            /* Scan the list printing every entry */
+            // Print out all devices
             foreach(PcapDevice dev in PcapDeviceList.Instance)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
@@ -94,12 +92,10 @@ namespace QueuingPacketsForBackgroundProcessing
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+                new SharpPcap.Pcap.PacketArrivalEvent( device_OnPacketArrival );
 
             // Open the device for capturing
-            // true -- means promiscuous mode
-            // 1000 -- means a read wait of 1000ms
-            device.Open(true, 1000);
+            device.Open();
 
             Console.WriteLine();
             Console.WriteLine("-- Listenning on {0}, hit 'Enter' to stop...",
@@ -123,7 +119,7 @@ namespace QueuingPacketsForBackgroundProcessing
             // wait for the background thread to terminate
             backgroundThread.Join();
 
-            // print out the device statistics
+            // Print out the device statistics
             Console.WriteLine(device.Statistics().ToString());
 
             // Close the pcap device
@@ -133,14 +129,14 @@ namespace QueuingPacketsForBackgroundProcessing
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
         {
             // print out periodic statistics about this device
-            var Now = DateTime.Now; // cache Now for minor reduction in cpu overhead
+            var Now = DateTime.Now; // cache 'DateTime.Now' for minor reduction in cpu overhead
             var interval = Now - LastStatisticsOutput;
             if(interval > LastStatisticsInterval)
             {
-                Console.WriteLine("device_PcapOnPacketArrival: " + e.Device.Statistics());
+                Console.WriteLine("device_OnPacketArrival: " + e.Device.Statistics());
                 LastStatisticsOutput = Now;
             }
 

@@ -7,31 +7,29 @@ namespace SharpPcap.Test.Example9
     {
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
-            Console.WriteLine("SharpPcap {0}, Example9.SendPacket.cs", ver);
-            Console.WriteLine();
+            Console.WriteLine("SharpPcap {0}, Example9.SendPacket.cs\n", ver);
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the available devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
             }
@@ -45,9 +43,9 @@ namespace SharpPcap.Test.Example9
             Console.Write("-- This will send a random packet out this interface, "+
                 "continue? [YES|no]");
             string resp = Console.ReadLine().ToLower();
-            
-            //If user refused, exit program
-            if((resp!="")&&( !resp.StartsWith("y")))
+
+            // If user refused, exit program
+            if((resp!="") && ( !resp.StartsWith("y")))
             {
                 Console.WriteLine("Cancelled by user!");
                 return;

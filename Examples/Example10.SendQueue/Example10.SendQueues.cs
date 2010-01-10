@@ -7,18 +7,17 @@ namespace SharpPcap.Test.Example10
     /// <summary>
     /// Example using the WinPcap specific feature of send queues
     /// </summary>
-    public class SendQueues
+    public class WinPcapSendQueues
     {
         /// <summary>
         /// Basic capture example
         /// </summary>
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
-            Console.WriteLine("SharpPcap {0}, Example10.SendQueues.cs", ver);
+            Console.WriteLine("SharpPcap {0}, Example10.SendQueues.cs\n", ver);
 
-            Console.WriteLine();
             Console.Write("-- Please enter an input capture file name: ");
             string capFile = Console.ReadLine();
 
@@ -26,10 +25,10 @@ namespace SharpPcap.Test.Example10
 
             try
             {
-                //Get an offline file pcap device
+                // Get an offline file pcap device
                 device = new PcapOfflineDevice(capFile);
 
-                //Open the device for capturing
+                // Open the device for capturing
                 device.Open();
             } 
             catch(Exception e)
@@ -48,7 +47,7 @@ namespace SharpPcap.Test.Example10
             try
             {
                 //Go through all packets in the file and add to the queue
-                while( (packet=device.GetNextPacket()) != null )
+                while((packet = device.GetNextPacket()) != null )
                 {
                     if( !squeue.Add( packet ) )
                     {
@@ -63,9 +62,9 @@ namespace SharpPcap.Test.Example10
                 Console.WriteLine(e.Message);
                 return;
             }
-            
+
             Console.WriteLine("OK");
-            
+
             Console.WriteLine();
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
@@ -90,7 +89,7 @@ namespace SharpPcap.Test.Example10
 
             if(devices[i].PcapDataLink != device.PcapDataLink)
             {
-                Console.Write("Warning: the datalink of the capture"+
+                Console.Write("Warning: the datalink of the capture" +
                     " differs from the one of the selected interface, continue? [YES|no]");
                 resp = Console.ReadLine().ToLower();
 
@@ -108,7 +107,7 @@ namespace SharpPcap.Test.Example10
                 " this device, continue? [YES|no]");
             resp = Console.ReadLine().ToLower();
 
-            if((resp!="")&&( !resp.StartsWith("y")))
+            if((resp!="") && ( !resp.StartsWith("y")))
             {
                 Console.WriteLine("Cancelled by user!");
                 return;
@@ -129,6 +128,7 @@ namespace SharpPcap.Test.Example10
             {
                 Console.WriteLine( "Error: "+e.Message );
             }
+
             //Free the queue
             squeue.Dispose();
             Console.WriteLine("-- Queue is disposed.");

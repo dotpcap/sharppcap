@@ -45,16 +45,15 @@ namespace SharpPcap.Test.Example6
 
             //Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+                new SharpPcap.Pcap.PacketArrivalEvent( device_OnPacketArrival );
 
-            //Open the device for capturing
-            //true -- means promiscuous mode
-            //1000 -- means a read wait of 1000ms
-            device.Open(true, 1000);
+            // Open the device for capturing
+            // true -- means promiscuous mode
+            int readTimeoutMilliseconds = 1000;
+            device.Open(true, readTimeoutMilliseconds);
 
-            //tcpdump filter to capture only TCP/IP packets         
+            //tcpdump filter to capture only TCP/IP packets
             string filter = "ip and tcp";
-            //Associate the filter with this capture
             device.SetFilter( filter );
 
             Console.WriteLine();
@@ -65,12 +64,12 @@ namespace SharpPcap.Test.Example6
                 ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
                 device.Description);
 
-            //Start capture 'INFINTE' number of packets
+            // Start capture 'INFINTE' number of packets
             device.Capture( SharpPcap.Pcap.INFINITE );
 
-            //Close the pcap device
-            //(Note: this line will never be called since
-            // we're capturing infinite number of packets
+            // Close the pcap device
+            // (Note: this line will never be called since
+            //  we're capturing infinite number of packets
             device.Close();
         }
 
@@ -78,7 +77,7 @@ namespace SharpPcap.Test.Example6
         /// Prints the time, length, src ip, src port, dst ip and dst port
         /// for each TCP/IP packet received on the network
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
         {           
             if(e.Packet is TCPPacket)
             {               

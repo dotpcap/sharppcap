@@ -7,31 +7,29 @@ namespace SharpPcap.Test.Example7
     {
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
-            Console.WriteLine("SharpPcap {0}, Example7.DumpToFile.cs", ver);
-            Console.WriteLine();
+            Console.WriteLine("SharpPcap {0}, Example7.DumpToFile.cs\n", ver);
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the available devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
@@ -44,29 +42,27 @@ namespace SharpPcap.Test.Example7
 
             PcapDevice device = devices[i];
 
-            //Register our handler function to the 'packet arrival' event
+            // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent( device_PcapOnPacketArrival );
+                new SharpPcap.Pcap.PacketArrivalEvent( device_OnPacketArrival );
 
-            //Open the device for capturing
-            //true -- means promiscuous mode
-            //1000 -- means a read wait of 1000ms
-            device.Open(true, 1000);
+            // Open the device for capturing
+            device.Open();
 
-            //Open or create a capture output file
+            // Open or create a capture output file
             device.DumpOpen( capFile );
 
             Console.WriteLine();
             Console.WriteLine
-                ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
+                ("-- Listening on {0}, hit 'Ctrl-C' to exit...",
                 device.Description);
 
-            //Start capture 'INFINTE' number of packets
+            // Start capture 'INFINTE' number of packets
             device.Capture( SharpPcap.Pcap.INFINITE );
 
-            //Close the pcap device
-            //(Note: these lines will never be called since
-            // we're capturing infinite number of packets
+            // Close the pcap device
+            // (Note: these lines will never be called since
+            //  we're capturing infinite number of packets
             device.DumpFlush();
             device.DumpClose();
             device.Close();
@@ -75,9 +71,10 @@ namespace SharpPcap.Test.Example7
         /// <summary>
         /// Dumps each received packet to a pcap file
         /// </summary>
-        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
         {                       
             PcapDevice device = (PcapDevice)sender;
+
             //if device has a dump file opened
             if( device.DumpOpened )
             {

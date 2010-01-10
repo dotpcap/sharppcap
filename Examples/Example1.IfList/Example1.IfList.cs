@@ -13,27 +13,27 @@ namespace SharpPcap.Test.Example1
         /// </summary>
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
-            /* Retrieve the device list */
-            PcapDeviceList devices = PcapDeviceList.Instance;
+            // Retrieve the device list
+            var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine("\nThe following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------\n");
 
             /* Scan the list printing every entry */
             foreach(PcapDevice dev in devices)
                 Console.WriteLine("{0}\n",dev.ToString());
-            
+
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }

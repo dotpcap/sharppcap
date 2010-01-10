@@ -16,60 +16,58 @@ namespace Example12.PacketManipulation
         /// </summary>
         static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example12.PacketManipulation.cs", ver);
             Console.WriteLine();
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
+            // If no devices were found print an error
             if(devices.Count<1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the available devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
-                Console.WriteLine("{0}) {1}",i,dev.Description);
+                Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
             }
-            Console.WriteLine("{0}) {1}",i,"Read packets from offline pcap file");
+            Console.WriteLine("{0}) {1}", i, "Read packets from offline pcap file");
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            int choice = int.Parse( Console.ReadLine() );
-            
+            var choice = int.Parse( Console.ReadLine() );
+
             PcapDevice device =null;
             if(choice==i)
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 string capFile = Console.ReadLine();
-                device = SharpPcap.Pcap.GetPcapOfflineDevice(capFile);
+                device = new PcapOfflineDevice(capFile);
             }
             else
             {
                 device = devices[choice];
             }
-            
 
             //Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent(device_PcapOnPacketArrival);
+                new SharpPcap.Pcap.PacketArrivalEvent(device_OnPacketArrival);
 
-            //Open the device for capturing
-            //true -- means promiscuous mode
-            //1000 -- means a read wait of 1000ms
+            // Open the device for capturing
+            // true -- means promiscuous mode
+            // 1000 -- means a read wait of 1000ms
             device.Open(true, 1000);
 
             Console.WriteLine();
@@ -77,16 +75,16 @@ namespace Example12.PacketManipulation
                 ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
                 device.Description);
 
-            //Start capture 'INFINTE' number of packets
+            // Start capture 'INFINTE' number of packets
             device.Capture( SharpPcap.Pcap.INFINITE );
 
-            //Close the pcap device
-            //(Note: this line will never be called since
-            // we're capturing infinite number of packets
+            // Close the pcap device
+            // (Note: this line will never be called since
+            //  we're capturing infinite number of packets
             device.Close();
         }
 
-        private static void device_PcapOnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
         {
             if(e.Packet is EthernetPacket)
             {

@@ -11,31 +11,30 @@ namespace SharpPcap.Test.Example4
     {
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example4.BasicCapNoCallback.cs", ver);
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
@@ -46,10 +45,10 @@ namespace SharpPcap.Test.Example4
 
             PcapDevice device = devices[i];
 
-            //Open the device for capturing
-            //true -- means promiscuous mode
-            //1000 -- means a read wait of 1000ms
-            device.Open(true, 1000);
+            // Open the device for capturing
+            // true -- means promiscuous mode
+            int readTimeoutMilliseconds = 1000;
+            device.Open(true, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listenning on {0}...",
@@ -57,8 +56,8 @@ namespace SharpPcap.Test.Example4
 
             Packet packet;
 
-            //Keep capture packets using PcapGetNextPacket()
-            while( (packet=device.GetNextPacket()) != null )
+            // Capture packets using PcapGetNextPacket()
+            while( (packet = device.GetNextPacket()) != null )
             {
                 // Prints the time and length of each received packet
                 DateTime time = packet.PcapHeader.Date;
@@ -67,9 +66,12 @@ namespace SharpPcap.Test.Example4
                     time.Hour, time.Minute, time.Second, time.Millisecond, len);
             }
 
+            // Print out the device statistics
+            Console.WriteLine(device.Statistics().ToString());
+
             //Close the pcap device
             device.Close();
-            Console.WriteLine("-- Timeout (1000ms) elapsed, capture stopped, device closed.");
+            Console.WriteLine("-- Timeout elapsed, capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }

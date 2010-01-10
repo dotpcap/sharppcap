@@ -40,18 +40,17 @@ namespace SharpPcap.Test.Example2
     {
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
-            Console.WriteLine("SharpPcap {0}, Example2.ArpResolve.cs", ver);
-            Console.WriteLine();
+            Console.WriteLine("SharpPcap {0}, Example2.ArpResolve.cs\n", ver);
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
 
@@ -59,12 +58,11 @@ namespace SharpPcap.Test.Example2
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the available devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
@@ -77,6 +75,7 @@ namespace SharpPcap.Test.Example2
 
             System.Net.IPAddress ip;
 
+            // loop until a valid ip address is parsed
             while(true)
             {
                 Console.Write("-- Please enter IP address to be resolved by ARP: ");
@@ -85,12 +84,12 @@ namespace SharpPcap.Test.Example2
                 Console.WriteLine("Bad IP address format, please try again");
             }
 
-            //Create a new ARP resolver
-            //(for more info, see:
-            //http://www.tamirgal.com/home/SourceView.aspx?Item=SharpPcap&File=ARP.cs)
+            // Create a new ARP resolver
+            // (for more info, see:
+            // http://www.tamirgal.com/home/SourceView.aspx?Item=SharpPcap&File=ARP.cs)
             ARP arper = new ARP(device);
 
-            //print the resolved address
+            // print the resolved address
             Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
         }
     }

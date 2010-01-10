@@ -7,24 +7,24 @@ namespace SharpPcap.Test.Example11
     /// Stat collection capture example
     /// WinPcap specific feature
     /// </summary>
-    public class BasicCap
+    public class WinPcapStatisticsMode
     {
         /// <summary>
         /// Stat collection capture example
         /// </summary>
         public static void Main(string[] args)
         {
+            // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
-            /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example11.Statistics.cs", ver);
 
-            /* Retrieve the device list */
+            // Retrieve the device list
             var devices = PcapDeviceList.Instance;
 
-            /*If no device exists, print error */
-            if(devices.Count<1)
+            // If no devices were found print an error
+            if(devices.Count < 1)
             {
-                Console.WriteLine("No device found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
             
@@ -33,12 +33,11 @@ namespace SharpPcap.Test.Example11
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
-            /* Scan the list printing every entry */
+            // Print out the available devices
             foreach(PcapDevice dev in devices)
             {
-                /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
@@ -49,35 +48,36 @@ namespace SharpPcap.Test.Example11
 
             PcapDevice device = devices[i];
 
-            //Register our handler function to the 'pcap statistics' event
+            // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 
-                new Pcap.PcapStatisticsModeEvent( device_PcapOnPcapStatistics );
+                new Pcap.PcapStatisticsModeEvent( device_OnPcapStatistics );
 
-            //Open the device for capturing
-            //true -- means promiscuous mode
-            //1000 -- means stats will be collected 1000ms
-            device.Open(true, 1000);
+            // Open the device for capturing
+            device.Open();
 
-            //Handle TCP packets only
+            // Handle TCP packets only
             device.SetFilter( "tcp" );
 
-            //Set device to statistics mode
+            // Set device to statistics mode
             device.Mode = PcapDevice.PcapMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
                 device.Description);
 
-            //Start the capturing process
+            // Start the capturing process
             device.StartCapture();
 
-            //Wait for 'Enter' from the user.
+            // Wait for 'Enter' from the user.
             Console.ReadLine();
 
-            //Stop the capturing process
+            // Stop the capturing process
             device.StopCapture();
 
-            //Close the pcap device
+            // Print out the device statistics
+            Console.WriteLine(device.Statistics().ToString());
+
+            // Close the pcap device
             device.Close();
             Console.WriteLine("Capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
@@ -89,12 +89,13 @@ namespace SharpPcap.Test.Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_PcapOnPcapStatistics(object sender, PcapStatisticsModeEventArgs e)
+        private static void device_OnPcapStatistics(object sender, PcapStatisticsModeEventArgs e)
         {
-            /* Calculate the delay in microseconds from the last sample. */
-            /* This value is obtained from the timestamp that's associated with the sample. */
+            // Calculate the delay in microseconds from the last sample.
+            // This value is obtained from the timestamp that's associated with the sample.
             ulong delay = (e.Statistics.Seconds - oldSec) * 1000000 - oldUsec + e.Statistics.MicroSeconds;
-            /* Get the number of Bits per second */
+
+            // Get the number of Bits per second
             ulong bps = ((ulong)e.Statistics.RecievedBytes * 8 * 1000000) / delay;
             /*                                       ^       ^
                                                      |       |
@@ -105,18 +106,18 @@ namespace SharpPcap.Test.Example11
                         delay is expressed in microseconds --
             */
 
-            /* Get the number of Packets per second */
+            // Get the number of Packets per second
             ulong pps = ((ulong)e.Statistics.RecievedPackets * 1000000) / delay;
 
-            /* Convert the timestamp to readable format */
-            string ts = e.Statistics.Date.ToLongTimeString();
+            // Convert the timestamp to readable format
+            var ts = e.Statistics.Date.ToLongTimeString();
 
-            /* Print Statistics */
+            // Print Statistics
             Console.WriteLine("{0}: bps={1}, pps={2}", ts, bps, pps); 
 
             //store current timestamp
-            oldSec=e.Statistics.Seconds;
-            oldUsec=e.Statistics.MicroSeconds;
+            oldSec = e.Statistics.Seconds;
+            oldUsec = e.Statistics.MicroSeconds;
         }
     }
 }
