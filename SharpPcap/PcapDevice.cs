@@ -200,7 +200,7 @@ namespace SharpPcap
 
         /// <summary>
         /// Open the device with default values of: promiscuous_mode=false, read_timeout=1000
-        /// To start capturing call the 'PcapStartCapture' function
+        /// To start capturing call the 'StartCapture' function
         /// </summary>
         public virtual void Open()
         {
@@ -208,7 +208,7 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Open the device. To start capturing call the 'PcapStartCapture' function
+        /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
         /// <param name="promiscuous_mode">A value indicating wether to open the
         ///  device in promiscuous mode (true = capture *all* packets on the network,
@@ -219,7 +219,7 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Open the device. To start capturing call the 'PcapStartCapture' function
+        /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
         /// <param name="promiscuous_mode">A value indicating wether to open the
         ///  device in promiscuous mode (true = capture *all* packets on the network,
