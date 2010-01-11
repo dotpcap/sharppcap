@@ -50,9 +50,8 @@ namespace SharpPcap.Test.Example3
                 new PacketArrivalEventHandler( device_OnPacketArrival );
 
             // Open the device for capturing
-            // true -- means promiscuous mode
             int readTimeoutMilliseconds = 1000;
-            device.Open(true, readTimeoutMilliseconds);
+            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listenning on {0}, hit 'Enter' to stop...",

@@ -106,10 +106,12 @@ namespace SharpPcap
         /// <summary>
         /// Opens the device for capture
         /// </summary>
-        /// <param name="promiscuous_mode">This parameter
-        /// has no affect on this method since it's an 
-        /// offline device</param>
-        public override void Open(bool promiscuous_mode)
+        /// <param name="mode">
+        /// Parameter has no affect on this device since it is an offline device used
+        /// to read from a capture file
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        public override void Open(DeviceMode mode)
         {
             this.Open();
         }       
@@ -117,13 +119,15 @@ namespace SharpPcap
         /// <summary>
         /// Opens the device for capture
         /// </summary>
-        /// <param name="promiscuous_mode">This parameter
-        /// has no affect on this method since it's an 
-        /// offline device</param>
-        /// <param name="read_timeout">This parameter
-        /// has no affect on this method since it's an 
-        /// offline device</param>
-        public override void Open(bool promiscuous_mode, int read_timeout)
+        /// <param name="mode">
+        /// Parameter has no affect on this device since it is an offline device used
+        /// to read from a capture file
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout)
         {
             this.Open();
         }

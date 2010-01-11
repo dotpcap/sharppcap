@@ -103,7 +103,7 @@ namespace Test
 //          tcp.ComputeIPChecksum();
 //          tcp.ComputeTCPChecksum();
 
-            dev.Open(true, 20);
+            dev.Open(DeviceMode.Promiscuous, 20);
             
             //Set a filter to capture only replies
             //FIXME: PcapDevice doesn't have an IpAddress. Not sure if the more permissive

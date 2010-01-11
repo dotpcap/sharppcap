@@ -204,32 +204,32 @@ namespace SharpPcap
         /// </summary>
         public virtual void Open()
         {
-            this.Open(false);
+            this.Open(DeviceMode.Normal);
         }
 
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="promiscuous_mode">A value indicating wether to open the
-        ///  device in promiscuous mode (true = capture *all* packets on the network,
-        ///  including packets not for me)</param>
-        public virtual void Open(bool promiscuous_mode)
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        public virtual void Open(DeviceMode mode)
         {
-            this.Open( promiscuous_mode, 1000 );
+            const int readTimeoutMilliseconds = 1000;
+            this.Open(mode, readTimeoutMilliseconds);
         }
 
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="promiscuous_mode">A value indicating wether to open the
-        ///  device in promiscuous mode (true = capture *all* packets on the network,
-        ///  including packets not for me)</param>
-        /// <param name="read_timeout">The timeout in miliseconds to wait for a  packet arrival.</param>
-        public virtual void Open(bool promiscuous_mode, int read_timeout)
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public virtual void Open(DeviceMode mode, int read_timeout)
         {
-            short mode = 0;
-            if (promiscuous_mode) mode = 1;
-
             if ( !Opened )
             {
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
@@ -238,8 +238,8 @@ namespace SharpPcap
                     (   Name,           // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
                                             // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        mode,               // promiscuous mode
-                        (short)read_timeout,// read timeout                                             
+                        (short)mode,               // promiscuous mode
+                        (short)read_timeout,// read timeout
                         errbuf );           // error buffer
 
                 if ( PcapHandle == IntPtr.Zero)

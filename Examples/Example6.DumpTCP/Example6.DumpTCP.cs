@@ -48,9 +48,8 @@ namespace SharpPcap.Test.Example6
                 new PacketArrivalEventHandler( device_OnPacketArrival );
 
             // Open the device for capturing
-            // true -- means promiscuous mode
             int readTimeoutMilliseconds = 1000;
-            device.Open(true, readTimeoutMilliseconds);
+            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             //tcpdump filter to capture only TCP/IP packets
             string filter = "ip and tcp";

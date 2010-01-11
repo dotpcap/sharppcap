@@ -66,9 +66,8 @@ namespace Example12.PacketManipulation
                 new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
-            // true -- means promiscuous mode
-            // 1000 -- means a read wait of 1000ms
-            device.Open(true, 1000);
+            int readTimeoutMilliseconds = 1000;
+            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine

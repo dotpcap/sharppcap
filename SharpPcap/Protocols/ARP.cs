@@ -155,7 +155,7 @@ namespace SharpPcap.Protocols
             String arpFilter = "arp and ether dst " + localMAC.ToString();
 
             //open the device with 20ms timeout
-            device.Open(true, 20);
+            device.Open(DeviceMode.Promiscuous, 20);
             //set the filter
             device.SetFilter(arpFilter);
             //inject the packet to the wire

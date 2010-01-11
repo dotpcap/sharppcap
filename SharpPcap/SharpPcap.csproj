@@ -239,6 +239,7 @@
     <Compile Include="PacketArrivalEventHandler.cs" />
     <Compile Include="StatisticsModeEventHandler.cs" />
     <Compile Include="CaptureStoppedEventHandler.cs" />
+    <Compile Include="DeviceMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
