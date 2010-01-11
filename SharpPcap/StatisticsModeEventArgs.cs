@@ -9,11 +9,11 @@ namespace SharpPcap
 
         }
 
-        public PcapStatisticsModePacket Statistics
+        public StatisticsModePacket Statistics
         {
             get
             {
-                return new PcapStatisticsModePacket(base.Packet);
+                return new StatisticsModePacket(base.Packet);
             }
         }
     }

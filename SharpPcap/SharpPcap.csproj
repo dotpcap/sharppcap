@@ -182,7 +182,7 @@
     <Compile Include="SendQueue.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapStatisticsModePacket.cs">
+    <Compile Include="StatisticsModePacket.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Protocols\ARP.cs">
