@@ -32,26 +32,11 @@ namespace SharpPcap
     /// </summary>
     public class Pcap
     {
-        /// <summary>A delegate for Packet Arrival events</summary>
-        public delegate void PacketArrivalEvent(object sender, PcapCaptureEventArgs e);
-
-        /// <summary>
-        /// A delegate for delivering network statistics when using winpcap in
-        /// statistics mode
-        /// </summary>
-        public delegate void PcapStatisticsModeEvent(object sender, PcapStatisticsModeEventArgs e);
-
-        /// <summary>
-        /// A delegate for notifying of a capture stopped event
-        /// </summary>
-        public delegate void PcapCaptureStoppedEvent(object sender, bool error);
-
         /// <summary>Represents the infinite number for packet captures </summary>
         public const int INFINITE = -1;
 
         /// <summary>A string value that prefixes avery pcap device name </summary>
         internal const string PCAP_NAME_PREFIX = @"\Device\NPF_";
-
 
         /* interface is loopback */
         internal const uint     PCAP_IF_LOOPBACK                = 0x00000001;

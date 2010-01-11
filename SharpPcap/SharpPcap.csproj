@@ -236,6 +236,9 @@
     <Compile Include="PcapStatisticsException.cs" />
     <Compile Include="PcapWinPcapRequiredException.cs" />
     <Compile Include="PcapNotSupportedOnOfflineDeviceException.cs" />
+    <Compile Include="PacketArrivalEventHandler.cs" />
+    <Compile Include="StatisticsModeEventHandler.cs" />
+    <Compile Include="CaptureStoppedEventHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

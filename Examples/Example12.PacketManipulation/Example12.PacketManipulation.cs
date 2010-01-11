@@ -63,7 +63,7 @@ namespace Example12.PacketManipulation
 
             //Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent(device_OnPacketArrival);
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             // true -- means promiscuous mode

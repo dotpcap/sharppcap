@@ -92,18 +92,18 @@ namespace SharpPcap
         /// Fires whenever a new packet is received on this Pcap Device.<br/>
         /// This event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
-        public event Pcap.PacketArrivalEvent OnPacketArrival;
+        public event PacketArrivalEventHandler OnPacketArrival;
 
         /// <summary>
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
         /// This event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
-        public event Pcap.PcapStatisticsModeEvent OnPcapStatistics;
+        public event StatisticsModeEventHandler OnPcapStatistics;
 
         /// <summary>
         /// Fired when the capture process of this pcap device is stopped
         /// </summary>
-        public event Pcap.PcapCaptureStoppedEvent OnCaptureStopped;
+        public event CaptureStoppedEventHandler OnCaptureStopped;
 
         /// <summary>
         /// Gets the pcap name of this network device
@@ -310,14 +310,14 @@ namespace SharpPcap
             //Remove event handlers
             if ( OnPacketArrival != null)
             {
-                foreach(Pcap.PacketArrivalEvent pa in OnPacketArrival.GetInvocationList())
+                foreach(PacketArrivalEventHandler pa in OnPacketArrival.GetInvocationList())
                 {
                     OnPacketArrival -= pa;
                 }
             }
             if ( OnPcapStatistics != null)
             {
-                foreach(Pcap.PcapStatisticsModeEvent pse in OnPcapStatistics.GetInvocationList())
+                foreach(StatisticsModeEventHandler pse in OnPcapStatistics.GetInvocationList())
                 {
                     OnPcapStatistics -= pse;
                 }

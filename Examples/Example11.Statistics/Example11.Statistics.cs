@@ -50,7 +50,7 @@ namespace SharpPcap.Test.Example11
 
             // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 
-                new Pcap.PcapStatisticsModeEvent( device_OnPcapStatistics );
+                new StatisticsModeEventHandler( device_OnPcapStatistics );
 
             // Open the device for capturing
             device.Open();

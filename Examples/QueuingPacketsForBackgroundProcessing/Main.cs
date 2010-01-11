@@ -92,7 +92,7 @@ namespace QueuingPacketsForBackgroundProcessing
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
-                new SharpPcap.Pcap.PacketArrivalEvent( device_OnPacketArrival );
+                new PacketArrivalEventHandler( device_OnPacketArrival );
 
             // Open the device for capturing
             device.Open();
