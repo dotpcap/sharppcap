@@ -54,7 +54,7 @@ namespace SharpPcap
                 // free the stats memory so we don't leak before we throw
                 Marshal.FreeHGlobal(stat);
 
-                throw new PcapStatisticsException(error);
+                throw new StatisticsException(error);
             case PcapUnmanagedStructures.PcapStatReturnValue.Success:
                 // nothing to do upon success
                 break;

@@ -5,9 +5,9 @@ namespace SharpPcap
     /// <summary>
     /// thrown when pcap_stats() reports an error
     /// </summary>
-    public class PcapStatisticsException : PcapException
+    public class StatisticsException : PcapException
     {
-        public PcapStatisticsException(string msg) : base(msg)
+        public StatisticsException(string msg) : base(msg)
         {
         }
     }
