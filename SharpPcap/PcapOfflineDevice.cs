@@ -137,7 +137,7 @@ namespace SharpPcap
         /// </summary>
         public override void SetFilter( string filter )
         {
-            throw new PcapNotSupportedOnOfflineDeviceException("It is not possible to set a capture filter on an offline device");
+            throw new NotSupportedOnOfflineDeviceException("It is not possible to set a capture filter on an offline device");
         }
 
         /// <summary>
