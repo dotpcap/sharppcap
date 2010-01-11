@@ -835,7 +835,7 @@ namespace SharpPcap
             if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
                (Environment.OSVersion.Platform != PlatformID.Win32Windows))
             {
-                throw new PcapWinPcapRequiredException("only supported in winpcap");
+                throw new WinPcapRequiredException("only supported in winpcap");
             }
         }
 

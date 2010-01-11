@@ -234,7 +234,7 @@
     <Compile Include="PcapDeviceNotReadyException.cs" />
     <Compile Include="PcapStatistics.cs" />
     <Compile Include="PcapStatisticsException.cs" />
-    <Compile Include="PcapWinPcapRequiredException.cs" />
+    <Compile Include="WinPcapRequiredException.cs" />
     <Compile Include="PcapNotSupportedOnOfflineDeviceException.cs" />
     <Compile Include="PacketArrivalEventHandler.cs" />
     <Compile Include="StatisticsModeEventHandler.cs" />
