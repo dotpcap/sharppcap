@@ -51,9 +51,9 @@ namespace SharpPcap
         // Constants for address families
         // These are set in a Pcap static initializer because the values
         // differ between Windows and Linux
-        public readonly static int      AF_INET;
-        public readonly static int      AF_PACKET;
-        public readonly static int      AF_INET6;
+        internal readonly static int      AF_INET;
+        internal readonly static int      AF_PACKET;
+        internal readonly static int      AF_INET6;
 
         // Constants for pcap loop exit status.
         internal const int LOOP_USER_TERMINATED  = -2;
