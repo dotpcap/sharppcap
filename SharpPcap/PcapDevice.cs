@@ -17,7 +17,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 /* 
  * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
  * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
- * Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
+ * Copyright 2008-2010 Phillip Lemon <lucidcomms@gmail.com>
  */
 
 using System;
