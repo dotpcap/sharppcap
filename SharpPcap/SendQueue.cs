@@ -29,7 +29,7 @@ namespace SharpPcap
     /// <summary>
     /// Interface to the WinPcap send queue extension methods
     /// </summary>
-    public class PcapSendQueue
+    public class SendQueue
     {
         IntPtr m_queue = IntPtr.Zero;
 
@@ -39,7 +39,7 @@ namespace SharpPcap
         /// <param name="memSize">
         /// The maximun amount of memory (in bytes) 
         /// to allocate for the queue</param>
-        public PcapSendQueue(int memSize)
+        public SendQueue(int memSize)
         {
             // ensure that we are running under winpcap
             PcapDevice.ThrowIfNotWinPcap();

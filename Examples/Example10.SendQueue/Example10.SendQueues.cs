@@ -40,7 +40,7 @@ namespace SharpPcap.Test.Example10
             Console.Write("Queueing packets...");
 
             //Allocate a new send queue
-            PcapSendQueue squeue = new PcapSendQueue
+            SendQueue squeue = new SendQueue
                 ( (int)((PcapOfflineDevice)device).FileSize );
             Packet packet;
             

@@ -179,7 +179,7 @@
     <Compile Include="PcapOfflineDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapSendQueue.cs">
+    <Compile Include="SendQueue.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PcapStatisticsModePacket.cs">
