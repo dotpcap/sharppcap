@@ -170,9 +170,6 @@
     <Compile Include="PcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PcapException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -240,6 +237,8 @@
     <Compile Include="StatisticsModeEventHandler.cs" />
     <Compile Include="CaptureStoppedEventHandler.cs" />
     <Compile Include="DeviceMode.cs" />
+    <Compile Include="CaptureEventArgs.cs" />
+    <Compile Include="StatisticsModeEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

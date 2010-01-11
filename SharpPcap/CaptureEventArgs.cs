@@ -19,12 +19,11 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
  * Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
  */
-
 using System;
 
 namespace SharpPcap
 {
-    public class PcapCaptureEventArgs : EventArgs
+    public class CaptureEventArgs : EventArgs
     {
         private Packets.Packet packet;
         public Packets.Packet Packet
@@ -38,28 +37,10 @@ namespace SharpPcap
             get { return device; }
         }
 
-        public PcapCaptureEventArgs(Packets.Packet packet, PcapDevice device)
+        public CaptureEventArgs(Packets.Packet packet, PcapDevice device)
         {
             this.packet = packet;
             this.device = device;
         }
-
     }
-
-    public class PcapStatisticsModeEventArgs : PcapCaptureEventArgs
-    {        
-        public PcapStatisticsModeEventArgs(Packets.Packet packet, PcapDevice device) : base(packet, device)
-        {
-
-        }
-
-        public PcapStatisticsModePacket Statistics
-        {
-            get
-            {
-                return new PcapStatisticsModePacket(base.Packet);
-            }
-        }
-    }
-
 }

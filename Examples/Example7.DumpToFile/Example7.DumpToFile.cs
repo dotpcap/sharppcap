@@ -71,7 +71,7 @@ namespace SharpPcap.Test.Example7
         /// <summary>
         /// Dumps each received packet to a pcap file
         /// </summary>
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {                       
             PcapDevice device = (PcapDevice)sender;
 

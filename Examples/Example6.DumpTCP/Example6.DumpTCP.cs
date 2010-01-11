@@ -76,7 +76,7 @@ namespace SharpPcap.Test.Example6
         /// Prints the time, length, src ip, src port, dst ip and dst port
         /// for each TCP/IP packet received on the network
         /// </summary>
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {           
             if(e.Packet is TCPPacket)
             {               

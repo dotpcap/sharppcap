@@ -83,7 +83,7 @@ namespace Example12.PacketManipulation
             device.Close();
         }
 
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             if(e.Packet is EthernetPacket)
             {

@@ -129,7 +129,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             // print out periodic statistics about this device
             var Now = DateTime.Now; // cache 'DateTime.Now' for minor reduction in cpu overhead

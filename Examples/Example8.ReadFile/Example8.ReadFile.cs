@@ -54,7 +54,7 @@ namespace SharpPcap.Test.Example8
         /// <summary>
         /// Prints the source and dest MAC addresses of each received Ethernet frame
         /// </summary>
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {       
             if( e.Packet is EthernetPacket )
             {

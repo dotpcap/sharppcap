@@ -472,7 +472,7 @@ namespace SharpPcap
                 if(OnPacketArrival != null )
                 {
                     //Invoke the packet arrival event                                           
-                    OnPacketArrival(this, new PcapCaptureEventArgs(p, this));
+                    OnPacketArrival(this, new CaptureEventArgs(p, this));
                 }
             }
             //else mode is MODE_STAT

@@ -78,7 +78,7 @@ namespace SharpPcap.Test.Example3
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
-        private static void device_OnPacketArrival(object sender, PcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             DateTime time = e.Packet.PcapHeader.Date;
             uint len = e.Packet.PcapHeader.PacketLength;
