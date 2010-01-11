@@ -231,7 +231,7 @@
     <Compile Include="PcapInterface.cs" />
     <Compile Include="Packets\EthernetPacketType.cs" />
     <Compile Include="Packets\RawPacket.cs" />
-    <Compile Include="PcapDeviceNotReadyException.cs" />
+    <Compile Include="DeviceNotReadyException.cs" />
     <Compile Include="PcapStatistics.cs" />
     <Compile Include="PcapStatisticsException.cs" />
     <Compile Include="WinPcapRequiredException.cs" />

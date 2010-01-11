@@ -41,7 +41,7 @@ namespace Test
             try
             {
                 devices[0].SetFilter("tcp port 80");
-            } catch(PcapDeviceNotReadyException)
+            } catch(DeviceNotReadyException)
             {
                 caughtExpectedException = true;
             }

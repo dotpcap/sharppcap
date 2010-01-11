@@ -75,7 +75,7 @@ namespace Test
             {
                 // attempt to retrieve statistics from a closed device
                 devices[0].Statistics();
-            } catch(PcapDeviceNotReadyException)
+            } catch(DeviceNotReadyException)
             {
                 caughtException = true;
             }

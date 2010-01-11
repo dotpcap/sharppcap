@@ -158,7 +158,7 @@ namespace SharpPcap
             if (!Started)
             {
                 if (!Opened)
-                    throw new PcapDeviceNotReadyException("Can't start capture, the pcap device is not opened.");
+                    throw new DeviceNotReadyException("Can't start capture, the pcap device is not opened.");
 
                 shouldCaptureThreadStop = false;
                 captureThread = new Thread(new ThreadStart(this.CaptureThread));
@@ -211,7 +211,7 @@ namespace SharpPcap
         private void CaptureThread()
         {
             if (!Opened)
-                throw new PcapDeviceNotReadyException("Capture called before PcapDevice.Open()");
+                throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");
 
             bool isLibPcap = (Environment.OSVersion.Platform == PlatformID.Unix);
 

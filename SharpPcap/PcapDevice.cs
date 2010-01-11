@@ -660,7 +660,7 @@ namespace SharpPcap
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");
             if(!DumpOpened)
-                throw new PcapDeviceNotReadyException("Cannot dump packet, dump file is not opened");
+                throw new DeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
             //Marshal packet
             IntPtr pktPtr;
@@ -850,7 +850,7 @@ namespace SharpPcap
         {
             if(!Opened)
             {
-                throw new PcapDeviceNotReadyException(ExceptionString);
+                throw new DeviceNotReadyException(ExceptionString);
             }
         }
     }
