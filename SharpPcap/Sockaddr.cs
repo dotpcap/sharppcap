@@ -25,6 +25,10 @@ using System.Net.NetworkInformation;
 
 namespace SharpPcap
 {
+    /// <summary>
+    /// Container class that represents either an ip address or a mac address
+    /// An analog to the 'sockaddr_' series of structures
+    /// </summary>
     public class Sockaddr
     {
         public enum Type

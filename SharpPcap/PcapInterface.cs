@@ -27,7 +27,7 @@ using SharpPcap;
 
 namespace SharpPcap
 {
-    // managed version of pcap_if
+    // managed version of struct pcap_if
     // NOTE: we can't use pcap_if directly because the class contains
     //       a pointer to pcap_if that will be freed when the
     //       device memory is freed, so instead convert the unmanaged structure
