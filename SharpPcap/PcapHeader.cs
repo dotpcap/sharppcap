@@ -123,7 +123,7 @@ namespace SharpPcap
                 time = time.AddSeconds(Seconds); 
                 time = time.AddMilliseconds(MicroSeconds / 1000); 
                 return time.ToLocalTime();
-            }           
+            }
         }
 
         /// <summary>
