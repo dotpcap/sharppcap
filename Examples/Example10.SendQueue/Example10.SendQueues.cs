@@ -100,7 +100,11 @@ namespace SharpPcap.Test.Example10
                     return;
                 }
             }
+
+            // close the offline device
             device.Close();
+
+            // find the network device for sending the packets we read
             device = devices[i];
 
             Console.Write("This will transmit all queued packets through"+
