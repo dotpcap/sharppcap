@@ -38,18 +38,18 @@ namespace SharpPcap
         /// <summary>
         /// The working mode of a Pcap device
         /// </summary>
-        public enum CaptureMode
+        public enum CaptureMode : int
         {
             /// <summary>
             /// Set a Pcap device to capture packets, Capture mode
             /// </summary>
-            Packets,
+            Packets = 0,
 
             /// <summary>
             /// Set a Pcap device to report statistics, Statistics mode
             /// WinPcap only
             /// </summary>
-            Statistics
+            Statistics = 1
         };
 
         private PcapInterface m_pcapIf;
@@ -182,10 +182,7 @@ namespace SharpPcap
                 ThrowIfNotOpen("Mode");
 
                 m_pcapMode = value;
-                int mode = ( m_pcapMode == CaptureMode.Packets ? 
-                             Pcap.MODE_CAPT : 
-                             Pcap.MODE_STAT);
-                int result = SafeNativeMethods.pcap_setmode(this.PcapHandle ,mode);
+                int result = SafeNativeMethods.pcap_setmode(this.PcapHandle , (int)m_pcapMode);
                 if (result < 0)
                     throw new PcapException("Error setting PcapDevice mode. : " + LastError);
             }
@@ -236,12 +233,12 @@ namespace SharpPcap
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
                 PcapHandle = SafeNativeMethods.pcap_open_live
-                    (   Name,           // name of the device
+                    (   Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
-                                            // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (short)mode,               // promiscuous mode
-                        (short)read_timeout,// read timeout
-                        errbuf );           // error buffer
+                                                // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
+                        (short)mode,            // promiscuous mode
+                        (short)read_timeout,    // read timeout
+                        errbuf );               // error buffer
 
                 if ( PcapHandle == IntPtr.Zero)
                 {

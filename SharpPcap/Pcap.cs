@@ -37,12 +37,8 @@ namespace SharpPcap
 
         /* interface is loopback */
         internal const uint     PCAP_IF_LOOPBACK                = 0x00000001;
-        private  const int      MAX_ADAPTER_NAME_LENGTH         = 256;
-        private  const int      MAX_ADAPTER_DESCRIPTION_LENGTH  = 128;
         internal const int      MAX_PACKET_SIZE                 = 65536;
         internal const int      PCAP_ERRBUF_SIZE                = 256;
-        internal const int      MODE_CAPT                       =   0;
-        internal const int      MODE_STAT                       =   1;
 
         // Constants for address families
         // These are set in a Pcap static initializer because the values
