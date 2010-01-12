@@ -240,6 +240,7 @@
     <Compile Include="CaptureEventArgs.cs" />
     <Compile Include="StatisticsModeEventArgs.cs" />
     <Compile Include="SendQueueTransmitModes.cs" />
+    <Compile Include="CaptureMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

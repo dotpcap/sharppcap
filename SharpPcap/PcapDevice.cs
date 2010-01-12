@@ -35,23 +35,6 @@ namespace SharpPcap
     /// </summary>
     public partial class PcapDevice
     {
-        /// <summary>
-        /// The working mode of a Pcap device
-        /// </summary>
-        public enum CaptureMode : int
-        {
-            /// <summary>
-            /// Set a Pcap device to capture packets, Capture mode
-            /// </summary>
-            Packets = 0,
-
-            /// <summary>
-            /// Set a Pcap device to report statistics, Statistics mode
-            /// WinPcap only
-            /// </summary>
-            Statistics = 1
-        };
-
         private PcapInterface m_pcapIf;
         public PcapInterface Interface
         {
