@@ -25,7 +25,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using SharpPcap;
 
-namespace SharpPcap.Containers
+namespace SharpPcap
 {
     // managed version of pcap_if
     // NOTE: we can't use pcap_if directly because the class contains

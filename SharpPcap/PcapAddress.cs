@@ -22,7 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 
-namespace SharpPcap.Containers
+namespace SharpPcap
 {
     // managed version of pcap_addr
     public class PcapAddress

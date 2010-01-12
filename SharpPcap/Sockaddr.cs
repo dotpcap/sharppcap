@@ -23,7 +23,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
 
-namespace SharpPcap.Containers
+namespace SharpPcap
 {
     public class Sockaddr
     {
