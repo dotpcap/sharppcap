@@ -38,15 +38,16 @@ namespace SharpPcap
         /// <summary>
         /// The working mode of a Pcap device
         /// </summary>
-        public enum PcapMode
+        public enum CaptureMode
         {
             /// <summary>
-            /// Set a Pcap device to Capture mode (MODE_CAPT)
+            /// Set a Pcap device to capture packets, Capture mode
             /// </summary>
-            Capture,
+            Packets,
 
             /// <summary>
-            /// Set a Pcap device to Statistics mode (MODE_STAT)
+            /// Set a Pcap device to report statistics, Statistics mode
+            /// WinPcap only
             /// </summary>
             Statistics
         };
@@ -57,11 +58,11 @@ namespace SharpPcap
             get { return m_pcapIf; }
         }
 
-        private IntPtr      m_pcapAdapterHandle = IntPtr.Zero;
-        private IntPtr      m_pcapDumpHandle    = IntPtr.Zero;
-        private PcapMode    m_pcapMode          = PcapMode.Capture;
-        private int         m_pcapPacketCount   = Pcap.INFINITE;
-        private int         m_mask  = 0; //for filter expression
+        private IntPtr       m_pcapAdapterHandle = IntPtr.Zero;
+        private IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
+        private CaptureMode  m_pcapMode          = CaptureMode.Packets;
+        private int          m_pcapPacketCount   = Pcap.INFINITE;
+        private int          m_mask  = 0; //for filter expression
 
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
@@ -168,7 +169,7 @@ namespace SharpPcap
         /// <value>
         /// WinPcap specific property
         /// </value>
-        public virtual PcapMode Mode
+        public virtual CaptureMode Mode
         {
             get
             {
@@ -181,7 +182,7 @@ namespace SharpPcap
                 ThrowIfNotOpen("Mode");
 
                 m_pcapMode = value;
-                int mode = ( m_pcapMode==PcapMode.Capture ? 
+                int mode = ( m_pcapMode == CaptureMode.Packets ? 
                              Pcap.MODE_CAPT : 
                              Pcap.MODE_STAT);
                 int result = SafeNativeMethods.pcap_setmode(this.PcapHandle ,mode);
@@ -467,7 +468,7 @@ namespace SharpPcap
         private void SendPacketArrivalEvent(Packet p)
         {
             //If mode is MODE_CAP:
-            if(Mode==PcapMode.Capture)
+            if(Mode == CaptureMode.Packets)
             {
                 if(OnPacketArrival != null )
                 {
@@ -476,7 +477,7 @@ namespace SharpPcap
                 }
             }
             //else mode is MODE_STAT
-            else if(Mode==PcapMode.Statistics)
+            else if(Mode == CaptureMode.Statistics)
             {
                 if(OnPcapStatistics != null)
                 {

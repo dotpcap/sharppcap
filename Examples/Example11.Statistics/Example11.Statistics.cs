@@ -59,7 +59,7 @@ namespace SharpPcap.Test.Example11
             device.SetFilter( "tcp" );
 
             // Set device to statistics mode
-            device.Mode = PcapDevice.PcapMode.Statistics;
+            device.Mode = PcapDevice.CaptureMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
