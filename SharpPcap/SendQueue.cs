@@ -34,7 +34,7 @@ namespace SharpPcap
         IntPtr m_queue = IntPtr.Zero;
 
         /// <summary>
-        /// Creates and allocates a new PcapSendQueue
+        /// Creates and allocates a new SendQueue
         /// </summary>
         /// <param name="memSize">
         /// The maximun amount of memory (in bytes) 
@@ -136,22 +136,27 @@ namespace SharpPcap
         /// <summary>
         /// Send a queue of raw packets to the network. 
         /// </summary>
-        /// <param name="device">The PcapDevice on which to send the queue</param>
-        /// <param name="synchronize">determines if the send operation must be synchronized: 
-        /// if it is non-zero, the packets are sent respecting the timestamps, 
-        /// otherwise they are sent as fast as possible.</param>
-        /// <returns></returns>
-        public int Transmit( PcapDevice device, bool synchronize)
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="transmitMode">
+        /// A <see cref="SendQueueTransmitModes"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public int Transmit( PcapDevice device, SendQueueTransmitModes transmitMode)
         {
             if(!device.Opened)
-                throw new PcapException("Can't transmit queue, the pcap device is closed.");
+                throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");
 
             if(m_queue==IntPtr.Zero)
             {
                 throw new PcapException("Can't transmit queue, this queue is disposed");
             }
 
-            int sync = synchronize ? 1 : 0;         
+            int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
             return SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
         }
 

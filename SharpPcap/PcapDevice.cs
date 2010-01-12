@@ -759,10 +759,18 @@ namespace SharpPcap
         /// <summary>
         /// Sends all packets in a 'PcapSendQueue' out this pcap device
         /// </summary>
-        /// <param name="q">The 'PcapSendQueue' hodling the packets</param>
-        public int SendQueue( SendQueue q, bool sync )
+        /// <param name="q">
+        /// A <see cref="SendQueue"/>
+        /// </param>
+        /// <param name="transmitMode">
+        /// A <see cref="SendQueueTransmitModes"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public int SendQueue( SendQueue q, SendQueueTransmitModes transmitMode )
         {
-            return q.Transmit( this, sync );
+            return q.Transmit( this, transmitMode);
         }
 
         /// <summary>

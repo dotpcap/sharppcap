@@ -116,7 +116,7 @@ namespace SharpPcap.Test.Example10
             try
             {
                 Console.Write("Sending packets...");
-                int sent = device.SendQueue( squeue, true );
+                int sent = device.SendQueue(squeue, SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {
