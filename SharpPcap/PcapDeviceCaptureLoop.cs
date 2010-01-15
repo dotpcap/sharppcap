@@ -320,7 +320,7 @@ namespace SharpPcap
                             //       from causing premature exiting from the capture loop we only consider
                             //       exhausted events to cause an escape from the loop when they are from
                             //       offline devices, ie. files read from disk
-                            if(this is PcapOfflineDevice)
+                            if(this is OfflinePcapDevice)
                             {
                                 SendCaptureStoppedEvent(false);
                                 return;

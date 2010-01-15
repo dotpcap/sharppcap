@@ -31,16 +31,16 @@ namespace SharpPcap
     /// <summary>
     /// List of available Pcap Interfaces.
     /// </summary>
-    public class PcapDeviceList : ReadOnlyCollection<PcapDevice>
+    public class LivePcapDeviceList : ReadOnlyCollection<LivePcapDevice>
     {
-        private static PcapDeviceList instance;
-        public static PcapDeviceList Instance
+        private static LivePcapDeviceList instance;
+        public static LivePcapDeviceList Instance
         {
             get
             {
                 if(instance == null)
                 {
-                    instance = new PcapDeviceList();
+                    instance = new LivePcapDeviceList();
                 }
 
                 return instance;
@@ -55,17 +55,17 @@ namespace SharpPcap
         /// PcapDeviceList.
         /// </summary>
         /// <returns>
-        /// A <see cref="PcapDeviceList"/>
+        /// A <see cref="LivePcapDeviceList"/>
         /// </returns>
-        public static PcapDeviceList New()
+        public static LivePcapDeviceList New()
         {
-            return new PcapDeviceList();
+            return new LivePcapDeviceList();
         }
 
         /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
-        private PcapDeviceList() : base(new List<PcapDevice>())
+        private LivePcapDeviceList() : base(new List<LivePcapDevice>())
         {
             Refresh();
         }
@@ -76,12 +76,12 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="List"/>
         /// </returns>
-        private static List<PcapDevice> GetDevices()
+        private static List<LivePcapDevice> GetDevices()
         {
-            var deviceList = new List<PcapDevice>();
+            var deviceList = new List<LivePcapDevice>();
 
-            IntPtr devicePtr = IntPtr.Zero;
-            StringBuilder errorBuffer = new StringBuilder(256);
+            var devicePtr = IntPtr.Zero;
+            var errorBuffer = new StringBuilder(256);
 
             int result = SafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
             if (result < 0)
@@ -96,7 +96,7 @@ namespace SharpPcap
                     (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
                                                     typeof(PcapUnmanagedStructures.pcap_if));
                 PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
-                deviceList.Add(new PcapDevice(pcap_if));
+                deviceList.Add(new LivePcapDevice(pcap_if));
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
             SafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
@@ -104,7 +104,7 @@ namespace SharpPcap
             // go through the network interfaces to populate the mac address
             // for each of the devices
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-            foreach(PcapDevice device in deviceList)
+            foreach(LivePcapDevice device in deviceList)
             {
                 foreach(NetworkInterface adapter in nics)
                 {
@@ -168,7 +168,7 @@ namespace SharpPcap
                 }
 
                 // find items that we have that the current list is missing
-                var itemsToRemove = new List<PcapDevice>();
+                var itemsToRemove = new List<LivePcapDevice>();
                 foreach(var existingItem in base.Items)
                 {
                     bool found = false;
@@ -200,7 +200,7 @@ namespace SharpPcap
 
         #region PcapDevice Indexers
         /// <param name="Name">The name or description of the pcap interface to get.</param>
-        public PcapDevice this[string Name]
+        public LivePcapDevice this[string Name]
         {
             get
             {
@@ -208,9 +208,9 @@ namespace SharpPcap
                 // with other methods
                 lock(this)
                 {
-                    List<PcapDevice> devices = (List<PcapDevice>)base.Items;
-                    PcapDevice dev = devices.Find(delegate(PcapDevice i) { return i.Name == Name; });
-                    PcapDevice result = dev ?? devices.Find(delegate(PcapDevice i) { return i.Description == Name; });
+                    var devices = (List<LivePcapDevice>)base.Items;
+                    var dev = devices.Find(delegate(LivePcapDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate(LivePcapDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

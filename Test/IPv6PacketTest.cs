@@ -39,7 +39,7 @@ namespace Test
         [Test]
         public void IPv6PacketTestParsing()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/ipv6_icmpv6_packet.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/ipv6_icmpv6_packet.pcap");
             dev.Open();                                                                           
 
             Packet p;
@@ -67,7 +67,7 @@ namespace Test
         [Test]
         public void TCPChecksumIPv6()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/ipv6_http.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
             dev.Open();
 
             Packet p;

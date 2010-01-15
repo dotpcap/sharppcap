@@ -167,7 +167,7 @@ namespace Test
         [Test]
         public void TestParsingKnownPackets()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/test_stream.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/test_stream.pcap");
             dev.Open();
 
             Packet p;

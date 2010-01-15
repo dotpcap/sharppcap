@@ -22,11 +22,11 @@ using System;
 
 namespace SharpPcap
 {
-    public class PcapStatisticsModeEventArgs : CaptureEventArgs
+    public class StatisticsModeEventArgs : CaptureEventArgs
     {        
-        public PcapStatisticsModeEventArgs(Packets.Packet packet, PcapDevice device) : base(packet, device)
+        public StatisticsModeEventArgs(Packets.Packet packet, LivePcapDevice device)
+            : base(packet, device)
         {
-
         }
 
         public StatisticsModePacket Statistics

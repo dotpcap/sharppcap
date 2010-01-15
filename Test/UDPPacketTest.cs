@@ -14,7 +14,7 @@ namespace Test
             Packet p;
             UDPPacket u;
 
-            var dev = new PcapOfflineDevice("../../capture_files/udp_dns_request_response.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/udp_dns_request_response.pcap");
             dev.Open();
 
             // check the first packet

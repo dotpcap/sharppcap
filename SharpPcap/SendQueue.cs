@@ -146,7 +146,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public int Transmit( PcapDevice device, SendQueueTransmitModes transmitMode)
+        public int Transmit( LivePcapDevice device, SendQueueTransmitModes transmitMode)
         {
             if(!device.Opened)
                 throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");

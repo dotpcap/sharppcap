@@ -29,7 +29,7 @@ namespace SharpPcap
     /// <summary>
     /// Capture packets from an offline pcap file
     /// </summary>
-    public class PcapOfflineDevice : PcapDevice
+    public class OfflinePcapDevice : PcapDevice
     {
         private string m_pcapFile;
 
@@ -44,11 +44,14 @@ namespace SharpPcap
         /// pcap files
         /// </summary>
         /// <param name="pcapFile"></param>
-        public PcapOfflineDevice(string pcapFile)
+        public OfflinePcapDevice(string pcapFile)
         {
             m_pcapFile = pcapFile;
         }
 
+        /// <value>
+        /// The name of the capture file
+        /// </value>
         public override string Name
         {
             get
@@ -57,6 +60,9 @@ namespace SharpPcap
             }
         }
 
+        /// <value>
+        /// Description of the device
+        /// </value>
         public override string Description
         {
             get
@@ -65,6 +71,9 @@ namespace SharpPcap
             }
         }
 
+        /// <value>
+        /// Number of bytes in the capture file
+        /// </value>
         public long FileSize
         {
             get
@@ -72,7 +81,6 @@ namespace SharpPcap
                 return new FileInfo( Name ).Length;
             }
         }
-
 
         /// <summary>
         /// The underlying pcap file name
@@ -87,68 +95,20 @@ namespace SharpPcap
         /// </summary>
         public override void Open()
         {
-            //holds errors
+            // holds errors
             StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
-            //opens offline pcap file
+            // opens offline pcap file
             IntPtr adapterHandle = SafeNativeMethods.pcap_open_offline( this.Name, errbuf);
 
-            //handle error
+            // handle error
             if ( adapterHandle == IntPtr.Zero)
             {
                 string err = "Unable to open offline adapter: " + errbuf.ToString();
                 throw new PcapException( err );
             }
 
-            //set the local handle
+            // set the local handle
             this.PcapHandle = adapterHandle;
-        }
-
-        /// <summary>
-        /// Opens the device for capture
-        /// </summary>
-        /// <param name="mode">
-        /// Parameter has no affect on this device since it is an offline device used
-        /// to read from a capture file
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        public override void Open(DeviceMode mode)
-        {
-            this.Open();
-        }       
-
-        /// <summary>
-        /// Opens the device for capture
-        /// </summary>
-        /// <param name="mode">
-        /// Parameter has no affect on this device since it is an offline device used
-        /// to read from a capture file
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public override void Open(DeviceMode mode, int read_timeout)
-        {
-            this.Open();
-        }
-
-        /// <summary>
-        /// Setting a capture filter on this offline device is not supported
-        /// </summary>
-        public override void SetFilter( string filter )
-        {
-            throw new NotSupportedOnOfflineDeviceException("It is not possible to set a capture filter on an offline device");
-        }
-
-        /// <summary>
-        /// Statistics are not supported for savefiles
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PcapStatistics"/>
-        /// </returns>
-        public override PcapStatistics Statistics ()
-        {
-            throw new PcapException("No statistics are stored in savefiles");
         }
     }
 }

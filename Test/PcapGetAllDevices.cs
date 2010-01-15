@@ -11,7 +11,7 @@ namespace Test
         [Test]
         public void PcapGetAllDevicesTest()
         {
-            List<PcapDevice> devices = Pcap.GetAllDevices();
+            List<LivePcapDevice> devices = Pcap.GetAllDevices();
 
             if(devices.Count == 0)
             {
@@ -22,7 +22,7 @@ namespace Test
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            foreach(PcapDevice d in devices)
+            foreach(LivePcapDevice d in devices)
             {
                 Console.WriteLine(d.ToString());
             }

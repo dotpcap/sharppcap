@@ -25,7 +25,7 @@ namespace Test
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            PcapDevice dev = null;
+            LivePcapDevice dev = null;
             foreach(var d in devices)
             {
                 Console.WriteLine(d.ToString());

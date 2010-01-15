@@ -49,7 +49,7 @@ namespace Test
         [Test]
         public void ParsingArpPacketRequestResponse()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/arp_request_response.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/arp_request_response.pcap");
             dev.Open();                                                                           
 
             Packet p;

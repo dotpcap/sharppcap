@@ -68,7 +68,7 @@ namespace SharpPcap
             {
             case PcapUnmanagedStructures.PcapStatReturnValue.Error:
                 // retrieve the error information
-                var error = PcapDevice.GetLastError(pcap_t);
+                var error = LivePcapDevice.GetLastError(pcap_t);
 
                 // free the stats memory so we don't leak before we throw
                 Marshal.FreeHGlobal(stat);

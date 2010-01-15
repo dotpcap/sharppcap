@@ -22,7 +22,7 @@ namespace Example12.PacketManipulation
             Console.WriteLine();
 
             // Retrieve the device list
-            var devices = PcapDeviceList.Instance;
+            var devices = LivePcapDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count<1)
@@ -38,7 +38,7 @@ namespace Example12.PacketManipulation
             int i = 0;
 
             // Print out the available devices
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
             {
                 Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
@@ -54,7 +54,7 @@ namespace Example12.PacketManipulation
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 string capFile = Console.ReadLine();
-                device = new PcapOfflineDevice(capFile);
+                device = new OfflinePcapDevice(capFile);
             }
             else
             {
@@ -66,12 +66,11 @@ namespace Example12.PacketManipulation
                 new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
-            int readTimeoutMilliseconds = 1000;
-            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            device.Open();
 
             Console.WriteLine();
             Console.WriteLine
-                ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
+                ("-- Listening on {0}, hit 'Ctrl-C' to exit...",
                 device.Description);
 
             // Start capture 'INFINTE' number of packets

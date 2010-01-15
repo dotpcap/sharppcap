@@ -14,72 +14,38 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
- * Copyright 2008-2010 Phillip Lemon <lucidcomms@gmail.com>
+/*
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
 using System;
-using System.Text;
-using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using System.Net.NetworkInformation;
 using SharpPcap.Packets;
 
 namespace SharpPcap
 {
     /// <summary>
-    /// Capture live packets from a network device
+    /// Base class for all pcap devices
     /// </summary>
-    public partial class PcapDevice
+    public abstract partial class PcapDevice
     {
-        private PcapInterface m_pcapIf;
-        public PcapInterface Interface
-        {
-            get { return m_pcapIf; }
-        }
+        protected PcapInterface m_pcapIf;
 
-        private IntPtr       m_pcapAdapterHandle = IntPtr.Zero;
-        private IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
-        private CaptureMode  m_pcapMode          = CaptureMode.Packets;
-        private int          m_pcapPacketCount   = Pcap.INFINITE;
-        private int          m_mask  = 0; //for filter expression
+        protected IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
+        protected IntPtr       m_pcapAdapterHandle = IntPtr.Zero;
+        protected int          m_pcapPacketCount   = Pcap.INFINITE;
+        private CaptureMode    m_pcapMode          = CaptureMode.Packets;
 
         /// <summary>
-        /// Constructs a new PcapDevice based on a 'pcapIf' struct
-        /// </summary>
-        /// <param name="pcapIf">A 'pcapIf' struct representing
-        /// the pcap device</param>
-        internal PcapDevice( PcapInterface pcapIf )
-        {
-            m_pcapIf = pcapIf;
-        }
-
-        /// <summary>
-        /// Default contructor for subclasses
-        /// </summary>
-        protected PcapDevice()
-        {
-        }
-
-        /// <summary>
-        /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
-        /// </summary>
-        ~PcapDevice()
-        {
-            this.Close();
-        }
-
-        /// <summary>
-        /// Fires whenever a new packet is received on this Pcap Device.<br/>
-        /// This event is invoked only when working in "PcapMode.Capture" mode.
+        /// Fires whenever a new packet is processed, either when the packet arrives
+        /// from the network device or when the packet is read from the on-disk file.<br/>
+        /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
         public event PacketArrivalEventHandler OnPacketArrival;
 
         /// <summary>
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
-        /// This event is invoked only when working in "PcapMode.Statistics" mode.
+        /// For network captured packets this event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
         public event StatisticsModeEventHandler OnPcapStatistics;
 
@@ -88,44 +54,44 @@ namespace SharpPcap
         /// </summary>
         public event CaptureStoppedEventHandler OnCaptureStopped;
 
-        /// <summary>
-        /// Gets the pcap name of this network device
-        /// </summary>
-        public virtual string Name
+        /// <value>
+        /// Low level pcap device values
+        /// </value>
+        public PcapInterface Interface
         {
-            get { return m_pcapIf.Name; }
-        }
-
-        public virtual ReadOnlyCollection<PcapAddress> Addresses
-        {
-            get { return new ReadOnlyCollection<PcapAddress>(m_pcapIf.Addresses); }
+            get { return m_pcapIf; }
         }
 
         /// <summary>
-        /// Gets the pcap description of this device
+        /// Return a value indicating if this adapter is opened
         /// </summary>
-        public virtual string Description
+        public virtual bool Opened
         {
-            get { return m_pcapIf.Description; }
-        }
-
-        public virtual uint Flags
-        {
-            get { return m_pcapIf.Flags; }
-        }
-
-        public virtual bool Loopback
-        {
-            get { return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
+            get{ return (PcapHandle != IntPtr.Zero); }
         }
 
         /// <summary>
-        /// The underlying pcap device handle
+        /// Gets a value indicating wether pcap dump file is already associated with this device
         /// </summary>
-        internal virtual IntPtr PcapHandle
+        public virtual bool DumpOpened
         {
-            get { return m_pcapAdapterHandle; }
-            set { m_pcapAdapterHandle = value; }
+            get { return m_pcapDumpHandle!=IntPtr.Zero; }
+        }
+
+        /// <summary>
+        /// Gets the name of the device
+        /// </summary>
+        public abstract string Name
+        {
+            get;
+        }
+
+        /// <value>
+        /// Description of the device
+        /// </value>
+        public abstract string Description
+        {
+            get;
         }
 
         /// <summary>
@@ -138,14 +104,6 @@ namespace SharpPcap
                 ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
                 return (LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
             }
-        }
-
-        /// <summary>
-        /// Return a value indicating if this adapter is opened
-        /// </summary>
-        public virtual bool Opened
-        {
-            get{return (PcapHandle != IntPtr.Zero);}
         }
 
         /// <value>
@@ -171,106 +129,41 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Gets a value indicating wether pcap dump file is already associated with this device
+        /// The underlying pcap device handle
         /// </summary>
-        public bool DumpOpened
+        internal virtual IntPtr PcapHandle
         {
-            get { return m_pcapDumpHandle!=IntPtr.Zero; }
+            get { return m_pcapAdapterHandle; }
+            set { m_pcapAdapterHandle = value; }
         }
 
         /// <summary>
-        /// Open the device with default values of: promiscuous_mode = false, read_timeout = 1000
-        /// To start capturing call the 'StartCapture' function
+        /// Retrieve the last error string for a given pcap_t* device
         /// </summary>
-        public virtual void Open()
-        {
-            this.Open(DeviceMode.Normal);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
+        /// <param name="deviceHandle">
+        /// A <see cref="IntPtr"/>
         /// </param>
-        public virtual void Open(DeviceMode mode)
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        internal static string GetLastError(IntPtr deviceHandle)
         {
-            const int readTimeoutMilliseconds = 1000;
-            this.Open(mode, readTimeoutMilliseconds);
+            IntPtr err_ptr = SafeNativeMethods.pcap_geterr(deviceHandle);
+            return Marshal.PtrToStringAnsi(err_ptr);
         }
 
         /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
+        /// The last pcap error associated with this pcap device
         /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout)
+        public string LastError
         {
-            if ( !Opened )
-            {
-                StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
-
-                PcapHandle = SafeNativeMethods.pcap_open_live
-                    (   Name,                   // name of the device
-                        Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
-                                                // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (short)mode,            // promiscuous mode
-                        (short)read_timeout,    // read timeout
-                        errbuf );               // error buffer
-
-                if ( PcapHandle == IntPtr.Zero)
-                {
-                    string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
-                    throw new PcapException( err );
-                }
-            }
+            get { return GetLastError(PcapHandle);  }
         }
 
         /// <summary>
-        /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
+        /// Open the device with class specific options
         /// </summary>
-        private const int disableBlocking = 0;
-        private const int enableBlocking = 1;
-        public bool NonBlockingMode
-        {
-            get
-            {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                int ret = SafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
-
-                // Errorbuf is only filled when ret = -1
-                if (ret == -1)
-                {
-                    string err = "Unable to set get blocking" + errbuf.ToString();
-                    throw new PcapException(err);
-                }
-
-                if(ret == enableBlocking)
-                    return true;
-                return false;
-            }
-            set 
-            {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
-                int block = disableBlocking;
-                if (value)
-                    block = enableBlocking;
-
-                int ret = SafeNativeMethods.pcap_setnonblock(PcapHandle, block, errbuf);
-
-                // Errorbuf is only filled when ret = -1
-                if (ret == -1)
-                {
-                    string err = "Unable to set non blocking" + errbuf.ToString();
-                    throw new PcapException(err);
-                }
-            }
-        }
+        public abstract void Open();
 
         /// <summary>
         /// Closes this adapter
@@ -305,6 +198,47 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Notify the OnPacketArrival delegates about a newly captured packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="SharpPcap.Packets.Packet"/>
+        /// </param>
+        private void SendPacketArrivalEvent(Packet p)
+        {
+            if(Mode == CaptureMode.Packets)
+            {
+                if(OnPacketArrival != null )
+                {
+                    //Invoke the packet arrival event                                           
+                    OnPacketArrival(this, new CaptureEventArgs(p, (LivePcapDevice)this));
+                }
+            }
+            else if(Mode == CaptureMode.Statistics)
+            {
+                if(OnPcapStatistics != null)
+                {
+                    //Invoke the pcap statistics event
+                    OnPcapStatistics(this, new StatisticsModeEventArgs(p, (LivePcapDevice)this));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notify the delegates that are subscribed to the capture stopped event
+        /// </summary>
+        /// <param name="error">
+        /// A <see cref="System.Boolean"/>
+        /// </param>
+        private void SendCaptureStoppedEvent(bool error)
+        {
+            if(OnCaptureStopped != null)
+            {
+                //Notify upper applications
+                OnCaptureStopped(this, error);
+            }
+        }
+
+        /// <summary>
         /// Gets the next packet captured on this device
         /// </summary>
         /// <returns>The next packet captured on this device</returns>
@@ -326,6 +260,7 @@ namespace SharpPcap
         {
             //Pointer to a packet info struct
             IntPtr header = IntPtr.Zero;
+
             //Pointer to a packet struct
             IntPtr data = IntPtr.Zero;
             int res = 0;
@@ -367,7 +302,7 @@ namespace SharpPcap
         /// packet parsing code is removed from SharpPcap when Packet.net is mature enough
         /// </summary>
         /// <param name="p">
-        /// A <see cref="RawPacket"/>
+        /// A <see cref="SharpPcap.Packets.RawPacket"/>
         /// </param>
         /// <returns>
         /// A <see cref="System.Int32"/>
@@ -413,7 +348,7 @@ namespace SharpPcap
             Packet p;
 
             // marshal the header
-            PcapHeader pcapHeader = new PcapHeader(header);
+            var pcapHeader = new PcapHeader(header);
 
             byte[] pkt_data = new byte[pcapHeader.CaptureLength];
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
@@ -431,7 +366,7 @@ namespace SharpPcap
             RawPacket p;
 
             // marshal the header
-            PcapHeader pcapHeader = new PcapHeader(header);
+            var pcapHeader = new PcapHeader(header);
 
             byte[] pkt_data = new byte[pcapHeader.CaptureLength];
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
@@ -444,160 +379,15 @@ namespace SharpPcap
             return p;
         }
 
-        private void SendPacketArrivalEvent(Packet p)
-        {
-            //If mode is MODE_CAP:
-            if(Mode == CaptureMode.Packets)
-            {
-                if(OnPacketArrival != null )
-                {
-                    //Invoke the packet arrival event                                           
-                    OnPacketArrival(this, new CaptureEventArgs(p, this));
-                }
-            }
-            //else mode is MODE_STAT
-            else if(Mode == CaptureMode.Statistics)
-            {
-                if(OnPcapStatistics != null)
-                {
-                    //Invoke the pcap statistics event
-                    OnPcapStatistics(this, new PcapStatisticsModeEventArgs(p, this));
-                }
-            }
-        }
-
-        private void SendCaptureStoppedEvent(bool error)
-        {
-            if(OnCaptureStopped!=null)
-            {
-                //Notify upper applications
-                OnCaptureStopped(this, error);
-            }
-        }
-
-        // If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
-        /// or unmanaged memory will be leaked
-        private static bool CompileFilter(IntPtr pcapHandle,
-                                          string filterExpression,
-                                          uint mask,
-                                          out IntPtr bpfProgram,
-                                          out string errorString)
-        {
-            int result;
-            string err = String.Empty;
-
-            bpfProgram = IntPtr.Zero;
-            errorString = null;
-
-            //Alocate an unmanaged buffer
-            bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
-
-            //compile the expressions
-            result = SafeNativeMethods.pcap_compile(pcapHandle,
-                                                    bpfProgram,
-                                                    filterExpression,
-                                                    1,
-                                                    mask);
-
-            if(result < 0)
-            {
-                err = GetLastError(pcapHandle);
-
-                // free up the program memory
-                Marshal.FreeHGlobal(bpfProgram);            
-                bpfProgram = IntPtr.Zero; // make sure not to pass out a valid pointer
-
-                // set the error string
-                errorString = err;
-
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Free memory allocated in CompileFilter()
-        /// </summary>
-        /// <param name="bpfProgram">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        private static void FreeBpfProgram(IntPtr bpfProgram)
-        {
-            // free any pcap internally allocated memory from pcap_compile()
-            SafeNativeMethods.pcap_freecode(bpfProgram);
-
-            // free allocated buffers
-            Marshal.FreeHGlobal(bpfProgram);            
-        }
-
-        /// <summary>
-        /// Returns true if the filter expression was able to be compiled into a
-        /// program without errors
-        /// </summary>
-        public static bool CheckFilter(string filterExpression,
-                                       out string errorString)
-        {
-            IntPtr bpfProgram;
-            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)LinkLayers.Ethernet10Mb, Pcap.MAX_PACKET_SIZE);
-
-            uint mask = 0;
-            if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))
-            {
-                SafeNativeMethods.pcap_close(fakePcap);
-                return false;
-            }
-
-            FreeBpfProgram(bpfProgram);
-
-            SafeNativeMethods.pcap_close(fakePcap);
-            return true;
-        }
-
-        /// <summary>
-        /// Compile a kernel level filtering expression, and associate the filter 
-        /// with this device. For more info on filter expression syntax, see:
-        /// http://www.winpcap.org/docs/docs31/html/group__language.html
-        /// </summary>
-        /// <param name="filterExpression">The filter expression to compile</param>
-        public virtual void SetFilter(string filterExpression)
-        {
-            int res;
-            IntPtr bpfProgram;
-            string errorString;
-
-            // pcap_setfilter() requires a valid pcap_t which isn't present if
-            // the device hasn't been opened
-            ThrowIfNotOpen("device is not open");
-
-            // attempt to compile the program
-            if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
-            {
-                string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
-                throw new PcapException(err);
-            }
-
-            //associate the filter with this device
-            res = SafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
-
-            // Free the program whether or not we were successful in setting the filter
-            // we don't want to leak unmanaged memory if we throw an exception.
-            FreeBpfProgram(bpfProgram);
-
-            //watch for errors
-            if(res < 0)
-            {
-                errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
-                throw new PcapException(errorString);
-            }
-        }
-
+        #region Dump methods
         /// <summary>
         /// Opens a file for packet writings
         /// </summary>
         /// <param name="fileName"></param>
         public void DumpOpen(string fileName)
         {
+            ThrowIfNotOpen("Dump requires an open device");
+
             if(DumpOpened)
             {
                 throw new PcapException("A dump file is already opened");
@@ -674,145 +464,7 @@ namespace SharpPcap
             Dump(p.Bytes, p.PcapHeader);
         }
 
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        public void SendPacket(Packet p)
-        {
-            SendPacket(p.Bytes);
-        }
-
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public void SendPacket(Packet p, int size)
-        {
-            SendPacket(p.Bytes, size);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        public void SendPacket(byte[] p)
-        {
-            SendPacket(p, p.Length);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public void SendPacket(byte[] p, int size)
-        {
-            ThrowIfNotOpen("Can't send packet, the device is closed");
-
-            if (size > p.Length)
-            {
-                throw new ArgumentException("Invalid packetSize value: "+size+
-                "\nArgument size is larger than the total size of the packet.");
-            }
-
-            if (p.Length > Pcap.MAX_PACKET_SIZE) 
-            {
-                throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
-            }
-
-            IntPtr p_packet = IntPtr.Zero;          
-            p_packet = Marshal.AllocHGlobal( size );
-            Marshal.Copy(p, 0, p_packet, size);     
-
-            int res = SafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
-            Marshal.FreeHGlobal(p_packet);
-            if(res < 0)
-            {
-                throw new PcapException("Can't send packet: " + LastError);
-            }
-        }
-
-        /// <summary>
-        /// Sends all packets in a 'PcapSendQueue' out this pcap device
-        /// </summary>
-        /// <param name="q">
-        /// A <see cref="SendQueue"/>
-        /// </param>
-        /// <param name="transmitMode">
-        /// A <see cref="SendQueueTransmitModes"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public int SendQueue( SendQueue q, SendQueueTransmitModes transmitMode )
-        {
-            return q.Transmit( this, transmitMode);
-        }
-
-        /// <summary>
-        /// Retrieves pcap statistics
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PcapStatistics"/>
-        /// </returns>
-        public virtual PcapStatistics Statistics()
-        {
-            // can only call PcapStatistics on an open device
-            ThrowIfNotOpen("device not open");
-
-            return new PcapStatistics(this.m_pcapAdapterHandle);
-        }
-
-        /// <value>
-        /// Set the kernel value buffer size in bytes
-        /// WinPcap extension
-        /// </value>
-        public int KernelBufferSize
-        {
-            set
-            {
-                ThrowIfNotWinPcap();
-                ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
-
-                int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
-                                                            value);
-                if(retval != 0)
-                {
-                    throw new System.InvalidOperationException("pcap_setbuff() failed");
-                }
-            }   
-        }
-
-        /// <summary>
-        /// Retrieve the last error string for a given pcap_t* device
-        /// </summary>
-        /// <param name="deviceHandle">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        internal static string GetLastError(IntPtr deviceHandle)
-        {
-            IntPtr err_ptr = SafeNativeMethods.pcap_geterr(deviceHandle);
-            return Marshal.PtrToStringAnsi(err_ptr);
-        }
-
-        /// <summary>
-        /// The last pcap error associated with this pcap device
-        /// </summary>
-        public string LastError
-        {
-            get { return GetLastError(PcapHandle);  }
-        }
-
-        public override string ToString ()
-        {
-            return "interface: " + m_pcapIf.ToString() + "\n";
-        }
+        #endregion
 
         /// <summary>
         /// Helper method for ensuring we are running in winpcap. Throws
@@ -834,12 +486,23 @@ namespace SharpPcap
         /// <param name="ExceptionString">
         /// A <see cref="System.String"/>
         /// </param>
-        private void ThrowIfNotOpen(string ExceptionString)
+        protected void ThrowIfNotOpen(string ExceptionString)
         {
             if(!Opened)
             {
                 throw new DeviceNotReadyException(ExceptionString);
             }
+        }
+
+        /// <summary>
+        /// Override the default ToString() implementation
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public override string ToString ()
+        {
+            return "interface: " + m_pcapIf.ToString() + "\n";
         }
     }
 }

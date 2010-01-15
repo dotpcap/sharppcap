@@ -65,7 +65,7 @@ namespace Test
         static int sourcePort = 2222;
         
 
-        public static void SendTcpSyn(PcapDevice dev)
+        public static void SendTcpSyn(LivePcapDevice dev)
         {
             byte[] bytes = new byte[54];
 
@@ -136,7 +136,7 @@ namespace Test
             Console.WriteLine();
 
             /* Retrieve the device list */
-            List<PcapDevice> devices = Pcap.GetAllDevices();
+            List<LivePcapDevice> devices = Pcap.GetAllDevices();
 
             /*If no device exists, print error */
             if(devices.Count<1)
@@ -152,7 +152,7 @@ namespace Test
             int i=0;
 
             /* Scan the list printing every entry */
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1}",i,dev.Description);
@@ -163,7 +163,7 @@ namespace Test
             Console.Write("-- Please choose a device for sending: ");
             i = int.Parse( Console.ReadLine() );
 
-            PcapDevice device = devices[i];
+            LivePcapDevice device = devices[i];
 
             SendTcpSyn(device);
         }

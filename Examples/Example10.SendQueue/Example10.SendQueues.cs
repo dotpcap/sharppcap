@@ -26,7 +26,7 @@ namespace SharpPcap.Test.Example10
             try
             {
                 // Get an offline file pcap device
-                device = new PcapOfflineDevice(capFile);
+                device = new OfflinePcapDevice(capFile);
 
                 // Open the device for capturing
                 device.Open();
@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example10
 
             //Allocate a new send queue
             SendQueue squeue = new SendQueue
-                ( (int)((PcapOfflineDevice)device).FileSize );
+                ( (int)((OfflinePcapDevice)device).FileSize );
             Packet packet;
             
             try
@@ -72,9 +72,9 @@ namespace SharpPcap.Test.Example10
 
             int i=0;
 
-            var devices = PcapDeviceList.Instance;
+            var devices = LivePcapDeviceList.Instance;
             /* Scan the list printing every entry */
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -120,7 +120,7 @@ namespace SharpPcap.Test.Example10
             try
             {
                 Console.Write("Sending packets...");
-                int sent = device.SendQueue(squeue, SendQueueTransmitModes.Synchronized);
+                int sent = ((LivePcapDevice)device).SendQueue(squeue, SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {

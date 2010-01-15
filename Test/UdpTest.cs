@@ -18,8 +18,8 @@ namespace Test
             byte[] bytes = new byte[MIN_PKT_LEN + data.Length];
             Array.Copy(data, 0, bytes, MIN_PKT_LEN, data.Length);
 
-            List<PcapDevice> devices = Pcap.GetAllDevices();
-            PcapDevice device = devices[2];
+            List<LivePcapDevice> devices = Pcap.GetAllDevices();
+            LivePcapDevice device = devices[2];
 
             UDPPacket packet = new UDPPacket(lLen, bytes);
 

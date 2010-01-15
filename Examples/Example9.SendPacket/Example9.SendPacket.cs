@@ -12,7 +12,7 @@ namespace SharpPcap.Test.Example9
             Console.WriteLine("SharpPcap {0}, Example9.SendPacket.cs\n", ver);
 
             // Retrieve the device list
-            var devices = PcapDeviceList.Instance;
+            var devices = LivePcapDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -28,7 +28,7 @@ namespace SharpPcap.Test.Example9
             int i = 0;
 
             // Print out the available devices
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
             {
                 Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
@@ -38,7 +38,7 @@ namespace SharpPcap.Test.Example9
             Console.Write("-- Please choose a device to send a packet on: ");
             i = int.Parse( Console.ReadLine() );
 
-            PcapDevice device = devices[i];
+            LivePcapDevice device = devices[i];
 
             Console.Write("-- This will send a random packet out this interface, "+
                 "continue? [YES|no]");

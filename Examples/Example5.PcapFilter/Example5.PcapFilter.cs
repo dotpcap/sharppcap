@@ -12,7 +12,7 @@ namespace SharpPcap.Test.Example5
             Console.WriteLine("SharpPcap {0}, Example5.PcapFilter.cs\n", ver);
 
             // Retrieve the device list
-            var devices = PcapDeviceList.Instance;
+            var devices = LivePcapDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -28,7 +28,7 @@ namespace SharpPcap.Test.Example5
             int i = 0;
 
             // Scan the list printing every entry
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
             {
                 Console.WriteLine("{0}) {1}",i,dev.Description);
                 i++;
@@ -38,7 +38,7 @@ namespace SharpPcap.Test.Example5
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse( Console.ReadLine() );
 
-            PcapDevice device = devices[i];
+            LivePcapDevice device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 

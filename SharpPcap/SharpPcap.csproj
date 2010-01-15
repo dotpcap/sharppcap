@@ -167,7 +167,7 @@
     <Compile Include="Packets\Util\Timeval.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapDevice.cs">
+    <Compile Include="LivePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PcapException.cs">
@@ -176,7 +176,7 @@
     <Compile Include="PcapHeader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapOfflineDevice.cs">
+    <Compile Include="OfflinePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SendQueue.cs">
@@ -241,6 +241,7 @@
     <Compile Include="StatisticsModeEventArgs.cs" />
     <Compile Include="SendQueueTransmitModes.cs" />
     <Compile Include="CaptureMode.cs" />
+    <Compile Include="PcapDevice.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

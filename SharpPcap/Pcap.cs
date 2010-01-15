@@ -100,24 +100,24 @@ namespace SharpPcap
         /// Depreciated: Backwards compatability wrapper around PcapDeviceList. Don't use this.
         /// </summary>
         /// <returns>A List of PcapDevices</returns>
-        public static List<PcapDevice> GetAllDevices()
+        public static List<LivePcapDevice> GetAllDevices()
         {
             System.Diagnostics.Debug.WriteLine("List<PcapDevice> GetAllDevices() is depreciated.  Use Pcap.Devices instead.");
-            return new List<PcapDevice>(PcapDeviceList.Instance);
+            return new List<LivePcapDevice>(LivePcapDeviceList.Instance);
         }
 
         /// <summary>
-        /// Depreciated: Backwards compatability wrapper around new PcapOfflineDevice(string PcapFileName). Don't use this.
+        /// Depreciated: Backwards compatability wrapper around new OfflinePcapDevice(string PcapFileName). Don't use this.
         /// <param name="pcapFileName">
         /// A <see cref="System.String"/>
         /// </param>
         /// <returns>
-        /// A <see cref="PcapOfflineDevice"/>
+        /// A <see cref="OfflinePcapDevice"/>
         /// </returns>
         /// </summary>
-        public static PcapOfflineDevice GetPcapOfflineDevice(string pcapFileName)
+        public static OfflinePcapDevice GetPcapOfflineDevice(string pcapFileName)
         {
-            return new PcapOfflineDevice( pcapFileName );
+            return new OfflinePcapDevice( pcapFileName );
         }
 
         /// <summary>
@@ -125,10 +125,10 @@ namespace SharpPcap
         /// </summary>
         /// <param name="pcapDeviceName">The name of a device.</param>
         /// <returns>A PcapDevice</returns>
-        public static PcapDevice GetPcapDevice( string pcapDeviceName )
+        public static LivePcapDevice GetPcapDevice( string pcapDeviceName )
         {
             System.Diagnostics.Debug.WriteLine("GetPcapDevice(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
-            return PcapDeviceList.Instance[pcapDeviceName];
+            return LivePcapDeviceList.Instance[pcapDeviceName];
         }
     }
 }

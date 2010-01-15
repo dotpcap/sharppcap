@@ -11,7 +11,7 @@ namespace Test
         [Test]
         public virtual void TCPData()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/tcp_with_extra_bytes.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/tcp_with_extra_bytes.pcap");
             dev.Open();
 
             Packet p;
@@ -36,7 +36,7 @@ namespace Test
         [Test]
         public virtual void Checksum()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/tcp.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/tcp.pcap");
             dev.Open();
 
             Packet p;
@@ -90,7 +90,7 @@ namespace Test
         [Test]
         public void TCPOptions()
         {
-            var dev = new PcapOfflineDevice("../../capture_files/tcp.pcap");
+            var dev = new OfflinePcapDevice("../../capture_files/tcp.pcap");
             dev.Open();
 
             Packet p;

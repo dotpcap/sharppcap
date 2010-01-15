@@ -18,7 +18,7 @@ namespace SharpPcap.Test.Example1
             Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
             // Retrieve the device list
-            var devices = PcapDeviceList.Instance;
+            var devices = LivePcapDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -31,7 +31,7 @@ namespace SharpPcap.Test.Example1
             Console.WriteLine("----------------------------------------------------\n");
 
             /* Scan the list printing every entry */
-            foreach(PcapDevice dev in devices)
+            foreach(LivePcapDevice dev in devices)
                 Console.WriteLine("{0}\n",dev.ToString());
 
             Console.Write("Hit 'Enter' to exit...");

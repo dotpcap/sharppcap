@@ -20,7 +20,7 @@ namespace SharpPcap.Test.Example8
             try
             {
                 // Get an offline device
-                device = new PcapOfflineDevice( capFile );
+                device = new OfflinePcapDevice( capFile );
 
                 // Open the device
                 device.Open();
