@@ -60,7 +60,7 @@ namespace SharpPcap.Test.Example6
                 ("-- The following tcpdump filter will be applied: \"{0}\"", 
                 filter);
             Console.WriteLine
-                ("-- Listenning on {0}, hit 'Ctrl-C' to exit...",
+                ("-- Listening on {0}, hit 'Ctrl-C' to exit...",
                 device.Description);
 
             // Start capture 'INFINTE' number of packets

@@ -98,7 +98,7 @@ namespace QueuingPacketsForBackgroundProcessing
             device.Open();
 
             Console.WriteLine();
-            Console.WriteLine("-- Listenning on {0}, hit 'Enter' to stop...",
+            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
                 device.Description);
 
             // Start the capturing process

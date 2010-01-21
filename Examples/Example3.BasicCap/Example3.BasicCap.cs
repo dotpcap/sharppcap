@@ -45,7 +45,7 @@ namespace SharpPcap.Test.Example3
 
             LivePcapDevice device = devices[i];
 
-            //Register our handler function to the 'packet arrival' event
+            // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
                 new PacketArrivalEventHandler( device_OnPacketArrival );
 
@@ -54,7 +54,7 @@ namespace SharpPcap.Test.Example3
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
-            Console.WriteLine("-- Listenning on {0}, hit 'Enter' to stop...",
+            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
                 device.Description);
 
             // Start the capturing process

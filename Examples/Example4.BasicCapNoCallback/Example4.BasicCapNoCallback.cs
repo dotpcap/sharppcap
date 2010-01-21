@@ -50,7 +50,7 @@ namespace SharpPcap.Test.Example4
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
-            Console.WriteLine("-- Listenning on {0}...",
+            Console.WriteLine("-- Listening on {0}...",
                 device.Description);
 
             Packet packet;
