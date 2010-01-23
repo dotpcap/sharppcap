@@ -224,7 +224,6 @@
     <Compile Include="PcapDeviceCaptureLoop.cs" />
     <Compile Include="PcapAddress.cs" />
     <Compile Include="Sockaddr.cs" />
-    <Compile Include="PcapDeviceList.cs" />
     <Compile Include="PcapInterface.cs" />
     <Compile Include="Packets\EthernetPacketType.cs" />
     <Compile Include="Packets\RawPacket.cs" />
@@ -242,6 +241,7 @@
     <Compile Include="SendQueueTransmitModes.cs" />
     <Compile Include="CaptureMode.cs" />
     <Compile Include="PcapDevice.cs" />
+    <Compile Include="LivePcapDeviceList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
