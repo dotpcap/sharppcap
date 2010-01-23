@@ -150,6 +150,20 @@ namespace SharpPcap
             get { return (captureThread != null); }
         }
 
+        // time we give the capture thread to stop before we assume that
+        // there is an error
+        private TimeSpan stopCaptureTimeout = new TimeSpan(0, 0, 1);
+
+        /// <summary>
+        /// Maximum time within which the capture thread must join the main thread (on 
+        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
+        /// </summary>
+        public TimeSpan StopCaptureTimeout
+        {
+            get { return stopCaptureTimeout; }
+            set { stopCaptureTimeout = value; }
+        }
+
         /// <summary>
         /// Starts the capturing process
         /// </summary>
@@ -174,18 +188,17 @@ namespace SharpPcap
         /// </summary>
         public virtual void StopCapture()
         {
-            TimeSpan joinTimeout = new TimeSpan(0, 0, 1);
             if (Started)
             {
                 shouldCaptureThreadStop = true;
-                if(!captureThread.Join(joinTimeout))
+                if(!captureThread.Join(StopCaptureTimeout))
                 {
                     captureThread.Abort();
                     captureThread = null;
                     var error = string.Format("captureThread was aborted after {0}, if you are" +
                                               " using Mono use a version newer than ~2.4 and ensure that" +
                                               " Mono.Posix is installed to enable smooth thread shutdown",
-                                              joinTimeout.ToString());
+                                              StopCaptureTimeout.ToString());
                     throw new PcapException(error);
                 }
 
