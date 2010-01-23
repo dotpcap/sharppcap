@@ -207,18 +207,20 @@ namespace SharpPcap
         {
             if(Mode == CaptureMode.Packets)
             {
-                if(OnPacketArrival != null )
+                var handler = OnPacketArrival;
+                if(handler != null )
                 {
-                    //Invoke the packet arrival event                                           
-                    OnPacketArrival(this, new CaptureEventArgs(p, (LivePcapDevice)this));
+                    //Invoke the packet arrival event
+                    handler(this, new CaptureEventArgs(p, (LivePcapDevice)this));
                 }
             }
             else if(Mode == CaptureMode.Statistics)
             {
-                if(OnPcapStatistics != null)
+                var handler = OnPcapStatistics;
+                if(handler != null)
                 {
                     //Invoke the pcap statistics event
-                    OnPcapStatistics(this, new StatisticsModeEventArgs(p, (LivePcapDevice)this));
+                    handler(this, new StatisticsModeEventArgs(p, (LivePcapDevice)this));
                 }
             }
         }
@@ -231,10 +233,10 @@ namespace SharpPcap
         /// </param>
         private void SendCaptureStoppedEvent(bool error)
         {
-            if(OnCaptureStopped != null)
+            var handler = OnCaptureStopped;
+            if(handler != null)
             {
-                //Notify upper applications
-                OnCaptureStopped(this, error);
+                handler(this, error);
             }
         }
 
@@ -331,7 +333,7 @@ namespace SharpPcap
                     p = MarshalRawPacket(header, data);
                 }
             }
-            return res;            
+            return res;
         }
 
         /// <summary>
