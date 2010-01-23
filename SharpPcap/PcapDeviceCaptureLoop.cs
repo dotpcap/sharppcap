@@ -71,6 +71,9 @@ namespace SharpPcap
         /// </returns>
         private static bool MonoUnixFound = false;
 
+        // if true then we are running under a unix platform so we must be using libpcap
+        private static bool isLibPcap = (Environment.OSVersion.Platform == PlatformID.Unix);
+
 #if !UseMonoUnixNativeDirectly
         // variables for unix dynamic invocation of Mono.Unix.Native.Syscall.poll()
         private static Assembly MonoUnixNativeAssembly;
@@ -195,10 +198,20 @@ namespace SharpPcap
                 {
                     captureThread.Abort();
                     captureThread = null;
-                    var error = string.Format("captureThread was aborted after {0}, if you are" +
-                                              " using Mono use a version newer than ~2.4 and ensure that" +
-                                              " Mono.Posix is installed to enable smooth thread shutdown",
+                    string error;
+
+                    if(isLibPcap && !MonoUnixFound)
+                    {
+                        error = string.Format("captureThread was aborted after {0}. Using a Mono" +
+                                              " version >= 2.4 and installing Mono.Posix should" +
+                                              " enable smooth thread shutdown",
                                               StopCaptureTimeout.ToString());
+                    } else
+                    {
+                        error = string.Format("captureThread was aborted after {0}",
+                                              StopCaptureTimeout.ToString());
+                    }
+                        
                     throw new PcapException(error);
                 }
 
@@ -221,12 +234,13 @@ namespace SharpPcap
             m_pcapPacketCount = Pcap.INFINITE;
         }
 
+        /// <summary>
+        /// The capture thread
+        /// </summary>
         private void CaptureThread()
         {
             if (!Opened)
                 throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");
-
-            bool isLibPcap = (Environment.OSVersion.Platform == PlatformID.Unix);
 
             // unix specific code
             int captureFileDescriptor = 0;
