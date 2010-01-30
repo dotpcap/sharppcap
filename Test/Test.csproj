@@ -95,9 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Int64RangeTest.cs">
       <SubType>Code</SubType>
     </Compile>
