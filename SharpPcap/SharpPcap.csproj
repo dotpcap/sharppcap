@@ -73,8 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Content Include="docs\SharpPcap.html" />
-    <Content Include="docs\SharpPcap\SharpPcap.png" />
     <Content Include="Packets\package.html" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
