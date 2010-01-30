@@ -3,3 +3,4 @@
 *.userprefs
 *.pidb
 bin
+obj
