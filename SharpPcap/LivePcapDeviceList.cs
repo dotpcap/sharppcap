@@ -112,6 +112,12 @@ namespace SharpPcap
                     // that matches the PcapDevice
                     if(device.Name.EndsWith(adapter.Id))
                     {
+                        var ipProperties = adapter.GetIPProperties();
+                        if (ipProperties.GatewayAddresses.Count != 0)
+                        {
+                            device.Interface.GatewayAddress = ipProperties.GatewayAddresses[0].Address;
+                        }
+
                         device.Interface.MacAddress = adapter.GetPhysicalAddress();
                         device.Interface.FriendlyName = adapter.Name;
                     }

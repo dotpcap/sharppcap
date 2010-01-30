@@ -50,6 +50,12 @@ namespace SharpPcap
         public string Description { get; internal set; }
 
         /// <value>
+        /// Gateway address of this device
+        /// NOTE: May only be available on Windows
+        /// </value>
+        public System.Net.IPAddress GatewayAddress { get; internal set; }
+
+        /// <value>
         /// Addresses associated with this device
         /// </value>
         public List<PcapAddress> Addresses { get; internal set; }
@@ -144,6 +150,11 @@ namespace SharpPcap
             if(FriendlyName != null)
             {
                 sb.AppendFormat("FriendlyName: {0}\n", FriendlyName);
+            }
+
+            if (GatewayAddress != null)
+            {
+                sb.AppendFormat("GatewayAddress: {0}\n", GatewayAddress);
             }
 
             sb.AppendFormat("Description: {0}\n", Description);
