@@ -144,16 +144,17 @@ namespace SharpPcap
             }
         }
 
+        private const int disableBlocking = 0;
+        private const int enableBlocking = 1;
+
         /// <summary>
         /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
         /// </summary>
-        private const int disableBlocking = 0;
-        private const int enableBlocking = 1;
         public bool NonBlockingMode
         {
             get
             {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
                 int ret = SafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
 
                 // Errorbuf is only filled when ret = -1
@@ -169,7 +170,7 @@ namespace SharpPcap
             }
             set 
             {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
                 int block = disableBlocking;
                 if (value)
