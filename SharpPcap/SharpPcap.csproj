@@ -70,7 +70,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="PacketDotNet, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
@@ -99,27 +99,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Pcap.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Convert.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Int64Range.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPAddressRange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPSubnet.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPUtil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\NumberRange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Random.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Version.cs">
@@ -157,4 +136,7 @@
     <ProjectGuid>{24262E52-1304-4A25-8F73-A3B06E40592E}</ProjectGuid>
     <RootNamespace>SharpPcap</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Util\" />
+  </ItemGroup>
 </Project>

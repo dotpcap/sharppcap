@@ -95,18 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Compile Include="Int64RangeTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IPAddressRangeTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IPSubnetTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IpUtilTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PcapGetAllDevices.cs" />
     <Compile Include="CheckFilterTest.cs" />
     <Compile Include="PcapTest.cs" />

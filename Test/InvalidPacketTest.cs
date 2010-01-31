@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
-using SharpPcap.Util;
 
 namespace Test
 {
