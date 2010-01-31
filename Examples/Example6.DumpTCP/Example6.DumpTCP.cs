@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example6
 {
@@ -78,16 +77,19 @@ namespace SharpPcap.Test.Example6
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {           
-            if(e.Packet is TCPPacket)
-            {               
-                DateTime time = e.Packet.PcapHeader.Date;
-                uint len = e.Packet.PcapHeader.PacketLength;
+            var time = e.Packet.Timeval.Date;
+            var len = e.Packet.Data.Length;
 
-                TCPPacket tcp = (TCPPacket)e.Packet;
-                System.Net.IPAddress srcIp = tcp.SourceAddress;
-                System.Net.IPAddress dstIp = tcp.DestinationAddress;
-                int srcPort = tcp.SourcePort;
-                int dstPort = tcp.DestinationPort;
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+
+            var tcpPacket = PacketDotNet.TcpPacket.GetType(packet);
+            if(tcpPacket != null)
+            {
+                var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;
+                System.Net.IPAddress srcIp = ipPacket.SourceAddress;
+                System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
+                int srcPort = tcpPacket.SourcePort;
+                int dstPort = tcpPacket.DestinationPort;
 
                 Console.WriteLine("{0}:{1}:{2},{3} Len={4} {5}:{6} -> {7}:{8}", 
                     time.Hour, time.Minute, time.Second, time.Millisecond, len,

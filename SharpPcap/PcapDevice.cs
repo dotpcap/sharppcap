@@ -20,7 +20,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Runtime.InteropServices;
-using SharpPcap.Packets;
 
 namespace SharpPcap
 {
@@ -97,12 +96,12 @@ namespace SharpPcap
         /// <summary>
         /// Return the pcap link layer value of an adapter. 
         /// </summary>
-        public virtual LinkLayers PcapDataLink
+        public virtual PacketDotNet.LinkLayers PcapDataLink
         {
             get
             {
                 ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
-                return (LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
+                return (PacketDotNet.LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
             }
         }
 
@@ -201,9 +200,9 @@ namespace SharpPcap
         /// Notify the OnPacketArrival delegates about a newly captured packet
         /// </summary>
         /// <param name="p">
-        /// A <see cref="SharpPcap.Packets.Packet"/>
+        /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
-        private void SendPacketArrivalEvent(Packet p)
+        private void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
         {
             if(Mode == CaptureMode.Packets)
             {
@@ -244,9 +243,9 @@ namespace SharpPcap
         /// Gets the next packet captured on this device
         /// </summary>
         /// <returns>The next packet captured on this device</returns>
-        public virtual Packet GetNextPacket()
+        public virtual PacketDotNet.RawPacket GetNextPacket()
         {
-            Packet p;
+            PacketDotNet.RawPacket p;
             int res = GetNextPacket( out p );
             if(res==-1)
                 throw new PcapException("Error receiving packet.");
@@ -258,61 +257,11 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">A packet reference</param>
         /// <returns>A reference to a packet object</returns>
-        public virtual int GetNextPacket(out Packet p)
+        public virtual int GetNextPacket(out PacketDotNet.RawPacket p)
         {
             //Pointer to a packet info struct
             IntPtr header = IntPtr.Zero;
 
-            //Pointer to a packet struct
-            IntPtr data = IntPtr.Zero;
-            int res = 0;
-
-            // using an invalid PcapHandle can result in an unmanaged segfault
-            // so check for that here
-            ThrowIfNotOpen("Device must be opened via Open() prior to use");
-
-            //Get a packet from winpcap
-            res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
-            p = null;
-
-            if(res>0)
-            {
-                //Marshal the packet
-                if ( (header != IntPtr.Zero) && (data != IntPtr.Zero) )
-                {
-                    p = MarshalPacket(header, data);
-                }
-            }
-            return res;
-        }
-
-        /// <summary>
-        /// Gets the next packet captured on this device
-        /// </summary>
-        /// <returns>The next packet captured on this device</returns>
-        public virtual RawPacket GetNextRawPacket()
-        {
-            RawPacket p;
-            int res = GetNextPacket( out p );
-            if(res==-1)
-                throw new PcapException("Error receiving packet.");
-            return p;
-        }
-
-        /// <summary>
-        /// Retrieve the next packet as a RawPacket. Method is temporary until
-        /// packet parsing code is removed from SharpPcap when Packet.net is mature enough
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="SharpPcap.Packets.RawPacket"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public virtual int GetNextPacket(out RawPacket p)
-        {
-            //Pointer to a packet info struct
-            IntPtr header = IntPtr.Zero;
             //Pointer to a packet struct
             IntPtr data = IntPtr.Zero;
             int res = 0;
@@ -341,40 +290,22 @@ namespace SharpPcap
         /// </summary>
         protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
-            Packet p = MarshalPacket(header, data);
+            var p = MarshalRawPacket(header, data);
             SendPacketArrivalEvent(p);
         }
 
-        protected virtual Packet MarshalPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
+        protected virtual PacketDotNet.RawPacket MarshalRawPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
-            Packet p;
+            PacketDotNet.RawPacket p;
 
             // marshal the header
             var pcapHeader = new PcapHeader(header);
 
-            byte[] pkt_data = new byte[pcapHeader.CaptureLength];
+            var pkt_data = new byte[pcapHeader.CaptureLength];
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
-            p = Packets.PacketFactory.dataToPacket(PcapDataLink, pkt_data,
-                                                   new Packets.Util.Timeval(pcapHeader.Seconds,
-                                                                            pcapHeader.MicroSeconds));
-            p.pcapHeader = pcapHeader;
-
-            return p;
-        }
-
-        protected virtual RawPacket MarshalRawPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
-        {
-            RawPacket p;
-
-            // marshal the header
-            var pcapHeader = new PcapHeader(header);
-
-            byte[] pkt_data = new byte[pcapHeader.CaptureLength];
-            Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
-
-            p = new RawPacket(PcapDataLink,
-                              new Packets.Util.Timeval(pcapHeader.Seconds,
+            p = new PacketDotNet.RawPacket(PcapDataLink,
+                              new PacketDotNet.PosixTimeval(pcapHeader.Seconds,
                                                        pcapHeader.MicroSeconds),
                               pkt_data);
 
@@ -461,9 +392,13 @@ namespace SharpPcap
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        public void Dump(Packet p)
+        public void Dump(PacketDotNet.RawPacket p)
         {
-            Dump(p.Bytes, p.PcapHeader);
+            var data = p.Data;
+            var timeval = p.Timeval;
+            var header = new PcapHeader(timeval.Seconds, timeval.MicroSeconds,
+                                        (uint)data.Length, (uint)data.Length);
+            Dump(data, header);
         }
 
         #endregion

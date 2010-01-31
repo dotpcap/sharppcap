@@ -24,7 +24,7 @@ namespace SharpPcap
 {
     public class StatisticsModeEventArgs : CaptureEventArgs
     {        
-        public StatisticsModeEventArgs(Packets.Packet packet, LivePcapDevice device)
+        public StatisticsModeEventArgs(PacketDotNet.RawPacket packet, LivePcapDevice device)
             : base(packet, device)
         {
         }

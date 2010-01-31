@@ -25,7 +25,6 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using SharpPcap.Packets;
 
 namespace SharpPcap
 {
@@ -251,7 +250,7 @@ namespace SharpPcap
                                        out string errorString)
         {
             IntPtr bpfProgram;
-            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)LinkLayers.Ethernet10Mb, Pcap.MAX_PACKET_SIZE);
+            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
 
             uint mask = 0;
             if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))
@@ -308,7 +307,7 @@ namespace SharpPcap
         /// Sends a raw packet throgh this device
         /// </summary>
         /// <param name="p">The packet to send</param>
-        public void SendPacket(Packet p)
+        public void SendPacket(PacketDotNet.Packet p)
         {
             SendPacket(p.Bytes);
         }
@@ -319,7 +318,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">The packet to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public void SendPacket(Packet p, int size)
+        public void SendPacket(PacketDotNet.Packet p, int size)
         {
             SendPacket(p.Bytes, size);
         }

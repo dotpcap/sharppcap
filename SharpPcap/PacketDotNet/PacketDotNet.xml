@@ -1,0 +1,3709 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>/home/cmorgan/packetnet_git/PacketDotNet/bin/Release/PacketDotNet</name>
+    </assembly>
+    <members>
+        <member name="T:PacketDotNet.ApplicationPacket">
+            <summary>
+            Represents an application layer packet as described at http://en.wikipedia.org/wiki/Application_Layer
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ApplicationPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            ApplicationPacket constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.DataLinkPacket">
+            <summary>
+            Represents a Layer 2 protocol.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DataLinkPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            DataLinkPacket constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.EthernetPacket">
+            <summary>
+            See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.#ctor(System.Net.NetworkInformation.PhysicalAddress,System.Net.NetworkInformation.PhysicalAddress,PacketDotNet.EthernetPacketType)">
+            <summary>
+            Construct a new ethernet packet from source and destination mac addresses
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Create an EthernetPacket from a byte array
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Create an EthernetPacket from a byte array and a Timeval
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.EthernetPacket.PayloadPacket">
+            <value>
+            Payload packet, overridden to set the 'Type' field based on
+            the type of packet being used here if the PayloadPacket is being set
+            </value>
+        </member>
+        <member name="P:PacketDotNet.EthernetPacket.SourceHwAddress">
+            <summary> MAC address of the host where the packet originated from.</summary>
+        </member>
+        <member name="P:PacketDotNet.EthernetPacket.DestinationHwAddress">
+            <summary> MAC address of the host where the packet originated from.</summary>
+        </member>
+        <member name="P:PacketDotNet.EthernetPacket.Type">
+            <value>
+            Type of packet that this ethernet packet encapsulates
+            </value>
+        </member>
+        <member name="P:PacketDotNet.EthernetPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArrayAndOffset,PacketDotNet.EthernetPacketType,PacketDotNet.PosixTimeval)">
+            <summary>
+            Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
+            also needs to perform the same operations as it contains an ethernet type
+            </summary>
+            <param name="Header">
+            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></param>
+            <param name="Type">
+            A <see cref="T:PacketDotNet.EthernetPacketType" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.PacketOrByteArray" /></returns>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.ToString">
+            <summary> Convert this ethernet packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this ethernet packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert a more verbose string.</summary>
+        </member>
+        <member name="M:PacketDotNet.EthernetPacket.RandomPacket">
+            <summary>
+            Generate a random EthernetPacket
+            TODO: could improve this routine to set a random payload as well
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.EthernetPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.EthernetPacketType">
+            Copied from Pcap.Net @ 20091117
+            <summary>
+            Code constants for well-defined ethernet protocols.
+            EtherType is a two-octet field in an Ethernet frame, as defined by the Ethernet II framing networking standard.
+            It is used to indicate which protocol is encapsulated in the payload.
+            Also contains entries taken from linux/if_ether.h and tcpdump/ethertype.h
+            </summary></member>
+        <member name="F:PacketDotNet.EthernetPacketType.None">
+            <summary>
+            No Ethernet type
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.IpV4">
+            <summary>
+            Internet Protocol, Version 4 (IPv4)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.Arp">
+            <summary>
+            Address Resolution Protocol (ARP)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.ReverseArp">
+            <summary>
+            Reverse Address Resolution Protocol (RARP)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.AppleTalk">
+            <summary>
+            AppleTalk (Ethertalk)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.AppleTalkArp">
+            <summary>
+            AppleTalk Address Resolution Protocol (AARP)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.VLanTaggedFrame">
+            <summary>
+            VLAN-tagged frame (IEEE 802.1Q)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.NovellInternetworkPacketExchange">
+            <summary>
+            Novell IPX (alt)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.Novell">
+            <summary>
+            Novell
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.IpV6">
+            <summary>
+            Internet Protocol, Version 6 (IPv6)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.MacControl">
+            <summary>
+            MAC Control
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.CobraNet">
+            <summary>
+            CobraNet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.MultiprotocolLabelSwitchingUnicast">
+            <summary>
+            MPLS unicast
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.MultiprotocolLabelSwitchingMulticast">
+            <summary>
+            MPLS multicast
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.PointToPointProtocolOverEthernetDiscoveryStage">
+            <summary>
+            PPPoE Discovery Stage
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.PointToPointProtocolOverEthernetSessionStage">
+            <summary>
+            PPPoE Session Stage
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.ExtensibleAuthenticationProtocolOverLan">
+            <summary>
+            EAP over LAN (IEEE 802.1X)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.HyperScsi">
+            <summary>
+            HyperSCSI (SCSI over Ethernet)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.AtaOverEthernet">
+            <summary>
+            ATA over Ethernet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.EtherCatProtocol">
+            <summary>
+            EtherCAT Protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.ProviderBridging">
+            <summary>
+            Provider Bridging (IEEE 802.1ad)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.AvbTransportProtocol">
+            <summary>
+            AVB Transport Protocol (AVBTP)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.SerialRealTimeCommunicationSystemIii">
+            <summary>
+            SERCOS III
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.CircuitEmulationServicesOverEthernet">
+            <summary>
+            Circuit Emulation Services over Ethernet (MEF-8)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.HomePlug">
+            <summary>
+            HomePlug
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.MacSecurity">
+            <summary>
+            MAC security (IEEE 802.1AE)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.PrecisionTimeProtocol">
+            <summary>
+            Precision Time Protocol (IEEE 1588)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.ConnectivityFaultManagementOrOperationsAdministrationManagement">
+            <summary>
+            IEEE 802.1ag Connectivity Fault Management (CFM) Protocol / ITU-T Recommendation Y.1731 (OAM)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.FibreChannelOverEthernet">
+            <summary>
+            Fibre Channel over Ethernet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.FibreChannelOverEthernetInitializationProtocol">
+            <summary>
+            FCoE Initialization Protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.QInQ">
+            <summary>
+            Q-in-Q
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.VeritasLowLatencyTransport">
+            <summary>
+            Veritas Low Latency Transport (LLT)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.Loop">
+            <summary>
+            Ethernet loopback packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetPacketType.Echo">
+            <summary>
+            Ethernet echo packet
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.IpPacket">
+            <summary>
+            Base class for IPv4 and IPv6 packets that exports the common
+            functionality that both of these classes has in common
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            IpPacket constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.IpPacket.TransportChecksumOption">
+            <summary>
+            Options for use when creating a transport layer checksum
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPacket.TransportChecksumOption.None">
+            <summary>
+            No extra options
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPacket.TransportChecksumOption.AttachPseudoIPHeader">
+            <summary>
+            Attach a pseudo IP header to the transport data being checksummed
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.PayloadPacket">
+            <value>
+            Payload packet, overridden to set the NextHeader/Protocol based
+            on the type of payload packet when the payload packet is set
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.DestinationAddress">
+            <value>
+            The destination address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.SourceAddress">
+            <value>
+            The source address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.Version">
+            <value>
+            The IP version
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.Protocol">
+            <value>
+            The protocol of the ip packet's payload
+            Named 'Protocol' in IPv4
+            Named 'NextHeader' in IPv6'
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.NextHeader">
+            <value>
+            The protocol of the ip packet's payload
+            Included along side Protocol for user convienence
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.TimeToLive">
+            <value>
+            The number of hops remaining before this packet is discarded
+            Named 'TimeToLive' in IPv4
+            Named 'HopLimit' in IPv6
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.HopLimit">
+            <value>
+            The number of hops remaining for this packet
+            Included along side of TimeToLive for user convienence
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.HeaderLength">
+            <summary>
+            ipv4 header length field, computed for ipv6 packets
+            NOTE: This field is the number of 32bit words in the ip header,
+            ie. the number of bytes is 4x this value
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.TotalLength">
+            <summary>
+            ipv4 total number of bytes in the ipv4 header + payload,
+            ipv6 PayloadLength + IPv6Fields.HeaderLength
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.PayloadLength">
+            <summary>
+            ipv6 payload length in bytes,
+            computed from ipv4.TotalLength - (ipv4.HeaderLength * 4)
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IpPacket.ValidIPChecksum">
+            <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.AttachPseudoIPHeader(System.Byte[])">
+            <summary>
+            Adds a pseudo ip header to a given packet. Used to generate the full
+            byte array required to generate a udp or tcp checksum.
+            </summary>
+            <param name="origHeader">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:System.Byte" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily,System.Int32,System.Byte[])">
+            <summary>
+            Convert an ip address from a byte[]
+            </summary>
+            <param name="ipType">
+            A <see cref="T:System.Net.Sockets.AddressFamily" /></param>
+            <param name="fieldOffset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:System.Net.IPAddress" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArrayAndOffset,PacketDotNet.IPProtocolType,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
+            <summary>
+            Called by IPv4 and IPv6 packets to parse their packet payload
+            </summary>
+            <param name="Header">
+            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></param>
+            <param name="ProtocolType">
+            A <see cref="T:PacketDotNet.IPProtocolType" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.PacketOrByteArray" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.IsValidTransportLayerChecksum(PacketDotNet.IpPacket.TransportChecksumOption)">
+            <summary>
+            Determine if the transport layer checksum is valid
+            </summary>
+            <param name="option">
+            A <see cref="T:PacketDotNet.IpPacket.TransportChecksumOption" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.ComputeIPChecksum">
+            <summary>
+            Compute the checksum of the ip packet
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.UpdateIPChecksum">
+            <summary>
+            Update the value of the IP checksum
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.ComputeTransportLayerChecksum(System.Int32,System.Boolean)">
+            <summary>
+            Computes the transport layer checksum, either for the
+            tcp or udp packet
+            </summary>
+            <param name="checksumOffset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="pseudoIPHeader">
+            A <see cref="T:System.Boolean" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.IsType(PacketDotNet.Packet)">
+            <summary>
+            Returns true if Packet p contains this type
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.GetType(PacketDotNet.Packet)">
+            <summary>
+            Returns the IpPacket inside of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.IpPacket" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IpPacket.RandomPacket(PacketDotNet.IpVersion)">
+            <summary>
+            Generate a random packet of a specific ip version
+            </summary>
+            <param name="version">
+            A <see cref="T:PacketDotNet.IpVersion" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.IpPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Packet">
+            <summary>
+            Base class for all packet types.
+            Defines helper methods and accessors for the architecture that underlies how
+            packets interact and store their data.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Packet.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            Basic Packet constructor
+            </summary>
+            <param name="timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.Packet.Timeval">
+            <value>
+            PosixTimeval of this packet, can be the packet arrival time
+            or the packet creation time
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Packet.SharesMemoryWithSubPackets">
+            <value>
+            Returns true if we already have a contiguous byte[] in either
+            of these conditions:
+            - This packet's header byte[] and payload byte[] are the same instance
+            or
+            - This packet's header byte[] and this packet's payload packet
+            are the same instance and the offsets indicate that the bytes
+            are contiguous
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Packet.ParentPacket">
+            <summary>
+            The packet that is carrying this one
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Packet.Header">
+            <value>
+            Returns a
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Packet.PayloadPacket">
+            <summary>
+            Packet that this packet carries if one is present.
+            Note that the packet MAY have a null PayloadPacket but
+            a non-null PayloadData
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Packet.PayloadData">
+            <summary>
+            Payload byte[] if one is present.
+            Note that the packet MAY have a null PayloadData but a
+            non-null PayloadPacket
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Packet.Bytes">
+            <summary>
+            byte[] containing this packet and its payload
+            NOTE: Use 'public virtual ByteArrayAndOffset BytesHighPerformance' for highest performance
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Packet.BytesHighPerformance">
+            <value>
+            The option to return a ByteArrayAndOffset means that this method
+            is higher performance as the data can start at an offset other than
+            the first byte.
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Packet.Color">
+            <value>
+            Color used when generating the text description of a packet
+            </value>
+        </member>
+        <member name="M:PacketDotNet.Packet.Parse(System.Byte[])">
+            <summary>
+            Turns an array of bytes into an EthernetPacket
+            </summary>
+            <param name="data">The packets caught</param>
+            <returns>An ethernet packet which has references to the higher protocols</returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.ParsePacket(PacketDotNet.RawPacket)">
+            <summary>
+            Parse a raw packet into its specific packets and payloads
+            </summary>
+            <param name="rawPacket">
+            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.ParsePacket(PacketDotNet.LinkLayers,PacketDotNet.PosixTimeval,System.Byte[])">
+            <summary>
+            Parse bytes into a packet
+            </summary>
+            <param name="LinkLayer">
+            A <see cref="T:PacketDotNet.LinkLayers" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="PacketData">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.ToColoredString(System.Boolean)">
+            <summary>
+            Returns a ansi colored string. This routine calls
+            the ToColoredString() of the payload packet if one
+            is present.
+            </summary>
+            <param name="colored">
+            A <see cref="T:System.Boolean" /></param>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.ToColoredVerboseString(System.Boolean)">
+            <summary>
+            Returns a verbose ansi colored string. This routine calls
+            the ToColoredVerboseString() of the payload packet if one
+            is present.
+            </summary>
+            <param name="colored">
+            A <see cref="T:System.Boolean" /></param>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.SessionPacket">
+            <summary>
+            Session layer packet
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.SessionPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.TcpPacket">
+            <summary>
+            TcpPacket
+            See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.#ctor(System.UInt16,System.UInt16)">
+            <summary>
+            Create a new TCP packet from values
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int offset constructor, timeval defaults to the current time
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
+            <summary>
+            Constructor when this packet is encapsulated in another packet
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+        </member>
+        <member name="F:PacketDotNet.TcpPacket.HeaderMinimumLength">
+            <value>
+            20 bytes is the smallest tcp header
+            </value>
+        </member>
+        <member name="F:PacketDotNet.TcpPacket.serialVersionUID">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.SourcePort">
+            <summary> Fetch the port number on the source host.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.DestinationPort">
+            <summary> Fetches the port number on the destination host.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.SequenceNumber">
+            <summary> Fetch the packet sequence number.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.AcknowledgmentNumber">
+            <summary> Fetch the packet acknowledgment number.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.DataOffset">
+            <summary> The size of the tcp header in 32bit words </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.WindowSize">
+            <summary>
+            The size of the receive window, which specifies the number of
+            bytes (beyond the sequence number in the acknowledgment field) that
+            the receiver is currently willing to receive.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Checksum">
+            <value>
+            Tcp checksum field value of type UInt16
+            </value>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.ValidChecksum">
+            <summary> Check if the TCP packet is valid, checksum-wise.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.ValidTCPChecksum">
+            <value>
+            True if the tcp checksum is valid
+            </value>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Urg">
+            <summary> Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Ack">
+            <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Psh">
+            <summary> Check the PSH flag, flag indicates the receiver should pass the
+            data to the application as soon as possible.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Rst">
+            <summary> Check the RST flag, flag indicates the session should be reset between
+            the sender and the receiver.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Syn">
+            <summary> Check the SYN flag, flag indicates the sequence numbers should
+            be synchronized between the sender and receiver to initiate
+            a connection.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Fin">
+            <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.ECN">
+            <value>
+            ECN flag
+            </value>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.CWR">
+            <value>
+            CWR flag
+            </value>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.UrgentPointer">
+            <summary> Fetch the urgent pointer.</summary>
+        </member>
+        <member name="P:PacketDotNet.TcpPacket.Options">
+            <summary>
+            Bytes that represent the tcp options
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.ComputeTCPChecksum(System.Boolean)">
+            <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
+            </summary>
+            <param name="update">Specifies whether or not to update the TCP checksum header
+            after computing the checksum. A value of true indicates the
+            header should be updated, a value of false indicates it should
+            not be updated.
+            </param>
+            <returns> The computed TCP checksum.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.ComputeTCPChecksum">
+            <summary> Same as <code>computeTCPChecksum(true);</code></summary>
+            <returns> The computed TCP checksum value.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.ToString">
+            <summary> Convert this TCP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this TCP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert this TCP packet to a verbose.</summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.IsType(PacketDotNet.Packet)">
+            <summary>
+            Returns true if Packet p contains a TcpPacket
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.GetType(PacketDotNet.Packet)">
+            <summary>
+            Returns the TcpPacket embedded in Packet p or null if
+            there is no embedded TcpPacket
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TcpPacket.RandomPacket">
+            <summary>
+            Create a randomized tcp packet with the given ip version
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="T:PacketDotNet.UdpPacket">
+            <summary>
+            User datagram protocol
+            See http://en.wikipedia.org/wiki/Udp
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.#ctor(System.UInt16,System.UInt16)">
+            <summary>
+            Create from values
+            </summary>
+            <param name="SourcePort">
+            A <see cref="T:System.UInt16" /></param>
+            <param name="DestinationPort">
+            A <see cref="T:System.UInt16" /></param>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int offset constructor, timeval defaults to the current time
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
+            <summary>
+            Constructor when this packet is encapsulated in another packet
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.SourcePort">
+            <summary> Fetch the port number on the source host.</summary>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.DestinationPort">
+            <summary> Fetch the port number on the target host.</summary>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.Length">
+            <value>
+            Retrieves the length field from this udp packet
+            </value>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.Checksum">
+            <summary> Fetch the header checksum.</summary>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.ComputeUDPChecksum(System.Boolean)">
+            <summary>
+            Computes the UDP checksum, optionally updating the UDP checksum header.
+            </summary>
+            <param name="update">Specifies whether or not to update the UDP checksum header
+            after computing the checksum. A value of true indicates the
+            header should be updated, a value of false indicates it should
+            not be updated.
+            </param>
+            <returns> The computed UDP checksum.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.ComputeUDPChecksum">
+            <summary>
+            Compute the checksum for this packet
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.ToString">
+            <summary> Convert this UDP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this UDP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.IsType(PacketDotNet.Packet)">
+            <summary>
+            Returns true if this Packet contains this type
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.GetType(PacketDotNet.Packet)">
+            <summary>
+            Returns the UdpPacket inside of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.UdpPacket" /></returns>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.RandomPacket">
+            <summary>
+            Generate a random packet
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.UdpPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.EthernetFields">
+            <summary> Ethernet protocol field encoding information.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.TypeLength">
+            <summary> Width of the ethernet type code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.DestinationMacPosition">
+            <summary> Position of the destination MAC address within the ethernet header.</summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.SourceMacPosition">
+            <summary> Position of the source MAC address within the ethernet header.</summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.TypePosition">
+            <summary> Position of the ethernet type field within the ethernet header.</summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.HeaderLength">
+            <summary> Total length of an ethernet header in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.EthernetFields.MacAddressLength">
+            <summary>
+            size of an ethernet mac address in bytes
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.TransportPacket">
+            <summary>
+            Transport layer packet
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TransportPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.Utils.ByteArrayAndOffset">
+            <summary>
+            Container class for a byte array that contains an offset and
+            a length
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Constructor from a byte array, offset into the byte array and
+            a length beyond that offset of the bytes this class is referencing
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Length">
+            <value>
+            Number of bytes beyond the offset into Bytes
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Bytes">
+            <value>
+            The byte[] array
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Offset">
+            <value>
+            Offset into Bytes
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.NeedsCopyForActualBytes">
+            <summary>
+            Return true if we need to perform a copy to get
+            the bytes represented by this class
+            </summary>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.ActualBytes">
+            <summary>
+            Returns a contiguous byte[] from this container, if necessary, by copying
+            the bytes from the current offset into a newly allocated byte[].
+            NeedsCopyForActualBytes can be used to determine if the copy is necessary
+            </summary>
+            <returns>
+            A <see cref="T:System.Byte" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.EncapsulatedBytes">
+            <summary>
+            Helper method that returns the segment immediately following
+            this instance, useful for processing where the parent
+            wants to pass the next segment to a sub class for processing
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.ToString">
+            <summary>
+            Format the class information as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.IPProtocol">
+            <summary>
+            String representation of an IP protocol value
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocol.messages">
+            <summary> 'Human-readable' IP protocol descriptions.</summary>
+        </member>
+        <member name="M:PacketDotNet.IPProtocol.getDescription(System.Int32)">
+            <summary> Fetch a protocol description.</summary>
+            <param name="code">the code associated with the message.
+            </param>
+            <returns> a message describing the significance of the IP protocol.
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.Utils.AnsiEscapeSequences">
+            <summary> String constants for color console output.
+            <p>
+            This file contains control sequences to print color text on a text
+            console capable of interpreting and displaying control sequences.
+            </p><p>
+            A capable console would be
+            unix bash, os/2 shell, or command.com w/ ansi.sys loaded
+            </p></summary>
+            <author>  Chris Cheetham
+            </author>
+        </member>
+        <member name="F:PacketDotNet.Utils.AnsiEscapeSequences.EscapeBegin">
+            <summary>
+            Delimits the start of an ansi color sequence, the color code goes after this
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Utils.AnsiEscapeSequences.EscapeEnd">
+            <summary>
+            Delimits the stop of the ansi color sequence, the color code comes before this
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.UdpFields">
+            <summary>
+            Defines the lengths and positions of the udp fields within
+            a udp packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.PortLength">
+            <summary> Length of a UDP port in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.HeaderLengthLength">
+            <summary> Length of the header length field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.ChecksumLength">
+            <summary> Length of the checksum field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.SourcePortPosition">
+            <summary> Position of the source port.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.DestinationPortPosition">
+            <summary> Position of the destination port.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.HeaderLengthPosition">
+            <summary> Position of the header length.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.ChecksumPosition">
+            <summary> Position of the header checksum length.</summary>
+        </member>
+        <member name="F:PacketDotNet.UdpFields.HeaderLength">
+            <summary> Length of a UDP header in bytes.</summary>
+        </member>
+        <member name="T:MiscUtil.IO.EndianBinaryReader">
+            <summary>
+            Equivalent of System.IO.BinaryReader, but with either endianness, depending on
+            the EndianBitConverter it is constructed with. No data is buffered in the
+            reader; the client may seek within the stream at will.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.#ctor(MiscUtil.Conversion.EndianBitConverter,System.IO.Stream)">
+            <summary>
+            Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
+            the EndianBitConverter it is constructed with.
+            </summary>
+            <param name="bitConverter">Converter to use when reading data</param>
+            <param name="stream">Stream to read data from</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.#ctor(MiscUtil.Conversion.EndianBitConverter,System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Constructs a new binary reader with the given bit converter, reading
+            to the given stream, using the given encoding.
+            </summary>
+            <param name="bitConverter">Converter to use when reading data</param>
+            <param name="stream">Stream to read data from</param>
+            <param name="encoding">Encoding to use when reading character data</param>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryReader.disposed">
+            <summary>
+            Whether or not this reader has been disposed yet.
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryReader.decoder">
+            <summary>
+            Decoder to use for string conversions.
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryReader.buffer">
+            <summary>
+            Buffer used for temporary storage before conversion into primitives
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryReader.charBuffer">
+            <summary>
+            Buffer used for temporary storage when reading a single character
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryReader.minBytesPerChar">
+            <summary>
+            Minimum number of bytes used to encode a character
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryReader.BitConverter">
+            <summary>
+            The bit converter used to read values from the stream
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryReader.Encoding">
+            <summary>
+            The encoding used to read strings
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryReader.BaseStream">
+            <summary>
+            Gets the underlying stream of the EndianBinaryReader.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Close">
+            <summary>
+            Closes the reader, including the underlying stream..
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Seek(System.Int32,System.IO.SeekOrigin)">
+            <summary>
+            Seeks within the stream.
+            </summary>
+            <param name="offset">Offset to seek to.</param>
+            <param name="origin">Origin of seek operation.</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadByte">
+            <summary>
+            Reads a single byte from the stream.
+            </summary>
+            <returns>The byte read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadSByte">
+            <summary>
+            Reads a single signed byte from the stream.
+            </summary>
+            <returns>The byte read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadBoolean">
+            <summary>
+            Reads a boolean from the stream. 1 byte is read.
+            </summary>
+            <returns>The boolean read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadInt16">
+            <summary>
+            Reads a 16-bit signed integer from the stream, using the bit converter
+            for this reader. 2 bytes are read.
+            </summary>
+            <returns>The 16-bit integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadInt32">
+            <summary>
+            Reads a 32-bit signed integer from the stream, using the bit converter
+            for this reader. 4 bytes are read.
+            </summary>
+            <returns>The 32-bit integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadInt64">
+            <summary>
+            Reads a 64-bit signed integer from the stream, using the bit converter
+            for this reader. 8 bytes are read.
+            </summary>
+            <returns>The 64-bit integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadUInt16">
+            <summary>
+            Reads a 16-bit unsigned integer from the stream, using the bit converter
+            for this reader. 2 bytes are read.
+            </summary>
+            <returns>The 16-bit unsigned integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadUInt32">
+            <summary>
+            Reads a 32-bit unsigned integer from the stream, using the bit converter
+            for this reader. 4 bytes are read.
+            </summary>
+            <returns>The 32-bit unsigned integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadUInt64">
+            <summary>
+            Reads a 64-bit unsigned integer from the stream, using the bit converter
+            for this reader. 8 bytes are read.
+            </summary>
+            <returns>The 64-bit unsigned integer read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadSingle">
+            <summary>
+            Reads a single-precision floating-point value from the stream, using the bit converter
+            for this reader. 4 bytes are read.
+            </summary>
+            <returns>The floating point value read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadDouble">
+            <summary>
+            Reads a double-precision floating-point value from the stream, using the bit converter
+            for this reader. 8 bytes are read.
+            </summary>
+            <returns>The floating point value read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadDecimal">
+            <summary>
+            Reads a decimal value from the stream, using the bit converter
+            for this reader. 16 bytes are read.
+            </summary>
+            <returns>The decimal value read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Read">
+            <summary>
+            Reads a single character from the stream, using the character encoding for
+            this reader. If no characters have been fully read by the time the stream ends,
+            -1 is returned.
+            </summary>
+            <returns>The character read, or -1 for end of stream.</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Read(System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Reads the specified number of characters into the given buffer, starting at
+            the given index.
+            </summary>
+            <param name="data">The buffer to copy data into</param>
+            <param name="index">The first index to copy data into</param>
+            <param name="count">The number of characters to read</param>
+            <returns>The number of characters actually read. This will only be less than
+            the requested number of characters if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads the specified number of bytes into the given buffer, starting at
+            the given index.
+            </summary>
+            <param name="buffer">The buffer to copy data into</param>
+            <param name="index">The first index to copy data into</param>
+            <param name="count">The number of bytes to read</param>
+            <returns>The number of bytes actually read. This will only be less than
+            the requested number of bytes if the end of the stream is reached.
+            </returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadBytes(System.Int32)">
+            <summary>
+            Reads the specified number of bytes, returning them in a new byte array.
+            If not enough bytes are available before the end of the stream, this
+            method will return what is available.
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns>The bytes read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadBytesOrThrow(System.Int32)">
+            <summary>
+            Reads the specified number of bytes, returning them in a new byte array.
+            If not enough bytes are available before the end of the stream, this
+            method will throw an IOException.
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns>The bytes read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Read7BitEncodedInt">
+            <summary>
+            Reads a 7-bit encoded integer from the stream. This is stored with the least significant
+            information first, with 7 bits of information per byte of value, and the top
+            bit as a continuation flag. This method is not affected by the endianness
+            of the bit converter.
+            </summary>
+            <returns>The 7-bit encoded integer read from the stream.</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadBigEndian7BitEncodedInt">
+            <summary>
+            Reads a 7-bit encoded integer from the stream. This is stored with the most significant
+            information first, with 7 bits of information per byte of value, and the top
+            bit as a continuation flag. This method is not affected by the endianness
+            of the bit converter.
+            </summary>
+            <returns>The 7-bit encoded integer read from the stream.</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadString">
+            <summary>
+            Reads a length-prefixed string from the stream, using the encoding for this reader.
+            A 7-bit encoded integer is first read, which specifies the number of bytes
+            to read from the stream. These bytes are then converted into a string with
+            the encoding for this reader.
+            </summary>
+            <returns>The string read from the stream.</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.CheckDisposed">
+            <summary>
+            Checks whether or not the reader has been disposed, throwing an exception if so.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.ReadInternal(System.Byte[],System.Int32)">
+            <summary>
+            Reads the given number of bytes from the stream, throwing an exception
+            if they can't all be read.
+            </summary>
+            <param name="data">Buffer to read into</param>
+            <param name="size">Number of bytes to read</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.TryReadInternal(System.Byte[],System.Int32)">
+            <summary>
+            Reads the given number of bytes from the stream if possible, returning
+            the number of bytes actually read, which may be less than requested if
+            (and only if) the end of the stream is reached.
+            </summary>
+            <param name="data">Buffer to read into</param>
+            <param name="size">Number of bytes to read</param>
+            <returns>Number of bytes actually read</returns>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryReader.Dispose">
+            <summary>
+            Disposes of the underlying stream.
+            </summary>
+        </member>
+        <member name="T:MiscUtil.IO.EndianBinaryWriter">
+            <summary>
+            Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
+            the EndianBitConverter it is constructed with.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.#ctor(MiscUtil.Conversion.EndianBitConverter,System.IO.Stream)">
+            <summary>
+            Constructs a new binary writer with the given bit converter, writing
+            to the given stream, using UTF-8 encoding.
+            </summary>
+            <param name="bitConverter">Converter to use when writing data</param>
+            <param name="stream">Stream to write data to</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.#ctor(MiscUtil.Conversion.EndianBitConverter,System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Constructs a new binary writer with the given bit converter, writing
+            to the given stream, using the given encoding.
+            </summary>
+            <param name="bitConverter">Converter to use when writing data</param>
+            <param name="stream">Stream to write data to</param>
+            <param name="encoding">Encoding to use when writing character data</param>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryWriter.disposed">
+            <summary>
+            Whether or not this writer has been disposed yet.
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryWriter.buffer">
+            <summary>
+            Buffer used for temporary storage during conversion from primitives
+            </summary>
+        </member>
+        <member name="F:MiscUtil.IO.EndianBinaryWriter.charBuffer">
+            <summary>
+            Buffer used for Write(char)
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryWriter.BitConverter">
+            <summary>
+            The bit converter used to write values to the stream
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryWriter.Encoding">
+            <summary>
+            The encoding used to write strings
+            </summary>
+        </member>
+        <member name="P:MiscUtil.IO.EndianBinaryWriter.BaseStream">
+            <summary>
+            Gets the underlying stream of the EndianBinaryWriter.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Close">
+            <summary>
+            Closes the writer, including the underlying stream.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Flush">
+            <summary>
+            Flushes the underlying stream.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Seek(System.Int32,System.IO.SeekOrigin)">
+            <summary>
+            Seeks within the stream.
+            </summary>
+            <param name="offset">Offset to seek to.</param>
+            <param name="origin">Origin of seek operation.</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Boolean)">
+            <summary>
+            Writes a boolean value to the stream. 1 byte is written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Int16)">
+            <summary>
+            Writes a 16-bit signed integer to the stream, using the bit converter
+            for this writer. 2 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Int32)">
+            <summary>
+            Writes a 32-bit signed integer to the stream, using the bit converter
+            for this writer. 4 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Int64)">
+            <summary>
+            Writes a 64-bit signed integer to the stream, using the bit converter
+            for this writer. 8 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.UInt16)">
+            <summary>
+            Writes a 16-bit unsigned integer to the stream, using the bit converter
+            for this writer. 2 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.UInt32)">
+            <summary>
+            Writes a 32-bit unsigned integer to the stream, using the bit converter
+            for this writer. 4 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.UInt64)">
+            <summary>
+            Writes a 64-bit unsigned integer to the stream, using the bit converter
+            for this writer. 8 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Single)">
+            <summary>
+            Writes a single-precision floating-point value to the stream, using the bit converter
+            for this writer. 4 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Double)">
+            <summary>
+            Writes a double-precision floating-point value to the stream, using the bit converter
+            for this writer. 8 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Decimal)">
+            <summary>
+            Writes a decimal value to the stream, using the bit converter for this writer.
+            16 bytes are written.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Byte)">
+            <summary>
+            Writes a signed byte to the stream.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.SByte)">
+            <summary>
+            Writes an unsigned byte to the stream.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Byte[])">
+            <summary>
+            Writes an array of bytes to the stream.
+            </summary>
+            <param name="value">The values to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Writes a portion of an array of bytes to the stream.
+            </summary>
+            <param name="value">An array containing the bytes to write</param>
+            <param name="offset">The index of the first byte to write within the array</param>
+            <param name="count">The number of bytes to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Char)">
+            <summary>
+            Writes a single character to the stream, using the encoding for this writer.
+            </summary>
+            <param name="value">The value to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.Char[])">
+            <summary>
+            Writes an array of characters to the stream, using the encoding for this writer.
+            </summary>
+            <param name="value">An array containing the characters to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write(System.String)">
+            <summary>
+            Writes a string to the stream, using the encoding for this writer.
+            </summary>
+            <param name="value">The value to write. Must not be null.</param>
+            <exception cref="T:System.ArgumentNullException">value is null</exception>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Write7BitEncodedInt(System.Int32)">
+            <summary>
+            Writes a 7-bit encoded integer from the stream. This is stored with the least significant
+            information first, with 7 bits of information per byte of value, and the top
+            bit as a continuation flag.
+            </summary>
+            <param name="value">The 7-bit encoded integer to write to the stream</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.CheckDisposed">
+            <summary>
+            Checks whether or not the writer has been disposed, throwing an exception if so.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.WriteInternal(System.Byte[],System.Int32)">
+            <summary>
+            Writes the specified number of bytes from the start of the given byte array,
+            after checking whether or not the writer has been disposed.
+            </summary>
+            <param name="bytes">The array of bytes to write from</param>
+            <param name="length">The number of bytes to write</param>
+        </member>
+        <member name="M:MiscUtil.IO.EndianBinaryWriter.Dispose">
+            <summary>
+            Disposes of the underlying stream.
+            </summary>
+        </member>
+        <member name="T:MiscUtil.Conversion.BigEndianBitConverter">
+            <summary>
+            Implementation of EndianBitConverter which converts to/from big-endian
+            byte arrays.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.BigEndianBitConverter.Endianness">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.BigEndianBitConverter.IsLittleEndian">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+            <remarks>
+            Different computer architectures store data using different byte orders. "Big-endian"
+            means the most significant byte is on the left end of a word. "Little-endian" means the
+            most significant byte is on the right end of a word.
+            </remarks>
+            <returns>true if this converter is little-endian, false otherwise.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.BigEndianBitConverter.CopyBytesImpl(System.Int64,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified number of bytes from value to buffer, starting at index.
+            </summary>
+            <param name="value">The value to copy</param>
+            <param name="bytes">The number of bytes to copy</param>
+            <param name="buffer">The buffer to copy the bytes into</param>
+            <param name="index">The index to start at</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.BigEndianBitConverter.FromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Returns a value built from the specified number of bytes from the given buffer,
+            starting at index.
+            </summary>
+            <param name="buffer">The data in byte array format</param>
+            <param name="startIndex">The first index to use</param>
+            <param name="bytesToConvert">The number of bytes to use</param>
+            <returns>The value built from the given bytes</returns>
+        </member>
+        <member name="T:MiscUtil.Conversion.DoubleConverter">
+            <summary>
+            A class to allow the conversion of doubles to string representations of
+            their exact decimal values. The implementation aims for readability over
+            efficiency.
+            </summary>
+        </member>
+        <member name="T:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal">
+            <summary>
+            Private class used for manipulating sequences of decimal digits.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.#ctor(System.Int64)">
+            <summary>
+            Constructs an arbitrary decimal expansion from the given long.
+            The long must not be negative.
+            </summary>
+        </member>
+        <member name="F:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.digits">
+            <summary>Digits in the decimal expansion, one byte per digit</summary>
+        </member>
+        <member name="F:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.decimalPoint">
+            <summary>
+            How many digits are *after* the decimal point
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.MultiplyBy(System.Int32)">
+            <summary>
+            Multiplies the current expansion by the given amount, which should
+            only be 2 or 5.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.Shift(System.Int32)">
+            <summary>
+            Shifts the decimal point; a negative value makes
+            the decimal expansion bigger (as fewer digits come after the
+            decimal place) and a positive value makes the decimal
+            expansion smaller.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.Normalize">
+            <summary>
+            Removes leading/trailing zeroes from the expansion.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ArbitraryDecimal.ToString">
+            <summary>
+            Converts the value to a proper decimal string representation.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.DoubleConverter.ToExactString(System.Double)">
+            <summary>
+            Converts the given double to a string representation of its
+            exact decimal value.
+            </summary>
+            <param name="d">The double to convert.</param>
+            <returns>A string representation of the double's exact decimal value.</returns>
+        </member>
+        <member name="T:MiscUtil.Conversion.EndianBitConverter">
+            <summary>
+            Equivalent of System.BitConverter, but with either endianness.
+            </summary>
+        </member>
+        <member name="T:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion">
+            <summary>
+            Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.#ctor(System.Int32)">
+            <summary>
+            Creates an instance representing the given integer.
+            </summary>
+            <param name="i">The integer value of the new instance.</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.#ctor(System.Single)">
+            <summary>
+            Creates an instance representing the given floating point number.
+            </summary>
+            <param name="f">The floating point value of the new instance.</param>
+        </member>
+        <member name="F:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.i">
+            <summary>
+            Int32 version of the value.
+            </summary>
+        </member>
+        <member name="F:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.f">
+            <summary>
+            Single version of the value.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.AsInt32">
+            <summary>
+            Returns the value of the instance as an integer.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.EndianBitConverter.Int32SingleUnion.AsSingle">
+            <summary>
+            Returns the value of the instance as a floating point number.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.EndianBitConverter.Endianness">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.EndianBitConverter.Little">
+            <summary>
+            Returns a little-endian bit converter instance. The same instance is
+            always returned.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.EndianBitConverter.Big">
+            <summary>
+            Returns a big-endian bit converter instance. The same instance is
+            always returned.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.IsLittleEndian">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+            <remarks>
+            Different computer architectures store data using different byte orders. "Big-endian"
+            means the most significant byte is on the left end of a word. "Little-endian" means the
+            most significant byte is on the right end of a word.
+            </remarks>
+            <returns>true if this converter is little-endian, false otherwise.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.DoubleToInt64Bits(System.Double)">
+            <summary>
+            Converts the specified double-precision floating point number to a
+            64-bit signed integer. Note: the endianness of this converter does not
+            affect the returned value.
+            </summary>
+            <param name="value">The number to convert. </param>
+            <returns>A 64-bit signed integer whose value is equivalent to value.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.Int64BitsToDouble(System.Int64)">
+            <summary>
+            Converts the specified 64-bit signed integer to a double-precision
+            floating point number. Note: the endianness of this converter does not
+            affect the returned value.
+            </summary>
+            <param name="value">The number to convert. </param>
+            <returns>A double-precision floating point number whose value is equivalent to value.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.SingleToInt32Bits(System.Single)">
+            <summary>
+            Converts the specified single-precision floating point number to a
+            32-bit signed integer. Note: the endianness of this converter does not
+            affect the returned value.
+            </summary>
+            <param name="value">The number to convert. </param>
+            <returns>A 32-bit signed integer whose value is equivalent to value.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.Int32BitsToSingle(System.Int32)">
+            <summary>
+            Converts the specified 32-bit signed integer to a single-precision floating point
+            number. Note: the endianness of this converter does not
+            affect the returned value.
+            </summary>
+            <param name="value">The number to convert. </param>
+            <returns>A single-precision floating point number whose value is equivalent to value.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToBoolean(System.Byte[],System.Int32)">
+            <summary>
+            Returns a Boolean value converted from one byte at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>true if the byte at startIndex in value is nonzero; otherwise, false.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToChar(System.Byte[],System.Int32)">
+            <summary>
+            Returns a Unicode character converted from two bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A character formed by two bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToDouble(System.Byte[],System.Int32)">
+            <summary>
+            Returns a double-precision floating point number converted from eight bytes
+            at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A double precision floating point number formed by eight bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToSingle(System.Byte[],System.Int32)">
+            <summary>
+            Returns a single-precision floating point number converted from four bytes
+            at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A single precision floating point number formed by four bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToInt16(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 16-bit signed integer converted from two bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToInt32(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToInt64(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 64-bit signed integer converted from eight bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToUInt16(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 16-bit unsigned integer converted from two bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToUInt32(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToUInt64(System.Byte[],System.Int32)">
+            <summary>
+            Returns a 64-bit unsigned integer converted from eight bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CheckByteArgument(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Checks the given argument for validity.
+            </summary>
+            <param name="value">The byte array passed in</param>
+            <param name="startIndex">The start index passed in</param>
+            <param name="bytesRequired">The number of bytes required</param>
+            <exception cref="T:System.ArgumentNullException">value is a null reference</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            startIndex is less than zero or greater than the length of value minus bytesRequired.
+            </exception>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CheckedFromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Checks the arguments for validity before calling FromBytes
+            (which can therefore assume the arguments are valid).
+            </summary>
+            <param name="value">The bytes to convert after checking</param>
+            <param name="startIndex">The index of the first byte to convert</param>
+            <param name="bytesToConvert">The number of bytes to convert</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.FromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Convert the given number of bytes from the given array, from the given start
+            position, into a long, using the bytes as the least significant part of the long.
+            By the time this is called, the arguments have been checked for validity.
+            </summary>
+            <param name="value">The bytes to convert</param>
+            <param name="startIndex">The index of the first byte to convert</param>
+            <param name="bytesToConvert">The number of bytes to use in the conversion</param>
+            <returns>The converted number</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToString(System.Byte[])">
+            <summary>
+            Returns a String converted from the elements of a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <remarks>All the elements of value are converted.</remarks>
+            <returns>
+            A String of hexadecimal pairs separated by hyphens, where each pair
+            represents the corresponding element in value; for example, "7F-2C-4A".
+            </returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToString(System.Byte[],System.Int32)">
+            <summary>
+            Returns a String converted from the elements of a byte array starting at a specified array position.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <remarks>The elements from array position startIndex to the end of the array are converted.</remarks>
+            <returns>
+            A String of hexadecimal pairs separated by hyphens, where each pair
+            represents the corresponding element in value; for example, "7F-2C-4A".
+            </returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Returns a String converted from a specified number of bytes at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <param name="length">The number of bytes to convert.</param>
+            <remarks>The length elements from array position startIndex are converted.</remarks>
+            <returns>
+            A String of hexadecimal pairs separated by hyphens, where each pair
+            represents the corresponding element in value; for example, "7F-2C-4A".
+            </returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.ToDecimal(System.Byte[],System.Int32)">
+            <summary>
+            Returns a decimal value converted from sixteen bytes
+            at a specified position in a byte array.
+            </summary>
+            <param name="value">An array of bytes.</param>
+            <param name="startIndex">The starting position within value.</param>
+            <returns>A decimal  formed by sixteen bytes beginning at startIndex.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Decimal)">
+            <summary>
+            Returns the specified decimal value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 16.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Decimal,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified decimal value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">A character to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Int64,System.Int32)">
+            <summary>
+            Returns an array with the given number of bytes formed
+            from the least significant bytes of the specified value.
+            This is used to implement the other GetBytes methods.
+            </summary>
+            <param name="value">The value to get bytes for</param>
+            <param name="bytes">The number of significant bytes to return</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Boolean)">
+            <summary>
+            Returns the specified Boolean value as an array of bytes.
+            </summary>
+            <param name="value">A Boolean value.</param>
+            <returns>An array of bytes with length 1.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Char)">
+            <summary>
+            Returns the specified Unicode character value as an array of bytes.
+            </summary>
+            <param name="value">A character to convert.</param>
+            <returns>An array of bytes with length 2.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Double)">
+            <summary>
+            Returns the specified double-precision floating point value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 8.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Int16)">
+            <summary>
+            Returns the specified 16-bit signed integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 2.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Int32)">
+            <summary>
+            Returns the specified 32-bit signed integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 4.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Int64)">
+            <summary>
+            Returns the specified 64-bit signed integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 8.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.Single)">
+            <summary>
+            Returns the specified single-precision floating point value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 4.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.UInt16)">
+            <summary>
+            Returns the specified 16-bit unsigned integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 2.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.UInt32)">
+            <summary>
+            Returns the specified 32-bit unsigned integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 4.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.GetBytes(System.UInt64)">
+            <summary>
+            Returns the specified 64-bit unsigned integer value as an array of bytes.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <returns>An array of bytes with length 8.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Int64,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the given number of bytes from the least-specific
+            end of the specified value into the specified byte array, beginning
+            at the specified index.
+            This is used to implement the other CopyBytes methods.
+            </summary>
+            <param name="value">The value to copy bytes for</param>
+            <param name="bytes">The number of significant bytes to copy</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytesImpl(System.Int64,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the given number of bytes from the least-specific
+            end of the specified value into the specified byte array, beginning
+            at the specified index.
+            This must be implemented in concrete derived classes, but the implementation
+            may assume that the value will fit into the buffer.
+            </summary>
+            <param name="value">The value to copy bytes for</param>
+            <param name="bytes">The number of significant bytes to copy</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Boolean,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified Boolean value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">A Boolean value.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Char,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified Unicode character value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">A character to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Double,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified double-precision floating point value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Int16,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 16-bit signed integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 32-bit signed integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Int64,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 64-bit signed integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.Single,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified single-precision floating point value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.UInt16,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 16-bit unsigned integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.UInt32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 32-bit unsigned integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.EndianBitConverter.CopyBytes(System.UInt64,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified 64-bit unsigned integer value into the specified byte array,
+            beginning at the specified index.
+            </summary>
+            <param name="value">The number to convert.</param>
+            <param name="buffer">The byte array to copy the bytes into</param>
+            <param name="index">The first index into the array to copy the bytes into</param>
+        </member>
+        <member name="T:MiscUtil.Conversion.Endianness">
+            <summary>
+            Endianness of a converter
+            </summary>
+        </member>
+        <member name="F:MiscUtil.Conversion.Endianness.LittleEndian">
+            <summary>
+            Little endian - least significant byte first
+            </summary>
+        </member>
+        <member name="F:MiscUtil.Conversion.Endianness.BigEndian">
+            <summary>
+            Big endian - most significant byte first
+            </summary>
+        </member>
+        <member name="T:MiscUtil.Conversion.LittleEndianBitConverter">
+            <summary>
+            Implementation of EndianBitConverter which converts to/from little-endian
+            byte arrays.
+            </summary>
+        </member>
+        <member name="P:MiscUtil.Conversion.LittleEndianBitConverter.Endianness">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+        </member>
+        <member name="M:MiscUtil.Conversion.LittleEndianBitConverter.IsLittleEndian">
+            <summary>
+            Indicates the byte order ("endianess") in which data is converted using this class.
+            </summary>
+            <remarks>
+            Different computer architectures store data using different byte orders. "Big-endian"
+            means the most significant byte is on the left end of a word. "Little-endian" means the
+            most significant byte is on the right end of a word.
+            </remarks>
+            <returns>true if this converter is little-endian, false otherwise.</returns>
+        </member>
+        <member name="M:MiscUtil.Conversion.LittleEndianBitConverter.CopyBytesImpl(System.Int64,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Copies the specified number of bytes from value to buffer, starting at index.
+            </summary>
+            <param name="value">The value to copy</param>
+            <param name="bytes">The number of bytes to copy</param>
+            <param name="buffer">The buffer to copy the bytes into</param>
+            <param name="index">The index to start at</param>
+        </member>
+        <member name="M:MiscUtil.Conversion.LittleEndianBitConverter.FromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Returns a value built from the specified number of bytes from the given buffer,
+            starting at index.
+            </summary>
+            <param name="buffer">The data in byte array format</param>
+            <param name="startIndex">The first index to use</param>
+            <param name="bytesToConvert">The number of bytes to use</param>
+            <returns>The value built from the given bytes</returns>
+        </member>
+        <member name="T:PacketDotNet.InternetPacket">
+            <summary>
+            Internet packets include IPv4, IPv6, IGMP etc, see
+            http://en.wikipedia.org/wiki/Internet_Layer
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.InternetPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.IPv4Fields">
+            <summary>
+            IP protocol field encoding information.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.VersionAndHeaderLengthLength">
+            <summary> Width of the IP version and header length field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.DifferentiatedServicesLength">
+            <summary> Width of the Differentiated Services / Type of service field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.TotalLengthLength">
+            <summary> Width of the total length field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.IdLength">
+            <summary> Width of the ID field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.FragmentOffsetAndFlagsLength">
+            <summary> Width of the fragment offset bits and offset field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.TtlLength">
+            <summary> Width of the TTL field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.ProtocolLength">
+            <summary> Width of the IP protocol code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.ChecksumLength">
+            <summary> Width of the IP checksum in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.VersionAndHeaderLengthPosition">
+            <summary> Position of the version code and header length within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.DifferentiatedServicesPosition">
+            <summary> Position of the differentiated services value within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.TotalLengthPosition">
+            <summary> Position of the header length within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.IdPosition">
+            <summary> Position of the packet ID within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.FragmentOffsetAndFlagsPosition">
+            <summary> Position of the flag bits and fragment offset within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.TtlPosition">
+            <summary> Position of the ttl within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.ProtocolPosition">
+            <summary>
+            Position of the protocol used within the IP data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.ChecksumPosition">
+            <summary> Position of the checksum within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.SourcePosition">
+            <summary> Position of the source IP address within the IP header.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.DestinationPosition">
+            <summary> Position of the destination IP address within a packet.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.HeaderLength">
+            <summary> Length in bytes of an IP header, excluding options.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Fields.AddressLength">
+            <summary>
+            Number of bytes in an IPv4 address
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.IPv4Packet">
+            <summary>
+            IPv4 packet
+            See http://en.wikipedia.org/wiki/IPv4 for into
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.#ctor(System.Net.IPAddress,System.Net.IPAddress)">
+            <summary>
+            Construct an instance by values
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Parse bytes into an IP packet
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Parse bytes into an IP packet
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.IPv4Packet.TypesOfService_Fields">
+            <summary> Type of service code constants for IP. Type of service describes
+            how a packet should be handled.
+            <p>
+            TOS is an 8-bit record in an IP header which contains a 3-bit
+            precendence field, 4 TOS bit fields and a 0 bit.
+            </p><p>
+            The following constants are bit masks which can be logically and'ed
+            with the 8-bit IP TOS field to determine what type of service is set.
+            </p><p>
+            Taken from TCP/IP Illustrated V1 by Richard Stevens, p34.
+            </p></summary>
+        </member>
+        <member name="F:PacketDotNet.IPv4Packet.HeaderMinimumLength">
+            <value>
+            Number of bytes in the smallest valid ipv4 packet
+            </value>
+        </member>
+        <member name="F:PacketDotNet.IPv4Packet.ipVersion">
+            <value>
+            Version number of the IP protocol being used
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.Version">
+            <summary> Get the IP version code.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.PayloadLength">
+            <value>
+            Forwards compatibility IPv6.PayloadLength property
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.HeaderLength">
+            <summary>
+            The IP header length field.  At most, this can be a
+            four-bit value.  The high order bits beyond the fourth bit
+            will be ignored.
+            </summary>
+            <param name="length">The length of the IP header in 32-bit words.
+            </param>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.Id">
+            <summary>
+            The unique ID of this IP datagram. The ID normally
+            increments by one each time a datagram is sent by a host.
+            A 16-bit unsigned integer.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.FragmentOffset">
+            <summary>
+            Fragmentation offset
+            The offset specifies a number of octets (i.e., bytes).
+            A 13-bit unsigned integer.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.SourceAddress">
+            <summary> Fetch the IP address of the host where the packet originated from.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.DestinationAddress">
+            <summary> Fetch the IP address of the host where the packet is destined.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.Checksum">
+            <summary> Fetch the header checksum.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.ValidChecksum">
+            <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.ValidIPChecksum">
+            <summary>
+            Check if the IP packet header is valid, checksum-wise.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.DifferentiatedServices">
+            <summary> Fetch the type of service. </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.TypeOfService">
+            <value>
+            Renamed to DifferentiatedServices in IPv6 but present here
+            for backwards compatibility
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.TotalLength">
+            <value>
+            The entire datagram size including header and data
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.FragmentFlags">
+            <summary> Fetch fragment flags.</summary>
+            <param name="flags">A 3-bit unsigned integer.</param>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.TimeToLive">
+            <summary> Fetch the time to live. TTL sets the upper limit on the number of
+            routers through which this IP datagram is allowed to pass.
+            Originally intended to be the number of seconds the packet lives it is now decremented
+            by one each time a router passes the packet on
+            8-bit value
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv4Packet.Protocol">
+            <summary> Fetch the code indicating the type of protocol embedded in the IP</summary>
+            <seealso cref="T:PacketDotNet.IPProtocolType">
+            </seealso>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.ComputeIPChecksum">
+            <summary>
+            Computes the IP checksum, optionally updating the IP checksum header.
+            </summary>
+            <returns> The computed IP checksum.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.UpdateIPChecksum">
+            <summary>
+            Update the checksum value
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.AttachPseudoIPHeader(System.Byte[])">
+            <summary>
+            Prepend to the given byte[] origHeader the portion of the IPv6 header used for
+            generating an tcp checksum
+            http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv4
+            http://tools.ietf.org/html/rfc793
+            </summary>
+            <param name="origHeader">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:System.Byte" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.ToString">
+            <summary> Convert this IP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this IP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert this IP packet to a more verbose string.</summary>
+        </member>
+        <member name="M:PacketDotNet.IPv4Packet.RandomPacket">
+            <summary>
+            Generate a random packet
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="T:PacketDotNet.IPv6Fields">
+            <summary>
+            A struct containing length and position information about IPv6 Fields.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IPv6Fields.#ctor">
+            <summary>
+            Commutes the field positions.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.VersionTrafficClassFlowLabelLength">
+            <summary>
+            The IP Version, Traffic Class, and Flow Label field length. These must be in one
+            field due to boundary crossings.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.PayloadLengthLength">
+            <summary>
+            The payload length field length.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.NextHeaderLength">
+            <summary>
+            The next header field length, identifies protocol encapsulated by the packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.HopLimitLength">
+            <summary>
+            The hop limit field length.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.AddressLength">
+            <summary>
+            Address field length
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.VersionTrafficClassFlowLabelPosition">
+            <summary>
+            The byte position of the field line in the IPv6 header.
+            This is where the IP version, Traffic Class, and Flow Label fields are.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.PayloadLengthPosition">
+            <summary>
+            The byte position of the payload length field.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.NextHeaderPosition">
+            <summary>
+            The byte position of the next header field. (Replaces the ipv4 protocol field)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.HopLimitPosition">
+            <summary>
+            The byte position of the hop limit field.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.SourceAddressPosition">
+            <summary>
+            The byte position of the source address field.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.DestinationAddressPosition">
+            <summary>
+            The byte position of the destination address field.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPv6Fields.HeaderLength">
+            <summary>
+            The byte length of the IPv6 Header
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.IPv6Packet">
+            <summary>
+            IPv6 packet
+            References
+            ----------
+            http://tools.ietf.org/html/rfc2460
+            http://en.wikipedia.org/wiki/IPv6
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.#ctor(System.Net.IPAddress,System.Net.IPAddress)">
+            <summary>
+            Create an IPv6 packet from values
+            </summary>
+            <param name="SourceAddress">
+            A <see cref="T:System.Net.IPAddress" /></param>
+            <param name="DestinationAddress">
+            A <see cref="T:System.Net.IPAddress" /></param>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int offset constructor, timeval defaults to the current time
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="F:PacketDotNet.IPv6Packet.HeaderMinimumLength">
+            <value>
+            Minimum number of bytes in an IPv6 header
+            </value>
+        </member>
+        <member name="F:PacketDotNet.IPv6Packet.ipVersion">
+            <value>
+            The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.Version">
+            <summary>
+            The version field of the IPv6 Packet.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.TrafficClass">
+            <summary>
+            The traffic class field of the IPv6 Packet.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.FlowLabel">
+            <summary>
+            The flow label field of the IPv6 Packet.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.PayloadLength">
+            <summary>
+            The payload lengeth field of the IPv6 Packet
+            NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
+            payload length is ONLY the size of the payload.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.HeaderLength">
+            <value>
+            Backwards compatibility property for IPv4.HeaderLength
+            NOTE: This field is the number of 32bit words
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.TotalLength">
+            <value>
+            Backwards compatibility property for IPv4.TotalLength
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.NextHeader">
+            <summary>
+            Identifies the protocol encapsulated by this packet
+            Replaces IPv4's 'protocol' field, has compatible values
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.Protocol">
+            <value>
+            The protocol of the packet encapsulated in this ip packet
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.HopLimit">
+            <summary>
+            The hop limit field of the IPv6 Packet.
+            NOTE: Replaces the 'time to live' field of IPv4
+            8-bit value
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.TimeToLive">
+            <value>
+            Helper alias for 'HopLimit'
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.SourceAddress">
+            <summary>
+            The source address field of the IPv6 Packet.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.DestinationAddress">
+            <summary>
+            The destination address field of the IPv6 Packet.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.Color">
+            <summary>
+            Converts the packet to a color string. TODO add a method for colored to string.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.IPv6Packet.ValidIPChecksum">
+            <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.AttachPseudoIPHeader(System.Byte[])">
+            <summary>
+            Prepend to the given byte[] origHeader the portion of the IPv6 header used for
+            generating an tcp checksum
+            http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv6
+            http://tools.ietf.org/html/rfc2460#page-27
+            </summary>
+            <param name="origHeader">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:System.Byte" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.ToString">
+            <summary>
+            Converts the packet to a string.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this IP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert this IP packet to a more verbose string.</summary>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.ComputeIPChecksum">
+            <summary>
+            Calculate the IP checksum of this packet
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.UpdateIPChecksum">
+            <summary>
+            Update the IP checksum, nothing to do for IPv6 packets
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.IPv6Packet.RandomPacket">
+            <summary>
+            Generate a random packet
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="T:PacketDotNet.IpPort">
+            <summary> Code constants for ip ports. </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Ssh">
+            <summary>
+            Secure shell
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Telnet">
+            <summary>
+            Terminal protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Smtp">
+            <summary>
+            Simple mail transport protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Http">
+            <summary>
+            Hyper text transfer protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Www">
+            <summary>
+            Same as Http
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Sftp">
+            <summary>
+            Secure ftp
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Ntp">
+            <summary>
+            Network time protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpPort.Snmp">
+            <summary>
+            Simple network management protocol
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Utils.ChecksumUtils">
+            <summary>
+            Computes the one's sum on a byte array.
+            Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
+            Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ChecksumUtils.OnesComplementSum(System.Byte[])">
+            <summary>
+            Computes the one's complement sum on a byte array
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ChecksumUtils.OnesComplementSum(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Computes the one's complement sum on a byte array
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ChecksumUtils.OnesSum(System.Byte[])">
+            <summary>
+            Compute a ones sum of a byte array
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ChecksumUtils.OnesSum(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            16 bit sum of all values
+            http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="start">
+            A <see cref="T:System.Int32" /></param>
+            <param name="len">
+            A <see cref="T:System.Int32" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="T:PacketDotNet.TcpFields">
+            <summary> IP protocol field encoding information.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.PortLength">
+            <summary> Length of a TCP port in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.SequenceNumberLength">
+            <summary> Length of the sequence number in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.AckNumberLength">
+            <summary> Length of the acknowledgment number in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.DataOffsetLength">
+            <summary> Length of the data offset and flags field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.FlagsLength">
+            <summary> The length of the flags field </summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.WindowSizeLength">
+            <summary> Length of the window size field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.ChecksumLength">
+            <summary> Length of the checksum field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.UrgentPointerLength">
+            <summary> Length of the urgent field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.SourcePortPosition">
+            <summary> Position of the source port field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.DestinationPortPosition">
+            <summary> Position of the destination port field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.SequenceNumberPosition">
+            <summary> Position of the sequence number field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.AckNumberPosition">
+            <summary> Position of the acknowledgment number field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.DataOffsetPosition">
+            <summary> Position of the data offset </summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.FlagsPosition">
+            <summary> Position of the flags field </summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.WindowSizePosition">
+            <summary> Position of the window size field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.ChecksumPosition">
+            <summary> Position of the checksum field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.UrgentPointerPosition">
+            <summary> Position of the urgent pointer field.</summary>
+        </member>
+        <member name="F:PacketDotNet.TcpFields.HeaderLength">
+            <summary> Length in bytes of a TCP header.</summary>
+        </member>
+        <member name="T:PacketDotNet.ARPFields">
+            <summary> IP protocol field encoding information.
+            </summary>
+            FIXME: These fields are partially broken because they assume the offset for
+            several fields and the offset is actually based on the accumulated offset
+            into the structure determined by the fields that indicate sizes</member>
+        <member name="F:PacketDotNet.ARPFields.EthernetProtocolType">
+            <summary> Type code for ethernet addresses.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.IPv4ProtocolType">
+            <summary> Type code for MAC addresses.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.OperationLength">
+            <summary> Operation type length in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.AddressTypeLength">
+            <summary>
+            The length of the address type fields in bytes,
+            eg. the length of hardware type or protocol type
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.AddressLengthLength">
+            <summary>
+            The length of the address length fields in bytes.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.HardwareAddressTypePosition">
+            <summary> Position of the hardware address type.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.ProtocolAddressTypePosition">
+            <summary> Position of the protocol address type.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.HardwareAddressLengthPosition">
+            <summary> Position of the hardware address length.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.ProtocolAddressLengthPosition">
+            <summary> Position of the protocol address length.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.OperationPosition">
+            <summary> Position of the operation type.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.SenderHardwareAddressPosition">
+            <summary> Position of the sender hardware address.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.SenderProtocolAddressPosition">
+            <summary> Position of the sender protocol address.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.TargetHardwareAddressPosition">
+            <summary> Position of the target hardware address.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.TargetProtocolAddressPosition">
+            <summary> Position of the target protocol address.</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPFields.HeaderLength">
+            <summary> Total length in bytes of an ARP header.</summary>
+        </member>
+        <member name="T:PacketDotNet.ARPPacket">
+            <summary>
+            An ARP protocol packet.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.#ctor(PacketDotNet.ARPOperation,System.Net.NetworkInformation.PhysicalAddress,System.Net.IPAddress,System.Net.NetworkInformation.PhysicalAddress,System.Net.IPAddress)">
+            <summary>
+            Create an ARPPacket from values
+            </summary>
+            <param name="Operation">
+            A <see cref="T:PacketDotNet.ARPOperation" /></param>
+            <param name="TargetHardwareAddress">
+            A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
+            <param name="TargetProtocolAddress">
+            A <see cref="T:System.Net.IPAddress" /></param>
+            <param name="SenderHardwareAddress">
+            A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
+            <param name="SenderProtocolAddress">
+            A <see cref="T:System.Net.IPAddress" /></param>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int Offset constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.HardwareAddressType">
+            <value>
+            Also known as HardwareType
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.ProtocolAddressType">
+            <value>
+            Also known as ProtocolType
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.HardwareAddressLength">
+            <value>
+            Hardware address length field
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.ProtocolAddressLength">
+            <value>
+            Protocol address length field
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.Operation">
+            <summary> Fetch the operation code.
+            Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
+            </summary>
+            <summary> Sets the operation code.
+            Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.SenderProtocolAddress">
+            <value>
+            Upper layer protocol address of the sender, typically an IPv4 or IPv6 address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.TargetProtocolAddress">
+            <value>
+            Upper layer protocol address of the target, typically an IPv4 or IPv6 address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.SenderHardwareAddress">
+            <value>
+            Sender hardware address, usually an ethernet mac address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.TargetHardwareAddress">
+            <value>
+            Target hardware address, usually an ethernet mac address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ARPPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.ToString">
+            <summary> Convert this ARP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this ARP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.IsType(PacketDotNet.Packet)">
+            <summary>
+            Returns true if Packet is an ARPPacket, ie.
+            an EthernetPacket that contains an ARPPacket
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.ARPPacket.GetType(PacketDotNet.Packet)">
+            <summary>
+            Returns the encapsulated ARPPacket of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.ARPPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.ICMPv6Fields">
+            <summary>
+            ICMP protocol field encoding information.
+            See http://en.wikipedia.org/wiki/ICMPv6
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.TypeLength">
+            <summary> Length of the ICMP message type code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.CodeLength">
+            <summary> Length of the ICMP subcode in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.ChecksumLength">
+            <summary> Length of the ICMP header checksum in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.TypePosition">
+            <summary> Position of the ICMP message type.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.CodePosition">
+            <summary> Position of the ICMP message subcode.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.ChecksumPosition">
+            <summary> Position of the ICMP header checksum.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Fields.HeaderLength">
+            <summary> Length in bytes of an ICMP header.</summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPTypeCode">
+            <summary>
+            Code constants for ICMP message types.
+            From http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
+            Note that these values represent the combined
+            type and code fields, where the type field is the upper byte
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPv6Packet">
+            <summary>
+            An ICMP packet.
+            See http://en.wikipedia.org/wiki/ICMPv6
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int offset constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int Offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.ICMPv6Packet.Type">
+            <value>
+            The Type value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ICMPv6Packet.Code">
+            <summary> Fetch the ICMP code </summary>
+        </member>
+        <member name="P:PacketDotNet.ICMPv6Packet.Checksum">
+            <value>
+            Checksum value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ICMPv6Packet.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.ToString">
+            <summary> Convert this ICMP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this ICMP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="T:PacketDotNet.IGMPMessageType">
+            <summary> Code constants for IGMP message types.
+            From RFC #2236.
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.IGMPv2Packet">
+            <summary>
+            An IGMP packet.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int Offset constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.IGMPv2Packet.Type">
+            <value>
+            The type of IGMP message
+            </value>
+        </member>
+        <member name="P:PacketDotNet.IGMPv2Packet.MaxResponseTime">
+            <summary> Fetch the IGMP max response time.</summary>
+        </member>
+        <member name="P:PacketDotNet.IGMPv2Packet.Checksum">
+            <summary> Fetch the IGMP header checksum.</summary>
+        </member>
+        <member name="P:PacketDotNet.IGMPv2Packet.GroupAddress">
+            <summary> Fetch the IGMP group address.</summary>
+        </member>
+        <member name="P:PacketDotNet.IGMPv2Packet.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.IGMPv2Packet.ToString">
+            <summary> Convert this IGMP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.IGMPv2Packet.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this IGMP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="T:PacketDotNet.InternetLinkLayerPacket">
+            <summary>
+            Internet Link layer packet
+            See http://en.wikipedia.org/wiki/Link_Layer
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.InternetLinkLayerPacket.#ctor(PacketDotNet.PosixTimeval)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="T:PacketDotNet.IGMPv2Fields">
+            <summary> IGMP protocol field encoding information. </summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.TypeLength">
+            <summary> Length of the IGMP message type code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.MaxResponseTimeLength">
+            <summary> Length of the IGMP max response code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.ChecksumLength">
+            <summary> Length of the IGMP header checksum in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.GroupAddressLength">
+            <summary> Length of group address in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.TypePosition">
+            <summary> Position of the IGMP message type.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.MaxResponseTimePosition">
+            <summary> Position of the IGMP max response code.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.ChecksumPosition">
+            <summary> Position of the IGMP header checksum.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.GroupAddressPosition">
+            <summary> Position of the IGMP group address.</summary>
+        </member>
+        <member name="F:PacketDotNet.IGMPv2Fields.HeaderLength">
+            <summary> Length in bytes of an IGMP header.</summary>
+        </member>
+        <member name="T:PacketDotNet.LinuxSLLPacket">
+            <summary>
+            Represents a Linux cooked capture packet, the kinds of packets
+            received when capturing on an 'any' device
+            See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LinuxSLLPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Create an LinuxSLLPacket from a byte array
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.LinuxSLLPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Create an LinuxSLLPacket from a byte array and a Timeval
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.LinuxSLLPacket.Type">
+            <value>
+            Information about the packet direction
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LinuxSLLPacket.LinkLayerAddressType">
+            <value>
+            The
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LinuxSLLPacket.LinkLayerAddressLength">
+            <value>
+            Number of bytes in the link layer address of the sender of the packet
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LinuxSLLPacket.LinkLayerAddress">
+            <value>
+            Link layer header bytes, maximum of 8 bytes
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LinuxSLLPacket.EthernetProtocolType">
+            <value>
+            The encapsulated protocol type
+            </value>
+        </member>
+        <member name="M:PacketDotNet.LinuxSLLPacket.ToString">
+            <summary>
+            ToString implementation
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LinuxSLLPacket.ToColoredString(System.Boolean)">
+            <summary>
+            Colored string that represents the values in this class instance
+            </summary>
+            <param name="colored">
+            A <see cref="T:System.Boolean" /></param>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LinuxSLLPacket.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert a more verbose string.</summary>
+        </member>
+        <member name="T:PacketDotNet.LinuxSLLFields">
+            <summary>
+            Lengths and offsets to the fields in the LinuxSLL packet
+            See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.PacketTypeLength">
+            <summary>
+            Length of the packet type field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressTypeLength">
+            <summary>
+            Link layer address type
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressLengthLength">
+            <summary>
+            Link layer address length
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressMaximumLength">
+            <summary>
+            The link layer address field length
+            NOTE: the actual link layer address MAY be shorter than this
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.SLLHeaderLength">
+            <summary>
+            Number of bytes in a SLL header
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.EthernetProtocolTypeLength">
+            <summary>
+            Length of the ethernet protocol field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.PacketTypePosition">
+            <summary>
+            Position of the packet type field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressTypePosition">
+            <summary>
+            Position of the link layer address type field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressLengthPosition">
+            <summary>
+            Positino of the link layer address length field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.LinkLayerAddressPosition">
+            <summary>
+            Position of the link layer address field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLFields.EthernetProtocolTypePosition">
+            <summary>
+            Position of the ethernet protocol type field
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.LinuxSLLType">
+            <summary>
+            The types of cooked packets
+            See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLType.PacketSentToUs">
+            <summary>
+            Packet was sent to us by somebody else
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLType.PacketBroadCast">
+            <summary>
+            Packet was broadcast by somebody else
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLType.PacketMulticast">
+            <summary>
+            Packet was multicast, but not broadcast
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLType.PacketSentToSomeoneElse">
+            <summary>
+            Packet was sent by somebody else to somebody else
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinuxSLLType.PacketSentByUs">
+            <summary>
+            Packet was sent by us
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.IPProtocolType">
+            <summary>
+            The protocol encapsulated inside of the IP packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.IP">
+            <summary> Dummy protocol for TCP. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.HOPOPTS">
+            <summary> IPv6 Hop-by-Hop options. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.ICMP">
+            <summary> Internet Control Message Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.IGMP">
+            <summary> Internet Group Management Protocol.</summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.IPIP">
+            <summary> IPIP tunnels (older KA9Q tunnels use 94). </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.TCP">
+            <summary> Transmission Control Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.EGP">
+            <summary> Exterior Gateway Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.PUP">
+            <summary> PUP protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.UDP">
+            <summary> User Datagram Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.IDP">
+            <summary> XNS IDP protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.TP">
+            <summary> SO Transport Protocol Class 4. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.IPV6">
+            <summary> IPv6 header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.ROUTING">
+            <summary> IPv6 routing header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.FRAGMENT">
+            <summary> IPv6 fragmentation header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.RSVP">
+            <summary> Reservation Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.GRE">
+            <summary> General Routing Encapsulation. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.ESP">
+            <summary> encapsulating security payload. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.AH">
+            <summary> authentication header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.ICMPV6">
+            <summary> ICMPv6. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.NONE">
+            <summary> IPv6 no next header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.DSTOPTS">
+            <summary> IPv6 destination options. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.MTP">
+            <summary> Multicast Transport Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.ENCAP">
+            <summary> Encapsulation Header. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.PIM">
+            <summary> Protocol Independent Multicast. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.COMP">
+            <summary> Compression Header Protocol. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.RAW">
+            <summary> Raw IP packets. </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.INVALID">
+            <summary> Unrecognized IP protocol.
+            WARNING: this only works because the int storage for the protocol
+            code has more bits than the field in the IP header where it is stored.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IPProtocolType.MASK">
+            <summary> IP protocol mask.</summary>
+        </member>
+        <member name="T:PacketDotNet.IpVersion">
+            <summary> Code constants for internet protocol versions.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IpVersion.IPv4">
+            <summary> Internet protocol version 4.</summary>
+        </member>
+        <member name="F:PacketDotNet.IpVersion.IPv6">
+            <summary> Internet protocol version 6.</summary>
+        </member>
+        <member name="T:PacketDotNet.LinkLayers">
+            <summary> Link-layer type codes.
+            <p>
+            Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
+            </p><p>
+            The link-layer type is used to determine what data-structure the
+            IP protocol bits will be encapsulated inside of.
+            </p><p>
+            On a 10/100mbps network, packets are encapsulated inside of ethernet.
+            14-byte ethernet headers which contain MAC addresses and an ethernet type
+            field.
+            </p><p>
+            On ethernet over ppp, the link-layer type is raw, and packets
+            are not encapsulated in any ethernet header.
+            </p></summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Null">
+            <summary> no link-layer encapsulation </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Ethernet">
+            <summary> Ethernet (10Mb) </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.ExperimentalEthernet3MB">
+            <summary> Experimental Ethernet (3Mb) </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.AmateurRadioAX25">
+            <summary> Amateur Radio AX.25 </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.ProteonProNetTokenRing">
+            <summary> Proteon ProNET Token Ring </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Chaos">
+            <summary> Chaos </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Ieee802">
+            <summary> IEEE 802 Networks </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.ArcNet">
+            <summary> ARCNET </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Slip">
+            <summary> Serial Line IP </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Ppp">
+            <summary> Point-to-point Protocol </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Fddi">
+            <summary> FDDI </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.AtmRfc1483">
+            <summary> LLC/SNAP encapsulated atm </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Raw">
+            <summary> raw IP </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.SlipBSD">
+            <summary> BSD Slip.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.PppBSD">
+            <summary> BSD PPP.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.AtmClip">
+            <summary> IP over ATM.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.PppSerial">
+            <summary> PPP over HDLC.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.CiscoHDLC">
+            <summary> Cisco HDLC.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Ieee80211">
+            <summary> IEEE 802.11 wireless.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Loop">
+            <summary> OpenBSD loopback.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.LinuxSLL">
+            <summary> Linux cooked sockets.</summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.Unknown">
+            <summary> unknown link-layer type</summary>
+        </member>
+        <member name="T:PacketDotNet.Utils.HexPrinter">
+            <summary>
+            Helper class that prints out an array of hex values
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.HexPrinter.GetString(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create a string that contains the hex values of byte[] Byte in
+            text form
+            </summary>
+            <param name="Byte">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Length">
+            A <see cref="T:System.Int32" /></param>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.PosixTimeval">
+            <summary> POSIX.4 timeval</summary>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.#ctor(System.UInt64,System.UInt64)">
+            <summary>
+            Constructor with Seconds and MicroSeconds fields
+            </summary>
+            <param name="Seconds">
+            A <see cref="T:System.UInt64" /></param>
+            <param name="MicroSeconds">
+            A <see cref="T:System.UInt64" /></param>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.#ctor">
+            <summary>
+            Construct a PosixTimeval using the current UTC time
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PosixTimeval.Seconds">
+            <value>
+            Number of seconds in the timeval
+            </value>
+        </member>
+        <member name="P:PacketDotNet.PosixTimeval.MicroSeconds">
+            <value>
+            Number of microseconds in the timeval
+            </value>
+        </member>
+        <member name="P:PacketDotNet.PosixTimeval.Date">
+            <summary> The timeval as a DateTime in Utc </summary>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.ToString">
+            <summary>
+            Convert the timeval to a string like 'SECONDS.MICROSECONDSs'
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Utils.RandomUtils">
+            <summary>
+            Random utility methods
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.RandomUtils.GetIPAddress(PacketDotNet.IpVersion)">
+            <summary>
+            Generate a random ip address
+            </summary>
+            <param name="version">
+            A <see cref="T:PacketDotNet.IpVersion" /></param>
+            <returns>
+            A <see cref="T:System.Net.IPAddress" /></returns>
+        </member>
+        <member name="T:PacketDotNet.PacketOrByteArray">
+            <summary>
+            Encapsulates and ensures that we have either a Packet OR
+            a ByteArrayAndOffset, but not both
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PacketOrByteArray.Type">
+            <value>
+            Whether or not this container contains a packet, a byte[] or neither
+            </value>
+        </member>
+        <member name="M:PacketDotNet.PacketOrByteArray.AppendToMemoryStream(System.IO.MemoryStream)">
+            <summary>
+            Appends to the MemoryStream either the byte[] represented by TheByteArray, or
+            if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
+            which will append ThePacket's header and any encapsulated packets it contains
+            </summary>
+            <param name="ms">
+            A <see cref="T:System.IO.MemoryStream" /></param>
+        </member>
+        <member name="T:PacketDotNet.PayloadType">
+            <summary>
+            Differentiates between a packet class payload, a byte[] payload
+            or no payload
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPv6Types">
+            <summary>
+            ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
+            http://www.iana.org/assignments/icmpv6-parameters
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.RawPacket">
+            <summary>
+            Raw packet as loaded from a pcap device or file
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.RawPacket.#ctor(PacketDotNet.LinkLayers,PacketDotNet.PosixTimeval,System.Byte[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="LinkLayerType">
+            A <see cref="T:PacketDotNet.LinkLayers" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="Data">
+            A <see cref="T:System.Byte" /></param>
+        </member>
+        <member name="P:PacketDotNet.RawPacket.LinkLayerType">
+            <value>
+            Link layer from which this packet was captured
+            </value>
+        </member>
+        <member name="P:PacketDotNet.RawPacket.Timeval">
+            <value>
+            The unix timeval when the packet was created
+            </value>
+        </member>
+        <member name="P:PacketDotNet.RawPacket.Data">
+            <summary> Fetch data portion of the packet.</summary>
+        </member>
+        <member name="M:PacketDotNet.RawPacket.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.ARPOperation">
+            <summary>
+            The possible ARP operation values
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.Request">
+            <summary>
+            Arp request
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.Response">
+            <summary>
+            Arp response
+            </summary>
+        </member>
+    </members>
+</doc>

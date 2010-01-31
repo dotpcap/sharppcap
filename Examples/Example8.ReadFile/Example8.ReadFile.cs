@@ -1,5 +1,4 @@
 using System;
-using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example8
 {
@@ -55,15 +54,17 @@ namespace SharpPcap.Test.Example8
         /// Prints the source and dest MAC addresses of each received Ethernet frame
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
-        {       
-            if( e.Packet is EthernetPacket )
+        {
+            if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
-                EthernetPacket etherFrame = (EthernetPacket)e.Packet;
+                var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+                var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
+
                 Console.WriteLine("At: {0}:{1}: MAC:{2} -> MAC:{3}",
-                    etherFrame.PcapHeader.Date.ToString(),
-                    etherFrame.PcapHeader.Date.Millisecond,
-                    etherFrame.SourceHwAddress, 
-                    etherFrame.DestinationHwAddress);
+                    ethernetPacket.Timeval.Date.ToString(),
+                    ethernetPacket.Timeval.Date.Millisecond,
+                    ethernetPacket.SourceHwAddress, 
+                    ethernetPacket.DestinationHwAddress);
             }
         }
     }

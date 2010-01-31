@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap.Protocols;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.

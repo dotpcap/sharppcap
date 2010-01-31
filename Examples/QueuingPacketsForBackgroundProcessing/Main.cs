@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using SharpPcap;
-using SharpPcap.Packets;
 
 namespace QueuingPacketsForBackgroundProcessing
 {
@@ -31,7 +30,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// The queue that the callback thread puts packets in. Accessed by
         /// the background thread when QueueLock is held
         /// </summary>
-        private static List<Packet> PacketQueue = new List<Packet>();
+        private static List<PacketDotNet.RawPacket> PacketQueue = new List<PacketDotNet.RawPacket>();
 
         /// <summary>
         /// The last time PcapDevice.Statistics() was called on the active device.
@@ -176,20 +175,20 @@ namespace QueuingPacketsForBackgroundProcessing
                     System.Threading.Thread.Sleep(250);
                 } else // should process the queue
                 {
-                    List<Packet> ourQueue;
+                    List<PacketDotNet.RawPacket> ourQueue;
                     lock(QueueLock)
                     {
                         // swap queues, giving the capture callback a new one
                         ourQueue = PacketQueue;
-                        PacketQueue = new List<Packet>();
+                        PacketQueue = new List<PacketDotNet.RawPacket>();
                     }
 
                     Console.WriteLine("BackgroundThread: ourQueue.Count is {0}", ourQueue.Count);
 
                     foreach(var packet in ourQueue)
                     {
-                        DateTime time = packet.PcapHeader.Date;
-                        uint len = packet.PcapHeader.PacketLength;
+                        var time = packet.Timeval.Date;
+                        var len = packet.Data.Length;
                         Console.WriteLine("BackgroundThread: {0}:{1}:{2},{3} Len={4}", 
                             time.Hour, time.Minute, time.Second, time.Millisecond, len);
                     }

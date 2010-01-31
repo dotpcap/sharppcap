@@ -60,13 +60,17 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpPcap, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SharpPcap, Version=2.4.1.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpPcap\bin\Debug\SharpPcap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="PacketDotNet, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example6.DumpTCP.cs">

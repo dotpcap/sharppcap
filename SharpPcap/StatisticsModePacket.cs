@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
+/*
  * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
  * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
  */
@@ -32,28 +32,21 @@ namespace SharpPcap
         /// <summary>
         /// This holds time value
         /// </summary>
-        private PcapHeader m_pktHdr;
+        public PacketDotNet.PosixTimeval Timeval
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// This holds byte received and packets received
         /// </summary>
         private byte[]  m_pktData;
 
-        /// <summary>
-        /// Constructs a new Pcap Statistics strcuture
-        /// </summary>
-        /// <param name="pktHdr">Time value as PCAP_PKTHDR</param>
-        /// <param name="pktData">Statistics values as PCAP_PKTDATA</param>
-        internal StatisticsModePacket(PcapHeader pktHdr, PcapUnmanagedStructures.PCAP_PKTDATA pktData)
+        internal StatisticsModePacket(PacketDotNet.RawPacket p)
         {
-            this.m_pktHdr   = pktHdr;
-            this.m_pktData  = pktData.bytes;
-        }
-
-        internal StatisticsModePacket(Packets.Packet p)
-        {
-            this.m_pktHdr   = p.PcapHeader;
-            this.m_pktData  = p.Bytes;
+            this.Timeval = p.Timeval;
+            this.m_pktData  = p.Data;
         }
 
         /// <summary>
@@ -76,42 +69,6 @@ namespace SharpPcap
             {
                 return BitConverter.ToInt64(m_pktData, 8);
             }
-        }
-
-        /// <summary>
-        /// The 'Seconds' part of the timestamp
-        /// </summary>
-        public ulong Seconds
-        {
-            get
-            {
-                return m_pktHdr.Seconds;
-            }           
-        }
-
-        /// <summary>
-        /// The 'MicroSeconds' part of the timestamp
-        /// </summary>
-        public ulong MicroSeconds
-        {
-            get
-            {
-                return m_pktHdr.MicroSeconds;
-            }           
-        }
-
-        /// <summary>
-        /// The timestamps
-        /// </summary>
-        public System.DateTime Date
-        {
-            get
-            {
-                DateTime timeval = new DateTime(1970,1,1); 
-                timeval = timeval.AddSeconds(Seconds); 
-                timeval = timeval.AddMilliseconds(MicroSeconds / 1000); 
-                return timeval.ToLocalTime();
-            }           
         }
     }
 }

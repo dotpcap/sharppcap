@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example4
 {
@@ -53,14 +52,14 @@ namespace SharpPcap.Test.Example4
             Console.WriteLine("-- Listening on {0}...",
                 device.Description);
 
-            Packet packet;
+            PacketDotNet.RawPacket packet;
 
             // Capture packets using PcapGetNextPacket()
             while( (packet = device.GetNextPacket()) != null )
             {
                 // Prints the time and length of each received packet
-                DateTime time = packet.PcapHeader.Date;
-                uint len = packet.PcapHeader.PacketLength;
+                var time = packet.Timeval.Date;
+                var len = packet.Data.Length;
                 Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                     time.Hour, time.Minute, time.Second, time.Millisecond, len);
             }

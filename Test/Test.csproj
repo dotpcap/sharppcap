@@ -107,29 +107,11 @@
     <Compile Include="IpUtilTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PacketsTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SendTcpSynExample.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TCPPacketTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UdpTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EthernetPacketTest.cs" />
     <Compile Include="PcapGetAllDevices.cs" />
-    <Compile Include="IPv6PacketTest.cs" />
-    <Compile Include="ArpPacketTest.cs" />
-    <Compile Include="UDPPacketTest.cs" />
     <Compile Include="CheckFilterTest.cs" />
     <Compile Include="PcapTest.cs" />
     <Compile Include="SetFilterTest.cs" />
     <Compile Include="InvalidPacketTest.cs" />
-    <Compile Include="IPPacketTest.cs" />
-    <Compile Include="ChecksumUtilsTest.cs" />
     <Compile Include="PcapStatisticsTest.cs" />
   </ItemGroup>
   <ItemGroup>

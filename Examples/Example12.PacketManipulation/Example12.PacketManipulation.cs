@@ -2,7 +2,6 @@ using System;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using SharpPcap;
-using SharpPcap.Packets;
 
 namespace Example12.PacketManipulation
 {
@@ -84,18 +83,19 @@ namespace Example12.PacketManipulation
 
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            if(e.Packet is EthernetPacket)
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+            if(packet is PacketDotNet.EthernetPacket)
             {
-                EthernetPacket eth = ((EthernetPacket)e.Packet);
+                var eth = ((PacketDotNet.EthernetPacket)packet);
                 Console.WriteLine("Original Eth packet: " + eth.ToColoredString(false));
 
                 //Manipulate ethernet parameters
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
                 eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
-                if (e.Packet is IPPacket)
+                var ip = PacketDotNet.IpPacket.GetType(packet);
+                if(ip != null)
                 {
-                    IPPacket ip = ((IPPacket)e.Packet);
                     Console.WriteLine("Original IP packet: " + ip.ToColoredString(false));
 
                     //manipulate IP parameters
@@ -106,9 +106,9 @@ namespace Example12.PacketManipulation
                     //Recalculate the IP checksum
                     ip.ComputeIPChecksum();
 
-                    if (ip is TCPPacket)
+                    var tcp = PacketDotNet.TcpPacket.GetType(packet);
+                    if (tcp != null)
                     {
-                        TCPPacket tcp = ((TCPPacket)ip);
                         Console.WriteLine("Original TCP packet: " + tcp.ToColoredString(false));
 
                         //manipulate TCP parameters
@@ -125,9 +125,9 @@ namespace Example12.PacketManipulation
                         tcp.ComputeTCPChecksum();
                     }
 
-                    if (ip is UDPPacket)
+                    var udp = PacketDotNet.UdpPacket.GetType(packet);
+                    if (udp != null)
                     {
-                        UDPPacket udp = ((UDPPacket)ip);
                         Console.WriteLine("Original UDP packet: " + udp.ToColoredString(false));
 
                         //manipulate UDP parameters

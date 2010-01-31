@@ -25,8 +25,8 @@ namespace SharpPcap
 {
     public class CaptureEventArgs : EventArgs
     {
-        private Packets.Packet packet;
-        public Packets.Packet Packet
+        private PacketDotNet.RawPacket packet;
+        public PacketDotNet.RawPacket Packet
         {
             get { return packet; }
         }
@@ -37,7 +37,7 @@ namespace SharpPcap
             get { return device; }
         }
 
-        public CaptureEventArgs(Packets.Packet packet, LivePcapDevice device)
+        public CaptureEventArgs(PacketDotNet.RawPacket packet, LivePcapDevice device)
         {
             this.packet = packet;
             this.device = device;
