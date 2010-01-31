@@ -64,10 +64,6 @@
     <RootNamespace>Example10.SendQueue</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpPcap, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharpPcap\bin\Debug\SharpPcap.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -86,4 +82,10 @@
     <ProjectGuid>{BBF3DECE-E4F5-44BE-BE8C-3016202B17ED}</ProjectGuid>
     <RootNamespace>Example10.SendQueue</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj">
+      <Project>{24262E52-1304-4A25-8F73-A3B06E40592E}</Project>
+      <Name>SharpPcap</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
