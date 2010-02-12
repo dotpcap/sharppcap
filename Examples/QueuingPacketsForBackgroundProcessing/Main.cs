@@ -135,7 +135,7 @@ namespace QueuingPacketsForBackgroundProcessing
             var interval = Now - LastStatisticsOutput;
             if(interval > LastStatisticsInterval)
             {
-                Console.WriteLine("device_OnPacketArrival: " + e.Device.Statistics());
+                Console.WriteLine("device_OnPacketArrival: " + ((LivePcapDevice)e.Device).Statistics());
                 LastStatisticsOutput = Now;
             }
 

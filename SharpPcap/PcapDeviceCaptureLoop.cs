@@ -242,9 +242,12 @@ namespace SharpPcap
             if (!Opened)
                 throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");
 
+            var usePoll = (this is LivePcapDevice) &&
+                          isLibPcap && MonoUnixFound;
+
             // unix specific code
             int captureFileDescriptor = 0;
-            if(isLibPcap && MonoUnixFound)
+            if(usePoll)
             {
                 // retrieve the file descriptor of the adapter for use with poll()
                 captureFileDescriptor = SafeNativeMethods.pcap_fileno(PcapHandle);
@@ -270,7 +273,7 @@ namespace SharpPcap
             // infrequently enough to cause any noticable performance overhead
             int millisecondTimeout = 500;
 
-            if(isLibPcap && MonoUnixFound)
+            if(usePoll)
             {
 #if UseMonoUnixNativeDirectly
                 pollFds[0].fd = captureFileDescriptor;
@@ -303,11 +306,12 @@ namespace SharpPcap
 
             while(!shouldCaptureThreadStop)
             {
+                Console.WriteLine("capturing");
                 // unix specific code, we want to poll for packets
                 // otherwise if we call pcap_dispatch() the read() will block
                 // and won't resume until a packet arrives OR until a signal
                 // occurs
-                if(isLibPcap && MonoUnixFound)
+                if(usePoll)
                 {
                     // block here
 #if UseMonoUnixNativeDirectly
@@ -324,6 +328,7 @@ namespace SharpPcap
                     // if we have no poll results, just loop
                     if(result <= 0)
                     {
+                        Console.WriteLine("no results, looping");
                         continue;
                     }
 

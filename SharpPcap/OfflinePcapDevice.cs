@@ -110,5 +110,16 @@ namespace SharpPcap
             // set the local handle
             this.PcapHandle = adapterHandle;
         }
+
+        /// <summary>
+        /// Retrieves pcap statistics
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PcapStatistics"/>
+        /// </returns>
+        public override PcapStatistics Statistics()
+        {
+            throw new NotSupportedOnOfflineDeviceException("Statistics not supported on offline device");
+        }
     }
 }

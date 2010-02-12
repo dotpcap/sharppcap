@@ -197,6 +197,14 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Retrieves pcap statistics
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PcapStatistics"/>
+        /// </returns>
+        public abstract PcapStatistics Statistics();
+
+        /// <summary>
         /// Notify the OnPacketArrival delegates about a newly captured packet
         /// </summary>
         /// <param name="p">
@@ -210,7 +218,7 @@ namespace SharpPcap
                 if(handler != null )
                 {
                     //Invoke the packet arrival event
-                    handler(this, new CaptureEventArgs(p, (LivePcapDevice)this));
+                    handler(this, new CaptureEventArgs(p, this));
                 }
             }
             else if(Mode == CaptureMode.Statistics)
@@ -219,7 +227,7 @@ namespace SharpPcap
                 if(handler != null)
                 {
                     //Invoke the pcap statistics event
-                    handler(this, new StatisticsModeEventArgs(p, (LivePcapDevice)this));
+                    handler(this, new StatisticsModeEventArgs(p, this));
                 }
             }
         }

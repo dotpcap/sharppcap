@@ -31,13 +31,13 @@ namespace SharpPcap
             get { return packet; }
         }
 
-        private LivePcapDevice device;
-        public LivePcapDevice Device
+        private PcapDevice device;
+        public PcapDevice Device
         {
             get { return device; }
         }
 
-        public CaptureEventArgs(PacketDotNet.RawPacket packet, LivePcapDevice device)
+        public CaptureEventArgs(PacketDotNet.RawPacket packet, PcapDevice device)
         {
             this.packet = packet;
             this.device = device;
