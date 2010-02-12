@@ -11,8 +11,6 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Test</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -131,6 +129,7 @@
     <Compile Include="IPPacketTest.cs" />
     <Compile Include="ChecksumUtilsTest.cs" />
     <Compile Include="PcapStatisticsTest.cs" />
+    <Compile Include="OfflinePcapDeviceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

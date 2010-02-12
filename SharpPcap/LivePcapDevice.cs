@@ -388,7 +388,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public virtual PcapStatistics Statistics()
+        public override PcapStatistics Statistics()
         {
             // can only call PcapStatistics on an open device
             ThrowIfNotOpen("device not open");
