@@ -134,4 +134,13 @@
     <ProjectGuid>{24262E52-1304-4A25-8F73-A3B06E40592E}</ProjectGuid>
     <RootNamespace>SharpPcap</RootNamespace>
   </PropertyGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy FileWidth="120" TabWidth="4" TabsToSpaces="True" NoTabsAfterNonTabs="False" RemoveTrailingWhitespace="False" EolMarker="Native" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>
