@@ -306,7 +306,6 @@ namespace SharpPcap
 
             while(!shouldCaptureThreadStop)
             {
-                Console.WriteLine("capturing");
                 // unix specific code, we want to poll for packets
                 // otherwise if we call pcap_dispatch() the read() will block
                 // and won't resume until a packet arrives OR until a signal
@@ -328,7 +327,6 @@ namespace SharpPcap
                     // if we have no poll results, just loop
                     if(result <= 0)
                     {
-                        Console.WriteLine("no results, looping");
                         continue;
                     }
 
