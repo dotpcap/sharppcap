@@ -1,6 +1,7 @@
 Generating release packages and updating source control (git)
 
 - Check that the version set in AssemblyInfo.cs is correct for the next release
+- Generate a changelog like 'git log SharpPcap_X_Y_Z..SharpPcap_X_Y_Z+1 > changes'
 - Make sure ChangeLog has been updated to reflect this version ahead of the
   list of changes that are going into that release.
 - Rebuild project
