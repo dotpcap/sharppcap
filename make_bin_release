@@ -54,6 +54,10 @@ cp SharpPcap/SharpPcap.dll.config ${releaseDirectory}
 cp SharpPcap/bin/Debug/SharpPcap.xml ${debugDirectory}
 cp SharpPcap/bin/Release/SharpPcap.xml ${releaseDirectory}
 
+# copy the PacketDotNet files
+cp SharpPcap/PacketDotNet/* ${debugDirectory}
+cp SharpPcap/PacketDotNet/* ${releaseDirectory}
+
 # make a zip file of the binary files
 cd ${binDirectory}
 zip -r ${binDirectory}/${dirName}.bin.zip ${dirName}
