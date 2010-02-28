@@ -10,7 +10,7 @@ Generating release packages and updating source control (git)
 - Push tags to the server
   git push --tags
 - Run build_release ~/sharppcap_releases X.Y.Z X.Y.Z+1
-- Edit ~/sharppcap_releases/SharpPcap_3.0.0_ReleaseNotes.txt with any additional
+- Edit ~/sharppcap_releases/SharpPcap_X.Y.Z+1_ReleaseNotes.txt with any additional
   notes about the changes in the newly released version
 
 Pushing changes out to the world
