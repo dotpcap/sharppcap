@@ -460,15 +460,6 @@
             <returns>
             A <see cref="T:System.Int32" /></returns>
         </member>
-        <member name="M:PacketDotNet.IpPacket.IsType(PacketDotNet.Packet)">
-            <summary>
-            Returns true if Packet p contains this type
-            </summary>
-            <param name="p">
-            A <see cref="T:PacketDotNet.Packet" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
         <member name="M:PacketDotNet.IpPacket.GetType(PacketDotNet.Packet)">
             <summary>
             Returns the IpPacket inside of the Packet p or null if
@@ -673,10 +664,6 @@
             20 bytes is the smallest tcp header
             </value>
         </member>
-        <member name="F:PacketDotNet.TcpPacket.serialVersionUID">
-            <summary>
-            </summary>
-        </member>
         <member name="P:PacketDotNet.TcpPacket.SourcePort">
             <summary> Fetch the port number on the source host.</summary>
         </member>
@@ -788,11 +775,6 @@
         <member name="M:PacketDotNet.TcpPacket.ToColoredVerboseString(System.Boolean)">
             <summary> Convert this TCP packet to a verbose.</summary>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.IsType(PacketDotNet.Packet)">
-            <summary>
-            Returns true if Packet p contains a TcpPacket
-            </summary>
-        </member>
         <member name="M:PacketDotNet.TcpPacket.GetType(PacketDotNet.Packet)">
             <summary>
             Returns the TcpPacket embedded in Packet p or null if
@@ -899,15 +881,6 @@
             color escape sequences.
             </param>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.IsType(PacketDotNet.Packet)">
-            <summary>
-            Returns true if this Packet contains this type
-            </summary>
-            <param name="p">
-            A <see cref="T:PacketDotNet.Packet" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
         <member name="M:PacketDotNet.UdpPacket.GetType(PacketDotNet.Packet)">
             <summary>
             Returns the UdpPacket inside of the Packet p or null if
@@ -926,7 +899,8 @@
             A <see cref="T:PacketDotNet.UdpPacket" /></returns>
         </member>
         <member name="T:PacketDotNet.EthernetFields">
-            <summary> Ethernet protocol field encoding information.
+            <summary>
+            Ethernet protocol field encoding information.
             </summary>
         </member>
         <member name="F:PacketDotNet.EthernetFields.TypeLength">
@@ -2999,16 +2973,6 @@
             color escape sequences.
             </param>
         </member>
-        <member name="M:PacketDotNet.ARPPacket.IsType(PacketDotNet.Packet)">
-            <summary>
-            Returns true if Packet is an ARPPacket, ie.
-            an EthernetPacket that contains an ARPPacket
-            </summary>
-            <param name="p">
-            A <see cref="T:PacketDotNet.Packet" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
         <member name="M:PacketDotNet.ARPPacket.GetType(PacketDotNet.Packet)">
             <summary>
             Returns the encapsulated ARPPacket of the Packet p or null if
@@ -3173,6 +3137,17 @@
             </summary>
             <param name="timeval">
             A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="M:PacketDotNet.InternetLinkLayerPacket.GetInnerPayload(PacketDotNet.InternetLinkLayerPacket)">
+            <summary>
+            Look for the innermost payload. This method is useful because
+            while some packets are LinuxSSL-&gt;IpPacket or
+            EthernetPacket-&gt;IpPacket, there are some packets that are
+            EthernetPacket-&gt;PPPoEPacket-&gt;PPPPacket-&gt;IpPacket, and for these cases
+            we really want to get to the IpPacket
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
         </member>
         <member name="T:PacketDotNet.IGMPv2Fields">
             <summary> IGMP protocol field encoding information. </summary>
@@ -3601,12 +3576,94 @@
         <member name="P:PacketDotNet.PosixTimeval.Date">
             <summary> The timeval as a DateTime in Utc </summary>
         </member>
+        <member name="M:PacketDotNet.PosixTimeval.Equals(System.Object)">
+            <summary>
+            Equals override
+            </summary>
+            <param name="obj">
+            A <see cref="T:System.Object" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.GetHashCode">
+            <summary>
+            GetHashCode override
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
         <member name="M:PacketDotNet.PosixTimeval.ToString">
             <summary>
             Convert the timeval to a string like 'SECONDS.MICROSECONDSs'
             </summary>
             <returns>
             A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_LessThan(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator &lt; overload
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_GreaterThan(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator &gt; overload
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_LessThanOrEqual(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator &lt;=
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_GreaterThanOrEqual(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator &gt;=
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_Equality(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator ==
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.op_Inequality(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
+            <summary>
+            Operator !=
+            </summary>
+            <param name="a">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
         </member>
         <member name="T:PacketDotNet.Utils.RandomUtils">
             <summary>
@@ -3704,6 +3761,248 @@
             <summary>
             Arp response
             </summary>
+        </member>
+        <member name="T:PacketDotNet.PPPoEPacket">
+            <summary>
+            Point to Point Protocol
+            See http://tools.ietf.org/html/rfc2516
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.#ctor(PacketDotNet.PPPoECode,System.UInt16)">
+            <summary>
+            Construct a new PPPoEPacket from source and destination mac addresses
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Create an PPPoEPacket from a byte array
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Create an PPPoEPacket from a byte array and a Timeval
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.Version">
+            <summary>
+            PPPoe version, must be 0x1 according to RFC
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.Type">
+            <summary>
+            Type, must be 0x1 according to RFC
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.Code">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.SessionId">
+            <summary>
+            Session identifier for this PPPoe packet
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.Length">
+            <summary>
+            Length of the PPPoe payload, not including the PPPoe header
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPoEPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.ToString">
+            <summary> Convert this packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert a more verbose string.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPoEPacket.RandomPacket">
+            <summary>
+            Generate a random PPPoEPacket
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.PPPoEPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.PPPoEFields">
+            <summary>
+            Point to Point Protocol
+            See http://tools.ietf.org/html/rfc2516
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.VersionTypeLength">
+            <summary> Size in bytes of the version/type field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.CodeLength">
+            <summary> Size in bytes of the code field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.SessionIdLength">
+            <summary> Size in bytes of the SessionId field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.LengthLength">
+            <summary> Size in bytes of the Length field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.VersionTypePosition">
+            <summary> Offset from the start of the header to the version/type field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.CodePosition">
+            <summary> Offset from the start of the header to the Code field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.SessionIdPosition">
+            <summary> Offset from the start of the header to the SessionId field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.LengthPosition">
+            <summary> Offset from the start of the header to the Length field </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoEFields.HeaderLength">
+            <summary>
+            Length of the overall PPPoe header
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.PPPoECode">
+            <summary>
+            Values for the Code field of a PPPoE packet
+            See http://tools.ietf.org/html/rfc2516
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoECode.SessionStage">
+            <summary>
+            The PPPoe payload must contain a PPP packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoECode.ActiveDiscoveryOffer">
+            <summary>
+            Active Discovery Offer (PADO) packet
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoECode.ActiveDiscoveryInitiation">
+            <summary>
+            From RFC2516:
+            The Host sends the PADI packet with the DESTINATION_ADDR set to the
+            broadcast address.  The CODE field is set to 0x09 and the SESSION_ID
+            MUST be set to 0x0000.
+            The PADI packet MUST contain exactly one TAG of TAG_TYPE Service-
+            Name, indicating the service the Host is requesting, and any number
+            of other TAG types.  An entire PADI packet (including the PPPoE
+            header) MUST NOT exceed 1484 octets so as to leave sufficient room
+            for a relay agent to add a Relay-Session-Id TAG.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPoECode.ActiveDiscoveryTerminate">
+            <summary>
+            Indicate that the PPPoe session specified by the SessionId field of
+            the PPPoe packet has been terminated
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.PPPPacket">
+            <summary>
+            PPP packet
+            See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.#ctor(PacketDotNet.PPPoECode,System.UInt16)">
+            <summary>
+            Construct a new PPPPacket from source and destination mac addresses
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Create an PPPPacket from a byte array
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Create an PPPPacket from a byte array and a Timeval
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.PPPPacket.Protocol">
+            <summary>
+            See http://www.iana.org/assignments/ppp-numbers
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PPPPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.ToString">
+            <summary> Convert this packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.ToColoredVerboseString(System.Boolean)">
+            <summary> Convert a more verbose string.</summary>
+        </member>
+        <member name="M:PacketDotNet.PPPPacket.RandomPacket">
+            <summary>
+            Generate a random PPPoEPacket
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.PPPoEPacket" /></returns>
+        </member>
+        <member name="T:PacketDotNet.PPPFields">
+            <summary>
+            The fields in a PPP packet
+            See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPFields.ProtocolLength">
+            <summary>
+            Length of the Protocol field in bytes, the field is of type
+            PPPProtocol
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPFields.ProtocolPosition">
+            <summary>
+            Offset from the start of the PPP packet where the Protocol field is located
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPFields.HeaderLength">
+            <summary>
+            The length of the header
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.PPPProtocol">
+            <summary>
+            Indicates the protocol encapsulated by the PPP packet
+            See http://www.iana.org/assignments/ppp-numbers
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPProtocol.Padding">
+            <summary> Padding </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPProtocol.IPv4">
+            <summary> IPv4 </summary>
+        </member>
+        <member name="F:PacketDotNet.PPPProtocol.IPv6">
+            <summary> IPv6 </summary>
         </member>
     </members>
 </doc>
