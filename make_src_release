@@ -4,7 +4,7 @@
 #
 # parameter 1 is the output directory
 # parameter 2 is the version being released
-# parameter 3 is the svn path
+# parameter 3 is the git tag
 #
 
 function PrintUsage()
