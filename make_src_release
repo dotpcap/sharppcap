@@ -4,7 +4,6 @@
 #
 # parameter 1 is the output directory
 # parameter 2 is the version being released
-# parameter 3 is the git tag
 #
 
 function PrintUsage()
@@ -13,13 +12,15 @@ function PrintUsage()
   echo "  ./make_src_release OutputDirectory VersionNumber TagName";
   echo "";
   echo "example:";
-  echo "  ./make_src_release ~/sharppcap_releases 2.0.0 SharpPcap_2_0_0";
+  echo "  ./make_src_release ~/sharppcap_releases 2.0.0";
 }
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 2 ]; then
   PrintUsage
   exit
 fi
+
+echo "make_src_release $1 $2"
 
 baseOutputDirectory=$1
 releaseVersion=$2
@@ -30,6 +31,9 @@ baseOutputDirectory=${baseOutputDirectory}/src
 mkdir -p ${baseOutputDirectory}
 outputName=SharpPcap-${releaseVersion}
 
+# build the tag by converting the '.' in the version to '_'
+tag=SharpPcap_${2//./_}
+
 # create a zip file of the appropriate tag
-git archive --format=zip --remote=${gitRemotePublicPath} $3 > ${baseOutputDirectory}/${outputName}.src.zip
+git archive --format=zip --remote=${gitRemotePublicPath} $tag > ${baseOutputDirectory}/${outputName}.src.zip
 
