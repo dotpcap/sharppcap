@@ -1,44 +1,34 @@
+/*
+This file is part of SharpPcap.
+
+SharpPcap is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SharpPcap is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/* 
+ * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+ * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
+ */
+
 using System;
 using System.Net.NetworkInformation;
-using SharpPcap.Packets;
-using SharpPcap.Util;
 
-/*
-Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-    1. Redistributions of source code must retain the above copyright notice,
-        this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright 
-        notice, this list of conditions and the following disclaimer in 
-        the documentation and/or other materials provided with the distribution.
-
-    3. The names of the authors may not be used to endorse or promote products
-        derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR
-OR ANY CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT,
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
-OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-namespace SharpPcap.Protocols
+namespace SharpPcap
 {
     /// <summary>
     /// Resolves MAC addresses from IP addresses using the Address Resolution Protocol (ARP)
     /// </summary>
     public class ARP
     {
-        private System.Net.IPAddress    _localIP;
         private string                  _deviceName;
 
         /// <summary>
@@ -54,10 +44,8 @@ namespace SharpPcap.Protocols
         /// <param name="deviceName">The name of the network device on which this resolver sends its ARP packets</param>
         public ARP(string deviceName)
         {
-            DeviceName=deviceName;
+            DeviceName = deviceName;
         }
-
-        private PhysicalAddress          _localMAC;
 
         /// <summary>
         /// The source MAC address to be used for ARP requests.
@@ -65,14 +53,8 @@ namespace SharpPcap.Protocols
         /// </summary>
         public PhysicalAddress LocalMAC
         {
-            get
-            {
-                return _localMAC;
-            }
-            set
-            {
-                _localMAC = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -81,15 +63,8 @@ namespace SharpPcap.Protocols
         /// </summary>
         public System.Net.IPAddress LocalIP
         {
-            get
-            {
-                return _localIP;
-            }
-
-            set
-            {
-                _localIP = value;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -149,64 +124,71 @@ namespace SharpPcap.Protocols
                 localMAC = device.Interface.MacAddress;
 
             //Build a new ARP request packet
-            ARPPacket request = BuildRequest(destIP, localMAC, localIP);
+            var request = BuildRequest(destIP, localMAC, localIP);
 
             //create a "tcpdump" filter for allowing only arp replies to be read
             String arpFilter = "arp and ether dst " + localMAC.ToString();
 
             //open the device with 20ms timeout
             device.Open(DeviceMode.Promiscuous, 20);
+
             //set the filter
             device.SetFilter(arpFilter);
+
             //inject the packet to the wire
             device.SendPacket(request);
 
-            ARPPacket reply;
+            PacketDotNet.ARPPacket arpPacket = null;
 
             while(true)
             {
                 //read the next packet from the network
-                reply = (ARPPacket)device.GetNextPacket();
-                if(reply==null)continue;
-                
+                var reply = device.GetNextPacket();
+                if(reply == null)continue;
+
+                // parse the packet
+                var packet = PacketDotNet.Packet.ParsePacket(reply);
+
+                // is this an arp packet?
+                arpPacket = PacketDotNet.ARPPacket.GetType(packet);
+                if(arpPacket == null)
+                {
+                    continue;
+                }
+
                 //if this is the reply we're looking for, stop
-                if(reply.ARPSenderProtoAddress.Equals(destIP))
+                if(arpPacket.SenderProtocolAddress.Equals(destIP))
                 {
                     break;
                 }
             }
+
             //free the device
             device.Close();
+
             //return the resolved MAC address
-            return reply.ARPSenderHwAddress;
+            return arpPacket.SenderHardwareAddress;
         }
 
-        private ARPPacket BuildRequest(System.Net.IPAddress destIP,
-                                       PhysicalAddress localMAC,
-                                       System.Net.IPAddress localIP)
+        private PacketDotNet.Packet BuildRequest(System.Net.IPAddress destinationIP,
+                                                 PhysicalAddress localMac,
+                                                 System.Net.IPAddress localIP)
         {
-            ARPPacket arp = BuildARP(localMAC, localIP);
-            arp.ARPOperation = ARPFields_Fields.ARP_OP_REQ_CODE;
-            arp.ARPTargetHwAddress = PhysicalAddress.Parse("00-00-00-00-00-00");
-            arp.ARPTargetProtoAddress = destIP;
-            arp.DestinationHwAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
-            return arp;
-        }
+            // an arp packet is inside of an ethernet packet
+            var ethernetPacket = new PacketDotNet.EthernetPacket(localMac,
+                                                                 PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"),
+                                                                 PacketDotNet.EthernetPacketType.Arp);
 
-        private ARPPacket BuildARP(PhysicalAddress localMAC, System.Net.IPAddress localIP)
-        {
-            ARPPacket arp = new ARPPacket(14, new byte[60]);
-            // arp fields
-            arp.ARPHwLength = 6;
-            arp.ARPHwType = ARPFields_Fields.ARP_ETH_ADDR_CODE;
-            arp.ARPProtocolLength = 4;
-            arp.ARPProtocolType = ARPFields_Fields.ARP_IP_ADDR_CODE;
-            arp.ARPSenderHwAddress = localMAC;
-            arp.ARPSenderProtoAddress = localIP;
-            // ether fields
-            arp.SourceHwAddress = localMAC;
-            arp.EthernetProtocol = EthernetPacketType.Arp;
-            return arp;
+            var arpPacket = new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
+                                                       PhysicalAddress.Parse("00-00-00-00-00-00"),
+                                                       destinationIP,
+                                                       localMac,
+                                                       localIP);
+
+            // the arp packet is the payload of the ethernet packet
+            ethernetPacket.PayloadPacket = arpPacket;
+
+            return ethernetPacket;
         }
     }
 }

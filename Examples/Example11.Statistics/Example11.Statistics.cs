@@ -93,7 +93,7 @@ namespace SharpPcap.Test.Example11
         {
             // Calculate the delay in microseconds from the last sample.
             // This value is obtained from the timestamp that's associated with the sample.
-            ulong delay = (e.Statistics.Seconds - oldSec) * 1000000 - oldUsec + e.Statistics.MicroSeconds;
+            ulong delay = (e.Statistics.Timeval.Seconds - oldSec) * 1000000 - oldUsec + e.Statistics.Timeval.MicroSeconds;
 
             // Get the number of Bits per second
             ulong bps = ((ulong)e.Statistics.RecievedBytes * 8 * 1000000) / delay;
@@ -110,14 +110,14 @@ namespace SharpPcap.Test.Example11
             ulong pps = ((ulong)e.Statistics.RecievedPackets * 1000000) / delay;
 
             // Convert the timestamp to readable format
-            var ts = e.Statistics.Date.ToLongTimeString();
+            var ts = e.Statistics.Timeval.Date.ToLongTimeString();
 
             // Print Statistics
             Console.WriteLine("{0}: bps={1}, pps={2}", ts, bps, pps); 
 
             //store current timestamp
-            oldSec = e.Statistics.Seconds;
-            oldUsec = e.Statistics.MicroSeconds;
+            oldSec = e.Statistics.Timeval.Seconds;
+            oldUsec = e.Statistics.Timeval.MicroSeconds;
         }
     }
 }

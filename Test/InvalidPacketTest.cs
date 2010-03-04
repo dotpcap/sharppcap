@@ -1,8 +1,6 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
-using SharpPcap.Packets;
-using SharpPcap.Util;
 
 namespace Test
 {
@@ -16,6 +14,8 @@ namespace Test
         [Test]
         public void IPPacketInvalidLength()
         {
+            throw new System.InvalidOperationException("Migrate test to Packet.Net");
+#if false
             var dev = new OfflinePcapDevice("../../capture_files/ip_packet_bogus_length.pcap");
             dev.Open();
 
@@ -35,7 +35,7 @@ namespace Test
             {
                 dev.Close();
             }
+#endif
         }
     }
-
 }

@@ -9,12 +9,9 @@ Generating release packages and updating source control (git)
   git tag -a SharpPcap_X_Y_Z
 - Push tags to the server
   git push --tags
-- Generate a changelog like 'git log SharpPcap_X_Y_Z..SharpPcap_X_Y_Z+1 > changes'
-- Make sure ChangeLog has been updated to reflect this version ahead of the
-  list of changes that are going into that release.
-- Run make_src_release with the tag name and release name
-- Run make_bin_release with the release name
-
+- Run build_release ~/sharppcap_releases X.Y.Z X.Y.Z+1
+- Edit ~/sharppcap_releases/SharpPcap_X.Y.Z+1_ReleaseNotes.txt with any additional
+  notes about the changes in the newly released version
 
 Pushing changes out to the world
 - Log into the sourceforge website and go to 'Project admin'->'File manager'

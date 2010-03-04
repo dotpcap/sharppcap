@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SharpPcap.Packets;
 
 namespace SharpPcap.Test.Example10
 {
@@ -42,7 +41,7 @@ namespace SharpPcap.Test.Example10
             //Allocate a new send queue
             SendQueue squeue = new SendQueue
                 ( (int)((OfflinePcapDevice)device).FileSize );
-            Packet packet;
+            PacketDotNet.RawPacket packet;
             
             try
             {

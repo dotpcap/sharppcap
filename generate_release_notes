@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# script to build release notes
+#
+# parameter 1 is the output directory
+# parameter 2 is the 'from' version being released
+# parameter 3 is the 'to' version being released
+
+function PrintUsage()
+{
+  echo "example:";
+  echo "  ./generate_release_notes ~/sharppcap_releases 2.0.0 2.1.0";
+}
+
+if [ "$#" -ne 3 ]; then
+  PrintUsage
+  exit
+fi
+
+destinationDirectory=$1
+fromVersion=$2
+toVersion=$3
+
+# need to swap out the '.' in the version with '_' because
+# thats the tagging convention used in git
+replace=.
+with=_
+
+# generate the tags in the format of 'Blah_A_B_C'
+fromTag=SharpPcap_${fromVersion//$replace/$with}
+toTag=SharpPcap_${toVersion//$replace/$with}
+
+outputFile=$destinationDirectory/SharpPcap_${toVersion}_ReleaseNotes.txt
+
+echo "SharpPcap ChangeLog" > $outputFile
+echo "v$fromVersion -> v$toVersion" >> $outputFile
+echo "http://sharppcap.sourceforge.net" >> $outputFile
+echo "Chris Morgan <chmorgan@gmail.com>" >> $outputFile
+echo "" >> $outputFile
+
+# generate the differences between the tags
+git log ${fromTag}..${toTag} > changes
+
+# append the changes to the release file
+cat changes >> ${outputFile}

@@ -11,8 +11,6 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>SharpPcap</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -70,98 +68,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="PacketDotNet, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>PacketDotNet\PacketDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Content Include="Packets\package.html" />
     <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ARPFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ARPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\EthernetFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\EthernetPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ICMPFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ICMPMessage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ICMPMessages.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\ICMPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IGMPFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IGMPMessage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IGMPMessages.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IGMPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IPv4Fields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IPPorts.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\IPProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\LinkLayer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\LinkLayers.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Packet.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\PacketEncoding.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\PacketFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\TCPFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\TCPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\UDPFields.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\UDPPacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\AnsiEscapeSequences.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\ArrayHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\HexHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Packets\Util\Timeval.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LivePcapDevice.cs">
@@ -182,48 +96,18 @@
     <Compile Include="StatisticsModePacket.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Protocols\ARP.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Pcap.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Convert.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Int64Range.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPAddressRange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPSubnet.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\IPUtil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\NumberRange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Util\Random.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Version.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PcapUnmanagedStructures.cs" />
-    <Compile Include="Packets\IPv4Packet.cs" />
-    <Compile Include="Packets\IPv6Packet.cs" />
-    <Compile Include="Packets\IPv6Fields.cs" />
-    <Compile Include="Packets\Util\ChecksumUtils.cs" />
     <Compile Include="SafeNativeMethods.cs" />
     <Compile Include="PcapDeviceCaptureLoop.cs" />
     <Compile Include="PcapAddress.cs" />
     <Compile Include="Sockaddr.cs" />
     <Compile Include="PcapInterface.cs" />
-    <Compile Include="Packets\EthernetPacketType.cs" />
-    <Compile Include="Packets\RawPacket.cs" />
     <Compile Include="DeviceNotReadyException.cs" />
     <Compile Include="PcapStatistics.cs" />
     <Compile Include="StatisticsException.cs" />
@@ -239,6 +123,7 @@
     <Compile Include="CaptureMode.cs" />
     <Compile Include="PcapDevice.cs" />
     <Compile Include="LivePcapDeviceList.cs" />
+    <Compile Include="ARP.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

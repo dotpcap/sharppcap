@@ -22,7 +22,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Runtime.InteropServices;
-using SharpPcap.Packets;
 
 namespace SharpPcap
 {
@@ -114,10 +113,15 @@ namespace SharpPcap
         /// </summary>
         /// <param name="packet">The packet to add</param>
         /// <returns>True if success, else false</returns>
-        public bool Add( Packet packet )
+        public bool Add( PacketDotNet.RawPacket packet )
         {
-            return this.AddInternal( packet.Bytes, packet.PcapHeader );
+            var data = packet.Data;
+            var timeval = packet.Timeval;
+            var header = new PcapHeader(timeval.Seconds, timeval.MicroSeconds,
+                                        (uint)data.Length, (uint)data.Length);
+            return this.AddInternal(data, header);
         }
+
         /// <summary>
         /// Add a packet to this send queue.
         /// </summary>
