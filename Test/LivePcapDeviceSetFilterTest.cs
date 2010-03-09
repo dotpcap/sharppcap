@@ -6,7 +6,7 @@ using SharpPcap;
 namespace Test
 {
     [TestFixture]
-    public class SetFilterTest
+    public class LivePcapDeviceSetFilterTest
     {
         [Test]
         public void SimpleFilter()

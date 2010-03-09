@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
+using PacketDotNet;
 
 namespace Test
 {
@@ -54,6 +55,35 @@ namespace Test
             }
 
             Assert.IsTrue(caughtExpectedException);
+        }
+
+        [Test]
+        public void SetFilter()
+        {
+            var offlineDevice = new OfflinePcapDevice("../../capture_files/test_stream.pcap");
+
+            offlineDevice.Open();
+            offlineDevice.SetFilter("port 53");
+
+            RawPacket rawPacket;
+            int count = 0;
+            do
+            {
+                rawPacket = offlineDevice.GetNextPacket();
+                if(rawPacket != null)
+                {
+                    Packet p = Packet.ParsePacket(rawPacket);
+                    var udpPacket = UdpPacket.GetType(p);
+                    Assert.IsNotNull(udpPacket);
+                    int dnsPort = 53;
+                    Assert.AreEqual(dnsPort, udpPacket.DestinationPort);
+                    count++;
+                }
+            } while(rawPacket != null);
+
+            Assert.AreEqual(1, count);
+
+            offlineDevice.Close(); // close the device
         }
     }
 }

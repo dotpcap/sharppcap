@@ -33,8 +33,6 @@ namespace SharpPcap
     /// </summary>
     public class LivePcapDevice : PcapDevice
     {
-        private int          m_mask  = 0; //for filter expression
-
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
         /// </summary>
@@ -183,123 +181,6 @@ namespace SharpPcap
                     string err = "Unable to set non blocking" + errbuf.ToString();
                     throw new PcapException(err);
                 }
-            }
-        }
-
-        // If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
-        /// or unmanaged memory will be leaked
-        private static bool CompileFilter(IntPtr pcapHandle,
-                                          string filterExpression,
-                                          uint mask,
-                                          out IntPtr bpfProgram,
-                                          out string errorString)
-        {
-            int result;
-            string err = String.Empty;
-
-            bpfProgram = IntPtr.Zero;
-            errorString = null;
-
-            //Alocate an unmanaged buffer
-            bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
-
-            //compile the expressions
-            result = SafeNativeMethods.pcap_compile(pcapHandle,
-                                                    bpfProgram,
-                                                    filterExpression,
-                                                    1,
-                                                    mask);
-
-            if(result < 0)
-            {
-                err = GetLastError(pcapHandle);
-
-                // free up the program memory
-                Marshal.FreeHGlobal(bpfProgram);            
-                bpfProgram = IntPtr.Zero; // make sure not to pass out a valid pointer
-
-                // set the error string
-                errorString = err;
-
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Free memory allocated in CompileFilter()
-        /// </summary>
-        /// <param name="bpfProgram">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        private static void FreeBpfProgram(IntPtr bpfProgram)
-        {
-            // free any pcap internally allocated memory from pcap_compile()
-            SafeNativeMethods.pcap_freecode(bpfProgram);
-
-            // free allocated buffers
-            Marshal.FreeHGlobal(bpfProgram);            
-        }
-
-        /// <summary>
-        /// Returns true if the filter expression was able to be compiled into a
-        /// program without errors
-        /// </summary>
-        public static bool CheckFilter(string filterExpression,
-                                       out string errorString)
-        {
-            IntPtr bpfProgram;
-            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
-
-            uint mask = 0;
-            if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))
-            {
-                SafeNativeMethods.pcap_close(fakePcap);
-                return false;
-            }
-
-            FreeBpfProgram(bpfProgram);
-
-            SafeNativeMethods.pcap_close(fakePcap);
-            return true;
-        }
-
-        /// <summary>
-        /// Compile a kernel level filtering expression, and associate the filter 
-        /// with this device. For more info on filter expression syntax, see:
-        /// http://www.winpcap.org/docs/docs31/html/group__language.html
-        /// </summary>
-        /// <param name="filterExpression">The filter expression to compile</param>
-        public virtual void SetFilter(string filterExpression)
-        {
-            int res;
-            IntPtr bpfProgram;
-            string errorString;
-
-            // pcap_setfilter() requires a valid pcap_t which isn't present if
-            // the device hasn't been opened
-            ThrowIfNotOpen("device is not open");
-
-            // attempt to compile the program
-            if(!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out bpfProgram, out errorString))
-            {
-                string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
-                throw new PcapException(err);
-            }
-
-            //associate the filter with this device
-            res = SafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
-
-            // Free the program whether or not we were successful in setting the filter
-            // we don't want to leak unmanaged memory if we throw an exception.
-            FreeBpfProgram(bpfProgram);
-
-            //watch for errors
-            if(res < 0)
-            {
-                errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
-                throw new PcapException(errorString);
             }
         }
 
