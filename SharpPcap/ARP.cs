@@ -107,7 +107,7 @@ namespace SharpPcap
             PhysicalAddress localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
             //NetworkDevice device = new NetworkDevice(DeviceName);
-            LivePcapDevice device = Pcap.GetPcapDevice(DeviceName);
+            LivePcapDevice device = LivePcapDeviceList.Instance[DeviceName];
 
             //FIXME: PcapDevices don't have IpAddress
             //       These were present under Windows specific network adapters

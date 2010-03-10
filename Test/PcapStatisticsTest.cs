@@ -13,7 +13,7 @@ namespace Test
         [Test]
         public void TestStatistics()
         {
-            var devices = Pcap.GetAllDevices();
+            var devices = LivePcapDeviceList.Instance;
 
             if(devices.Count == 0)
             {
@@ -58,7 +58,7 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var devices = Pcap.GetAllDevices();
+            var devices = LivePcapDeviceList.Instance;
 
             if(devices.Count == 0)
             {

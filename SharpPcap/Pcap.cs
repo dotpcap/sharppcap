@@ -98,40 +98,5 @@ namespace SharpPcap
                 AF_INET6 = 23; // value for windows from winsock.h
             }
         }
-
-        /// <summary>
-        /// Depreciated: Backwards compatability wrapper around PcapDeviceList. Don't use this.
-        /// </summary>
-        /// <returns>A List of PcapDevices</returns>
-        public static List<LivePcapDevice> GetAllDevices()
-        {
-            System.Diagnostics.Debug.WriteLine("List<PcapDevice> GetAllDevices() is depreciated.  Use Pcap.Devices instead.");
-            return new List<LivePcapDevice>(LivePcapDeviceList.Instance);
-        }
-
-        /// <summary>
-        /// Depreciated: Backwards compatability wrapper around new OfflinePcapDevice(string PcapFileName). Don't use this.
-        /// <param name="pcapFileName">
-        /// A <see cref="System.String"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="OfflinePcapDevice"/>
-        /// </returns>
-        /// </summary>
-        public static OfflinePcapDevice GetPcapOfflineDevice(string pcapFileName)
-        {
-            return new OfflinePcapDevice( pcapFileName );
-        }
-
-        /// <summary>
-        /// Depreciated: Backwards compatability wrapper around Pcap.Devices[string Name].  Don't use this.
-        /// </summary>
-        /// <param name="pcapDeviceName">The name of a device.</param>
-        /// <returns>A PcapDevice</returns>
-        public static LivePcapDevice GetPcapDevice( string pcapDeviceName )
-        {
-            System.Diagnostics.Debug.WriteLine("GetPcapDevice(string pcapDeviceName) is depreciated.  Use Pcap.Devices[pcapDeviceName] instead.");
-            return LivePcapDeviceList.Instance[pcapDeviceName];
-        }
     }
 }
