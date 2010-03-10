@@ -220,18 +220,26 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Synchronously capture packets on this device. Method blocks forever.
+        /// </summary>
+        public void Capture()
+        {
+            Capture(Pcap.InfinitePacketCount);
+        }
+
+        /// <summary>
         /// Synchronously captures packets on this network device. This method will block
         /// until capturing is finished.
         /// </summary>
-        /// <param name="packetCount">The number of packets to be captured. 
-        /// Value of '-1' means infinite.</param>
+        /// <param name="packetCount">The number of packets to be captured.
+        /// -1 means capture indefiniately</param>
         public void Capture(int packetCount)
         {
             m_pcapPacketCount = packetCount;
             CaptureThread();
 
             // restore the capture count incase the user Starts
-            m_pcapPacketCount = Pcap.INFINITE;
+            m_pcapPacketCount = Pcap.InfinitePacketCount;
         }
 
         /// <summary>

@@ -32,7 +32,7 @@ namespace SharpPcap
     public class Pcap
     {
         /// <summary>Represents the infinite number for packet captures </summary>
-        public const int INFINITE = -1;
+        internal const int InfinitePacketCount = -1;
 
         /* interface is loopback */
         internal const uint     PCAP_IF_LOOPBACK                = 0x00000001;

@@ -58,7 +58,7 @@ namespace SharpPcap.Test.Example7
                 device.Description);
 
             // Start capture 'INFINTE' number of packets
-            device.Capture( SharpPcap.Pcap.INFINITE );
+            device.Capture();
 
             // Close the pcap device
             // (Note: these lines will never be called since

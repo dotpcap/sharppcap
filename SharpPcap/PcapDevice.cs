@@ -46,7 +46,7 @@ namespace SharpPcap
         /// <summary>
         /// Number of packets that this adapter should capture
         /// </summary>
-        protected int          m_pcapPacketCount   = Pcap.INFINITE;
+        protected int          m_pcapPacketCount   = Pcap.InfinitePacketCount;
 
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
         private int          m_mask  = 0; //for filter expression

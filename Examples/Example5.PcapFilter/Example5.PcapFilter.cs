@@ -61,7 +61,7 @@ namespace SharpPcap.Test.Example5
                 device.Description);
 
             // Start capture packets
-            device.Capture( SharpPcap.Pcap.INFINITE );
+            device.Capture();
 
             // Close the pcap device
             // (Note: this line will never be called since

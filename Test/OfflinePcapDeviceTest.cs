@@ -21,7 +21,7 @@ namespace Test
             offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
             offlineDevice.Open();
 
-            offlineDevice.Capture(Pcap.INFINITE);
+            offlineDevice.Capture();
 
             offlineDevice.StopCapture();
 
