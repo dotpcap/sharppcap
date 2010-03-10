@@ -66,6 +66,9 @@ namespace SharpPcap
             get { return m_pcapIf.Name; }
         }
 
+        /// <summary>
+        /// Addresses that represent this device
+        /// </summary>
         public virtual ReadOnlyCollection<PcapAddress> Addresses
         {
             get { return new ReadOnlyCollection<PcapAddress>(m_pcapIf.Addresses); }
@@ -79,11 +82,17 @@ namespace SharpPcap
             get { return m_pcapIf.Description; }
         }
 
+        /// <summary>
+        /// Interface flags, see pcap_findalldevs() man page for more info
+        /// </summary>
         public virtual uint Flags
         {
             get { return m_pcapIf.Flags; }
         }
 
+        /// <summary>
+        /// True if device is a loopback interface, false if not
+        /// </summary>
         public virtual bool Loopback
         {
             get { return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }

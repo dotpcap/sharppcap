@@ -33,8 +33,9 @@ namespace SharpPcap
             Packets = 0,
 
             /// <summary>
-            /// Set a Pcap device to report statistics, Statistics mode
-            /// WinPcap only
+            /// Set a Pcap device to report statistics.
+            /// <br/>
+            /// Statistics mode is only supported in WinPcap
             /// </summary>
             Statistics = 1
         };

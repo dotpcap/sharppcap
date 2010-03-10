@@ -23,20 +23,40 @@ using System;
 
 namespace SharpPcap
 {
+    /// <summary>
+    /// Capture event arguments
+    /// </summary>
     public class CaptureEventArgs : EventArgs
     {
         private PacketDotNet.RawPacket packet;
+
+        /// <summary>
+        /// Packet that was captured
+        /// </summary>
         public PacketDotNet.RawPacket Packet
         {
             get { return packet; }
         }
 
         private PcapDevice device;
+
+        /// <summary>
+        /// Device this EventArgs was generated for
+        /// </summary>
         public PcapDevice Device
         {
             get { return device; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="packet">
+        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// </param>
+        /// <param name="device">
+        /// A <see cref="PcapDevice"/>
+        /// </param>
         public CaptureEventArgs(PacketDotNet.RawPacket packet, PcapDevice device)
         {
             this.packet = packet;

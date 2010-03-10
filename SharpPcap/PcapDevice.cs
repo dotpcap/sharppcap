@@ -28,11 +28,26 @@ namespace SharpPcap
     /// </summary>
     public abstract partial class PcapDevice
     {
+        /// <summary>
+        /// Low level interface object that contains device specific information
+        /// </summary>
         protected PcapInterface m_pcapIf;
 
+        /// <summary>
+        /// Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
+        /// </summary>
         protected IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
+
+        /// <summary>
+        /// Handle to a pcap adapter, not equal to IntPtr.Zero if an adapter is open
+        /// </summary>
         protected IntPtr       m_pcapAdapterHandle = IntPtr.Zero;
+
+        /// <summary>
+        /// Number of packets that this adapter should capture
+        /// </summary>
         protected int          m_pcapPacketCount   = Pcap.INFINITE;
+
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
         private int          m_mask  = 0; //for filter expression
 
@@ -303,6 +318,18 @@ namespace SharpPcap
             SendPacketArrivalEvent(p);
         }
 
+        /// <summary>
+        /// Convert an unmanaged packet into a managed PacketDotNet.RawPacket
+        /// </summary>
+        /// <param name="header">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="data">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// </returns>
         protected virtual PacketDotNet.RawPacket MarshalRawPacket(IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
             PacketDotNet.RawPacket p;
@@ -367,7 +394,6 @@ namespace SharpPcap
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
-        /// <param name="p">The packet to write</param>
         public void Dump(byte[] p, PcapHeader h)
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");

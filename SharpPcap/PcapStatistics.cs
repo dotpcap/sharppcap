@@ -22,6 +22,9 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap
 {
+    /// <summary>
+    /// Adapter statistics, received, dropped packet counts etc
+    /// </summary>
     public class PcapStatistics
     {
         /// <value>
@@ -108,6 +111,12 @@ namespace SharpPcap
             Marshal.FreeHGlobal(stat);
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString ()
         {
             return string.Format("[PcapStatistics: ReceivedPackets={0}, DroppedPackets={1}, InterfaceDroppedPackets={2}]",

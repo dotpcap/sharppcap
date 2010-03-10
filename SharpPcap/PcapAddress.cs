@@ -24,12 +24,29 @@ using System.Text;
 
 namespace SharpPcap
 {
-    // managed version of pcap_addr
+    /// <summary>
+    /// Managed representation of the unmanaged pcap_addr structure
+    /// </summary>
     public class PcapAddress
     {
+        /// <summary>
+        /// The address value of this PcapAddress, null if none is present
+        /// </summary>
         public Sockaddr Addr { get; internal set; }
+
+        /// <summary>
+        /// Netmask of this PcapAddress, null if none is present
+        /// </summary>
         public Sockaddr Netmask { get; internal set; }
+
+        /// <summary>
+        /// Broadcast address of this PcapAddress, null if none is present
+        /// </summary>
         public Sockaddr Broadaddr { get; internal set; }
+
+        /// <summary>
+        /// Destination address, null if the interface isn't a point-to-point interface
+        /// </summary>
         public Sockaddr Dstaddr {get; internal set; }
 
         internal PcapAddress()
@@ -47,6 +64,12 @@ namespace SharpPcap
                 Dstaddr = new Sockaddr( pcap_addr.Dstaddr );
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

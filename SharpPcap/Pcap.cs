@@ -27,7 +27,7 @@ using System.Text;
 namespace SharpPcap
 {
     /// <summary>
-    /// Summary description for SharpPcap.
+    /// Constants and static helper methods
     /// </summary>
     public class Pcap
     {
@@ -51,6 +51,9 @@ namespace SharpPcap
         internal const int LOOP_EXIT_WITH_ERROR  = -1;
         internal const int LOOP_COUNT_EXHAUSTED  =  0;
 
+        /// <summary>
+        /// Returns the pcap version string retrieved via a call to pcap_lib_version()
+        /// </summary>
         public static string Version
         {
             get

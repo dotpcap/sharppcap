@@ -34,6 +34,10 @@ namespace SharpPcap
     public class LivePcapDeviceList : ReadOnlyCollection<LivePcapDevice>
     {
         private static LivePcapDeviceList instance;
+
+        /// <summary>
+        /// Method to retrieve this classes singleton instance
+        /// </summary>
         public static LivePcapDeviceList Instance
         {
             get
@@ -49,10 +53,9 @@ namespace SharpPcap
 
         /// <summary>
         /// Caution: Use the singlton instance unless you know why you need to call this.
-        /// One use is for multiple filters on the same physical device. The work around
-        /// is to simply open the same physical device multiple times, one for each
-        /// filter by calling this routine and picking the same device out of each
-        /// PcapDeviceList.
+        /// One use is for multiple filters on the same physical device. To apply multiple
+        /// filters open the same physical device multiple times, one for each
+        /// filter by calling this routine and picking the same device out of each list.
         /// </summary>
         /// <returns>
         /// A <see cref="LivePcapDeviceList"/>
@@ -74,7 +77,7 @@ namespace SharpPcap
         /// Retrieve a list of the current PcapDevices
         /// </summary>
         /// <returns>
-        /// A <see cref="List"/>
+        /// A <see cref="List&lt;LivePcapDevice&gt;"/>
         /// </returns>
         private static List<LivePcapDevice> GetDevices()
         {

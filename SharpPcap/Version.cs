@@ -22,7 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 namespace SharpPcap
 {
     /// <summary>
-    /// Represent the current version of SharpPcap.
+    /// Helper class/method to retrieve the version of the SharpPcap assembly
     /// </summary>
     public sealed class Version
     {

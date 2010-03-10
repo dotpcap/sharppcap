@@ -72,40 +72,44 @@ namespace SharpPcap
             this.CaptureLength = captureLength;
         }
 
+        private ulong _seconds;
+
         /// <summary>
         /// The seconds value of the packet's timestamp
         /// </summary>
-        private ulong _seconds;
         public ulong Seconds
         {
             get { return _seconds; }
             set { _seconds = value; }
         }
 
+        private ulong _usec;
+
         /// <summary>
         /// The microseconds value of the packet's timestamp
         /// </summary>
-        private ulong _usec;
         public ulong MicroSeconds
         {
             get { return _usec; }
             set { _usec = value; }
         }
 
+        private uint _packetlength;
+
         /// <summary>
         /// The actual length of the packet
         /// </summary>
-        private uint _packetlength;
         public uint PacketLength
         {
             get { return _packetlength; }
             set { _packetlength = value; }
         }
 
+        private uint _capturelength;
+
         /// <summary>
         /// The length of the capture
         /// </summary>
-        private uint _capturelength;
         public uint CaptureLength
         {
             get { return _capturelength; }

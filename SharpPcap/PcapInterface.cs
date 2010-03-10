@@ -27,11 +27,13 @@ using SharpPcap;
 
 namespace SharpPcap
 {
-    // managed version of struct pcap_if
-    // NOTE: we can't use pcap_if directly because the class contains
-    //       a pointer to pcap_if that will be freed when the
-    //       device memory is freed, so instead convert the unmanaged structure
-    //       to a managed one to avoid this issue
+    /// <summary>
+    /// managed version of struct pcap_if
+    /// NOTE: we can't use pcap_if directly because the class contains
+    ///       a pointer to pcap_if that will be freed when the
+    ///       device memory is freed, so instead convert the unmanaged structure
+    ///       to a managed one to avoid this issue
+    /// </summary>
     public class PcapInterface
     {
         /// <value>
@@ -66,6 +68,10 @@ namespace SharpPcap
         public uint Flags { get; internal set; }
 
         private PcapAddress m_macAddress;
+
+        /// <summary>
+        /// MacAddress of the interface
+        /// </summary>
         public System.Net.NetworkInformation.PhysicalAddress MacAddress
         {
             get
@@ -144,6 +150,12 @@ namespace SharpPcap
             }
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

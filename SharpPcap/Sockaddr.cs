@@ -31,18 +31,47 @@ namespace SharpPcap
     /// </summary>
     public class Sockaddr
     {
+        /// <summary>
+        /// Types of addresses a Sockaddr can represent
+        /// </summary>
         public enum Type
         {
+            /// <summary>
+            /// Address represents an ipv4 or ipv6 address
+            /// </summary>
             AF_INET_AF_INET6,
+
+            /// <summary>
+            /// Address represents a physical hardware address eg. a ethernet mac address
+            /// </summary>
             HARDWARE,
+
+            /// <summary>
+            /// Unknown address type
+            /// </summary>
             UNKNOWN
         }
+
+        /// <summary>
+        /// Address type represented by this Sockaddr
+        /// </summary>
         public Type type;
 
-        public System.Net.IPAddress ipAddress;  // if type == AF_INET_AF_INET6
-        public PhysicalAddress hardwareAddress; // if type == HARDWARE
+        /// <summary>
+        /// If type == AF_INET_AF_INET6
+        /// </summary>
+        public System.Net.IPAddress ipAddress;
+
+        /// <summary>
+        /// If type == HARDWARE
+        /// </summary>
+        public PhysicalAddress hardwareAddress;
 
         private int _sa_family;
+
+        /// <summary>
+        /// Address family
+        /// </summary>
         public int sa_family
         {
             get { return _sa_family; }
@@ -119,6 +148,12 @@ namespace SharpPcap
             }
         }
 
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             if(type == Type.AF_INET_AF_INET6)

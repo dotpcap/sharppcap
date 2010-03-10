@@ -22,13 +22,29 @@ using System;
 
 namespace SharpPcap
 {
+    /// <summary>
+    /// Event that contains statistics mode data
+    /// NOTE: WinPcap only
+    /// </summary>
     public class StatisticsModeEventArgs : CaptureEventArgs
-    {        
+    {
+        /// <summary>
+        /// Constructor for a statistics mode event
+        /// </summary>
+        /// <param name="packet">
+        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// </param>
+        /// <param name="device">
+        /// A <see cref="PcapDevice"/>
+        /// </param>
         public StatisticsModeEventArgs(PacketDotNet.RawPacket packet, PcapDevice device)
             : base(packet, device)
         {
         }
 
+        /// <summary>
+        /// Statistics data for this event
+        /// </summary>
         public StatisticsModePacket Statistics
         {
             get

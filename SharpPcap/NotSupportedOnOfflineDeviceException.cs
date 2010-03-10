@@ -27,6 +27,12 @@ namespace SharpPcap
     /// </summary>
     public class NotSupportedOnOfflineDeviceException : PcapException
     {
+        /// <summary>
+        /// string constructor
+        /// </summary>
+        /// <param name="msg">
+        /// A <see cref="System.String"/>
+        /// </param>
         public NotSupportedOnOfflineDeviceException(string msg) : base(msg)
         {
         }

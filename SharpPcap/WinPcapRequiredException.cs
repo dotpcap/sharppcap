@@ -27,6 +27,12 @@ namespace SharpPcap
     /// </summary>
     public class WinPcapRequiredException : PcapException
     {
+        /// <summary>
+        /// string constructor
+        /// </summary>
+        /// <param name="msg">
+        /// A <see cref="System.String"/>
+        /// </param>
         public WinPcapRequiredException(string msg) : base(msg)
         {
         }
