@@ -1,0 +1,26 @@
+To update files on the sourceforge site or work with the site
+
+Via sftp
+===========
+
+sftp chrismorgan@web.sourceforge.net
+cd /home/groups/s/sh/sharppcap/htdocs/
+
+Currently index.php contains php to redirect users to mediawiki:
+
+<?php header("Location: http://sourceforge.net/apps/mediawiki/sharppcap"); exit; ?>
+
+
+Via ssh
+===========
+https://sourceforge.net/apps/trac/sourceforge/wiki/Shell%20service
+
+- Create the shell via:
+  ssh chrismorgan,sharppcap@shell.sourceforge.net create
+
+- Log in via the shell
+  ssh chrismorgan,sharppcap@shell.sourceforge.net
+
+- Change directory to the proper directory:
+  cd /home/groups/s/sh/sharppcap/htdocs/
+

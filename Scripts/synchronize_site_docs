@@ -1,0 +1,10 @@
+# synchronize the sourceforge site's documentation directory with the local htmldocs directory
+
+# start the remote shell
+ssh chrismorgan,sharppcap@shell.sourceforge.net create
+
+# upload the docs to the site
+rsync -r --delete htmldocs chrismorgan,sharppcap@shell.sourceforge.net:/home/groups/s/sh/sharppcap/htdocs
+
+# shutdown the remote shell
+ssh chrismorgan,sharppcap@shell.sourceforge.net shutdown

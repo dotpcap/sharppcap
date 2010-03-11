@@ -1,0 +1,6 @@
+# generate the static html documentation
+./generate_docs
+
+# rsync the static html docs with the sourceforge SharpPcap web site
+./synchronize_site_docs
+

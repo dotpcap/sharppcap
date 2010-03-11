@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source Common
+
 # script to help with building a source release package
 #
 # parameter 1 is the output directory

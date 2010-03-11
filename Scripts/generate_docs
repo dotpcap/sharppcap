@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# generate html docs from the xml documentation file
+mdoc update -i ../SharpPcap/bin/Release/SharpPcap.xml -o monodoc_output ../SharpPcap/bin/Release/SharpPcap.dll
+
+# convert the monodoc html to html
+mdoc export-html -o htmldocs monodoc_output
