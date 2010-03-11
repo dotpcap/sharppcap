@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# For some reason if we keep MONO_GAC_PREFIX set for a parallel mono install
+# then mdoc finds the old Mono.Cecil assembly instead of the new one
+# So disable MONO_GAC_PREFIX when generating documentation, if one was set
+MONO_GAC_PREFIX=""
+
 # generate html docs from the xml documentation file
 mdoc update -i ../SharpPcap/bin/Release/SharpPcap.xml -o monodoc_output ../SharpPcap/bin/Release/SharpPcap.dll
 
