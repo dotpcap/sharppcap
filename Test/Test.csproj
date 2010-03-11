@@ -97,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
-    <Compile Include="PcapGetAllDevices.cs" />
     <Compile Include="CheckFilterTest.cs" />
     <Compile Include="PcapTest.cs" />
     <Compile Include="InvalidPacketTest.cs" />
