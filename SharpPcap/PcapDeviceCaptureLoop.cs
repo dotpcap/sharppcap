@@ -371,6 +371,25 @@ namespace SharpPcap
                         default:    // This can only be triggered by a bug in libpcap.
                             throw new PcapException("Unknown pcap_loop exit status.");
                     }
+                } else // res > 0
+                {
+                    // if we aren't capturing infinitely we need to account for
+                    // the packets that we read
+                    if(m_pcapPacketCount != Pcap.InfinitePacketCount)
+                    {
+                        // take away for the packets read
+                        if(m_pcapPacketCount >= res)
+                            m_pcapPacketCount -= res;
+                        else
+                            m_pcapPacketCount = 0;
+
+                        // no more packets to capture, we are finished capturing
+                        if(m_pcapPacketCount == 0)
+                        {
+                            SendCaptureStoppedEvent(false);
+                            return;
+                        }
+                    }
                 }
             }
 
