@@ -124,6 +124,7 @@
     <Compile Include="PcapDevice.cs" />
     <Compile Include="LivePcapDeviceList.cs" />
     <Compile Include="ARP.cs" />
+    <Compile Include="CaptureStoppedEventStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

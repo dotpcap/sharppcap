@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
  * Copyright 2009-2010 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
 
 namespace SharpPcap
 {
-    /// <summary>
-    /// A delegate for notifying of a capture stopped event
-    /// </summary>
-    public delegate void CaptureStoppedEventHandler(object sender, CaptureStoppedEventStatus status);
+    public enum CaptureStoppedEventStatus
+    {
+        CompletedWithoutError,
+        ErrorWhileCapturing
+    }
 }

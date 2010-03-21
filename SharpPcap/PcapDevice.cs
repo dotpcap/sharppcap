@@ -251,15 +251,15 @@ namespace SharpPcap
         /// <summary>
         /// Notify the delegates that are subscribed to the capture stopped event
         /// </summary>
-        /// <param name="error">
-        /// A <see cref="System.Boolean"/>
+        /// <param name="status">
+        /// A <see cref="CaptureStoppedEventStatus"/>
         /// </param>
-        private void SendCaptureStoppedEvent(bool error)
+        private void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
         {
             var handler = OnCaptureStopped;
             if(handler != null)
             {
-                handler(this, error);
+                handler(this, status);
             }
         }
 

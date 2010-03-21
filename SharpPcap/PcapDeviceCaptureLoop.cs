@@ -261,7 +261,7 @@ namespace SharpPcap
                 captureFileDescriptor = SafeNativeMethods.pcap_fileno(PcapHandle);
                 if(captureFileDescriptor == -1)
                 {
-                    SendCaptureStoppedEvent(true);
+                    SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                     return;
                 }
             }
@@ -350,7 +350,7 @@ namespace SharpPcap
                     switch (res)    // Check pcap loop status results and notify upstream.
                     {
                         case Pcap.LOOP_USER_TERMINATED:     // User requsted loop termination with StopCapture()
-                            SendCaptureStoppedEvent(false);
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                             return;
                         case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
                         {
@@ -360,13 +360,13 @@ namespace SharpPcap
                             //       offline devices, ie. files read from disk
                             if(this is OfflinePcapDevice)
                             {
-                                SendCaptureStoppedEvent(false);
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                                 return;
                             }
                             break;
                         }
-                        case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occoured whilst capturing.
-                            SendCaptureStoppedEvent(true);
+                        case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                             return;
                         default:    // This can only be triggered by a bug in libpcap.
                             throw new PcapException("Unknown pcap_loop exit status.");
@@ -386,14 +386,14 @@ namespace SharpPcap
                         // no more packets to capture, we are finished capturing
                         if(m_pcapPacketCount == 0)
                         {
-                            SendCaptureStoppedEvent(false);
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                             return;
                         }
                     }
                 }
             }
 
-            SendCaptureStoppedEvent(false);
+            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
         }
     }
 }
