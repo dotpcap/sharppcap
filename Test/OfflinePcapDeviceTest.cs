@@ -12,20 +12,36 @@ namespace Test
 
         /// <summary>
         /// Test that we can retrieve packets from a pcap file just as we would from
-        /// a live capture device
+        /// a live capture device and that all packets are captured
         /// </summary>
         [Test]
-        public void OfflineDeviceWithCallback()
+        public void CaptureInfinite()
         {
             var offlineDevice = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
             offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
             offlineDevice.Open();
 
+            var expectedPackets = 10;
+            capturedPackets = 0;
             offlineDevice.Capture();
 
-            offlineDevice.StopCapture();
+            Assert.AreEqual(expectedPackets, capturedPackets);
+        }
 
-            var expectedPackets = 10;
+        /// <summary>
+        /// Test that if we ask to capture a finite number of packets that
+        /// only this number of packets will be captured
+        /// </summary>
+        [Test]
+        public void CaptureFinite()
+        {
+            var offlineDevice = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
+            offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
+            offlineDevice.Open();
+
+            var expectedPackets = 3;
+            capturedPackets = 0;
+            offlineDevice.Capture(expectedPackets);
 
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
