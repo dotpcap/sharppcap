@@ -90,7 +90,7 @@
       <Project>{24262E52-1304-4A25-8F73-A3B06E40592E}</Project>
       <Name>SharpPcap</Name>
     </ProjectReference>
-    <Reference Include="PacketDotNet, Version=0.3.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
@@ -99,7 +99,6 @@
     <Content Include="App.ico" />
     <Compile Include="CheckFilterTest.cs" />
     <Compile Include="PcapTest.cs" />
-    <Compile Include="InvalidPacketTest.cs" />
     <Compile Include="PcapStatisticsTest.cs" />
     <Compile Include="OfflinePcapDeviceTest.cs" />
     <Compile Include="LivePcapDeviceSetFilterTest.cs" />
