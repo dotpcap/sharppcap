@@ -82,7 +82,7 @@ namespace SharpPcap.Test.Example6
 
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
 
-            var tcpPacket = PacketDotNet.TcpPacket.GetType(packet);
+            var tcpPacket = PacketDotNet.TcpPacket.GetEncapsulated(packet);
             if(tcpPacket != null)
             {
                 var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;

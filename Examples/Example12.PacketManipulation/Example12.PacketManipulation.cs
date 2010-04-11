@@ -93,7 +93,7 @@ namespace Example12.PacketManipulation
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
                 eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
-                var ip = PacketDotNet.IpPacket.GetType(packet);
+                var ip = PacketDotNet.IpPacket.GetEncapsulated(packet);
                 if(ip != null)
                 {
                     Console.WriteLine("Original IP packet: " + ip.ToColoredString(false));
@@ -103,10 +103,7 @@ namespace Example12.PacketManipulation
                     ip.DestinationAddress = System.Net.IPAddress.Parse("44.33.22.11");
                     ip.TimeToLive = 11;
 
-                    //Recalculate the IP checksum
-                    ip.ComputeIPChecksum();
-
-                    var tcp = PacketDotNet.TcpPacket.GetType(packet);
+                    var tcp = PacketDotNet.TcpPacket.GetEncapsulated(packet);
                     if (tcp != null)
                     {
                         Console.WriteLine("Original TCP packet: " + tcp.ToColoredString(false));
@@ -120,12 +117,9 @@ namespace Example12.PacketManipulation
                         tcp.WindowSize = 500;
                         tcp.AcknowledgmentNumber = 800;
                         tcp.SequenceNumber = 800;
-
-                        //Recalculate the TCP checksum
-                        tcp.ComputeTCPChecksum();
                     }
 
-                    var udp = PacketDotNet.UdpPacket.GetType(packet);
+                    var udp = PacketDotNet.UdpPacket.GetEncapsulated(packet);
                     if (udp != null)
                     {
                         Console.WriteLine("Original UDP packet: " + udp.ToColoredString(false));
@@ -133,11 +127,9 @@ namespace Example12.PacketManipulation
                         //manipulate UDP parameters
                         udp.SourcePort = 9999;
                         udp.DestinationPort = 8888;
-
-                        //Recalculate the UDP checksum
-                        udp.ComputeUDPChecksum();
                     }
                 }
+
                 Console.WriteLine("Manipulated Eth packet: " + eth.ToColoredString(false));
             }
         }

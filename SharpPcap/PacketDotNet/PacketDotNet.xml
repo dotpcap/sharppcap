@@ -78,19 +78,19 @@
         <member name="P:PacketDotNet.EthernetPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.EthernetPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArrayAndOffset,PacketDotNet.EthernetPacketType,PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.EthernetPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.EthernetPacketType,PacketDotNet.PosixTimeval)">
             <summary>
             Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
             also needs to perform the same operations as it contains an ethernet type
             </summary>
             <param name="Header">
-            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></param>
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="Type">
             A <see cref="T:PacketDotNet.EthernetPacketType" /></param>
             <param name="Timeval">
             A <see cref="T:PacketDotNet.PosixTimeval" /></param>
             <returns>
-            A <see cref="T:PacketDotNet.PacketOrByteArray" /></returns>
+            A <see cref="T:PacketDotNet.PacketOrByteArraySegment" /></returns>
         </member>
         <member name="M:PacketDotNet.EthernetPacket.ToString">
             <summary> Convert this ethernet packet to a readable string.</summary>
@@ -230,6 +230,11 @@
             AVB Transport Protocol (AVBTP)
             </summary>
         </member>
+        <member name="F:PacketDotNet.EthernetPacketType.LLDP">
+            <summary>
+            Link Layer Discovery Protocol (LLDP)
+            </summary>
+        </member>
         <member name="F:PacketDotNet.EthernetPacketType.SerialRealTimeCommunicationSystemIii">
             <summary>
             SERCOS III
@@ -303,19 +308,9 @@
             <param name="Timeval">
             A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
-        <member name="T:PacketDotNet.IpPacket.TransportChecksumOption">
+        <member name="F:PacketDotNet.IpPacket.DefaultTimeToLive">
             <summary>
-            Options for use when creating a transport layer checksum
-            </summary>
-        </member>
-        <member name="F:PacketDotNet.IpPacket.TransportChecksumOption.None">
-            <summary>
-            No extra options
-            </summary>
-        </member>
-        <member name="F:PacketDotNet.IpPacket.TransportChecksumOption.AttachPseudoIPHeader">
-            <summary>
-            Attach a pseudo IP header to the transport data being checksummed
+            The default time to live value for Ip packets being constructed
             </summary>
         </member>
         <member name="P:PacketDotNet.IpPacket.PayloadPacket">
@@ -367,7 +362,7 @@
         </member>
         <member name="P:PacketDotNet.IpPacket.HeaderLength">
             <summary>
-            ipv4 header length field, computed for ipv6 packets
+            ipv4 header length field, calculated for ipv6 packets
             NOTE: This field is the number of 32bit words in the ip header,
             ie. the number of bytes is 4x this value
             </summary>
@@ -381,11 +376,8 @@
         <member name="P:PacketDotNet.IpPacket.PayloadLength">
             <summary>
             ipv6 payload length in bytes,
-            computed from ipv4.TotalLength - (ipv4.HeaderLength * 4)
+            calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
             </summary>
-        </member>
-        <member name="P:PacketDotNet.IpPacket.ValidIPChecksum">
-            <summary> Check if the IP packet is valid, checksum-wise.</summary>
         </member>
         <member name="M:PacketDotNet.IpPacket.AttachPseudoIPHeader(System.Byte[])">
             <summary>
@@ -410,12 +402,12 @@
             <returns>
             A <see cref="T:System.Net.IPAddress" /></returns>
         </member>
-        <member name="M:PacketDotNet.IpPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArrayAndOffset,PacketDotNet.IPProtocolType,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.IpPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.IPProtocolType,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
             <summary>
             Called by IPv4 and IPv6 packets to parse their packet payload
             </summary>
             <param name="Header">
-            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></param>
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="ProtocolType">
             A <see cref="T:PacketDotNet.IPProtocolType" /></param>
             <param name="Timeval">
@@ -423,44 +415,9 @@
             <param name="ParentPacket">
             A <see cref="T:PacketDotNet.Packet" /></param>
             <returns>
-            A <see cref="T:PacketDotNet.PacketOrByteArray" /></returns>
+            A <see cref="T:PacketDotNet.PacketOrByteArraySegment" /></returns>
         </member>
-        <member name="M:PacketDotNet.IpPacket.IsValidTransportLayerChecksum(PacketDotNet.IpPacket.TransportChecksumOption)">
-            <summary>
-            Determine if the transport layer checksum is valid
-            </summary>
-            <param name="option">
-            A <see cref="T:PacketDotNet.IpPacket.TransportChecksumOption" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.IpPacket.ComputeIPChecksum">
-            <summary>
-            Compute the checksum of the ip packet
-            </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.IpPacket.UpdateIPChecksum">
-            <summary>
-            Update the value of the IP checksum
-            </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.IpPacket.ComputeTransportLayerChecksum(System.Int32,System.Boolean)">
-            <summary>
-            Computes the transport layer checksum, either for the
-            tcp or udp packet
-            </summary>
-            <param name="checksumOffset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="pseudoIPHeader">
-            A <see cref="T:System.Boolean" /></param>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.IpPacket.GetType(PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.IpPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
             Returns the IpPacket inside of the Packet p or null if
             there is no encapsulated packet
@@ -537,12 +494,12 @@
         <member name="P:PacketDotNet.Packet.Bytes">
             <summary>
             byte[] containing this packet and its payload
-            NOTE: Use 'public virtual ByteArrayAndOffset BytesHighPerformance' for highest performance
+            NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
             </summary>
         </member>
         <member name="P:PacketDotNet.Packet.BytesHighPerformance">
             <value>
-            The option to return a ByteArrayAndOffset means that this method
+            The option to return a ByteArraySegment means that this method
             is higher performance as the data can start at an offset other than
             the first byte.
             </value>
@@ -580,6 +537,21 @@
             A <see cref="T:System.Byte" /></param>
             <returns>
             A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.RecursivelyUpdateCalculatedValues">
+            <summary>
+            Used to ensure that values like checksums and lengths are
+            properly updated
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Packet.UpdateCalculatedValues">
+            <summary>
+            Called to ensure that calculated values are updated before
+            the packet bytes are retrieved
+            Classes should override this method to update things like
+            checksums and lengths that take too much time or are too complex
+            to update for each packet parameter change
+            </summary>
         </member>
         <member name="M:PacketDotNet.Packet.ToColoredString(System.Boolean)">
             <summary>
@@ -747,21 +719,15 @@
             <returns>
             A <see cref="T:System.String" /></returns>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.ComputeTCPChecksum(System.Boolean)">
+        <member name="M:PacketDotNet.TcpPacket.CalculateTCPChecksum">
             <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
             </summary>
-            <param name="update">Specifies whether or not to update the TCP checksum header
-            after computing the checksum. A value of true indicates the
-            header should be updated, a value of false indicates it should
-            not be updated.
-            </param>
-            <returns> The computed TCP checksum.
-            </returns>
+            <returns> The calculated TCP checksum.</returns>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.ComputeTCPChecksum">
-            <summary> Same as <code>computeTCPChecksum(true);</code></summary>
-            <returns> The computed TCP checksum value.
-            </returns>
+        <member name="M:PacketDotNet.TcpPacket.UpdateTCPChecksum">
+            <summary>
+            Update the checksum value.
+            </summary>
         </member>
         <member name="M:PacketDotNet.TcpPacket.ToString">
             <summary> Convert this TCP packet to a readable string.</summary>
@@ -775,7 +741,7 @@
         <member name="M:PacketDotNet.TcpPacket.ToColoredVerboseString(System.Boolean)">
             <summary> Convert this TCP packet to a verbose.</summary>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.GetType(PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.TcpPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
             Returns the TcpPacket embedded in Packet p or null if
             there is no embedded TcpPacket
@@ -844,33 +810,39 @@
         </member>
         <member name="P:PacketDotNet.UdpPacket.Length">
             <value>
-            Retrieves the length field from this udp packet
+            Length in bytes of the header and payload, minimum size of 8,
+            the size of the Udp header
             </value>
         </member>
         <member name="P:PacketDotNet.UdpPacket.Checksum">
             <summary> Fetch the header checksum.</summary>
         </member>
+        <member name="P:PacketDotNet.UdpPacket.ValidChecksum">
+            <summary> Check if the UDP packet is valid, checksum-wise.</summary>
+        </member>
+        <member name="P:PacketDotNet.UdpPacket.ValidUDPChecksum">
+            <value>
+            True if the udp checksum is valid
+            </value>
+        </member>
         <member name="P:PacketDotNet.UdpPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.ComputeUDPChecksum(System.Boolean)">
+        <member name="M:PacketDotNet.UdpPacket.UpdateCalculatedValues">
             <summary>
-            Computes the UDP checksum, optionally updating the UDP checksum header.
+            Update the Udp length
             </summary>
-            <param name="update">Specifies whether or not to update the UDP checksum header
-            after computing the checksum. A value of true indicates the
-            header should be updated, a value of false indicates it should
-            not be updated.
-            </param>
-            <returns> The computed UDP checksum.
-            </returns>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.ComputeUDPChecksum">
+        <member name="M:PacketDotNet.UdpPacket.CalculateUDPChecksum">
             <summary>
-            Compute the checksum for this packet
+            Calculates the UDP checksum, optionally updating the UDP checksum header.
             </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
+            <returns>The calculated UDP checksum.</returns>
+        </member>
+        <member name="M:PacketDotNet.UdpPacket.UpdateUDPChecksum">
+            <summary>
+            Update the checksum value.
+            </summary>
         </member>
         <member name="M:PacketDotNet.UdpPacket.ToString">
             <summary> Convert this UDP packet to a readable string.</summary>
@@ -881,7 +853,7 @@
             color escape sequences.
             </param>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.GetType(PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.UdpPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
             Returns the UdpPacket inside of the Packet p or null if
             there is no encapsulated packet
@@ -935,71 +907,45 @@
             <param name="Timeval">
             A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
-        <member name="T:PacketDotNet.Utils.ByteArrayAndOffset">
+        <member name="T:PacketDotNet.TransportPacket.TransportChecksumOption">
             <summary>
-            Container class for a byte array that contains an offset and
-            a length
+            Options for use when creating a transport layer checksum
             </summary>
         </member>
-        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.#ctor(System.Byte[],System.Int32,System.Int32)">
+        <member name="F:PacketDotNet.TransportPacket.TransportChecksumOption.None">
             <summary>
-            Constructor from a byte array, offset into the byte array and
-            a length beyond that offset of the bytes this class is referencing
+            No extra options
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Length">
-            A <see cref="T:System.Int32" /></param>
         </member>
-        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Length">
-            <value>
-            Number of bytes beyond the offset into Bytes
-            </value>
-        </member>
-        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Bytes">
-            <value>
-            The byte[] array
-            </value>
-        </member>
-        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.Offset">
-            <value>
-            Offset into Bytes
-            </value>
-        </member>
-        <member name="P:PacketDotNet.Utils.ByteArrayAndOffset.NeedsCopyForActualBytes">
+        <member name="F:PacketDotNet.TransportPacket.TransportChecksumOption.AttachPseudoIPHeader">
             <summary>
-            Return true if we need to perform a copy to get
-            the bytes represented by this class
+            Attach a pseudo IP header to the transport data being checksummed
             </summary>
+        </member>
+        <member name="P:PacketDotNet.TransportPacket.Checksum">
+            <value>
+            The Checksum version
+            </value>
+        </member>
+        <member name="M:PacketDotNet.TransportPacket.CalculateChecksum(PacketDotNet.TransportPacket.TransportChecksumOption)">
+            <summary>
+            Calculates the transport layer checksum, either for the
+            tcp or udp packet
+            </summary>
+            <param name="option">
+                <see cref="T:PacketDotNet.TransportPacket.TransportChecksumOption" />
+            </param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.TransportPacket.IsValidChecksum(PacketDotNet.TransportPacket.TransportChecksumOption)">
+            <summary>
+            Determine if the transport layer checksum is valid
+            </summary>
+            <param name="option">
+            A <see cref="T:PacketDotNet.TransportPacket.TransportChecksumOption" /></param>
             <returns>
             A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.ActualBytes">
-            <summary>
-            Returns a contiguous byte[] from this container, if necessary, by copying
-            the bytes from the current offset into a newly allocated byte[].
-            NeedsCopyForActualBytes can be used to determine if the copy is necessary
-            </summary>
-            <returns>
-            A <see cref="T:System.Byte" /></returns>
-        </member>
-        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.EncapsulatedBytes">
-            <summary>
-            Helper method that returns the segment immediately following
-            this instance, useful for processing where the parent
-            wants to pass the next segment to a sub class for processing
-            </summary>
-            <returns>
-            A <see cref="T:PacketDotNet.Utils.ByteArrayAndOffset" /></returns>
-        </member>
-        <member name="M:PacketDotNet.Utils.ByteArrayAndOffset.ToString">
-            <summary>
-            Format the class information as a string
-            </summary>
-            <returns>
-            A <see cref="T:System.String" /></returns>
         </member>
         <member name="T:PacketDotNet.IPProtocol">
             <summary>
@@ -2390,11 +2336,11 @@
             <seealso cref="T:PacketDotNet.IPProtocolType">
             </seealso>
         </member>
-        <member name="M:PacketDotNet.IPv4Packet.ComputeIPChecksum">
+        <member name="M:PacketDotNet.IPv4Packet.CalculateIPChecksum">
             <summary>
-            Computes the IP checksum, optionally updating the IP checksum header.
+            Calculates the IP checksum, optionally updating the IP checksum header.
             </summary>
-            <returns> The computed IP checksum.
+            <returns> The calculated IP checksum.
             </returns>
         </member>
         <member name="M:PacketDotNet.IPv4Packet.UpdateIPChecksum">
@@ -2624,9 +2570,6 @@
             Converts the packet to a color string. TODO add a method for colored to string.
             </summary>
         </member>
-        <member name="P:PacketDotNet.IPv6Packet.ValidIPChecksum">
-            <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        </member>
         <member name="M:PacketDotNet.IPv6Packet.AttachPseudoIPHeader(System.Byte[])">
             <summary>
             Prepend to the given byte[] origHeader the portion of the IPv6 header used for
@@ -2654,20 +2597,6 @@
         </member>
         <member name="M:PacketDotNet.IPv6Packet.ToColoredVerboseString(System.Boolean)">
             <summary> Convert this IP packet to a more verbose string.</summary>
-        </member>
-        <member name="M:PacketDotNet.IPv6Packet.ComputeIPChecksum">
-            <summary>
-            Calculate the IP checksum of this packet
-            </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.IPv6Packet.UpdateIPChecksum">
-            <summary>
-            Update the IP checksum, nothing to do for IPv6 packets
-            </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
         </member>
         <member name="M:PacketDotNet.IPv6Packet.RandomPacket">
             <summary>
@@ -2973,7 +2902,7 @@
             color escape sequences.
             </param>
         </member>
-        <member name="M:PacketDotNet.ARPPacket.GetType(PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.ARPPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
             Returns the encapsulated ARPPacket of the Packet p or null if
             there is no encapsulated packet
@@ -3009,14 +2938,6 @@
         </member>
         <member name="F:PacketDotNet.ICMPv6Fields.HeaderLength">
             <summary> Length in bytes of an ICMP header.</summary>
-        </member>
-        <member name="T:PacketDotNet.ICMPTypeCode">
-            <summary>
-            Code constants for ICMP message types.
-            From http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
-            Note that these values represent the combined
-            type and code fields, where the type field is the upper byte
-            </summary>
         </member>
         <member name="T:PacketDotNet.ICMPv6Packet">
             <summary>
@@ -3068,6 +2989,16 @@
             <param name="colored">whether or not the string should contain ansi
             color escape sequences.
             </param>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the ICMPv6Packet inside of Packet p or null if
+            there is no encapsulated ICMPv6Packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.ICMPv6Packet" /></returns>
         </member>
         <member name="T:PacketDotNet.IGMPMessageType">
             <summary> Code constants for IGMP message types.
@@ -3679,26 +3610,6 @@
             <returns>
             A <see cref="T:System.Net.IPAddress" /></returns>
         </member>
-        <member name="T:PacketDotNet.PacketOrByteArray">
-            <summary>
-            Encapsulates and ensures that we have either a Packet OR
-            a ByteArrayAndOffset, but not both
-            </summary>
-        </member>
-        <member name="P:PacketDotNet.PacketOrByteArray.Type">
-            <value>
-            Whether or not this container contains a packet, a byte[] or neither
-            </value>
-        </member>
-        <member name="M:PacketDotNet.PacketOrByteArray.AppendToMemoryStream(System.IO.MemoryStream)">
-            <summary>
-            Appends to the MemoryStream either the byte[] represented by TheByteArray, or
-            if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
-            which will append ThePacket's header and any encapsulated packets it contains
-            </summary>
-            <param name="ms">
-            A <see cref="T:System.IO.MemoryStream" /></param>
-        </member>
         <member name="T:PacketDotNet.PayloadType">
             <summary>
             Differentiates between a packet class payload, a byte[] payload
@@ -4003,6 +3914,1365 @@
         </member>
         <member name="F:PacketDotNet.PPPProtocol.IPv6">
             <summary> IPv6 </summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPv4TypeCodes">
+            <summary>
+            Code constants for ICMP message types.
+            From http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
+            Note that these values represent the combined
+            type and code fields, where the type field is the upper byte
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPv4Fields">
+            <summary>
+            ICMP protocol field encoding information.
+            See http://en.wikipedia.org/wiki/ICMPv6
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.TypeCodeLength">
+            <summary> Length of the ICMP message type code in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.ChecksumLength">
+            <summary> Length of the ICMP header checksum in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.IDLength">
+            <summary> Length of the ICMP ID field in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.SequenceLength">
+            <summary> Length of the ICMP Sequence field in bytes </summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.TypeCodePosition">
+            <summary> Position of the ICMP message type/code.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.ChecksumPosition">
+            <summary> Position of the ICMP header checksum.</summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.IDPosition">
+            <summary> Position of the ICMP ID field </summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.SequencePosition">
+            <summary> Position of the Sequence field </summary>
+        </member>
+        <member name="F:PacketDotNet.ICMPv4Fields.HeaderLength">
+            <summary> Length in bytes of an ICMP header.</summary>
+        </member>
+        <member name="T:PacketDotNet.ICMPv4Packet">
+            <summary>
+            An ICMP packet
+            See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            byte[]/int offset constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            byte[]/int Offset/PosixTimeval constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.TypeCode">
+            <value>
+            The Type/Code enum value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.Checksum">
+            <value>
+            Checksum value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.ID">
+            <summary>
+            ID field
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.Sequence">
+            <summary>
+            Sequence field
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.Data">
+            <summary>
+            Contents of the ICMP packet
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ICMPv4Packet.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.ToString">
+            <summary> Convert this ICMP packet to a readable string.</summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.ToColoredString(System.Boolean)">
+            <summary> Generate string with contents describing this ICMP packet.</summary>
+            <param name="colored">whether or not the string should contain ansi
+            color escape sequences.
+            </param>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the ICMPv4Packet inside of Packet p or null if
+            there is no encapsulated ICMPv4Packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.ICMPv4Packet" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Utils.ByteArraySegment">
+            <summary>
+            Container class that refers to a segment of bytes in a byte[]
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Constructor from a byte array, offset into the byte array and
+            a length beyond that offset of the bytes this class is referencing
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.Length">
+            <value>
+            Number of bytes beyond the offset into Bytes
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.Bytes">
+            <value>
+            The byte[] array
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.Offset">
+            <value>
+            Offset into Bytes
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.NeedsCopyForActualBytes">
+            <summary>
+            Return true if we need to perform a copy to get
+            the bytes represented by this class
+            </summary>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.ActualBytes">
+            <summary>
+            Returns a contiguous byte[] from this container, if necessary, by copying
+            the bytes from the current offset into a newly allocated byte[].
+            NeedsCopyForActualBytes can be used to determine if the copy is necessary
+            </summary>
+            <returns>
+            A <see cref="T:System.Byte" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.EncapsulatedBytes">
+            <summary>
+            Helper method that returns the segment immediately following
+            this instance, useful for processing where the parent
+            wants to pass the next segment to a sub class for processing
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.ToString">
+            <summary>
+            Format the class information as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.PacketOrByteArraySegment">
+            <summary>
+            Encapsulates and ensures that we have either a Packet OR
+            a ByteArraySegment but not both
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.PacketOrByteArraySegment.Type">
+            <value>
+            Whether or not this container contains a packet, a byte[] or neither
+            </value>
+        </member>
+        <member name="M:PacketDotNet.PacketOrByteArraySegment.AppendToMemoryStream(System.IO.MemoryStream)">
+            <summary>
+            Appends to the MemoryStream either the byte[] represented by TheByteArray, or
+            if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
+            which will append ThePacket's header and any encapsulated packets it contains
+            </summary>
+            <param name="ms">
+            A <see cref="T:System.IO.MemoryStream" /></param>
+        </member>
+        <member name="T:PacketDotNet.LLDPPacket">
+            <summary>
+            A LLDP packet.
+            As specified in IEEE Std 802.1AB
+            </summary>
+            <remarks>
+            See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol for general info
+            See IETF 802.1AB for the full specification
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.#ctor">
+            <summary>
+            Create an empty LLDPPacket
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a LLDP packet from a byte[]
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Creates a LLDP packet from a byte[]
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="F:PacketDotNet.LLDPPacket.TlvCollection">
+            <summary>
+            Contains the TLV's in the LLDPDU
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDPPacket.Item(System.Int32)">
+            <summary>
+            Allows access of the TlvCollection by index
+            </summary>
+            <param name="index">The index of the item being set/retrieved in the collection</param>
+            <returns>The requested TLV</returns>
+        </member>
+        <member name="P:PacketDotNet.LLDPPacket.Length">
+            <value>
+            The current length of the LLDPDU
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDPPacket.BytesHighPerformance">
+            <summary>
+            LLDPPacket specific implementation of BytesHighPerformance
+            Necessary because each TLV in the collection may have a
+            byte[] that is not shared by other TLVs
+            NOTE: There is potential for the same performance improvement that
+            the Packet class uses where we check to see if each TLVs uses the
+            same byte[] and that there are no gaps.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.GetEnumerator">
+            <summary>
+            Enables foreach functionality for this class
+            </summary>
+            <returns>The next item in the list</returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.ParseByteArrayIntoTlvs(System.Byte[],System.Int32)">
+            <summary>
+            Parse byte[] into TLVs
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.TLVFactory(System.Byte[],System.Int32,PacketDotNet.LLDP.TLVTypes)">
+            <summary>
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="type">
+            A <see cref="T:PacketDotNet.LLDP.TLVTypes" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.LLDP.TLV" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.GetType(PacketDotNet.Packet)">
+            <summary>
+            Returns the LLDP inside of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.IpPacket" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.RandomPacket">
+            <summary>
+            Create a randomized LLDP packet with some basic TLVs
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Packet" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.ToString">
+            <summary>
+            Convert this LLDP packet to a readable string.
+            </summary>
+            <returns>
+            A human readable string.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.ToColoredString(System.Boolean)">
+            <summary>
+            Convert this LLDP packet to a readable string.
+            </summary>
+            <param name="colored">
+            Sets whether the output includes coloring.
+            </param>
+            <returns>
+            A human readable string.
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.LLDPPacket.ToColoredVerboseString(System.Boolean)">
+            <summary>
+            Convert this LLDP packet to a verbose readable string.
+            </summary>
+            <param name="colored">
+            Sets whether the output includes coloring.
+            </param>
+            <returns>
+            A verbose human readable string.
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.TLVTypes">
+            <summary>
+            The TLV Types
+            </summary>
+            <remarks>
+            See IETF RFC 802.1AB for more info
+            </remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.EndOfLLDPU">
+            <summary>Signifies the end of a LLDPU</summary>
+            <description>
+            The End Of LLDPDU TLV is a 2-octet, all-zero
+            TLV that is used to mark the end of the TLV
+            sequence in LLDPDUs
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.ChassisID">
+            <summary>A Chassis Identifier</summary>
+            <description>
+            A mandatory TLV that identifies the chassis
+            containing the IEEE 802 LAN station
+            associated with the transmitting LLDP agent
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.PortID">
+            <summary>A Port Identifier</summary>
+            <description>
+            A mandatory TLV that identifies the
+            port component of the MSAP identifier associated
+            with the transmitting LLDP agent.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.TimeToLive">
+            <summary>Specifies the Time to Live</summary>
+            <description>
+            Indicates the number of seconds that the
+            recipient LLDP agent is to regard the information
+            associated with this MSAP identifier to be valid
+            A value of 0 signals that this source is no longer
+            available and all information associated with it
+            should be deleted.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.PortDescription">
+            <summary>A Description of the Port</summary>
+            <description>
+            The port description field shall contain an
+            alpha-numeric string that indicates the port’s
+            description.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.SystemName">
+            <summary>The System's Assigned Name</summary>
+            <description>
+            The System Name TLV allows network management
+            to advertise the system’s assigned name.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.SystemDescription">
+            <summary>A Description of the System</summary>
+            <description>
+            The System Description TLV allows network
+            management to advertise the system’s description
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.SystemCapabilities">
+            <summary>A bitmap containing the System's capabilities</summary>
+            <description>
+            The System Capabilities TLV is an optional TLV
+            that identifies the primary function(s) of the
+            system and whether or not these primary functions
+            are enabled.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.ManagementAddress">
+            <summary>The Management Address</summary>
+            <description>
+            The Management Address TLV identifies an address
+            associated with the local LLDP agent that may be
+            used to reach higher layer entities to assist
+            discovery by network management.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypes.OrganizationSpecific">
+            <summary>A vendor-specifid TLV</summary>
+            <description>
+            This TLV category is provided to allow different
+            organizations, such as IEEE 802.1, IEEE 802.3, IETF,
+            as well as individual software and equipment vendors,
+            to define TLVs that advertise information to remote
+            entities attached to the same media.
+            </description>
+            <remarks>Source: IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="T:PacketDotNet.LLDP.ChassisSubTypes">
+            <summary>
+            The Chassis ID TLV subtypes
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.ChassisComponent">
+            <summary>A Chassis Component identifier</summary>
+            <remarks>See IETF RFC 2737</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.InterfaceAlias">
+            <summary>An Interface Alias identifier</summary>
+            <remarks>See IETF RFC 2863</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.PortComponent">
+            <summary>A Port Component identifier</summary>
+            <remarks>See IETF RFC 2737</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.MACAddress">
+            <summary>A MAC (Media Access Control) Address identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.NetworkAddress">
+            <summary>A Network Address (IP Address) Identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.InterfaceName">
+            <summary>An Interface Name identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisSubTypes.LocallyAssigned">
+            <summary>A Locally Assigned identifier</summary>
+        </member>
+        <member name="T:PacketDotNet.LLDP.PortSubTypes">
+            <summary>
+            The Port ID TLV subtypes
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.InterfaceAlias">
+            <summary>An Interface Alias identifier</summary>
+            <remarks>See IETF RFC 2863</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.PortComponent">
+            <summary>A Port Component identifier</summary>
+            <remarks>See IETF RFC 2737</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.MACAddress">
+            <summary>A MAC (Media Access Control) Address identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.NetworkAddress">
+            <summary>A Network Address (IP Address) Identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.InterfaceName">
+            <summary>An Interface Name identifier</summary>
+            <remarks>See IEEE Std 802</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.AgentCircuitID">
+            <summary>An Agent Circiut ID identifier</summary>
+            <remarks>See IETF RFC 3046</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.PortSubTypes.LocallyAssigned">
+            <summary>A Locally Assigned identifier</summary>
+            <remarks>See IETF RFC 3046</remarks>
+        </member>
+        <member name="T:PacketDotNet.LLDP.CapabilityOptions">
+            <summary>
+            The System Capabilities options
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.Other">
+            <summary>
+            An Other Type of System
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.Repeater">
+            <summary>A Repeater</summary>
+            <remarks>See IETF RFC 2108</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.Bridge">
+            <summary>A Bridge</summary>
+            <remarks>IETF RFC 2674</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.WLanAP">
+            <summary>A WLAN Access Point</summary>
+            <remarks>IEEE 802.11 MIB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.Router">
+            <summary>A Router</summary>
+            <remarks>IETF RFC 1812</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.Telephone">
+            <summary>A Telephone</summary>
+            <remarks>IETF RFC 2011 </remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.DocsisCableDevice">
+            <summary>A DOCSIS Cable Device</summary>
+            <remarks>
+            See IETF RFC 2669
+            See IETF RFC 2670
+            </remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.CapabilityOptions.StationOnly">
+            <summary>A Station with no other capabilities</summary>
+            <remarks>IETF RFC 2011</remarks>
+        </member>
+        <member name="T:PacketDotNet.LLDP.TLV">
+            <summary>
+            A Type-Length-Value object
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TLV.#ctor">
+            <summary>
+            Create a tlv
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TLV.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a TLV
+            </summary>
+            <param name="bytes">
+            Bytes that comprise the TLV
+            </param>
+            <param name="offset">
+            The TLVs offset from the start of byte[] bytes
+            </param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLV._tlvData">
+            <summary>
+            Points to the TLV data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLV.TypeLength">
+            <summary>
+            Interface to this TLVs type and length
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.Length">
+            <summary>
+            Length of value portion of the TLV
+            NOTE: Does not include the length of the Type and Length fields
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.TotalLength">
+            <summary>
+            Total length of the TLV, including the length of the Type and Length fields
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.Type">
+            <summary>
+            Tlv type
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.ValueOffset">
+            <summary>
+            Offset to the value bytes of the TLV
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.Bytes">
+            <summary>
+            Return a byte[] that contains the tlv
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLV.tlvData">
+            <summary>
+            Points to the TLV data
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.LLDP.NetworkAddress">
+            <summary>
+            A Network Address
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.NetworkAddress.#ctor(System.Net.IPAddress)">
+            <summary>
+            Creates a Network Address entity
+            </summary>
+            <param name="address">
+            The Network Address
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.NetworkAddress.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Create a network address from byte data
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.NetworkAddress.AddressFamilyLength">
+            <summary>
+            Length of AddressFamily field in bytes
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.NetworkAddress.Length">
+            <summary>
+            Number of bytes in the NetworkAddress
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.NetworkAddress.AddressFamily">
+            <summary>The format of the Network Address</summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.NetworkAddress.Address">
+            <summary>The Network Address</summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.NetworkAddress.Equals(System.Object)">
+            <summary>
+            Equals override
+            </summary>
+            <param name="obj">
+            A <see cref="T:System.Object" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LLDP.NetworkAddress.GetHashCode">
+            <summary>
+            GetHashCode() override
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.LLDP.NetworkAddress.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.InterfaceNumbering">
+            <summary>
+            Interface Numbering Types
+            </summary>
+            <remarks>Source IETF RFC 802.1AB</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.InterfaceNumbering.Unknown">
+            <summary>Unknown</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.InterfaceNumbering.ifIndex">
+            <summary>Interface Index</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.InterfaceNumbering.SystemPortNumber">
+            <summary>System Port Number</summary>
+        </member>
+        <member name="T:PacketDotNet.LLDP.EndOfLLDPDU">
+            <summary>
+            An End Of LLDPDU TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.EndOfLLDPDU.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Parses bytes into an End Of LLDPDU TLV
+            </summary>
+            <param name="bytes">
+            TLV bytes
+            </param>
+            <param name="offset">
+            The End Of LLDPDU TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.EndOfLLDPDU.#ctor">
+            <summary>
+            Creates an End Of LLDPDU TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.EndOfLLDPDU.ToString">
+            <summary>
+            Convert this TTL TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.ChassisID">
+            <summary>
+            A Chassis ID TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Chassis ID TLV by parsing a byte[]
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The Chassis ID TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.#ctor(PacketDotNet.LLDP.ChassisSubTypes,System.Object)">
+            <summary>
+            Creates a Chassis ID TLV and sets it value
+            </summary>
+            <param name="subType">
+            The ChassisID subtype
+            </param>
+            <param name="subTypeValue">
+            The subtype's value
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.#ctor(System.Net.NetworkInformation.PhysicalAddress)">
+            <summary>
+            Create a ChassisID given a mac address
+            </summary>
+            <param name="MACAddress">
+            A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.#ctor(System.String)">
+            <summary>
+            Create a ChassisID given an interface name
+            http://tools.ietf.org/search/rfc2863 page 38
+            </summary>
+            <param name="InterfaceName">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ChassisID.SubTypeLength">
+            <summary>
+            Length of the sub type field in bytes
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.SubType">
+            <value>
+            The type of the TLV subtype
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.SubTypeValue">
+            <value>
+            The TLV subtype value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.ChassisComponent">
+            <summary>
+            If SubType is ChassisComponent
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.InterfaceName">
+            <summary>
+            If SubType is InterfaceName the interface name
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.MACAddress">
+            <summary>
+            If SubType is MACAddress the mac address
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.NetworkAddress">
+            <summary>
+            If SubType is NetworkAddress the network address
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.PortComponent">
+            <summary>
+            If SubType is PortComponent
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ChassisID.InterfaceAlias">
+            <summary>
+            If SubType is InterfaceAlias
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.EmptyTLVDataInit">
+            <summary>
+            Helper method to reduce duplication in type specific constructors
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ChassisID.ToString">
+            <summary>
+            Convert this Chassis ID TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.PortID">
+            <summary>
+            A Port ID TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortID.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Port ID TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The Port ID TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortID.#ctor(PacketDotNet.LLDP.PortSubTypes,System.Object)">
+            <summary>
+            Creates a Port ID TLV and sets it value
+            </summary>
+            <param name="subType">
+            The Port ID SubType
+            </param>
+            <param name="subTypeValue">
+            The subtype's value
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortID.#ctor(PacketDotNet.LLDP.NetworkAddress)">
+            <summary>
+            Construct a PortID from a NetworkAddress
+            </summary>
+            <param name="networkAddress">
+            A <see cref="T:PacketDotNet.LLDP.NetworkAddress" /></param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.PortID.SubType">
+            <value>
+            The type of the TLV subtype
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.PortID.SubTypeValue">
+            <value>
+            The TLV subtype value
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.PortID.DataOffset">
+            <summary>
+            Offset to the value field
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.PortID.DataLength">
+            <summary>
+            Size of the value field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortID.EmptyTLVDataInit">
+            <summary>
+            Helper method to reduce duplication in type specific constructors
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortID.ToString">
+            <summary>
+            Convert this Port ID TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.TimeToLive">
+            <summary>
+            A Time to Live TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TimeToLive.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a TTL TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The TTL TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TimeToLive.#ctor(System.UInt16)">
+            <summary>
+            Creates a TTL TLV and sets it value
+            </summary>
+            <param name="seconds">
+            The length in seconds until the LLDP
+            is refreshed
+            </param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TimeToLive.ValueLength">
+            <summary>
+            Number of bytes in the value portion of this tlv
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TimeToLive.Seconds">
+            <value>
+            The number of seconds until the LLDP needs
+            to be refreshed
+            A value of 0 means that the LLDP source is
+            closed and should no longer be refreshed
+            </value>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TimeToLive.ToString">
+            <summary>
+            Convert this TTL TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.PortDescription">
+            <summary>
+            A Port Description TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortDescription.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Port Description TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The Port Description TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.PortDescription.#ctor(System.String)">
+            <summary>
+            Creates a Port Description TLV and sets it value
+            </summary>
+            <param name="description">
+            A textual description of the port
+            </param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.PortDescription.Description">
+            <value>
+            A textual Description of the port
+            </value>
+        </member>
+        <member name="T:PacketDotNet.LLDP.SystemName">
+            <summary>
+            A System Name TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemName.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a System Name TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The System Name TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemName.#ctor(System.String)">
+            <summary>
+            Creates a System Name TLV and sets it value
+            </summary>
+            <param name="name">
+            A textual Name of the system
+            </param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.SystemName.Name">
+            <value>
+            A textual Name of the system
+            </value>
+        </member>
+        <member name="T:PacketDotNet.LLDP.SystemDescription">
+            <summary>
+            A System Description TLV
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemDescription.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a System Description TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The System Description TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemDescription.#ctor(System.String)">
+            <summary>
+            Creates a System Description TLV and sets it value
+            </summary>
+            <param name="description">
+            A textual Description of the system
+            </param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.SystemDescription.Description">
+            <value>
+            A textual Description of the system
+            </value>
+        </member>
+        <member name="T:PacketDotNet.LLDP.SystemCapabilities">
+            <summary>
+            A System Capabilities TLV
+            [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemCapabilities.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a System Capabilities TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The System Capabilities TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemCapabilities.#ctor(System.UInt16,System.UInt16)">
+            <summary>
+            Creates a System Capabilities TLV and sets the value
+            </summary>
+            <param name="capabilities">
+            A bitmap containing the available System Capabilities
+            </param>
+            <param name="enabled">
+            A bitmap containing the enabled System Capabilities
+            </param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.SystemCapabilities.Capabilities">
+            <value>
+            A bitmap containing the available System Capabilities
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.SystemCapabilities.Enabled">
+            <value>
+            A bitmap containing the Enabled System Capabilities
+            </value>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemCapabilities.IsCapable(PacketDotNet.LLDP.CapabilityOptions)">
+            <summary>
+            Checks whether the system is capable of a certain function
+            </summary>
+            <param name="capability">
+            The capability being checked
+            </param>
+            <returns>
+            Whether or not the system is capable of the function being tested
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemCapabilities.IsEnabled(PacketDotNet.LLDP.CapabilityOptions)">
+            <summary>
+            Checks whether the specified function has been enabled on the system
+            </summary>
+            <param name="capability">
+            The capability being checked
+            </param>
+            <returns>
+            Whether or not the specified function is enabled
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.LLDP.SystemCapabilities.ToString">
+            <summary>
+            Convert this System Capabilities TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.ManagementAddress">
+            <summary>
+            A Time to Live TLV
+            [TLV Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
+            [Interface Subtype : 1][Interface number : 4][OID length : 1][OID : 0-128]
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ManagementAddress.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Management Address TLV
+            </summary>
+            <param name="bytes">
+            The LLDP Data unit being modified
+            </param>
+            <param name="offset">
+            The Management Address TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ManagementAddress.#ctor(PacketDotNet.LLDP.NetworkAddress,PacketDotNet.LLDP.InterfaceNumbering,System.UInt32,System.String)">
+            <summary>
+            Creates a Management Address TLV and sets it value
+            </summary>
+            <param name="managementAddress">
+            The Management Address
+            </param>
+            <param name="interfaceSubType">
+            The Interface Numbering Sub Type
+            </param>
+            <param name="ifNumber">
+            The Interface Number
+            </param>
+            <param name="oid">
+            The Object Identifier
+            </param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ManagementAddress.MgmtAddressLengthLength">
+            <summary>
+            Number of bytes in the AddressLength field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ManagementAddress.InterfaceNumberSubTypeLength">
+            <summary>
+            Number of bytes in the interface number subtype field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ManagementAddress.InterfaceNumberLength">
+            <summary>
+            Number of bytes in the interface number field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ManagementAddress.ObjectIdentifierLengthLength">
+            <summary>
+            Number of bytes in the object identifier length field
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.ManagementAddress.maxObjectIdentifierLength">
+            <summary>
+            Maximum number of bytes in the object identifier field
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.AddressLength">
+            <value>
+            The Management Address Length
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.AddressSubType">
+            <value>
+            The Management Address Subtype
+            Forward to the MgmtAddress instance
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.MgmtAddress">
+            <value>
+            The Management Address
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.InterfaceSubType">
+            <value>
+            Interface Number Sub Type
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.InterfaceNumber">
+            <value>
+            Interface Number
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.ObjIdLength">
+            <value>
+            Object ID Length
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.ManagementAddress.ObjectIdentifier">
+            <value>
+            Object ID
+            </value>
+        </member>
+        <member name="M:PacketDotNet.LLDP.ManagementAddress.ToString">
+            <summary>
+            Convert this Management Address TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.OrganizationSpecific">
+            <summary>
+            An Organization Specific TLV
+            [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
+            [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.OrganizationSpecific.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates an Organization Specific TLV
+            </summary>
+            <param name="bytes">
+            The LLDP Data unit being modified
+            </param>
+            <param name="offset">
+            The Organization Specific TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.OrganizationSpecific.#ctor(System.Byte[],System.Int32,System.Byte[])">
+            <summary>
+            Creates an Organization Specific TLV and sets it value
+            </summary>
+            <param name="oui">
+            An Organizationally Unique Identifier
+            </param>
+            <param name="subType">
+            An Organizationally Defined SubType
+            </param>
+            <param name="infoString">
+            An Organizationally Defined Information String
+            </param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.OrganizationSpecific.OrganizationUniqueID">
+            <summary>
+            An Organizationally Unique Identifier
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.OrganizationSpecific.OrganizationDefinedSubType">
+            <summary>
+            An Organizationally Defined SubType
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.OrganizationSpecific.OrganizationDefinedInfoString">
+            <summary>
+            An Organizationally Defined Information String
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.OrganizationSpecific.ToString">
+            <summary>
+            Convert this Organization Specific TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.LLDP.TLVTypeLength">
+            <summary>
+            Tlv type and length are 2 bytes
+            See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.TLVTypeLength.#ctor(PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Construct a TLVTypeLength for a TLV
+            </summary>
+            <param name="byteArraySegment">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="F:PacketDotNet.LLDP.TLVTypeLength.TypeLengthLength">
+            <summary>
+            Length in bytes of the tlv type and length fields
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLVTypeLength.Type">
+            <value>
+            The TLV Value's Type
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLVTypeLength.Length">
+            <value>
+            The TLV Value's Length
+            NOTE: Value is the length of the TLV Value only, does not include the length
+            of the type and length fields
+            </value>
+        </member>
+        <member name="P:PacketDotNet.LLDP.TLVTypeLength.TypeAndLength">
+            <value>
+            A unsigned short representing the concatenated Type and Length
+            </value>
+        </member>
+        <member name="T:PacketDotNet.LLDP.AddressFamily">
+            <summary>
+            The IANA (Internet Assigned Numbers Authority) Address Family
+            </summary>
+            <remarks>Source http://www.iana.org/assignments/address-family-numbers/</remarks>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.IPv4">
+            <summary>IP version 4</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.IPv6">
+            <summary>IP version 6</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.NSAP">
+            <summary>NSAP</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.HDLC">
+            <summary>HDLC</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.BBN1822">
+            <summary>BBN 1822</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.Eth802">
+            <summary>802 (includes all 802 media plus Ethernet "canonical format")</summary>
+        </member>
+        <member name="F:PacketDotNet.LLDP.AddressFamily.E163">
+            <summary>E.163</summary>
+        </member>
+        <member name="T:PacketDotNet.LLDP.StringTLV">
+            <summary>
+            Base class for several TLV types that all contain strings
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LLDP.StringTLV.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a String TLV
+            </summary>
+            <param name="bytes">
+            </param>
+            <param name="offset">
+            The Port Description TLV's offset from the
+            origin of the LLDP
+            </param>
+        </member>
+        <member name="M:PacketDotNet.LLDP.StringTLV.#ctor(PacketDotNet.LLDP.TLVTypes,System.String)">
+            <summary>
+            Create from a type and string value
+            </summary>
+            <param name="tlvType">
+            A <see cref="T:PacketDotNet.LLDP.TLVTypes" /></param>
+            <param name="StringValue">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="P:PacketDotNet.LLDP.StringTLV.StringValue">
+            <value>
+            A textual Description of the port
+            </value>
+        </member>
+        <member name="M:PacketDotNet.LLDP.StringTLV.ToString">
+            <summary>
+            Convert this Port Description TLV to a string.
+            </summary>
+            <returns>
+            A human readable string
+            </returns>
+        </member>
+        <member name="T:PacketDotNet.TLVCollection">
+            <summary>
+            Custom collection for TLV types
+            Special behavior includes:
+            - Preventing an EndOfLLDPDU tlv from being added out of place
+            - Checking and throwing exceptions if one-per-LLDP packet TLVs are added multiple times
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TLVCollection.InsertItem(System.Int32,PacketDotNet.LLDP.TLV)">
+            <summary>
+            Override to:
+            - Prevent duplicate end tlvs from being added
+            - Ensure that an end tlv is present
+            - Replace any automatically added end tlvs with the user provided tlv
+            </summary>
+            <param name="index">
+            A <see cref="T:System.Int32" /></param>
+            <param name="item">
+            A <see cref="T:PacketDotNet.LLDP.TLV" /></param>
         </member>
     </members>
 </doc>
