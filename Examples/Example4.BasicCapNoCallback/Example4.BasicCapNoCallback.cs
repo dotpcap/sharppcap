@@ -54,7 +54,7 @@ namespace SharpPcap.Test.Example4
 
             PacketDotNet.RawPacket packet;
 
-            // Capture packets using PcapGetNextPacket()
+            // Capture packets using GetNextPacket()
             while( (packet = device.GetNextPacket()) != null )
             {
                 // Prints the time and length of each received packet
