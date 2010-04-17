@@ -79,7 +79,7 @@ namespace Test
             var offlineDevice = new OfflinePcapDevice("../../capture_files/test_stream.pcap");
 
             offlineDevice.Open();
-            offlineDevice.SetFilter("port 53");
+            offlineDevice.Filter = "port 53";
 
             RawPacket rawPacket;
             int count = 0;

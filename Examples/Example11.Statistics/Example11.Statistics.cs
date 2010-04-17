@@ -56,7 +56,7 @@ namespace SharpPcap.Test.Example11
             device.Open();
 
             // Handle TCP packets only
-            device.SetFilter( "tcp" );
+            device.Filter = "tcp";
 
             // Set device to statistics mode
             device.Mode = CaptureMode.Statistics;

@@ -50,7 +50,7 @@ namespace SharpPcap.Test.Example5
 
             // tcpdump filter to capture only TCP/IP packets
             string filter = "ip and tcp";
-            device.SetFilter( filter );
+            device.Filter = filter;
 
             Console.WriteLine();
             Console.WriteLine

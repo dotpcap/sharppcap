@@ -133,7 +133,7 @@ namespace SharpPcap
             device.Open(DeviceMode.Promiscuous, 20);
 
             //set the filter
-            device.SetFilter(arpFilter);
+            device.Filter = arpFilter;
 
             //inject the packet to the wire
             device.SendPacket(request);

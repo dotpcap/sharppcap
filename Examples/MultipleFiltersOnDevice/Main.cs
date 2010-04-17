@@ -57,8 +57,8 @@ namespace MultipleFiltersOnDevice
             device2.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             // set the filters
-            device1.SetFilter("tcp port 80"); // http
-            device2.SetFilter("udp port 53"); // dns
+            device1.Filter = "tcp port 80"; // http
+            device2.Filter = "udp port 53"; // dns
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",

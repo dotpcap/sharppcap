@@ -19,7 +19,7 @@ namespace Test
             }
 
             devices[0].Open();
-            devices[0].SetFilter("tcp port 80");
+            devices[0].Filter = "tcp port 80";
             devices[0].Close(); // close the device
         }
 
@@ -40,7 +40,7 @@ namespace Test
             bool caughtExpectedException = false;
             try
             {
-                devices[0].SetFilter("tcp port 80");
+                devices[0].Filter = "tcp port 80";
             } catch(DeviceNotReadyException)
             {
                 caughtExpectedException = true;

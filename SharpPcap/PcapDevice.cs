@@ -440,12 +440,11 @@ namespace SharpPcap
 
         #region Filtering
         /// <summary>
-        /// Compile a kernel level filtering expression, and associate the filter 
-        /// with this device. For more info on filter expression syntax, see:
-        /// http://www.winpcap.org/docs/docs31/html/group__language.html
+        /// Deprecated: Use the Filter property instead. This api will be removed in
+        /// the next release
         /// </summary>
         /// <param name="filterExpression">The filter expression to compile</param>
-        public virtual void SetFilter(string filterExpression)
+        public void SetFilter(string filterExpression)
         {
             int res;
             IntPtr bpfProgram;
@@ -474,6 +473,27 @@ namespace SharpPcap
             {
                 errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
                 throw new PcapException(errorString);
+            }
+        }
+
+        private string _filterString;
+
+        /// <summary>
+        /// Kernel level filtering expression associated with this device.
+        /// For more info on filter expression syntax, see:
+        /// http://www.winpcap.org/docs/docs31/html/group__language.html
+        /// </summary>
+        public virtual string Filter
+        {
+            get
+            {
+                return _filterString;
+            }
+
+            set
+            {
+                _filterString = value;
+                SetFilter(_filterString);
             }
         }
 
