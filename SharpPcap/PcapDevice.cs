@@ -446,6 +446,9 @@ namespace SharpPcap
         /// <param name="filterExpression">The filter expression to compile</param>
         public void SetFilter(string filterExpression)
         {
+            // save the filter string
+            _filterString = filterExpression;
+
             int res;
             IntPtr bpfProgram;
             string errorString;
@@ -492,7 +495,6 @@ namespace SharpPcap
 
             set
             {
-                _filterString = value;
                 SetFilter(_filterString);
             }
         }
