@@ -29,7 +29,7 @@ namespace SharpPcap
     /// </summary>
     public class ARP
     {
-        private string                  _deviceName;
+        private string _deviceName;
 
         /// <summary>
         /// Constructs a new ARP Resolver
@@ -97,6 +97,20 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Resolves the MAC address of the specified IP address.
+        /// </summary>
+        /// <param name="destIP">The IP address to resolve</param>
+        /// <param name="deviceName">The local network device name on which to send the ARP request</param>
+        /// <param name="srcIP">The local IP address from which to send the ARP request</param>
+        /// <returns>The MAC address that matches to the given IP address</returns>
+        public PhysicalAddress Resolve(System.Net.IPAddress destIP, string deviceName, System.Net.IPAddress srcIP)
+        {
+            DeviceName = deviceName;
+            LocalIP = srcIP;
+            return Resolve(destIP, DeviceName);
+        }
+
+        /// <summary>
         /// Resolves the MAC address of the specified IP address
         /// </summary>
         /// <param name="destIP">The IP address to resolve</param>
@@ -106,18 +120,23 @@ namespace SharpPcap
         {
             PhysicalAddress localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
-            //NetworkDevice device = new NetworkDevice(DeviceName);
             LivePcapDevice device = LivePcapDeviceList.Instance[DeviceName];
 
-            //FIXME: PcapDevices don't have IpAddress
-            //       These were present under Windows specific network adapters
-            //       and may be present in pcap in the future with pcap-ng
-            // if no local ip address is specified use the one from the
-            // local device
-#if false
-            if(localIP == null)
-                localIP = device.IpAddress;
-#endif
+            // if no local ip address is specified use the first one bound to the adapter
+            if (LocalIP == null)
+            {
+                if (device.Addresses.Count > 0)
+                {
+                    if (device.Addresses[0].Addr.ipAddress != null)
+                    {
+                        LocalIP = device.Addresses[0].Addr.ipAddress;
+                    }
+                    else
+                    {
+                        LocalIP = System.Net.IPAddress.Parse("127.0.0.1");
+                    }
+                }
+            }
 
             // if no local mac address is specified use the one from the device
             if(LocalMAC == null)
