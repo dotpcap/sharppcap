@@ -2379,6 +2379,11 @@
             <returns>
             A <see cref="T:PacketDotNet.Packet" /></returns>
         </member>
+        <member name="M:PacketDotNet.IPv4Packet.UpdateCalculatedValues">
+            <summary>
+            Update the length fields
+            </summary>
+        </member>
         <member name="T:PacketDotNet.IPv6Fields">
             <summary>
             A struct containing length and position information about IPv6 Fields.
