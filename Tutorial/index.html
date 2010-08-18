@@ -21,7 +21,8 @@
 <P>The first project is a great ethereal .NET clone that lets you capture and analyze numerous types of protocol packets. However, a few issues with this project make it almost impossible to be shared among other .NET applications. Firstly, the author did not provide any generic API for capturing packets that can be used by other .NET applications. He didn't separate his UI code and his analyzing and capturing code, making his capturing code depend on the GUI classes such as <CODE>ListView</CODE> to operate. Secondly, for some reason the author chose to re-implement some of WinPcap's functions in C# by himself rather than just wrapping them. This means that his application can't take advantage of the new WinPcap versions since he hard coded a certain version of WinPcap in his application.</P> 
 <P>The second and the third articles are nice starts for wrapper projects for WinPcap, however they didn't provide some important WinPcap features such as handling offline pcap files and applying kernel-level packet filters, and most importantly they provide no parser classes for analyzing protocol packets. Both projects didn't post their library source code together with the article in order to let other people extend their work and add new features and new packet parser classes.</P> 
 <P>And so, Tamir decided to start his own library for the task. Several versions in the 1.x series were released. Development slowed towards mid-2007 when the last version in the 1.x series was released, SharpPcap 1.6.2.</P>
-<P>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements. Development is active and ongoing in the 2.x series.</p>
+<P>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements.</p>
+<P>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
 <H2>About SharpPcap</H2> 
 <P>The purpose of <A href="http://sourceforge.net/projects/sharppcap" target=_blank>SharpPcap</A> is to provide a framework for capturing, injecting and analyzing network packets for .NET applications.</p>
 <p>SharpPcap is openly and actively developed with its source code and file releases hosted on SourceForge. Source code patches to improve or fix issues are welcome via the <a href="http://lists.sourceforge.net/lists/listinfo/sharppcap-devel">sharppcap developers mailing list</a>. Bug reports, feature requests and other queries are actively answered on the support forums and issue trackers there so if you have any trouble with the library please feel free to ask.</p>
@@ -39,13 +40,64 @@
 </ul>
 <LI>Enumerating and showing details about the physical network interface on a Windows machine.</li> 
 <LI>Capturing low-level network packets going through a given interface.</li> 
-<LI>Analyzing and parsing the following protocols: <I>Ethernet</I>, <I>ARP</I>, <I>IP (IPv4 and IPv6)</I>, <I>TCP</I>, <I>UDP</I>, <I>ICMP</I>, <I>IGMP</I>.</li> 
+<LI>Analyzing and parsing the following protocols: <I><a href="http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field">Ethernet</a></I>,
+<I><a href="http://wiki.wireshark.org/SLL LinuxSLL">Linux SLL</a></i>
+<I><a href="http://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP</a></I>,
+<I>IP (<a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a> and <a href="http://en.wikipedia.org/wiki/IPv6">IPv6</a>)</I>,
+<I><a href="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a></I>,
+<I><a href="http://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a></I>,
+<I><a href="http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMPv4</a></I>,
+<I><a href="http://en.wikipedia.org/wiki/ICMPv6">ICMPv6</a></I>,
+<I><a href="http://en.wikipedia.org/wiki/IGMP">IGMPv2</a></I>,
+<I><a href="http://en.wikipedia.org/wiki/Pppoe">PPPoE</a></i>,
+<i><a href="http://en.wikipedia.org/wiki/Point-to-Point_Protoco">PTP</a></i>,
+<i>LLDP</i>.</li> 
 <LI>Injecting low-level network packets on a given interface.</li> 
 <LI>Handling (reading and writing) offline packet capture files.</li>
 <li>Retrieving adapter statistics on packets received vs. dropped</li>
 </UL> 
 <P>Please check the project homepage <A href="http://sourceforge.net/projects/sharppcap" target=_blank>homepage</A> for the latest updates and bug fixes.</P> 
+<H2>Packet.Net architecture and usage</h2>
+<P>If you are familiar with SharpPcap you may recall that SharpPcap used an inheritance model. Tcp packets were represented by a class of type TCPPacket that inherited from IPPacket. IPPacket inherited from EthernetPacket and EthernetPacket inherited from the base packet class. This is convienent as each Tcp packet would have properties for Tcp fields, Ip fields and Ethernet fields. One API downside to this approach was field specific prefixes like TCPWindowSize and IPAddress, to clarify which fields went with which packet header.</P>
+<P>When users asked to be able to construct packets from values a significant issue became apparent. To build say a Udp packet a user needs to provide all of the fields for the Udp packet, including payload, as well as those of all of the other inherited packets, the IP packet and Ethernet packet. This makes for more complex constructors and more complex internal code as headers for derived packets have to be preserved but their data overwritten with the encapsulated packets header and data, ie. the IP packet payload is the Udp header and the Udp payload.</p>
+<p>Another issue with the inherited model is that it makes things like PPPoE difficult to represent as the PPPoE packet is inserted in the hierarchy. We no longer have the straight forward Ethernet->IP->Udp model, we now have Ethernet->PPPoE->PTP->IP->Udp. It's not clear how best to fit this kind of exception case into the inerhitance model.</p>
+<p>Packet.Net switches from an inheritance model to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users static GetEncapsulsted() methods have been added so users can do var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket).
+</p>
+<p>
+The GetEncapsulated() methods are intelligent. They are designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that looks like EthernetPacket -> IP packet -> UdpPacket, Linux Cooked Capture -> IP -> UdpPacket or EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets vs writing your own code to do so.
+</p>
+<p>
+With Packet.Net constructing packets looks like:
+<pre>
+    using PacketDotNet;
 
+    ushort tcpSourcePort = 123;
+    ushort tcpDestinationPort = 321;
+    var tcpPacket = new TcpPacket(tcpSourcePort, tcpDestinationPort);
+
+    var ipSourceAddress = System.Net.IPAddress.Parse("192.168.1.1");
+    var ipDestinationAddress = System.Net.IPAddress.Parse("192.168.1.2");
+    var ipPacket = new IPv4Packet(ipSourceAddress, ipDestinationAddress);
+
+    var sourceHwAddress = "90-90-90-90-90-90";
+    var ethernetSourceHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(sourceHwAddress);
+    var destinationHwAddress = "80-80-80-80-80-80";
+    var ethernetDestinationHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(destinationHwAddress);
+    // NOTE: using EthernetPacketType.None to illustrate that the ethernet
+    //       protocol type is updated based on the packet payload that is
+    //       assigned to that particular ethernet packet
+    var ethernetPacket = new EthernetPacket(ethernetSourceHwAddress,
+                                            ethernetDestinationHwAddress,
+                                            EthernetPacketType.None);
+
+    // Now stitch all of the packets together
+    ipPacket.PayloadPacket = tcpPacket;
+    ethernetPacket.PayloadPacket = ipPacket;
+
+    // and print out the packet to see that it looks just like we wanted it to
+    Console.WriteLine(ethernetPacket.ToString());
+</pre>
+</p>
 
 <H2>SharpPcap tutorial: A step by step guide to using SharpPcap</H2>
 <P>Examples can be found in the Examples/ directory of the source package.</p>
@@ -54,12 +106,14 @@
 <OL> 
 <LI><A href="#ifList">Obtaining the device list (Example 1)</A></li> 
 <LI><A href="#basicCap">Opening an adapter and capturing packets (Example 3)</A></li> 
-<LI><A href="#basicCapNoCallback">Capturing packets without the event handler (Example 4)</A></li> 
+<LI><A href="#basicCapNoCallback">Capturing packets without the event  (Example 4)</A></li> 
 <LI><A href="#filter">Filtering the traffic (Example 5)</A></li>
 <LI><A href="#dumpTCP">Interpreting the packets (Example 6)</A></li> 
 <LI><A href="#offline">Handling offline dump files (Example 8)</A></li> 
 <LI><A href="#sendPackets">Sending packets (Example 9)</A></li> 
 <LI><A href="#statistics">Gathering statistics on the network traffic (Example 11)</A></LI>
+<LI><A href="#QueuingPacketForBackgroundProcessing">Queuing packets for background processing - High speed capture</a></li>
+<LI><A href="#MultipleFiltersOnDevice">Multiple Filters on device</a></li>
 </OL> 
 
 
@@ -95,7 +149,7 @@ Console.ReadLine();
 <P>The output of the above application will be as something like this:</P>
 <PRE lang=text>
 c:\sharppcap\Examples\Example1.IfList\bin\Debug>Example1.IfList.exe
-SharpPcap 2.3.0.0, Example1.IfList.cs
+SharpPcap 3.1.0.0, Example1.IfList.cs
 
 The following devices are available on this machine:
 ----------------------------------------------------
@@ -130,7 +184,7 @@ Hit 'Enter' to exit...
 <LI><CODE lang=cs>Open(<span class="code-keyword">DeviceMode</span> mode)</CODE> 
 <LI><CODE lang=cs>Open(<span class="code-keyword">DeviceMode</span> mode, <span class="code-keyword">int</span> read_timeout)</CODE> </LI></UL> 
 <P>The above two arguments deserve some further explanation.</P> 
-<P><CODE>DeviceMode</CODE> In normal mode (<code>DeviceMode.Normal</code>), a network adapter only captures packets addressed directly to it; the packets exchanged by other hosts on the network are ignored. Instead, when the adapter is in promiscuous mode (<code>DeviceMode.Promiscuous</code>) it captures all packets whether they are destined to it or not. This means that on shared media (like non-switched Ethernet), libpcap/WinPcap will be able to capture the packets of other hosts. Promiscuous mode is the default for most capture applications, so we enable it in the following example. NOTE: Promiscuous mode can be detected via network means, search for "detect promiscuous" via a web search engine for more information.</P>
+<P><CODE>DeviceMode</CODE> In normal mode (<code>DeviceMode.Normal</code>), a network adapter only captures packets addressed directly to it; the packets exchanged by other hosts on the network are ignored. Instead, when the adapter is in promiscuous mode (<code>DeviceMode.Promiscuous</code>) it captures all packets whether they are destined to it or not. This means that on shared media (like non-switched Ethernet), libpcap/WinPcap will be able to capture the packets of other hosts. Promiscuous mode is the default for most capture applications, so we enable it in the following example. NOTE: Promiscuous mode can be detected via network means so if you are capturing in promiscuous mode you may be able to be detected by other entities on the network. Search for "detect promiscuous" via a web search engine for more information.</P>
 <P><CODE>read_timeout</CODE>: Specifies the read timeout, in milliseconds. A read on the adapter (for example, using the <CODE>GetNextPacket()</CODE> function) will always return after <CODE>read_timeout</CODE> milliseconds, even if no packets are available from the network. <CODE>read_timeout</CODE> also defines the interval between statistical reports if the adapter is in statistical mode (see the <I><A href="#statistics">Gathering statistics on the network traffic</A></I> section). Setting <CODE>read_timeout</CODE> to 0 means no timeout, a read on the adapter never returns if no packets arrive. A -1 timeout on the other side causes a read on the adapter to always return immediately.</P> 
 <P>The following example shows the use of the <CODE>OnPacketArrival</CODE> event for receiving packets. We create an event handler that is being called whenever a new packet is going through the <CODE>PcapDevice</CODE>:</P>
 <PRE lang=cs>
@@ -168,12 +222,12 @@ device.Close();</PRE>
 <span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">/</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span> </span> 
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(<span class="code-keyword">object</span> sender, CaptureEventArgs packet)
 {
-    DateTime time = packet.PcapHeader.Date;
-    <span class="code-keyword">int</span> len = packet.PcapHeader.PacketLength;
+    DateTime time = packet.Timeval.Date;
+    <span class="code-keyword">int</span> len = packet.Data.Length;
     Console.WriteLine(<span class="code-string">&quot;</span><span class="code-string">{0}:{1}:{2},{3} Len={4}&quot;</span>, 
         time.Hour, time.Minute, time.Second, time.Millisecond, len);
 }</PRE> 
-<P>Once the adapter is opened, the capture can be started with the <CODE>StartCapture()</CODE> or <CODE lang=cs>Capture(<span class="code-keyword">int</span> packetCount)</CODE> functions. These two functions are very similar, the difference is that <CODE>StartCapture()</CODE> is a non-blocking function that starts the capturing process on a new thread, while <CODE lang=cs>Capture(<span class="code-keyword">int</span> packetCount)</CODE> blocks until <CODE>packetCount</CODE> packets have been captured. When using <CODE>StartCapture()</CODE> we should later call <CODE>StopCapture()</CODE> to terminate the capture process. When using <CODE lang=cs>Capture(<span class="code-keyword">int</span> packetCount)</CODE> it is possible to pass a <CODE>SharpPcap.INFINITE</CODE> value to keep capturing forever.</P> 
+<P>Once the adapter is opened, the capture can be started with the <CODE>StartCapture()</CODE> or <CODE lang=cs>Capture(<span class="code-keyword">int</span> packetCount)</CODE> functions. These two functions are very similar, the difference is that <CODE>StartCapture()</CODE> is a non-blocking function that starts the capturing process on a new thread, while <CODE lang=cs>Capture(<span class="code-keyword">int</span> packetCount)</CODE> blocks until <CODE>packetCount</CODE> packets have been captured. When using <CODE>StartCapture()</CODE> we should later call <CODE>StopCapture()</CODE> to terminate the capture process. To capture indefinitely call the <CODE lang=cs>Capture()</CODE> method.</P> 
 <P>Both of these functions require that an event handler for processing packets registered prior to calling them. This event handler is invoked by <CODE>PcapDevice</CODE> for every new packet coming from the network and receives the sender object that invoked this handler (i.e. the <CODE>PcapDevice</CODE> object) and the actual received <CODE>Packet</CODE>, including all the protocol headers. Note that the frame CRC is normally not present in the packet, because it is removed by the network adapter after the frame validation. Note also that most adapters discard packets with wrong CRCs, so WinPcap (and therefore SharpPcap) is normally not able to capture them.</P> 
 <P>The <CODE>Packet</CODE> class represents a generic packet captured from the network. Each such packet has a <CODE>PcapHeader</CODE> property containing some info (e.g. the timestamp of the capture and the length of the packet) about the captured packet. The above example extracts the timestamp and the length from every <CODE>Packet</CODE> object and prints them on the screen.</P> 
 <P>Please note that the handler code is called by the <CODE>PcapDevice</CODE>; therefore the user application does not have direct control over it. Another approach is to use the <CODE>GetNextPacket()</CODE> function, which is presented in the next section.</P>
@@ -231,12 +285,12 @@ Console.WriteLine
   (<span class="code-string">&quot;-- Listening on {0}, hit 'Enter' to stop...&quot;</span>,
   device.Description);
  
-<span class="code-comment">// Start capture packets</span>
-device.Capture( SharpPcap.INFINITE );
+<span class="code-comment">// Start capturing packets indefinitely</span>
+device.Capture();
  
 <span class="code-comment">// Close the pcap device</span> 
 <span class="code-comment">// (Note: this line will never be called since</span> 
-<span class="code-comment">// we're capturing infinite number of packets</span> 
+<span class="code-comment">// we're capturing indefinitely</span> 
 device.Close();</PRE> 
 
 <H3 id=dumpTCP>Interpreting the packets (Example 6 in the source package)</H3> 
@@ -251,29 +305,26 @@ device.Close();</PRE>
 <span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">/</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span> 
 </span> 
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(
-                       <span class="code-keyword">object</span> sender, CaptureEventArgs packet)
-{            
-    <span class="code-keyword">if</span>(packet <span class="code-keyword">is</span> TCPPacket)
+                       <span class="code-keyword">object</span> sender, CaptureEventArgs e)
+{
+    var tcp = TcpPacket.GetEncapsulated(e.Packet);
+    <span class="code-keyword">if</span>(tcp != null)
     {                
-        DateTime time = packet.Timeval.Date;
-        <span class="code-keyword">int</span> len = packet.PcapHeader.len;
+        DateTime time = e.Packet.Timeval.Date;
+        <span class="code-keyword">int</span> len = e.Packet.Data.Length;
  
-        TCPPacket tcp = (TCPPacket)packet;
         <span class="code-keyword">string</span> srcIp = tcp.SourceAddress;
         <span class="code-keyword">string</span> dstIp = tcp.DestinationAddress;
-        <span class="code-keyword">int</span> srcPort = tcp.SourcePort;
-        <span class="code-keyword">int</span> dstPort = tcp.DestinationPort;
  
         Console.WriteLine(<span class="code-string">&quot;</span><span class="code-string">{0}:{1}:{2},
-            {3} Len={4} {5}:{6} -&gt; {7}:{8}&quot;</span>, 
+            {3} Len={4}", 
             time.Hour, time.Minute, time.Second, 
-            time.Millisecond, len, srcIp, srcPort, 
-            dstIp, dstPort);
+            time.Millisecond, len);
+        Console.WriteLine(e.Packet.ToString());
     }
 }</PRE> 
-<P>If you take a look at the <A href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut6.html" target=_blank>UDP example</A> of the original WinPcap tutorial you will see how complex it is to parse the packets (although UDP is a bit simpler to parse than TCP in our example) directly from the raw data bytes provided by the WinPcap library. Luckily for us, SharpPcap provides some useful packet analyzing classes for some common protocols (e.g. TCP, UDP, ICMP and others). These analyzing classes were initially a direct C# translation from <A href="http://jpcap.sourceforge.net/" target=_blank>JPcap</A>, a Java wrapper for libpcap/WinPcap similar to SharpPcap, but significant changes have been made to make them fit better into .NET. All these analyzing classes can be found under the <CODE>SharpPcap.Packets</CODE> namespace.</P> 
-<P>As you can see, in our packet handler we first do a check to verify that the <CODE>Packet</CODE> object received from the <CODE>PcapDevice</CODE> is of type <CODE>TCPPacet</CODE>, and only then we cast it to a <CODE>TCPPacet</CODE>. This check is not really needed if we set the appropriate filter using the <CODE>SetFilter()</CODE> function, however we use it here as a good practice.</P> 
-<P>The <CODE>TCPPacket</CODE> is a subclass of the <CODE>IPPacket</CODE> class (since TCP runs on top of IP), so all TCP/IP fields are accessible using <CODE>TCPPacet</CODE>'s properties. In the above example, we extract the TCP and IP values from the <CODE>TCPPacket</CODE> class and print them on the screen (of course, the <CODE>TCPPacket</CODE> class contains additional info such as TCP flags and sequence number fields, which are not shown in this example). The resulting output is something like this:</P>
+<P>If you take a look at the <A href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut6.html" target=_blank>UDP example</A> of the original WinPcap tutorial you will see how complex it is to parse the packets (although UDP is a bit simpler to parse than TCP in our example) directly from the raw data bytes provided by the WinPcap library. Luckily for us, SharpPcap provides some useful packet analyzing classes for some common protocols (e.g. TCP, UDP, ICMP and others). These analyzing classes were initially a direct C# translation from <A href="http://jpcap.sourceforge.net/" target=_blank>JPcap</A>, a Java wrapper for libpcap/WinPcap similar to SharpPcap, but significant changes have been made to make them fit better into .NET, including the rewrite to <a href="http://packetnet.sf.net"><b>Packet.Net</b></a>. All of the packet parsing and generation code can be found in the <code>PacketDotNet</code> namespace in the PacketNet.
+<P>As you can see, in our packet handler we first attempt to extract the Tcp packet encapsulated in the packet that was captured on the line. If one was found, and it should be since our filter selects only tcp packets, we can then access its properties. If we also wanted to see the IP packet properties these could be accessed via <code>var ip = IpPacket.GetEncapsulated(e.Packet);</code></P> 
 <PRE lang=text>
 Available devices:
 ------------------
@@ -313,12 +364,12 @@ Console.WriteLine
     (<span class="code-string">&quot;-- Listening on {0}, hit 'Ctrl-C' to exit...&quot;</span>,
     device.Description);
 
-<span class="code-comment">// Start capture 'INFINTE' number of packets</span> 
-device.Capture( SharpPcap.INFINITE );
+<span class="code-comment">// Start capturing indefinitely</span> 
+device.Capture();
  
 <span class="code-comment">// Close the pcap device</span> 
 <span class="code-comment">// (Note: this line will never be called since</span>
-<span class="code-comment">// we're capturing infinite number of packets</span>
+<span class="code-comment">// we're capturing forever</span>
 device.Close();
 </PRE> 
 <P>And here is the packet handler that will dump each received packet to the file:</P><PRE lang=cs><span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span></span> 
@@ -332,14 +383,14 @@ device.Close();
     <span class="code-keyword">if</span>( device.DumpOpened )
     {
         <span class="code-comment">// dump the packet to the file</span> 
-        device.PcapDump( packet );
+        device.Dump( packet );
         Console.WriteLine(<span class="code-string">&quot;Packet dumped to file.&quot;</span>);
     }
 }</PRE> 
 <P>As you can see, the structure of the program is very similar to the ones we have seen in the previous sections. The differences are:</P> 
 <UL> 
 <LI>The call to <CODE>device.DumpOpen( capFile )</CODE> is issued once the interface is opened. This call opens a dump file and associates it with the interface. 
-<LI>The packets are written to this file with the <CODE>device.PcapDump( packet )</CODE> call in the packet handler. Note the use of the sender object parameter passed to the packet handler callback which is casted to a <CODE>PcapDevice</CODE>. </LI></UL> 
+<LI>The packets are written to this file with the <CODE>device.Dump( packet )</CODE> call in the packet handler. Note the use of the sender object parameter passed to the packet handler callback which is casted to a <CODE>PcapDevice</CODE>. </LI></UL> 
 <br/>
 <H4>Reading packets from a dump file</H4> 
 <P>Now that we have a dump file available, we can try to read its content. The following code opens a WinPcap/libpcap dump file and displays every packet contained in the file. The <CODE>SharpPcap.OfflinePcapDevice( capFile )</CODE> class is a <CODE>PcapDevice</CODE> object which represents the offline capture file that we read, then the usual <CODE>OnPacketArrival</CODE> event is used to sequence through the packets. As you can see, reading packets from an offline capture is nearly identical to receiving them from a physical interface:</P>
@@ -372,9 +423,8 @@ Console.WriteLine
     (<span class="code-string">&quot;-- Capturing from '{0}', hit 'Ctrl-C' to exit...&quot;</span>,
     capFile);
 
-<span class="code-comment">// Start capture 'INFINTE' number of packets</span> 
-<span class="code-comment">// This method will return when EOF reached.</span> 
-device.Capture( SharpPcap.INFINITE );
+<span class="code-comment">// Start capturing an indefinite number of packets</span> 
+device.Capture();
 
 <span class="code-comment">// Close the pcap device</span> 
 device.Close();
@@ -382,7 +432,7 @@ Console.WriteLine(<span class="code-string">&quot;-- End of file reached.&quot;<
 </PRE>
 
 <H3 id=sendPackets>Sending packets (Example 9 in the source package)</H3> 
-<P>The simplest way to send a packet is shown in the following code snippet. After opening an adapter, <CODE>SendPacket</CODE> is called to send a hand-crafted packet. <CODE>SendPacket</CODE> takes as argument a byte array or a <CODE>Packet</CODE> object containing the data to be sent. Notice that the buffer is sent to the net as is, without any manipulation. This means that the application has to create the correct protocol headers in order to send something meaningful:</P>
+<P>The simplest way to send a packet is shown in the following code snippet. After opening an adapter, <CODE>SendPacket</CODE> is called to send a hand-crafted packet. <CODE>SendPacket</CODE> takes as argument a byte array or a <CODE>Packet</CODE> object containing the data to be sent. Notice that the buffer is sent to the network as it was received. This means that the application has to create the correct protocol headers in order to send something meaningful:</P>
 <PRE lang=cs>
 <span class="code-comment">// Open the device</span> 
 device.Open();
@@ -590,7 +640,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped,
     <span class="code-comment">// from the last sample.</span> 
     <span class="code-comment">// This value is obtained from the timestamp</span> 
     <span class="code-comment">// that's associated with the sample.</span> 
-    <span class="code-keyword">int</span> delay=(statistics.Seconds - oldSec) * 
+    <span class="code-keyword">int</span> delay = (statistics.Seconds - oldSec) * 
               <span class="code-digit">1000000</span> - oldUsec + statistics.MicroSeconds;
     <span class="code-comment">/*</span><span class="code-comment"> Get the number of Bits per second */</span> 
     <span class="code-keyword">long</span> bps =  
@@ -627,6 +677,10 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped,
 <li><a href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">Tamir's SharpPcap page (currently out-of-date)</a></li>
 </ul>
 <H2>History</H2>
+<ul>
+<li>2010-Apr-12
+<ul>
+<li>Updated for SharpPcap v3.x</li></ul></li></ul>
 <ul>
 <li>2010-Jan-27
 <ul>
