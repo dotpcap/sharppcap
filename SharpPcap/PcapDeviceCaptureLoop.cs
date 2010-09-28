@@ -168,7 +168,8 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Starts the capturing process
+        /// Starts the capturing process via a background thread
+        /// OnPacketArrival() will be called for each captured packet
         /// </summary>
         public virtual void StartCapture()
         {
