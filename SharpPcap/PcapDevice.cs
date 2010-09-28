@@ -506,7 +506,7 @@ namespace SharpPcap
 
             set
             {
-                SetFilter(_filterString);
+                SetFilter(value);
             }
         }
 
