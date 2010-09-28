@@ -294,6 +294,17 @@ namespace SharpPcap
             // so check for that here
             ThrowIfNotOpen("Device must be opened via Open() prior to use");
 
+            // If a user is calling GetNextPacket() when the background capture loop
+            // is also calling into libpcap then bad things can happen
+            //
+            // The bad behavior I (Chris M.) saw was that the background capture would keep running
+            // but no more packets were captured. Took two days to debug and regular users
+            // may hit the issue more often so check and report the issue here
+            if(Started)
+            {
+                throw new InvalidOperationDuringBackgroundCaptureException("GetNextPacket() invalid during background capture");
+            }
+
             //Get a packet from winpcap
             res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
             p = null;

@@ -68,7 +68,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="PacketDotNet, Version=0.4.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
@@ -125,6 +125,7 @@
     <Compile Include="LivePcapDeviceList.cs" />
     <Compile Include="ARP.cs" />
     <Compile Include="CaptureStoppedEventStatus.cs" />
+    <Compile Include="InvalidOperationDuringBackgroundCaptureException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
