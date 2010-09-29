@@ -52,6 +52,38 @@ namespace Test
             devices[0].Close();
         }
 
+        /// <summary>
+        /// Test that we get the appropriate exception from PcapDevice.StartCapture() if
+        /// there hasn't been any delegates assigned to PcapDevice.OnPacketArrival
+        /// </summary>
+        [Test]
+        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival ()
+        {
+            var devices = LivePcapDeviceList.Instance;
+            if(devices.Count == 0)
+            {
+                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                                                           " as a user with access to adapters (root on Linux)?");
+            }
+
+            devices[0].Open();
+
+            bool caughtExpectedException = false;
+
+            try
+            {
+                // start background capture
+                devices[0].StartCapture();
+            } catch(DeviceNotReadyException)
+            {
+                caughtExpectedException = true;
+            }
+
+            Assert.IsTrue(caughtExpectedException);
+
+            devices[0].Close();
+        }
+
         void HandleOnPacketArrival (object sender, CaptureEventArgs e)
         {
             
