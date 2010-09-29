@@ -451,11 +451,10 @@ namespace SharpPcap
 
         #region Filtering
         /// <summary>
-        /// Deprecated: Use the Filter property instead. This api will be removed in
-        /// the next release
+        /// Assign a filter to this device given a filterExpression
         /// </summary>
         /// <param name="filterExpression">The filter expression to compile</param>
-        public void SetFilter(string filterExpression)
+        protected void SetFilter(string filterExpression)
         {
             // save the filter string
             _filterString = filterExpression;
