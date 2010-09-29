@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>QueuingPacketsForBackgroundProcessing</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>QueuingPacketsForBackgroundProcessing</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,7 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="PacketDotNet, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
