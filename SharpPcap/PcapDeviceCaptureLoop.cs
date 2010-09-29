@@ -178,6 +178,9 @@ namespace SharpPcap
                 if (!Opened)
                     throw new DeviceNotReadyException("Can't start capture, the pcap device is not opened.");
 
+                if ( OnPacketArrival == null)
+                    throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
+
                 shouldCaptureThreadStop = false;
                 captureThread = new Thread(new ThreadStart(this.CaptureThread));
                 captureThread.Start();
