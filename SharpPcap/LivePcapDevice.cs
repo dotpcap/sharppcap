@@ -304,5 +304,25 @@ namespace SharpPcap
                 }
             }   
         }
+
+        /// <value>
+        /// Set the minumum amount of data (in bytes) received by the kernel in a single call. 
+        /// WinPcap extension
+        /// </value>
+        public int MinToCopy
+        {
+            set
+            {
+                ThrowIfNotWinPcap();
+                ThrowIfNotOpen("Can't set MinToCopy size, the device is not opened");
+
+                int retval = SafeNativeMethods.pcap_setmintocopy(this.m_pcapAdapterHandle,
+                                                                 value);
+                if (retval != 0)
+                {
+                    throw new System.InvalidOperationException("pcap_setmintocopy() failed");
+                }
+            }
+        }
     }
 }

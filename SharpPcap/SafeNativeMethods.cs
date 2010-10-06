@@ -238,6 +238,23 @@ namespace SharpPcap
         [DllImport(PCAP_DLL)]
         internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
 
+        /// <summary>
+        /// changes the minimum amount of data in the kernel buffer that causes 
+        /// a read from the application to return (unless the timeout expires)
+        /// See http://www.winpcap.org/docs/docs_412/html/group__wpcapfunc.html#gab14ceacbf1c2f63026416dd73f80dc0d
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="sizeInBytes">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL)]
+        internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
+
         #region Send queue functions
         /// <summary>
         /// Allocate a send queue. 
