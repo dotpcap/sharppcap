@@ -131,6 +131,7 @@ Global
 		$0.TextStylePolicy = $3
 		$3.FileWidth = 120
 		$3.NoTabsAfterNonTabs = True
+		$3.RemoveTrailingWhitespace = True
 		$3.inheritsSet = VisualStudio
 		$3.inheritsScope = text/plain
 		$3.scope = text/plain
