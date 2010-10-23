@@ -51,7 +51,15 @@ namespace SharpPcap.Test.Example3
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            if(device is WinPcap.WinPcapDevice)
+            {
+                var winPcap = device as WinPcap.WinPcapDevice;
+                winPcap.Open(WinPcap.OpenFlags.DataTransferUdp | WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+            }
+            else
+            {
+                device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            }
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",

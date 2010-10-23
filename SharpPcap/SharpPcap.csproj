@@ -90,12 +90,6 @@
     <Compile Include="OfflinePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SendQueue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="StatisticsModePacket.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Pcap.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -110,22 +104,32 @@
     <Compile Include="PcapInterface.cs" />
     <Compile Include="DeviceNotReadyException.cs" />
     <Compile Include="PcapStatistics.cs" />
-    <Compile Include="StatisticsException.cs" />
     <Compile Include="WinPcapRequiredException.cs" />
     <Compile Include="NotSupportedOnOfflineDeviceException.cs" />
     <Compile Include="PacketArrivalEventHandler.cs" />
-    <Compile Include="StatisticsModeEventHandler.cs" />
     <Compile Include="CaptureStoppedEventHandler.cs" />
     <Compile Include="DeviceMode.cs" />
     <Compile Include="CaptureEventArgs.cs" />
-    <Compile Include="StatisticsModeEventArgs.cs" />
-    <Compile Include="SendQueueTransmitModes.cs" />
-    <Compile Include="CaptureMode.cs" />
     <Compile Include="PcapDevice.cs" />
     <Compile Include="LivePcapDeviceList.cs" />
     <Compile Include="ARP.cs" />
     <Compile Include="CaptureStoppedEventStatus.cs" />
     <Compile Include="InvalidOperationDuringBackgroundCaptureException.cs" />
+    <Compile Include="WinPcap\SafeNativeMethods.cs" />
+    <Compile Include="WinPcap\SendQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WinPcap\SendQueueTransmitModes.cs" />
+    <Compile Include="WinPcap\StatisticsModeEventArgs.cs" />
+    <Compile Include="WinPcap\StatisticsModeEventHandler.cs" />
+    <Compile Include="WinPcap\StatisticsModePacket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WinPcap\OpenFlags.cs" />
+    <Compile Include="ICaptureDevice.cs" />
+    <Compile Include="WinPcap\WinPcapDevice.cs" />
+    <Compile Include="StatisticsException.cs" />
+    <Compile Include="WinPcap\CaptureMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -145,4 +149,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="WinPcap\" />
+  </ItemGroup>
 </Project>

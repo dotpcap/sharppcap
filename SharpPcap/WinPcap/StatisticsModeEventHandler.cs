@@ -15,28 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
- * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+ * Copyright 2008-2010 Chris Morgan <chmorgan@gmail.com>
  */
 
 using System;
 
-namespace SharpPcap
+namespace SharpPcap.WinPcap
 {
         /// <summary>
-        /// The working mode of a Pcap device
+        /// A delegate for delivering network statistics when using winpcap in
+        /// statistics mode
         /// </summary>
-        public enum CaptureMode : int
-        {
-            /// <summary>
-            /// Set a Pcap device to capture packets, Capture mode
-            /// </summary>
-            Packets = 0,
-
-            /// <summary>
-            /// Set a Pcap device to report statistics.
-            /// <br/>
-            /// Statistics mode is only supported in WinPcap
-            /// </summary>
-            Statistics = 1
-        };
+        public delegate void StatisticsModeEventHandler(object sender, StatisticsModeEventArgs e);
 }
