@@ -20,7 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace SharpPcap
+namespace SharpPcap.WinPcap
 {
     /// <summary>
     /// The types of transmit modes allowed by the WinPcap specific send queue

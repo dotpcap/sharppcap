@@ -26,7 +26,7 @@ namespace SharpPcap
     /// <summary>
     /// Base class for all pcap devices
     /// </summary>
-    public abstract partial class PcapDevice
+    public abstract partial class PcapDevice : ICaptureDevice
     {
         /// <summary>
         /// Low level interface object that contains device specific information
@@ -48,8 +48,10 @@ namespace SharpPcap
         /// </summary>
         protected int          m_pcapPacketCount   = Pcap.InfinitePacketCount;
 
-        private CaptureMode    m_pcapMode          = CaptureMode.Packets;
-        private int          m_mask  = 0; //for filter expression
+        private int            m_mask  = 0; //for filter expression
+
+        public abstract string Name { get; }
+        public abstract string Description { get; }
 
         /// <summary>
         /// Fires whenever a new packet is processed, either when the packet arrives
@@ -57,12 +59,6 @@ namespace SharpPcap
         /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
         public event PacketArrivalEventHandler OnPacketArrival;
-
-        /// <summary>
-        /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
-        /// For network captured packets this event is invoked only when working in "PcapMode.Statistics" mode.
-        /// </summary>
-        public event StatisticsModeEventHandler OnPcapStatistics;
 
         /// <summary>
         /// Fired when the capture process of this pcap device is stopped
@@ -94,22 +90,6 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Gets the name of the device
-        /// </summary>
-        public abstract string Name
-        {
-            get;
-        }
-
-        /// <value>
-        /// Description of the device
-        /// </value>
-        public abstract string Description
-        {
-            get;
-        }
-
-        /// <summary>
         /// Return the pcap link layer value of an adapter. 
         /// </summary>
         public virtual PacketDotNet.LinkLayers PcapDataLink
@@ -118,28 +98,6 @@ namespace SharpPcap
             {
                 ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
                 return (PacketDotNet.LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
-            }
-        }
-
-        /// <value>
-        /// WinPcap specific property
-        /// </value>
-        public virtual CaptureMode Mode
-        {
-            get
-            {
-                return m_pcapMode;
-            }
-
-            set
-            {
-                ThrowIfNotWinPcap();
-                ThrowIfNotOpen("Mode");
-
-                m_pcapMode = value;
-                int result = SafeNativeMethods.pcap_setmode(this.PcapHandle , (int)m_pcapMode);
-                if (result < 0)
-                    throw new PcapException("Error setting PcapDevice mode. : " + LastError);
             }
         }
 
@@ -203,13 +161,6 @@ namespace SharpPcap
                     OnPacketArrival -= pa;
                 }
             }
-            if ( OnPcapStatistics != null)
-            {
-                foreach(StatisticsModeEventHandler pse in OnPcapStatistics.GetInvocationList())
-                {
-                    OnPcapStatistics -= pse;
-                }
-            }
         }
 
         /// <summary>
@@ -226,25 +177,13 @@ namespace SharpPcap
         /// <param name="p">
         /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
-        private void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
+        protected void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
         {
-            if(Mode == CaptureMode.Packets)
+            var handler = OnPacketArrival;
+            if(handler != null )
             {
-                var handler = OnPacketArrival;
-                if(handler != null )
-                {
-                    //Invoke the packet arrival event
-                    handler(this, new CaptureEventArgs(p, this));
-                }
-            }
-            else if(Mode == CaptureMode.Statistics)
-            {
-                var handler = OnPcapStatistics;
-                if(handler != null)
-                {
-                    //Invoke the pcap statistics event
-                    handler(this, new StatisticsModeEventArgs(p, this));
-                }
+                //Invoke the packet arrival event
+                handler(this, new CaptureEventArgs(p, this));
             }
         }
 
@@ -588,19 +527,6 @@ namespace SharpPcap
             return true;
         }
         #endregion
-
-        /// <summary>
-        /// Helper method for ensuring we are running in winpcap. Throws
-        /// a PcapWinPcapRequiredException() if not on a windows platform
-        /// </summary>
-        internal static void ThrowIfNotWinPcap()
-        {
-            if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
-               (Environment.OSVersion.Platform != PlatformID.Win32Windows))
-            {
-                throw new WinPcapRequiredException("only supported in winpcap");
-            }
-        }
 
         /// <summary>
         /// Helper method for checking that the adapter is open, throws an

@@ -263,23 +263,6 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Sends all packets in a 'PcapSendQueue' out this pcap device
-        /// </summary>
-        /// <param name="q">
-        /// A <see cref="SendQueue"/>
-        /// </param>
-        /// <param name="transmitMode">
-        /// A <see cref="SendQueueTransmitModes"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public int SendQueue( SendQueue q, SendQueueTransmitModes transmitMode )
-        {
-            return q.Transmit( this, transmitMode);
-        }
-
-        /// <summary>
         /// Retrieves pcap statistics
         /// </summary>
         /// <returns>
@@ -291,46 +274,6 @@ namespace SharpPcap
             ThrowIfNotOpen("device not open");
 
             return new PcapStatistics(this.m_pcapAdapterHandle);
-        }
-
-        /// <value>
-        /// Set the kernel value buffer size in bytes
-        /// WinPcap extension
-        /// </value>
-        public int KernelBufferSize
-        {
-            set
-            {
-                ThrowIfNotWinPcap();
-                ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
-
-                int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
-                                                            value);
-                if(retval != 0)
-                {
-                    throw new System.InvalidOperationException("pcap_setbuff() failed");
-                }
-            }   
-        }
-
-        /// <value>
-        /// Set the minumum amount of data (in bytes) received by the kernel in a single call. 
-        /// WinPcap extension
-        /// </value>
-        public int MinToCopy
-        {
-            set
-            {
-                ThrowIfNotWinPcap();
-                ThrowIfNotOpen("Can't set MinToCopy size, the device is not opened");
-
-                int retval = SafeNativeMethods.pcap_setmintocopy(this.m_pcapAdapterHandle,
-                                                                 value);
-                if (retval != 0)
-                {
-                    throw new System.InvalidOperationException("pcap_setmintocopy() failed");
-                }
-            }
         }
     }
 }

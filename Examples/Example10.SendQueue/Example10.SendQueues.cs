@@ -39,7 +39,7 @@ namespace SharpPcap.Test.Example10
             Console.Write("Queueing packets...");
 
             //Allocate a new send queue
-            SendQueue squeue = new SendQueue
+            var squeue = new WinPcap.SendQueue
                 ( (int)((OfflinePcapDevice)device).FileSize );
             PacketDotNet.RawPacket packet;
             
@@ -118,8 +118,10 @@ namespace SharpPcap.Test.Example10
 
             try
             {
+                var winPcapDevice = device as WinPcap.WinPcapDevice;
+
                 Console.Write("Sending packets...");
-                int sent = ((LivePcapDevice)device).SendQueue(squeue, SendQueueTransmitModes.Synchronized);
+                int sent = winPcapDevice.SendQueue(squeue, WinPcap.SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {

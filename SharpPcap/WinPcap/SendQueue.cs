@@ -23,7 +23,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.WinPcap
 {
     /// <summary>
     /// Interface to the WinPcap send queue extension methods
@@ -41,9 +41,9 @@ namespace SharpPcap
         public SendQueue(int memSize)
         {
             // ensure that we are running under winpcap
-            PcapDevice.ThrowIfNotWinPcap();
+            WinPcapDevice.ThrowIfNotWinPcap();
 
-            m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );
+            m_queue = WinPcap.SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)
                 throw new PcapException("Error creating PcapSendQueue");
         }
@@ -77,7 +77,7 @@ namespace SharpPcap
             //Marshal header
             IntPtr hdrPtr = pcapHdr.MarshalToIntPtr();
 
-            int res = SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
+            int res = WinPcap.SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
 
             Marshal.FreeHGlobal(pktPtr);
             Marshal.FreeHGlobal(hdrPtr);    
@@ -150,7 +150,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public int Transmit( LivePcapDevice device, SendQueueTransmitModes transmitMode)
+        public int Transmit( WinPcapDevice device, SendQueueTransmitModes transmitMode)
         {
             if(!device.Opened)
                 throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");
@@ -161,7 +161,7 @@ namespace SharpPcap
             }
 
             int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
-            return SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
+            return WinPcap.SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
         }
 
         /// <summary>
