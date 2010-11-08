@@ -30,14 +30,14 @@
 <p>The following list illustrates the features currently supported by SharpPcap:</P> 
 <UL>
 <LI><b>Single assembly</b> for <b>Microsoft .NET</b> and <b>Mono</b> platforms on <i>Windows (32 or 64bit)</i>, <i>Linux (32 or 64bit)</i> and <i>Mac</i>.</li>
-<li>High performance - SharpPcap can capture fast enough to keep up with +3MB/s scp transfer rates</li>
+<li>High performance - SharpPcap can capture fast enough to keep up with >3MB/s scp transfer rates</li>
 <li>WinPcap extensions are partially supported
 <ul>
 <li>Setting the kernel buffer size</li>
 <LI>Injecting packets using send queues.</li>
 <LI>Collecting network statistics on a given network interface</LI>
-</li>
 </ul>
+</li>
 <LI>Enumerating and showing details about the physical network interface on a Windows machine.</li> 
 <LI>Capturing low-level network packets going through a given interface.</li> 
 <LI>Analyzing and parsing the following protocols: <I><a href="http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field">Ethernet</a></I>,
@@ -61,10 +61,10 @@
 <P>If you are familiar with SharpPcap you may recall that SharpPcap used an inheritance model. Tcp packets were represented by a class of type TCPPacket that inherited from IPPacket. IPPacket inherited from EthernetPacket and EthernetPacket inherited from the base packet class. This is convienent as each Tcp packet would have properties for Tcp fields, Ip fields and Ethernet fields. One API downside to this approach was field specific prefixes like TCPWindowSize and IPAddress, to clarify which fields went with which packet header.</P>
 <P>When users asked to be able to construct packets from values a significant issue became apparent. To build say a Udp packet a user needs to provide all of the fields for the Udp packet, including payload, as well as those of all of the other inherited packets, the IP packet and Ethernet packet. This makes for more complex constructors and more complex internal code as headers for derived packets have to be preserved but their data overwritten with the encapsulated packets header and data, ie. the IP packet payload is the Udp header and the Udp payload.</p>
 <p>Another issue with the inherited model is that it makes things like PPPoE difficult to represent as the PPPoE packet is inserted in the hierarchy. We no longer have the straight forward Ethernet->IP->Udp model, we now have Ethernet->PPPoE->PTP->IP->Udp. It's not clear how best to fit this kind of exception case into the inerhitance model.</p>
-<p>Packet.Net switches from an inheritance model to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users static GetEncapsulsted() methods have been added so users can do var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket).
+<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users static GetEncapsulsted() methods have been added so users can do var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket).
 </p>
 <p>
-The GetEncapsulated() methods are intelligent. They are designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that looks like EthernetPacket -> IP packet -> UdpPacket, Linux Cooked Capture -> IP -> UdpPacket or EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets vs writing your own code to do so.
+The GetEncapsulated() methods are intelligent. They are designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets vs writing your own code to do so.
 </p>
 <p>
 With Packet.Net constructing packets looks like:
@@ -83,18 +83,18 @@ With Packet.Net constructing packets looks like:
     var ethernetSourceHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(sourceHwAddress);
     var destinationHwAddress = "80-80-80-80-80-80";
     var ethernetDestinationHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(destinationHwAddress);
-    // NOTE: using EthernetPacketType.None to illustrate that the ethernet
+    <span class="code-comment">// NOTE: using EthernetPacketType.None to illustrate that the ethernet
     //       protocol type is updated based on the packet payload that is
-    //       assigned to that particular ethernet packet
+    //       assigned to that particular ethernet packet</span>
     var ethernetPacket = new EthernetPacket(ethernetSourceHwAddress,
                                             ethernetDestinationHwAddress,
                                             EthernetPacketType.None);
 
-    // Now stitch all of the packets together
+    <span class="code-comment">// Now stitch all of the packets together</span>
     ipPacket.PayloadPacket = tcpPacket;
     ethernetPacket.PayloadPacket = ipPacket;
 
-    // and print out the packet to see that it looks just like we wanted it to
+    <span class="code-comment">// and print out the packet to see that it looks just like we wanted it to</span>
     Console.WriteLine(ethernetPacket.ToString());
 </pre>
 </p>
@@ -111,9 +111,9 @@ With Packet.Net constructing packets looks like:
 <LI><A href="#dumpTCP">Interpreting the packets (Example 6)</A></li> 
 <LI><A href="#offline">Handling offline dump files (Example 8)</A></li> 
 <LI><A href="#sendPackets">Sending packets (Example 9)</A></li> 
-<LI><A href="#statistics">Gathering statistics on the network traffic (Example 11)</A></LI>
-<LI><A href="#QueuingPacketForBackgroundProcessing">Queuing packets for background processing - High speed capture</a></li>
-<LI><A href="#MultipleFiltersOnDevice">Multiple Filters on device</a></li>
+<LI><A href="#sendqueues">Send Queues (Example 10) - WinPcap only</A></li>
+<LI><A href="#statistics">Gathering statistics on the network traffic (Example 11) - WinPcap only</A></LI>
+<LI><A href="#QueuingPacketsForBackgroundProcessing">Queuing packets for background processing - High packet rate capture</a></li>
 </OL> 
 
 
@@ -294,16 +294,11 @@ device.Capture();
 device.Close();</PRE> 
 
 <H3 id=dumpTCP>Interpreting the packets (Example 6 in the source package)</H3> 
-<P>Now that we are able to capture and filter network traffic, we want to put our knowledge to work with a simple "real world" application. In this lesson, we will take the code from the previous sections and use these pieces to build a more useful program. The main purpose of the current program is to show how the protocol headers of a captured packet can be parsed and interpreted. The resulting application, called DumpTCP, prints a summary of the TCP traffic on our network. I have chosen to parse and display the TCP protocol (rather than the UDP example posted in the original tutorial) because it is a bit more interesting than UDP and with SharpPcap it doesn't require too much parsing coding.</P><PRE lang=cs><span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span> 
-</span> 
-<span class="code-SummaryComment">///</span><span class="code-comment"> Prints the time, length, src ip, 
-</span> 
-<span class="code-SummaryComment">///</span><span class="code-comment"> src port, dst ip and dst port
-</span> 
-<span class="code-SummaryComment">///</span><span class="code-comment"> for each TCP/IP packet received on the network
-</span> 
-<span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">/</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span> 
-</span> 
+<P>Now that we are able to capture and filter network traffic, we want to put our knowledge to work with a simple "real world" application. In this lesson, we will take the code from the previous sections and use these pieces to build a more useful program. The main purpose of the current program is to show how the protocol headers of a captured packet can be parsed and interpreted. The resulting application, called DumpTCP, prints a summary of the TCP traffic on our network. I have chosen to parse and display the TCP protocol (rather than the UDP example posted in the original tutorial) because it is a bit more interesting than UDP and with SharpPcap it doesn't require too much parsing coding.</P><PRE lang=cs><span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span></span> 
+<span class="code-SummaryComment">///</span><span class="code-comment"> Prints the time, length, src ip,</span> 
+<span class="code-SummaryComment">///</span><span class="code-comment"> src port, dst ip and dst port</span> 
+<span class="code-SummaryComment">///</span><span class="code-comment"> for each TCP/IP packet received on the network</span> 
+<span class="code-SummaryComment">///</span><span class="code-comment"> <span class="code-SummaryComment">&lt;</span><span class="code-SummaryComment">/</span><span class="code-SummaryComment">SUMMARY</span><span class="code-SummaryComment">&gt;</span></span> 
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(
                        <span class="code-keyword">object</span> sender, CaptureEventArgs e)
 {
@@ -323,7 +318,7 @@ device.Close();</PRE>
         Console.WriteLine(e.Packet.ToString());
     }
 }</PRE> 
-<P>If you take a look at the <A href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut6.html" target=_blank>UDP example</A> of the original WinPcap tutorial you will see how complex it is to parse the packets (although UDP is a bit simpler to parse than TCP in our example) directly from the raw data bytes provided by the WinPcap library. Luckily for us, SharpPcap provides some useful packet analyzing classes for some common protocols (e.g. TCP, UDP, ICMP and others). These analyzing classes were initially a direct C# translation from <A href="http://jpcap.sourceforge.net/" target=_blank>JPcap</A>, a Java wrapper for libpcap/WinPcap similar to SharpPcap, but significant changes have been made to make them fit better into .NET, including the rewrite to <a href="http://packetnet.sf.net"><b>Packet.Net</b></a>. All of the packet parsing and generation code can be found in the <code>PacketDotNet</code> namespace in the PacketNet.
+<P>If you take a look at the <A href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut6.html" target=_blank>UDP example</A> of the original WinPcap tutorial you will see how complex it is to parse the packets (although UDP is a bit simpler to parse than TCP in our example) directly from the raw data bytes provided by the WinPcap library. Luckily for us, SharpPcap provides some useful packet analyzing classes for some common protocols (e.g. TCP, UDP, ICMP and others). These analyzing classes were initially a direct C# translation from <A href="http://jpcap.sourceforge.net/" target=_blank>JPcap</A>, a Java wrapper for libpcap/WinPcap similar to SharpPcap, but significant changes have been made to make them fit better into .NET, including the rewrite to <a href="http://packetnet.sf.net"><b>Packet.Net</b></a>. All of the packet parsing and generation code can be found in the <code>PacketDotNet</code> namespace in the PacketDotNet assembly.
 <P>As you can see, in our packet handler we first attempt to extract the Tcp packet encapsulated in the packet that was captured on the line. If one was found, and it should be since our filter selects only tcp packets, we can then access its properties. If we also wanted to see the IP packet properties these could be accessed via <code>var ip = IpPacket.GetEncapsulated(e.Packet);</code></P> 
 <PRE lang=text>
 Available devices:
@@ -456,7 +451,7 @@ device.Close();
 Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>);</PRE> 
 
 
-<H4>Send queues - WinPcap specific extension (Example 11 in the source package)</H4> 
+<H3 id=sendqueues>Send queues - WinPcap specific extension (Example 10 in the source package)</H3> 
 <P>While <CODE>SendPacket</CODE> offers a simple and immediate way to send a single packet, <B>send queues</B> provide an advanced, powerful and optimized mechanism to send a collection of packets. A send queue is a container for a variable number of packets that will be sent to the network. It has a size, that represents the maximum amount of bytes it can store.</P>
 <p> Because SendQueue functionality is WinPcap specific the authors of SharpPcap recommend benchmarking your particular usage of sending packets to determine if the loss of cross platform support is worth the added efficiency of using send queues. The old adage, "avoid premature optimization" should be carefullyl considered.</p>
 <P>SharpPcap represents a send queue using the <CODE>SendQueue</CODE> class which is constructed by specifying the size of the new send queue.</P> 
@@ -667,8 +662,226 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped,
     <span class="code-comment">// store current timestamp</span> 
     oldSec = statistics.Seconds;
     oldUsec = statistics.MicroSeconds;
-}</PRE> 
-<P>Note that this example is by far more efficient than a program that captures the packets in the traditional way and calculates statistics at the user-level. Statistical mode requires minimum amount of data copies and context switches and therefore the CPU is optimized. Moreover, a very small amount of memory is required.</P>
+}</PRE>
+<P>Note that this example is by far more efficient than a program that captures the packets in the traditional way and calculates statistics at the user-level. Statistical mode requires minimum amount of data copies and context switches and therefore the CPU is optimized. Moreover, a very small amount of memory is required. The downside is that if your application uses statistical mode it will only work with WinPcap on Windows.</P>
+
+<H3 id=QueuingPacketsForBackgroundProcessing>Queuing packets for background processing - High packet rate capture (Example QueuingPacketsForBackgroundProcessing in the source package)</H3> 
+<P>Packet rates can exceed the rate at which they can be processed by the callback routines. This can occur if the packet processing code is time intensive, such as writing to disk, or if the packet processing code is performing advanced logic. Sometimes it is possible to reduce packet rates by applying bnf filters but in other cases these filters can be complex.</p>
+<p>If packet rates only exceed the rate of processing for short periods of time it is possible to simply defer packet processing until periods of less activity. One technique for this is to queue the packets and process them in a background thread as shown in this example.</P>
+<pre lang=cs>
+<span class="code-keyword">using</span> System;
+<span class="code-keyword">using</span> System.Collections.Generic;
+<span class="code-keyword">using</span> SharpPcap;
+
+<span class="code-keyword">namespace</span> QueuingPacketsForBackgroundProcessing
+{
+    <span class="code-comment">/// <summary>
+    /// Basic capture example showing simple queueing for background processing
+    /// </summary></span>
+    <span class="code-keyword">public class</span> MainClass
+    {
+        <span class="code-comment">/// &lt;summary&gt;
+        /// When true the background thread will terminate
+        /// &lt;/summary&gt;
+        /// &lt;param name="args"&gt;
+        /// A &lt;see cref="System.String"/&gt;
+        /// &lt;/param&gt;</span>
+        <span class="code-keyword">private static bool</span> BackgroundThreadStop = false;
+
+        <span class="code-comment">/// &lt;summary&gt;
+        /// Object that is used to prevent two threads from accessing
+        /// PacketQueue at the same time
+        /// &lt;/summary&gt;
+        /// &lt;param name="args"&gt;
+        /// A &lt;see cref="System.String"/&gt;
+        /// &lt;/param&gt;</span>
+        <span class="code-keyword">private static object</span> QueueLock = new object();
+
+        <span class="code-comment">/// &lt;summary&gt;
+        /// The queue that the callback thread puts packets in. Accessed by
+        /// the background thread when QueueLock is held
+        /// &lt;/summary&gt;</span>
+        <span class="code-keyword">private static</span> List<PacketDotNet.RawPacket> PacketQueue = new List<PacketDotNet.RawPacket>();
+
+        <span class="code-comment">/// &lt;summary&gt;
+        /// The last time PcapDevice.Statistics() was called on the active device.
+        /// Allow periodic display of device statistics
+        /// &lt;/summary&gt;
+        /// &lt;param name="args"&gt;
+        /// A &lt;see cref="System.String"/&gt;
+        /// &lt;/param&gt;</span>
+        <span class="code-keyword">private static</span> DateTime LastStatisticsOutput = DateTime.Now;
+
+        <span class="code-comment">/// &lt;summary&gt;
+        /// Interval between PcapDevice.Statistics() output
+        /// &lt;/summary&gt;
+        /// &lt;param name="args"&gt;
+        /// A &lt;see cref="System.String"/&gt;
+        /// &lt;/param&gt;</span>
+        <span class="code-keyword">private static</span> TimeSpan LastStatisticsInterval = new TimeSpan(0, 0, 2);
+
+        <span class="code-comment">/// <summary>
+        /// Basic capture example
+        /// </summary></span>
+        <span class="code-keyword">public static void</span> Main(string[] args)
+        {
+            <span class="code-comment">// Print SharpPcap version</span>
+            string ver = SharpPcap.Version.VersionString;
+            Console.WriteLine("SharpPcap {0}", ver);
+
+            <span class="code-comment">// If no device exists, print error</span>
+            if(LivePcapDeviceList.Instance.Count < 1)
+            {
+                Console.WriteLine("No device found on this machine");
+                <span class="code-keyword">return</span>;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("The following devices are available on this machine:");
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine();
+
+            int i=0;
+
+            <span class="code-comment">// Print out all devices</span>
+            foreach(LivePcapDevice dev in LivePcapDeviceList.Instance)
+            {
+                Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
+                i++;
+            }
+
+            Console.WriteLine();
+            Console.Write("-- Please choose a device to capture: ");
+            i = int.Parse( Console.ReadLine() );
+
+            <span class="code-comment">// start the background thread</span>
+            var backgroundThread = new System.Threading.Thread(BackgroundThread);
+            backgroundThread.Start();
+
+            LivePcapDevice device = LivePcapDeviceList.Instance[i];
+
+            <span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
+            device.OnPacketArrival += 
+                new PacketArrivalEventHandler( device_OnPacketArrival );
+
+            <span class="code-comment">// Open the device for capturing</span>
+            device.Open();
+
+            Console.WriteLine();
+            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
+                device.Description);
+
+            <span class="code-comment">// Start the capturing process</span>
+            device.StartCapture();
+
+            <span class="code-comment">// Wait for 'Enter' from the user. We pause here until being asked to
+            // be terminated</span>
+            Console.ReadLine();
+
+            <span class="code-comment">// Stop the capturing process</span>
+            device.StopCapture();
+
+            Console.WriteLine("-- Capture stopped.");
+
+            <span class="code-comment">// ask the background thread to shut down</span>
+            BackgroundThreadStop = true;
+
+            <span class="code-comment">// wait for the background thread to terminate</span>
+            backgroundThread.Join();
+
+            <span class="code-comment">// Print out the device statistics</span>
+            Console.WriteLine(device.Statistics().ToString());
+
+            <span class="code-comment">// Close the pcap device</span>
+            device.Close();
+        }
+
+<span class="code-comment">
+        /// <summary>
+        /// Prints the time and length of each received packet
+        /// </summary></span>
+        <span class="code-keyword">private static void</span> device_OnPacketArrival(object sender, CaptureEventArgs e)
+        {
+            <span class=code-comment">// print out periodic statistics about this device</span>
+            var Now = DateTime.Now; <span class="code-comment">// cache 'DateTime.Now' for minor reduction in cpu overhead</span>
+            var interval = Now - LastStatisticsOutput;
+            if(interval > LastStatisticsInterval)
+            {
+                Console.WriteLine("device_OnPacketArrival: " + ((LivePcapDevice)e.Device).Statistics());
+                LastStatisticsOutput = Now;
+            }
+
+<span class="code-comment">
+            // lock QueueLock to prevent multiple threads accessing PacketQueue at
+            // the same time</span>
+            lock(QueueLock)
+            {
+                PacketQueue.Add(e.Packet);
+            }
+        }
+
+<span class="code-comment">
+        /// <summary>
+        /// Checks for queued packets. If any exist it locks the QueueLock, saves a
+        /// reference of the current queue for itself, puts a new queue back into
+        /// place into PacketQueue and unlocks QueueLock. This is a minimal amount of
+        /// work done while the queue is locked.
+        ///
+        /// The background thread can then process queue that it saved without holding
+        /// the queue lock.
+        /// </summary></span>
+        <span class="code-keyword">private static void</span> BackgroundThread()
+        {
+            while(!BackgroundThreadStop)
+            {
+                bool shouldSleep = true;
+
+                lock(QueueLock)
+                {
+                    if(PacketQueue.Count != 0)
+                    {
+                        shouldSleep = false;
+                    }
+                }
+
+                if(shouldSleep)
+                {
+                    System.Threading.Thread.Sleep(250);
+                } else <span class="code-comment">// should process the queue</span>
+                {
+                    List<PacketDotNet.RawPacket> ourQueue;
+                    lock(QueueLock)
+                    {
+                        // swap queues, giving the capture callback a new one
+                        ourQueue = PacketQueue;
+                        PacketQueue = new List<PacketDotNet.RawPacket>();
+                    }
+
+                    Console.WriteLine("BackgroundThread: ourQueue.Count is {0}", ourQueue.Count);
+
+                    foreach(var packet in ourQueue)
+                    {
+                        var time = packet.Timeval.Date;
+                        var len = packet.Data.Length;
+                        Console.WriteLine("BackgroundThread: {0}:{1}:{2},{3} Len={4}", 
+                            time.Hour, time.Minute, time.Second, time.Millisecond, len);
+                    }
+
+<span class="code-comment">
+                    // Here is where we can process our packets freely without
+                    // holding off packet capture.
+                    //
+                    // NOTE: If the incoming packet rate is greater than
+                    //       the packet processing rate these queues will grow
+                    //       to enormous sizes. Packets should be dropped in these
+                    //       cases
+</span>
+                }
+            }
+        }
+    }
+}
+</pre>
 <H2>References</H2>
 <UL>
 <li><a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">SharpPcap home page (news / getting started)</a></li>
@@ -678,9 +891,11 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped,
 </ul>
 <H2>History</H2>
 <ul>
-<li>2010-Apr-12
+<li>2010-Nov-07
 <ul>
-<li>Updated for SharpPcap v3.x</li></ul></li></ul>
+<li>Updated for SharpPcap v3.x</li>
+<li>Added queueing example for high packet rates</li>
+</ul></li></ul>
 <ul>
 <li>2010-Jan-27
 <ul>
