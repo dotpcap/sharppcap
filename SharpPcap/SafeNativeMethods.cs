@@ -43,10 +43,6 @@ namespace SharpPcap
         [DllImport(PCAP_DLL, CharSet=CharSet.Auto)]
         internal extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
 
-        /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
-        internal extern static int pcap_findalldevs_ex (string /*char **/source, IntPtr /*pcap_rmtauth **/auth, ref IntPtr /*pcap_if_t ** */alldevs, StringBuilder /*char * */errbuf);
-        
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 

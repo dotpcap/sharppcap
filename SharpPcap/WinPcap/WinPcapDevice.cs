@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace SharpPcap.WinPcap
 {
@@ -16,6 +17,58 @@ namespace SharpPcap.WinPcap
         public override void Open()
         {
             base.Open();
+        }
+
+        /// <summary>
+        /// Open
+        /// </summary>
+        /// <param name="device">
+        /// A <see cref="System.String"/>
+        /// </param>
+        /// <param name="flags">
+        /// A <see cref="OpenFlags"/>
+        /// </param>
+        /// <param name="readTimeoutMilliseconds">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="remoteAuthentication">
+        /// A <see cref="RemoteAuthentication"/>
+        /// </param>
+        public void Open(string device,
+                         OpenFlags flags,
+                         int readTimeoutMilliseconds,
+                         RemoteAuthentication remoteAuthentication)
+        {
+            if(!Opened)
+            {
+                var errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
+
+                UnmanagedStructures.pcap_rmtauth rmauth;
+                rmauth.type = (IntPtr)remoteAuthentication.Type;
+                rmauth.username = remoteAuthentication.Username;
+                rmauth.password = remoteAuthentication.Password;
+
+                // Initialize unmanged memory to hold the struct.
+                IntPtr rmAuthPointer = Marshal.AllocHGlobal(Marshal.SizeOf(rmauth));
+
+                // marshal pcap_rmtauth
+                Marshal.StructureToPtr(rmauth, rmAuthPointer, false);
+
+                PcapHandle = SafeNativeMethods.pcap_open(device,
+                                                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
+                                                         (int)flags,
+                                                         readTimeoutMilliseconds,
+                                                         rmAuthPointer,
+                                                         errbuf);
+
+                Marshal.FreeHGlobal(rmAuthPointer);
+
+                if ( PcapHandle == IntPtr.Zero)
+                {
+                    string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
+                    throw new PcapException( err );
+                }
+            }
         }
 
         /// <value>
@@ -88,7 +141,7 @@ namespace SharpPcap.WinPcap
         /// <param name="p">
         /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
-        protected virtual void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
+        new protected virtual void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
         {
             if(Mode == CaptureMode.Packets)
             {

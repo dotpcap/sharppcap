@@ -56,7 +56,7 @@ namespace SharpPcap.WinPcap
         /// <param name="read_timeout">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="auth">
+        /// <param name="rmtauth">
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <param name="errbuf">
@@ -70,8 +70,15 @@ namespace SharpPcap.WinPcap
                                                               int packetLen,
                                                               int flags,
                                                               int read_timeout,
-                                                              IntPtr auth,
+                                                              IntPtr rmtauth,
                                                               StringBuilder errbuf);
+
+        /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
+        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        internal extern static int pcap_findalldevs_ex (string /*char **/source,
+                                                        IntPtr /*pcap_rmtauth **/auth,
+                                                        ref IntPtr /*pcap_if_t ** */alldevs,
+                                                        StringBuilder /*char * */errbuf);
 
         /// <summary>
         /// Set the working mode of the interface p to mode. 
