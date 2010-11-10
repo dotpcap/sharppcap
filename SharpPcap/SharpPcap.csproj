@@ -145,6 +145,9 @@
     <Compile Include="WinPcap\WinPcapDevice.cs" />
     <Compile Include="StatisticsException.cs" />
     <Compile Include="WinPcap\CaptureMode.cs" />
+    <Compile Include="WinPcap\UnmanagedStructures.cs" />
+    <Compile Include="WinPcap\RemoteAuthentication.cs" />
+    <Compile Include="WinPcap\AuthenticationTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
