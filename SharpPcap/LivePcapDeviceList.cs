@@ -84,7 +84,7 @@ namespace SharpPcap
             var deviceList = new List<LivePcapDevice>();
 
             var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(256);
+            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
             int result = SafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
             if (result < 0)
