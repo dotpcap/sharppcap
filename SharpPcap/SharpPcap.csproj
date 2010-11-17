@@ -133,6 +133,7 @@
     <Compile Include="WinPcap\UnmanagedStructures.cs" />
     <Compile Include="WinPcap\RemoteAuthentication.cs" />
     <Compile Include="WinPcap\AuthenticationTypes.cs" />
+    <Compile Include="WinPcap\RemoteDeviceList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

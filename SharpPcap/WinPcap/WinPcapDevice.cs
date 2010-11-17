@@ -43,16 +43,7 @@ namespace SharpPcap.WinPcap
             {
                 var errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
-                UnmanagedStructures.pcap_rmtauth rmauth;
-                rmauth.type = (IntPtr)remoteAuthentication.Type;
-                rmauth.username = remoteAuthentication.Username;
-                rmauth.password = remoteAuthentication.Password;
-
-                // Initialize unmanged memory to hold the struct.
-                IntPtr rmAuthPointer = Marshal.AllocHGlobal(Marshal.SizeOf(rmauth));
-
-                // marshal pcap_rmtauth
-                Marshal.StructureToPtr(rmauth, rmAuthPointer, false);
+                var rmAuthPointer = remoteAuthentication.GetUnmanaged();
 
                 PcapHandle = SafeNativeMethods.pcap_open(device,
                                                          Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
