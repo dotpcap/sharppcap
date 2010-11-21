@@ -11,8 +11,20 @@ namespace SharpPcap.Test.Example8
             Console.WriteLine("SharpPcap {0}, Example8.ReadFile.cs\n", ver);
 
             Console.WriteLine();
-            Console.Write("-- Please enter an input capture file name: ");
-            string capFile = Console.ReadLine();
+
+            // read the file from stdin or from the command line arguments
+            string capFile;
+            if(args.Length == 0)
+            {
+                Console.Write("-- Please enter an input capture file name: ");
+                capFile = Console.ReadLine();
+            } else
+            {
+                // use the first argument as the filename
+                capFile = args[0];
+            }
+
+            Console.WriteLine("opening '{0}'", capFile);
 
             PcapDevice device;
 
