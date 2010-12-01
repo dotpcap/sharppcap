@@ -134,6 +134,14 @@ namespace SharpPcap
             {
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
+                // set the StopCaptureTimeout value to twice the read timeout to ensure that
+                // we wait long enough before considering the capture thread to be stuck when stopping
+                // a background capture via StopCapture()
+                //
+                // NOTE: Doesn't affect Mono if unix poll is available, doesn't affect Linux because
+                //       Linux devices have no timeout, they always block. Only affects Windows devices.
+                StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
+
                 PcapHandle = SafeNativeMethods.pcap_open_live
                     (   Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
