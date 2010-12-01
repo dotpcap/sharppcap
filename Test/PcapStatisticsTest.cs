@@ -36,6 +36,15 @@ namespace Test
                 }
             }
 
+            // if we couldn't find the 'any' device (maybe we are running on Windows)
+            // then just use the first device we can find, if there are any devices
+            if ((dev == null) && devices.Count != 0)
+            {
+                dev = devices[0];
+            }
+
+            Assert.IsNotNull(dev, "Unable to find a capture device");
+
             // open a device for capture
             dev.Open();
 
