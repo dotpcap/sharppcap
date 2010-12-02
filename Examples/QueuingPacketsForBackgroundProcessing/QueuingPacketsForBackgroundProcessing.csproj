@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +8,7 @@
     <ProjectGuid>{DD778943-C509-427F-B4EA-F2EA14C651D7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>QueuingPacketsForBackgroundProcessing</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>QueuingPacketsForBackgroundProcessing</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="PacketDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
