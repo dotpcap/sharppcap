@@ -9,6 +9,14 @@ namespace SharpPcap.WinPcap
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
 
         /// <summary>
+        /// Constructs a new PcapDevice based on a 'pcapIf' struct
+        /// </summary>
+        /// <param name="pcapIf">A 'pcapIf' struct representing
+        /// the pcap device</param>
+        internal WinPcapDevice( PcapInterface pcapIf ) : base(pcapIf)
+        {}
+
+        /// <summary>
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
         /// For network captured packets this event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
@@ -22,9 +30,6 @@ namespace SharpPcap.WinPcap
         /// <summary>
         /// Open
         /// </summary>
-        /// <param name="device">
-        /// A <see cref="System.String"/>
-        /// </param>
         /// <param name="flags">
         /// A <see cref="OpenFlags"/>
         /// </param>
@@ -34,8 +39,7 @@ namespace SharpPcap.WinPcap
         /// <param name="remoteAuthentication">
         /// A <see cref="RemoteAuthentication"/>
         /// </param>
-        public void Open(string device,
-                         OpenFlags flags,
+        public void Open(OpenFlags flags,
                          int readTimeoutMilliseconds,
                          RemoteAuthentication remoteAuthentication)
         {
@@ -43,16 +47,21 @@ namespace SharpPcap.WinPcap
             {
                 var errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
 
-                var rmAuthPointer = remoteAuthentication.GetUnmanaged();
+                IntPtr rmAuthPointer;
+                if (remoteAuthentication == null)
+                    rmAuthPointer = IntPtr.Zero;
+                else
+                    rmAuthPointer = remoteAuthentication.GetUnmanaged();
 
-                PcapHandle = SafeNativeMethods.pcap_open(device,
+                PcapHandle = SafeNativeMethods.pcap_open(Name,
                                                          Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                          (int)flags,
                                                          readTimeoutMilliseconds,
                                                          rmAuthPointer,
                                                          errbuf);
 
-                Marshal.FreeHGlobal(rmAuthPointer);
+                if(rmAuthPointer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(rmAuthPointer);
 
                 if ( PcapHandle == IntPtr.Zero)
                 {
