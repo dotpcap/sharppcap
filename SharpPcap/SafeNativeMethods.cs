@@ -58,15 +58,12 @@ namespace SharpPcap
         /// <summary>Open a file to write packets. </summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static IntPtr /*pcap_dumper_t * */ pcap_dump_open (IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname);
-        
+
         /// <summary>
         ///  Save a packet to disk.  
         /// </summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
         internal extern static void  pcap_dump (IntPtr /*u_char * */user, IntPtr /*const struct pcap_pkthdr * */h, IntPtr /*const u_char * */sp) ;
-        
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
-        internal extern static IntPtr /* pcap_t* */ pcap_open(string dev, int packetLen, short mode, short timeout,IntPtr auth, StringBuilder errbuf);
 
         /// <summary> close the files associated with p and deallocates resources.</summary>
         [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
