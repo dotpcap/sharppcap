@@ -33,8 +33,6 @@ namespace SharpPcap.WinPcap
             else
                 rmAuthPointer = remoteAuthentication.GetUnmanaged();
 
-            Console.WriteLine("rmStr: {0}", rmStr);
-
             int result = SafeNativeMethods.pcap_findalldevs_ex(rmStr,
                                                                rmAuthPointer,
                                                                ref devicePtr,
