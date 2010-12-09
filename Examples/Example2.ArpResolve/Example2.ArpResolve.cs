@@ -84,8 +84,6 @@ namespace SharpPcap.Test.Example2
             }
 
             // Create a new ARP resolver
-            // (for more info, see:
-            // http://www.tamirgal.com/home/SourceView.aspx?Item=SharpPcap&File=ARP.cs)
             ARP arper = new ARP(device);
 
             // print the resolved address
