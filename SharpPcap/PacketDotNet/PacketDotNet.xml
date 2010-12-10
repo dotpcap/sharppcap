@@ -140,6 +140,11 @@
             Reverse Address Resolution Protocol (RARP)
             </summary>
         </member>
+        <member name="F:PacketDotNet.EthernetPacketType.WakeOnLan">
+            <summary>
+            Wake-On-Lan (WOL)
+            </summary>
+        </member>
         <member name="F:PacketDotNet.EthernetPacketType.AppleTalk">
             <summary>
             AppleTalk (Ethertalk)
@@ -4204,7 +4209,7 @@
             <returns>
             A <see cref="T:PacketDotNet.LLDP.TLV" /></returns>
         </member>
-        <member name="M:PacketDotNet.LLDPPacket.GetType(PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.LLDPPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
             Returns the LLDP inside of the Packet p or null if
             there is no encapsulated packet
@@ -5278,6 +5283,103 @@
             A <see cref="T:System.Int32" /></param>
             <param name="item">
             A <see cref="T:PacketDotNet.LLDP.TLV" /></param>
+        </member>
+        <member name="T:PacketDotNet.WakeOnLanPacket">
+            <summary>
+            Wake-On-Lan
+            See: http://en.wikipedia.org/wiki/Wake-on-LAN
+            See: http://wiki.wireshark.org/WakeOnLAN
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(System.Net.NetworkInformation.PhysicalAddress)">
+            <summary>
+            Create a Wake-On-LAN packet from the destination MAC address
+            </summary>
+            <param name="destinationMAC">
+            A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Wake-On-LAN packet from a byte[]
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+            <summary>
+            Creates a Wake-On-LAN packet from a byte[]
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Timeval">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+        </member>
+        <member name="P:PacketDotNet.WakeOnLanPacket.DestinationMAC">
+            <summary>
+            The Physical Address (MAC) of the host being woken up from sleep
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the embedded Wake-On-LAN packet
+            or null if there is none
+            </summary>
+            <returns>
+            A Wake-On-LAN packet
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.RandomPacket">
+            <summary>
+            Generate a random WakeOnLanPacket
+            </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.WakeOnLanPacket" /></returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.IsValid">
+            <summary>
+            Checks the validity of the Wake-On-LAN payload
+            - by checking the synchronization sequence
+            - by checking to see if there are 16 iterations of the Destination MAC address
+            </summary>
+            <returns>
+            True if the Wake-On-LAN payload is valid
+            </returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.IsValid(System.Byte[])">
+            <summary>
+            See IsValid()
+            </summary>
+            <param name="payloadData">
+            A <see cref="T:System.Byte[]" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.Equals(System.Object)">
+            <summary>
+            Compare two instances
+            </summary>
+            <param name="obj">
+            A <see cref="T:System.Object" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.GetHashCode">
+            <summary>
+            GetHashCode override
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.WakeOnLanPacket.ToString">
+            <summary>
+            ToString override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
         </member>
     </members>
 </doc>

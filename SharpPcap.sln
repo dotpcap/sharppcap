@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueuingPacketsForBackground
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleFiltersOnDevice", "Examples\MultipleFiltersOnDevice\MultipleFiltersOnDevice.csproj", "{396D2554-7F7A-4740-A2B7-3E30FBB4983A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakeOnLan", "Examples\WakeOnLan\WakeOnLan.csproj", "{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{24795AED-F26F-4EE7-BCA7-900F54FA5A53}"
 EndProject
 Global
@@ -103,6 +105,10 @@ Global
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24795AED-F26F-4EE7-BCA7-900F54FA5A53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
