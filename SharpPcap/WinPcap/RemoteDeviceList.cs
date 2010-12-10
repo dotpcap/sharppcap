@@ -11,9 +11,11 @@ namespace SharpPcap.WinPcap
     /// </summary>
     public class RemoteDeviceList
     {
-        public static List<WinPcapDevice> DeviceNames(IPAddress address,
-                                                      int port,
-                                                      RemoteAuthentication remoteAuthentication)
+        public static int RpcapdDefaultPort = 2002;
+
+        public static List<WinPcapDevice> Devices(IPAddress address,
+                                                  int port,
+                                                  RemoteAuthentication remoteAuthentication)
         {
             var retval = new List<WinPcapDevice>();
 
