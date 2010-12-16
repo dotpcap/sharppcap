@@ -54,7 +54,7 @@ namespace SharpPcap.Examples
             // scan the list printing every entry
             foreach(LivePcapDevice dev in devices)
             {
-                Console.WriteLine("{0}) {1}",i,dev.Description);
+                Console.WriteLine("{0}) {1} {2}",i,dev.Name,dev.Description);
                 i++;
             }
 
