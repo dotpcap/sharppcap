@@ -122,25 +122,48 @@ namespace SharpPcap
             System.Net.IPAddress localIP = LocalIP;
             LivePcapDevice device = LivePcapDeviceList.Instance[DeviceName];
 
-            // if no local ip address is specified use the first one bound to the adapter
-            if (LocalIP == null)
+            // if no local ip address is specified attempt to find one from the adapter
+            if (localIP == null)
             {
                 if (device.Addresses.Count > 0)
                 {
-                    if (device.Addresses[0].Addr.ipAddress != null)
+                    foreach(var address in device.Addresses)
                     {
-                        LocalIP = device.Addresses[0].Addr.ipAddress;
+                        if(address.Addr.type == Sockaddr.Type.AF_INET_AF_INET6)
+                        {
+                            localIP = address.Addr.ipAddress;
+                            break; // break out of the foreach
+                        }
                     }
-                    else
+
+                    if(localIP == null)
                     {
-                        LocalIP = System.Net.IPAddress.Parse("127.0.0.1");
+                        localIP = System.Net.IPAddress.Parse("127.0.0.1");
                     }
                 }
             }
 
-            // if no local mac address is specified use the one from the device
-            if(LocalMAC == null)
-                localMAC = device.Interface.MacAddress;
+            // if no local mac address is specified attempt to find one from the device
+            if(localMAC == null)
+            {
+                foreach(var address in device.Addresses)
+                {
+                    if(address.Addr.type == Sockaddr.Type.HARDWARE)
+                    {
+                        localMAC = address.Addr.hardwareAddress;
+                    }
+                }
+            }
+
+            if(localIP == null)
+            {
+                throw new System.InvalidOperationException("Unable to find local ip address");
+            }
+
+            if(localMAC == null)
+            {
+                throw new System.InvalidOperationException("Unable to find local mac address");
+            }
 
             //Build a new ARP request packet
             var request = BuildRequest(destIP, localMAC, localIP);
@@ -154,16 +177,30 @@ namespace SharpPcap
             //set the filter
             device.Filter = arpFilter;
 
-            //inject the packet to the wire
-            device.SendPacket(request);
+            // set a last request time that will trigger sending the
+            // arp request immediately
+            var lastRequestTime = DateTime.FromBinary(0);
+
+            var requestInterval = new TimeSpan(0, 0, 5);
 
             PacketDotNet.ARPPacket arpPacket = null;
 
             while(true)
             {
+                if(requestInterval < (DateTime.Now - lastRequestTime))
+                {
+                    //inject the packet to the wire
+                    device.SendPacket(request);
+                    lastRequestTime = DateTime.Now;
+                }
+
                 //read the next packet from the network
                 var reply = device.GetNextPacket();
-                if(reply == null)continue;
+                if(reply == null)
+                {
+
+                    continue;
+                }
 
                 // parse the packet
                 var packet = PacketDotNet.Packet.ParsePacket(reply);
@@ -197,7 +234,6 @@ namespace SharpPcap
             var ethernetPacket = new PacketDotNet.EthernetPacket(localMac,
                                                                  PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"),
                                                                  PacketDotNet.EthernetPacketType.Arp);
-
             var arpPacket = new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
                                                        PhysicalAddress.Parse("00-00-00-00-00-00"),
                                                        destinationIP,
