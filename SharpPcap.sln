@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueuingPacketsForBackground
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleFiltersOnDevice", "Examples\MultipleFiltersOnDevice\MultipleFiltersOnDevice.csproj", "{396D2554-7F7A-4740-A2B7-3E30FBB4983A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakeOnLan", "Examples\WakeOnLan\WakeOnLan.csproj", "{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{24795AED-F26F-4EE7-BCA7-900F54FA5A53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPcapRemoteCapture", "Examples\WinPcapRemoteCapture\WinPcapRemoteCapture.csproj", "{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}"
@@ -215,6 +217,10 @@ Global
 		{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}.Release|Mixed Platforms.Build.0 = Release|x86
 		{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}.Release|x86.ActiveCfg = Release|x86
 		{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}.Release|x86.Build.0 = Release|x86
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB52C08D-D2E9-4D06-A3E9-2F2E66972881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
