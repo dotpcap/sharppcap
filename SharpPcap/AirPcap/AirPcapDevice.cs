@@ -894,7 +894,6 @@ namespace SharpPcap.AirPcap
             if (!AirPcapSafeNativeMethods.AirpcapGetReadEvent(DeviceHandle, out ReadEvent))
             {
                 SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                Console.WriteLine("Error getting the read event: %s\n", LastError);
                 Close();
                 return;
             }
@@ -915,14 +914,11 @@ namespace SharpPcap.AirPcap
                    (uint)packetBufferSize,
                     out BytesReceived))
                 {
-                    Console.WriteLine("Error receiving packets: %s\n", this.LastError);
                     Marshal.FreeHGlobal(packetBuffer);
                     Close();
                     SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                     return;
                 }
-
-                Console.WriteLine("BytesReceived: {0}", (int)BytesReceived);
 
                 var bufferEnd = new IntPtr(packetBuffer.ToInt64() + (long)BytesReceived);
 
@@ -949,31 +945,20 @@ namespace SharpPcap.AirPcap
 
             IntPtr bufferPointer = packetsBuffer;
 
-            Console.WriteLine("start");
-
             while (bufferPointer.ToInt64() < bufferEnd.ToInt64())
             {
-                Console.WriteLine("bufferPointer {0}, bufferEnd {1}",
-                                  bufferPointer.ToInt64(),
-                                  bufferEnd.ToInt64());
-
                 // marshal the header
                 var header = new AirPcapPacketHeader(bufferPointer);
-
-                Console.WriteLine("header {0}", header.ToString());
 
                 bufferPointer = new IntPtr(bufferPointer.ToInt64() + header.Hdrlen);
 
                 // marshal the radio header
                 var radioHeader = new AirPcapRadioHeader(bufferPointer);
 
-                Console.WriteLine("radioHeader {0}", radioHeader.ToString());
-
                 // advance the pointer past the radio header to point at the packet data
                 bufferPointer = new IntPtr(bufferPointer.ToInt64() + radioHeader.Length);
 
                 var packetDataLength = header.Caplen - radioHeader.Length;
-
                 var pkt_data = new byte[packetDataLength];
                 Marshal.Copy(bufferPointer, pkt_data, 0, (int)packetDataLength);
 
