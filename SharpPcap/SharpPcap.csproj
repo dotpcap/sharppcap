@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -79,17 +79,46 @@
     <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PacketDotNet, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packetnet\PacketDotNet\bin\Release\PacketDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="PacketDotNet, Version=0.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>PacketDotNet\PacketDotNet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
+    <Compile Include="AirPcap\AirPcapAdapterBus.cs" />
+    <Compile Include="AirPcap\AirPcapAdapterId.cs" />
+    <Compile Include="AirPcap\AirPcapBands.cs" />
+    <Compile Include="AirPcap\AirPcapCaptureEventArgs.cs" />
+    <Compile Include="AirPcap\AirPcapChannelInfo.cs" />
+    <Compile Include="AirPcap\AirPcapChannelInfoFlags.cs" />
+    <Compile Include="AirPcap\AirPcapDecryptionState.cs" />
+    <Compile Include="AirPcap\AirPcapDevice.cs" />
+    <Compile Include="AirPcap\AirPcapDeviceCapabilities.cs" />
+    <Compile Include="AirPcap\AirPcapDeviceDescription.cs" />
+    <Compile Include="AirPcap\AirPcapDeviceList.cs" />
+    <Compile Include="AirPcap\AirPcapDeviceTimestamp.cs" />
+    <Compile Include="AirPcap\AirPcapKey.cs" />
+    <Compile Include="AirPcap\AirPcapKeyType.cs" />
+    <Compile Include="AirPcap\AirPcapLinkType.cs" />
+    <Compile Include="AirPcap\AirPcapMacFlags.cs" />
+    <Compile Include="AirPcap\AirPcapMediumType.cs" />
+    <Compile Include="AirPcap\AirPcapPacketHeader.cs" />
+    <Compile Include="AirPcap\AirPcapRadioHeader.cs" />
+    <Compile Include="AirPcap\AirPcapRadioTapChannelFlags.cs" />
+    <Compile Include="AirPcap\AirPcapRadioTapFields.cs" />
+    <Compile Include="AirPcap\AirPcapRadioTapFlags.cs" />
+    <Compile Include="AirPcap\AirPcapRadioTapType.cs" />
+    <Compile Include="AirPcap\AirPcapRawPacket.cs" />
+    <Compile Include="AirPcap\AirPcapSafeNativeMethods.cs" />
+    <Compile Include="AirPcap\AirPcapUnmanagedStructures.cs" />
+    <Compile Include="AirPcap\AirPcapValidationType.cs" />
+    <Compile Include="AirPcap\AirPcapVersion.cs" />
+    <Compile Include="AirPcap\Win32SafeNativeMethods.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -190,7 +219,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="WinPcap\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
