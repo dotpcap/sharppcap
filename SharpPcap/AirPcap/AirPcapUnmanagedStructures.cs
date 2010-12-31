@@ -65,6 +65,38 @@ namespace SharpPcap.AirPcap
         };
 
         /// <summary>
+        /// Capture statistics
+        /// Returned by AirpcapGetStats()
+        /// </summary>
+        internal struct AirpcapStats
+        {
+            ///<summary>
+            /// Number of packets that the driver received by the adapter 
+            /// from the beginning of the current capture. This value includes the packets 
+            /// dropped because of buffer full.
+            ///</summary>
+	        public UInt32 /* UINT */ Recvs;
+
+            ///<summary>
+            /// Number of packets that the driver dropped from the beginning of a capture.
+            /// A packet is lost when the the buffer of the driver is full. 
+            /// </summary>
+	        public UInt32 /* UINT */ Drops;
+
+            /// <summary>
+            /// Packets dropped by the card before going to the USB bus. 
+            /// Not supported at the moment.
+            /// </summary>
+	        public UInt32 /* UINT */ IfDrops;
+
+            /// <summary>
+            /// Number of packets that pass the BPF filter, find place in the kernel buffer and
+            /// therefore reach the application.
+            /// </summary>
+	        public UInt32 /* UINT */ Capt;
+        };
+
+        /// <summary>
         /// Device capabilities
         /// Returned by AirpcapGetDeviceCapabilities()
         /// </summary>

@@ -42,6 +42,8 @@ namespace SharpPcap
         /// </value>
         public uint InterfaceDroppedPackets { get; set; }
 
+        internal PcapStatistics() { }
+
         /// <summary>
         /// Retrieve pcap statistics from the adapter
         /// </summary>
