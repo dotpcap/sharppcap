@@ -93,7 +93,6 @@
     <Compile Include="AirPcap\AirPcapAdapterBus.cs" />
     <Compile Include="AirPcap\AirPcapAdapterId.cs" />
     <Compile Include="AirPcap\AirPcapBands.cs" />
-    <Compile Include="AirPcap\AirPcapCaptureEventArgs.cs" />
     <Compile Include="AirPcap\AirPcapChannelInfo.cs" />
     <Compile Include="AirPcap\AirPcapChannelInfoFlags.cs" />
     <Compile Include="AirPcap\AirPcapDecryptionState.cs" />
@@ -113,8 +112,8 @@
     <Compile Include="AirPcap\AirPcapRadioTapFields.cs" />
     <Compile Include="AirPcap\AirPcapRadioTapFlags.cs" />
     <Compile Include="AirPcap\AirPcapRadioTapType.cs" />
-    <Compile Include="AirPcap\AirPcapRawPacket.cs" />
     <Compile Include="AirPcap\AirPcapSafeNativeMethods.cs" />
+    <Compile Include="AirPcap\AirPcapStatistics.cs" />
     <Compile Include="AirPcap\AirPcapUnmanagedStructures.cs" />
     <Compile Include="AirPcap\AirPcapValidationType.cs" />
     <Compile Include="AirPcap\AirPcapVersion.cs" />
