@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SharpPcap;
 using SharpPcap.AirPcap;
 
 namespace AirPcapBasicCapture
@@ -32,9 +33,7 @@ namespace AirPcapBasicCapture
 
             device.Open();
 
-            ///FIXME: maybe create a separate project that uses the generic packet arrival
-//            device.OnPacketArrival += new SharpPcap.PacketArrivalEventHandler(device_OnPacketArrival);
-            device.OnAirPcapPacketArrival += new AirPcapDevice.AirPcapPacketArrivalEventHandler(device_OnAirPcapPacketArrival);
+            device.OnPacketArrival += new PacketArrivalEventHandler(device_OnPacketArrival);
 
             device.StartCapture();
 
@@ -46,36 +45,19 @@ namespace AirPcapBasicCapture
             Console.WriteLine("-- Capture stopped.");
 
             // Print out the device statistics
-//            Console.WriteLine(device.Statistics().ToString());
+            Console.WriteLine(device.Statistics.ToString());
 
             // Close the pcap device
             device.Close();
         }
 
-        static void device_OnAirPcapPacketArrival(object sender, AirPcapCaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            Console.WriteLine("AirPcap specific packet arrived {0}", e.Packet.ToString());
-            var fields = e.Packet.RadioHeader.DecodeRadioTapFields();
-            foreach (var field in fields)
-            {
-                Console.WriteLine(field.ToString());
-            }
-
-            var p = PacketDotNet.Packet.ParsePacket(e.Packet);
-            Console.WriteLine(p.ToString());
-
-#if false
-            foreach(var b in e.Packet.Data)
-            {
-                Console.Write(" {0:x}", b);
-            }
-            Console.WriteLine();
-#endif
-        }
-
-        static void device_OnPacketArrival(object sender, SharpPcap.CaptureEventArgs e)
-        {
-            Console.WriteLine("SharpPcap generic packet arrived, len={0}", e.Packet.Data.Length);
+            var time = e.Packet.Timeval.Date;
+            var len = e.Packet.Data.Length;
+            Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
+                time.Hour, time.Minute, time.Second, time.Millisecond, len);
+            Console.WriteLine(e.Packet.ToString());
         }
     }
 }
