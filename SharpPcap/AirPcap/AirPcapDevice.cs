@@ -122,14 +122,6 @@ namespace SharpPcap.AirPcap
         /// </summary>
         public event CaptureStoppedEventHandler OnCaptureStopped;
 
-        /// <summary>A delegate for AirPcap specific packet Arrival events</summary>
-        public delegate void AirPcapPacketArrivalEventHandler(object sender, AirPcapCaptureEventArgs e);
-
-        /// <summary>
-        /// AirPcap specific packet arrival event
-        /// </summary>
-        public event AirPcapPacketArrivalEventHandler OnAirPcapPacketArrival;
-
         public void Open()
         {
             StringBuilder errbuf = new StringBuilder( AIRPCAP_ERRBUF_SIZE ); //will hold errors
@@ -700,6 +692,14 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        public AirPcapStatistics Statistics
+        {
+            get
+            {
+                return new AirPcapStatistics(DeviceHandle);
+            }
+        }
+
         public List<AirPcapChannelInfo> SupportedChannels
         {
             get
@@ -789,20 +789,13 @@ namespace SharpPcap.AirPcap
         /// <param name="p">
         /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
-        protected void SendPacketArrivalEvent(AirPcapRawPacket p)
+        protected void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
         {
             // invoke the packet arrival handle from the base class
             var arrivalHandler = OnPacketArrival;
             if (arrivalHandler != null)
             {
                 arrivalHandler(this, new SharpPcap.CaptureEventArgs(p, this));
-            }
-
-            // invoke the airpcap specific arrival handler
-            var airpcapArrivalHandle = OnAirPcapPacketArrival;
-            if (airpcapArrivalHandle != null)
-            {
-                airpcapArrivalHandle(this, new AirPcapCaptureEventArgs(p, this));
             }
         }
 
@@ -853,8 +846,8 @@ namespace SharpPcap.AirPcap
                 if (!Opened)
                     throw new DeviceNotReadyException("Can't start capture, AirPcap device is not open");
 
-                if ((OnPacketArrival == null) && (OnAirPcapPacketArrival == null))
-                    throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival or OnAirPcapPacketArrival, no where for captured packets to go.");
+                if (OnPacketArrival == null)
+                    throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
 
                 shouldCaptureThreadStop = false;
                 captureThread = new Thread(new ThreadStart(this.CaptureThread));
@@ -904,7 +897,7 @@ namespace SharpPcap.AirPcap
 
             UInt32 BytesReceived;
 
-            List<AirPcapRawPacket> packets;
+            List<PacketDotNet.RawPacket> packets;
 
             while (!shouldCaptureThreadStop)
             {
@@ -937,11 +930,30 @@ namespace SharpPcap.AirPcap
         }
 
         protected virtual void MarshalPackets(IntPtr packetsBuffer, IntPtr bufferEnd,
-                                              out List<AirPcapRawPacket> packets)
+                                              out List<PacketDotNet.RawPacket> packets)
         {
-            AirPcapRawPacket p;
+            PacketDotNet.RawPacket p;
 
-            packets = new List<AirPcapRawPacket>();
+            // retrieve the link type and convert to a packet.net link layer type
+            var linkType = LinkType;
+
+            PacketDotNet.LinkLayers packetDotNetLinkLayer;
+            switch(linkType)
+            {
+                case AirPcapLinkType._802_11_PLUS_RADIO:
+                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
+                    break;
+                case AirPcapLinkType._802_11:
+                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee802;
+                    break;
+                case AirPcapLinkType._802_11_PLUS_PPI:
+                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
+                    break;
+                default:
+                    throw new System.InvalidOperationException("Unexpected linkType " + linkType);
+            }
+
+            packets = new List<PacketDotNet.RawPacket>();
 
             IntPtr bufferPointer = packetsBuffer;
 
@@ -952,28 +964,19 @@ namespace SharpPcap.AirPcap
 
                 bufferPointer = new IntPtr(bufferPointer.ToInt64() + header.Hdrlen);
 
-                // marshal the radio header
-                var radioHeader = new AirPcapRadioHeader(bufferPointer);
+                var pkt_data = new byte[header.Caplen];
+                Marshal.Copy(bufferPointer, pkt_data, 0, (int)header.Caplen);
 
-                // advance the pointer past the radio header to point at the packet data
-                bufferPointer = new IntPtr(bufferPointer.ToInt64() + radioHeader.Length);
-
-                var packetDataLength = header.Caplen - radioHeader.Length;
-                var pkt_data = new byte[packetDataLength];
-                Marshal.Copy(bufferPointer, pkt_data, 0, (int)packetDataLength);
-
-                //FIXME: not sure what the link layer value should be here...
-                p = new AirPcapRawPacket(radioHeader,
-                                         PacketDotNet.LinkLayers.Ieee80211,
-                                         new PacketDotNet.PosixTimeval(header.TsSec,
-                                                                       header.TsUsec),
-                                         pkt_data);
+                p = new PacketDotNet.RawPacket(packetDotNetLinkLayer,
+                                               new PacketDotNet.PosixTimeval(header.TsSec,
+                                                                             header.TsUsec),
+                                               pkt_data);
 
                 packets.Add(p);
 
-                // advance the pointer by the captured data less the radio header length
+                // advance the pointer by the size of the data
                 int alignment = 4;
-                var pointer = bufferPointer.ToInt64() + packetDataLength;
+                var pointer = bufferPointer.ToInt64() + header.Caplen;
                 pointer = AirPcapDevice.RoundUp(pointer, alignment);
                 bufferPointer = new IntPtr(pointer);
             }
