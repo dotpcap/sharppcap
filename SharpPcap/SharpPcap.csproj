@@ -107,10 +107,6 @@
     <Compile Include="AirPcap\AirPcapMacFlags.cs" />
     <Compile Include="AirPcap\AirPcapMediumType.cs" />
     <Compile Include="AirPcap\AirPcapPacketHeader.cs" />
-    <Compile Include="AirPcap\AirPcapRadioTapChannelFlags.cs" />
-    <Compile Include="AirPcap\AirPcapRadioTapFields.cs" />
-    <Compile Include="AirPcap\AirPcapRadioTapFlags.cs" />
-    <Compile Include="AirPcap\AirPcapRadioTapType.cs" />
     <Compile Include="AirPcap\AirPcapSafeNativeMethods.cs" />
     <Compile Include="AirPcap\AirPcapStatistics.cs" />
     <Compile Include="AirPcap\AirPcapUnmanagedStructures.cs" />
