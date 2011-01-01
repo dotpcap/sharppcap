@@ -929,6 +929,12 @@ namespace SharpPcap.AirPcap
             Marshal.FreeHGlobal(packetBuffer);
         }
 
+        /// <summary>
+        /// Marshal a chunk of captured packets into a packet list
+        /// </summary>
+        /// <param name="packetsBuffer"></param>
+        /// <param name="bufferEnd"></param>
+        /// <param name="packets"></param>
         protected virtual void MarshalPackets(IntPtr packetsBuffer, IntPtr bufferEnd,
                                               out List<PacketDotNet.RawPacket> packets)
         {
@@ -962,8 +968,9 @@ namespace SharpPcap.AirPcap
                 // marshal the header
                 var header = new AirPcapPacketHeader(bufferPointer);
 
+                // advance the pointer to the packet data and marshal that data
+                // into a managed buffer
                 bufferPointer = new IntPtr(bufferPointer.ToInt64() + header.Hdrlen);
-
                 var pkt_data = new byte[header.Caplen];
                 Marshal.Copy(bufferPointer, pkt_data, 0, (int)header.Caplen);
 
@@ -975,6 +982,7 @@ namespace SharpPcap.AirPcap
                 packets.Add(p);
 
                 // advance the pointer by the size of the data
+                // and round up to the next word offset since each frame header is on a word boundry
                 int alignment = 4;
                 var pointer = bufferPointer.ToInt64() + header.Caplen;
                 pointer = AirPcapDevice.RoundUp(pointer, alignment);
