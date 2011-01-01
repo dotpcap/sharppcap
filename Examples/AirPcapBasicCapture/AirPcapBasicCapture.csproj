@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="PacketDotNet, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packetnet\PacketDotNet\bin\Release\PacketDotNet.dll</HintPath>
+      <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
