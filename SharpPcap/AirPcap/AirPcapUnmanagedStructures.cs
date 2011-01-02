@@ -63,7 +63,7 @@ namespace SharpPcap.AirPcap
             /// </summary>
             byte Reserved1;
             byte Reserved2;
-#pragma warning enable 0169
+#pragma warning restore 0169
         };
 
         /// <summary>
