@@ -9,24 +9,20 @@
             Represents an application layer packet as described at http://en.wikipedia.org/wiki/Application_Layer
             </summary>
         </member>
-        <member name="M:PacketDotNet.ApplicationPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.ApplicationPacket.#ctor">
             <summary>
             ApplicationPacket constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="T:PacketDotNet.DataLinkPacket">
             <summary>
             Represents a Layer 2 protocol.
             </summary>
         </member>
-        <member name="M:PacketDotNet.DataLinkPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.DataLinkPacket.#ctor">
             <summary>
             DataLinkPacket constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="T:PacketDotNet.EthernetPacket">
             <summary>
@@ -38,25 +34,12 @@
             Construct a new ethernet packet from source and destination mac addresses
             </summary>
         </member>
-        <member name="M:PacketDotNet.EthernetPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.EthernetPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Create an EthernetPacket from a byte array
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.EthernetPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Create an EthernetPacket from a byte array and a Timeval
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.EthernetPacket.PayloadPacket">
             <value>
@@ -92,17 +75,8 @@
             <returns>
             A <see cref="T:PacketDotNet.PacketOrByteArraySegment" /></returns>
         </member>
-        <member name="M:PacketDotNet.EthernetPacket.ToString">
-            <summary> Convert this ethernet packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.EthernetPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this ethernet packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.EthernetPacket.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert a more verbose string.</summary>
+        <member name="M:PacketDotNet.EthernetPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.EthernetPacket.RandomPacket">
             <summary>
@@ -300,18 +274,1077 @@
             Ethernet echo packet
             </summary>
         </member>
+        <member name="T:PacketDotNet.Ieee80211FrameControlField">
+            <summary>
+            See http://www.ucertify.com/article/ieee-802-11-frame-format.html
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211FrameControlField.#ctor(System.UInt16)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="field">
+            A <see cref="T:System.UInt16" /></param>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211FrameControlField.FrameTypes">
+            <summary>
+            Types of frames
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementAssociationRequest">
+            <summary>
+            Association request
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementAssociationResponse">
+            <summary>
+            Association response
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReassociationRequest">
+            <summary>
+            Reassociation request
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReassociationResponse">
+            <summary>
+            Reassociation response
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementProbeRequest">
+            <summary>
+            Probe request
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementProbeResponse">
+            <summary>
+            Probe response
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReserved0">
+            <summary>
+            Reserved 0
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReserved1">
+            <summary>
+            Reserved 1
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementBecon">
+            <summary>
+            Becon
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementATIM">
+            <summary>
+            ATIM
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementDisassociation">
+            <summary>
+            Disassociation
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementAuthentication">
+            <summary>
+            Authentication
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementDeauthentication">
+            <summary>
+            Deauthentication
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReserved2">
+            <summary>
+            Reserved 2
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ManagementReserved3">
+            <summary>
+            Reserved 3
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlPSPoll">
+            <summary>
+            PS poll
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlRTS">
+            <summary>
+            RTS
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlCTS">
+            <summary>
+            CTS
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlACK">
+            <summary>
+            ACK
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlCFEnd">
+            <summary>
+            CF-End
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.ControlCFEndCFACK">
+            <summary>
+            CF-End CF-Ack
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.Data">
+            <summary>
+            Data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFACK">
+            <summary>
+            CF-ACK
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFPoll">
+            <summary>
+            CF-Poll
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFAckCFPoll">
+            <summary>
+            CF-Ack CF-Poll
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataNullFunctionNoData">
+            <summary>
+            Null function no data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFAckNoData">
+            <summary>
+            CF-Ack No data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFPollNoData">
+            <summary>
+            CF-Poll no data
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211FrameControlField.FrameTypes.DataCFAckCFPollNoData">
+            <summary>
+            CF-Ack CF-Poll no data
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.ProtocolVersion">
+            <summary>
+            Protocol version
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.Types">
+            <summary>
+            Helps to identify the type of WLAN frame, control data and management are
+            the various frame types defined in IEEE 802.11
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.ToDS">
+            <summary>
+            Is set to 1 when the frame is sent to Distribution System (DS)
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.FromDS">
+            <summary>
+            Is set to 1 when the frame is received from the Distribution System (DS)
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.MoreFragments">
+            <summary>
+            More Fragment is set to 1 when there are more fragments belonging to the same
+            frame following the current fragment
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.Retry">
+            <summary>
+            Indicates that this fragment is a retransmission of a previously transmitted fragment.
+            (For receiver to recognize duplicate transmissions of frames)
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.PowerManagement">
+            <summary>
+            Indicates the power management mode that the station will be in after the transmission of the frame
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.MoreData">
+            <summary>
+            Indicates that there are more frames buffered for this station
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.Wep">
+            <summary>
+            Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211FrameControlField.Order">
+            <summary>
+            Bit is set when the "strict ordering" delivery method is employed. Frames and
+            fragments are not always sent in order as it causes a transmission performance penalty.
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211MacFields">
+            <summary>
+            See http://www.ucertify.com/article/ieee-802-11-frame-format.html
+            NOTE: All positions are not defined here because the frame type changes
+            whether some address fields are present or not, causing the sequence control
+            field to move. In addition the payload size determines where the frame control
+            sequence value is as it is after the payload bytes, if any payload is present
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211MacFrame">
+            <summary>
+            Packet class has common fields, FrameControl and Duration and
+            a specific object class that is set based on the type of
+            the frame
+            See http://www.ucertify.com/article/ieee-802-11-frame-format.html
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.#ctor(PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211MacFrame.InnerFramePacket">
+            <summary>
+            Interfaces for all inner frames
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.InnerFramePacket.FrameSize">
+            <summary>
+            Length of the frame
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211MacFrame.RTSFrame">
+            <summary>
+            RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
+            these fields follow the common FrameControl[2] and DurationId[2] fields
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.RTSFrame.#ctor(PacketDotNet.Ieee80211MacFrame,PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parent">
+            A <see cref="T:PacketDotNet.Ieee80211MacFrame" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.RTSFrame.ReceiverAddress">
+            <summary>
+            ReceiverAddress
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.RTSFrame.TransmitterAddress">
+            <summary>
+            TransmitterAddress
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.RTSFrame.FrameSize">
+            <summary>
+            Length of the frame
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.RTSFrame.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211MacFrame.CTSOrACKFrame">
+            <summary>
+            Format of a CTS or an ACK frame
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.CTSOrACKFrame.#ctor(PacketDotNet.Ieee80211MacFrame,PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="parent">
+            A <see cref="T:PacketDotNet.Ieee80211MacFrame" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.CTSOrACKFrame.ReceiverAddress">
+            <summary>
+            Receiver address
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.CTSOrACKFrame.FrameSize">
+            <summary>
+            Length of the frame
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.CTSOrACKFrame.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.FrameControlBytes">
+            <summary>
+            Frame control bytes are the first two bytes of the frame
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.FrameControl">
+            <summary>
+            Frame control field
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.FrameCheckSequence">
+            <summary>
+            Frame check sequence, the last thing in the 802.11 mac packet
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211MacFrame.InnerFrame">
+            <summary>
+            One of RTS, CTS etc frames
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.SetAddress(System.Int32,System.Net.NetworkInformation.PhysicalAddress)">
+            <summary>
+            </summary>
+            <param name="addressIndex">Zero based address to look up</param>
+            <param name="address">
+            </param>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211MacFrame.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211RadioPacket">
+            <summary>
+            .Net analog of a ieee80211_radiotap_header from airpcap.h
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211RadioPacket.Version">
+            <summary>
+            Version 0. Only increases for drastic changes, introduction of compatible
+            new fields does not count.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211RadioPacket.Length">
+            <summary>
+            Length of the whole header in bytes, including it_version, it_pad, it_len
+            and data fields
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211RadioPacket.Present">
+            <summary>
+            Returns an array of UInt32 bitmap entries. Each bit in the bitmap indicates
+            which fields are present. Set bit 31 (0x8000000)
+            to extend the bitmap by another 32 bits. Additional extensions are made
+            by setting bit 31.
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Ieee80211RadioPacket.RadioTapFields">
+            <summary>
+            Array of radio tap fields
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee80211RadioPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
+        </member>
+        <member name="T:PacketDotNet.Ieee80211RadioFields">
+            <summary>
+            As defined by Airpcap.h
+            NOTE: PresentPosition may not be the only position present
+            as this the field can be extended if the high bit is set
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.VersionLength">
+            <summary>Length of the version field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.PadLength">
+            <summary>Length of the pad field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.LengthLength">
+            <summary>Length of the length field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.PresentLength">
+            <summary>Length of the first present field (others may follow)</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.VersionPosition">
+            <summary>Position of the version field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.PadPosition">
+            <summary>Position of the padding field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.LengthPosition">
+            <summary>Position of the length field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.PresentPosition">
+            <summary>Position of the first present field</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioFields.DefaultHeaderLength">
+            <summary>Default header length, assuming one present field entry</summary>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211RadioTapChannelFlags">
+            <summary>
+            Channel flags
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_TURBO">
+            <summary>Turbo channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_CCK">
+            <summary>CCK channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_OFDM">
+            <summary>OFDM channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_2GHZ">
+            <summary>2 GHz spectrum channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_5GHZ">
+            <summary>5 GHz spectrum channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_PASSIVE">
+            <summary>Only passive scan allowed</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_DYN">
+            <summary>Dynamic CCK-OFDM channel</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_GFSK">
+            <summary>GFSK channel (FHSS PHY)</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapChannelFlags.IEEE80211_CHAN_STURBO">
+            <summary>11a static turbo channel only</summary>
+        </member>
+        <member name="T:PacketDotNet.ChannelRadioTapField">
+            <summary>
+            Channel field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ChannelRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="F:PacketDotNet.ChannelRadioTapField.Flags">
+            <summary>
+            Channel flags
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ChannelRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.ChannelRadioTapField.FrequencyMHz">
+            <summary>
+            Frequency in MHz
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.ChannelRadioTapField.Channel">
+            <summary>
+            Channel number derived from frequency
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.ChannelRadioTapField.ChannelFromFrequencyMHz(System.Int32)">
+            <summary>
+            Convert a frequency to a channel
+            </summary>
+            <param name="frequencyMHz">
+            A <see cref="T:System.Int32" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:PacketDotNet.ChannelRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.FhssRadioTapField">
+            <summary>
+            Fhss radio tap field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.FhssRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.FhssRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.FhssRadioTapField.ChannelHoppingSet">
+            <summary>
+            Hop set
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.FhssRadioTapField.Pattern">
+            <summary>
+            Hop pattern
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.FhssRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.FlagsRadioTapField">
+            <summary>
+            Radio tap flags
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.FlagsRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="F:PacketDotNet.FlagsRadioTapField.Flags">
+            <summary>
+            Flags set
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.FlagsRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="M:PacketDotNet.FlagsRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.RateRadioTapField">
+            <summary>
+            Rate field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.RateRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.RateRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.RateRadioTapField.RateMbps">
+            <summary>
+            Rate in Mbps
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.RateRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbAntennaSignalRadioTapField">
+            <summary>
+            Db antenna signal
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbAntennaSignalRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbAntennaSignalRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbAntennaSignalRadioTapField.SignalStrengthdB">
+            <summary>
+            Signal strength in dB
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbAntennaSignalRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbAntennaNoiseRadioTapField">
+            <summary>
+            Antenna noise in dB
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbAntennaNoiseRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbAntennaNoiseRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbAntennaNoiseRadioTapField.AntennaNoisedB">
+            <summary>
+            Antenna noise in dB
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbAntennaNoiseRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.AntennaRadioTapField">
+            <summary>
+            Antenna field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.AntennaRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.AntennaRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.AntennaRadioTapField.Antenna">
+            <summary>
+            Antenna number
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.AntennaRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbmAntennaSignalRadioTapField">
+            <summary>
+            Antenna signal in dBm
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmAntennaSignalRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbmAntennaSignalRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbmAntennaSignalRadioTapField.AntennaSignalDbm">
+            <summary>
+            Antenna signal in dBm
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmAntennaSignalRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbmAntennaNoiseRadioTapField">
+            <summary>
+            Antenna noise in dBm
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmAntennaNoiseRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbmAntennaNoiseRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbmAntennaNoiseRadioTapField.AntennaNoisedBm">
+            <summary>
+            Antenna noise in dBm
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmAntennaNoiseRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.LockQualityRadioTapField">
+            <summary>
+            Lock quality
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LockQualityRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.LockQualityRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.LockQualityRadioTapField.SignalQuality">
+            <summary>
+            Signal quality
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.LockQualityRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.TsftRadioTapField">
+            <summary>
+            Tsft radio tap field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TsftRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.TsftRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.TsftRadioTapField.TimestampUsec">
+            <summary>
+            Timestamp in microseconds
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TsftRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.FcsRadioTapField">
+            <summary>
+            Fcs field
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.FcsRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.FcsRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.FcsRadioTapField.FrameCheckSequence">
+            <summary>
+            Frame check sequence
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.FcsRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.TxAttenuationRadioTapField">
+            <summary>
+            Transmit power expressed as unitless distance from max
+            power set at factory calibration.  0 is max power.
+            Monotonically nondecreasing with lower power levels.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TxAttenuationRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.TxAttenuationRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.TxAttenuationRadioTapField.TxPower">
+            <summary>
+            Transmit power
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.TxAttenuationRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbTxAttenuationRadioTapField">
+            <summary>
+            Transmit power expressed as decibel distance from max power
+            set at factory calibration.  0 is max power.  Monotonically
+            nondecreasing with lower power levels.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbTxAttenuationRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbTxAttenuationRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbTxAttenuationRadioTapField.TxPowerdB">
+            <summary>
+            Transmit power
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbTxAttenuationRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.DbmTxPowerRadioTapField">
+            <summary>
+            Transmit power expressed as dBm (decibels from a 1 milliwatt
+            reference). This is the absolute power level measured at
+            the antenna port.
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmTxPowerRadioTapField.#ctor(System.IO.BinaryReader)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+        </member>
+        <member name="P:PacketDotNet.DbmTxPowerRadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="P:PacketDotNet.DbmTxPowerRadioTapField.TxPowerdBm">
+            <summary>
+            Tx power in dBm
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.DbmTxPowerRadioTapField.ToString">
+            <summary>
+            ToString() override
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.RadioTapField">
+            <summary>
+            Abstract class for all radio tap fields
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.RadioTapField.FieldType">
+            <summary>Type of the field</summary>
+        </member>
+        <member name="M:PacketDotNet.RadioTapField.Parse(System.Int32,System.IO.BinaryReader)">
+            <summary>
+            Parse a radio tap field, indicated by bitIndex, from a given BinaryReader
+            </summary>
+            <param name="bitIndex">
+            A <see cref="T:System.Int32" /></param>
+            <param name="br">
+            A <see cref="T:System.IO.BinaryReader" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.RadioTapField" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211RadioTapFlags">
+            <summary>
+            Radio tap flags
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapFlags.CFP">
+            <summary>
+            sent/received during cfp
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapFlags.ShortPreamble">
+            <summary>
+            sent/received with short preamble
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapFlags.WepEncrypted">
+            <summary>
+            sent/received with WEP encryption
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapFlags.Fragmentation">
+            <summary>
+            sent/received with fragmentation
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapFlags.FcsIncludedInFrame">
+            <summary>
+            frame includes FCS
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Ieee80211RadioTapType">
+            <summary>
+            NOTE: Might be out-of-date information since it mentions Ethereal
+            NOTE: ethereal does NOT handle the following:
+            IEEE80211_RADIOTAP_FHSS:
+            IEEE80211_RADIOTAP_LOCK_QUALITY:
+            IEEE80211_RADIOTAP_TX_ATTENUATION:
+            IEEE80211_RADIOTAP_DB_TX_ATTENUATION:
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_TSFT">
+            <summary>
+            IEEE80211_RADIOTAP_TSFT              u_int64_t       microseconds
+            Value in microseconds of the MAC's 64-bit 802.11 Time
+            Synchronization Function timer when the first bit of the
+            MPDU arrived at the MAC. For received frames, only.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_FLAGS">
+            <summary>
+            IEEE80211_RADIOTAP_FLAGS             u_int8_t        bitmap
+            Properties of transmitted and received frames. See flags
+            defined below.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_RATE">
+            <summary>
+            IEEE80211_RADIOTAP_RATE              u_int8_t        500kb/s
+            Tx/Rx data rate
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_CHANNEL">
+            <summary>
+            IEEE80211_RADIOTAP_CHANNEL           2 x u_int16_t   MHz, bitmap
+            Tx/Rx frequency in MHz, followed by flags (see below).
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_FHSS">
+            <summary>
+            IEEE80211_RADIOTAP_FHSS              u_int16_t       see below
+            For frequency-hopping radios, the hop set (first byte)
+            and pattern (second byte).
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL">
+            <summary>
+            IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from
+            one milliwatt (dBm)
+            RF signal power at the antenna, decibel difference from
+            one milliwatt.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE">
+            <summary>
+            IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from
+            one milliwatt (dBm)
+            RF noise power at the antenna, decibel difference from one
+            milliwatt.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY">
+            <summary>
+            IEEE80211_RADIOTAP_LOCK_QUALITY     u_int16_t       unitless
+            Quality of Barker code lock. Unitless. Monotonically
+            nondecreasing with "better" lock strength. Called "Signal
+            Quality" in datasheets.  (Is there a standard way to measure
+            this?)
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_TX_ATTENUATION">
+            <summary>
+            IEEE80211_RADIOTAP_TX_ATTENUATION    u_int16_t       unitless
+            Transmit power expressed as unitless distance from max
+            power set at factory calibration.  0 is max power.
+            Monotonically nondecreasing with lower power levels.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION">
+            <summary>
+            IEEE80211_RADIOTAP_DB_TX_ATTENUATION u_int16_t       decibels (dB)
+            Transmit power expressed as decibel distance from max power
+            set at factory calibration.  0 is max power.  Monotonically
+            nondecreasing with lower power levels.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DBM_TX_POWER">
+            <summary>
+            IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from
+            one milliwatt (dBm)
+            Transmit power expressed as dBm (decibels from a 1 milliwatt
+            reference). This is the absolute power level measured at
+            the antenna port.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_ANTENNA">
+            <summary>
+            IEEE80211_RADIOTAP_ANTENNA           u_int8_t        antenna index
+            Unitless indication of the Rx/Tx antenna for this packet.
+            The first antenna is antenna 0.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL">
+            <summary>
+            IEEE80211_RADIOTAP_DB_ANTSIGNAL      u_int8_t        decibel (dB)
+            RF signal power at the antenna, decibel difference from an
+            arbitrary, fixed reference.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_DB_ANTNOISE">
+            <summary>
+            IEEE80211_RADIOTAP_DB_ANTNOISE       u_int8_t        decibel (dB)
+            RF noise power at the antenna, decibel difference from an
+            arbitrary, fixed reference point.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_FCS">
+            <summary>
+            IEEE80211_RADIOTAP_FCS              u_int32_t       data
+            FCS from frame in network byte order.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee80211RadioTapType.IEEE80211_RADIOTAP_EXT">
+            <summary>
+            Indicates that the flags bitmaps have been extended
+            </summary>
+        </member>
         <member name="T:PacketDotNet.IpPacket">
             <summary>
             Base class for IPv4 and IPv6 packets that exports the common
             functionality that both of these classes has in common
             </summary>
         </member>
-        <member name="M:PacketDotNet.IpPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.IpPacket.#ctor">
             <summary>
             IpPacket constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="F:PacketDotNet.IpPacket.DefaultTimeToLive">
             <summary>
@@ -411,7 +1444,7 @@
             <summary>
             Called by IPv4 and IPv6 packets to parse their packet payload
             </summary>
-            <param name="Header">
+            <param name="payload">
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="ProtocolType">
             A <see cref="T:PacketDotNet.IPProtocolType" /></param>
@@ -448,12 +1481,10 @@
             packets interact and store their data.
             </summary>
         </member>
-        <member name="M:PacketDotNet.Packet.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.Packet.#ctor">
             <summary>
-            Basic Packet constructor
+            Constructor
             </summary>
-            <param name="timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="P:PacketDotNet.Packet.Timeval">
             <value>
@@ -558,25 +1589,28 @@
             to update for each packet parameter change
             </summary>
         </member>
-        <member name="M:PacketDotNet.Packet.ToColoredString(System.Boolean)">
-            <summary>
-            Returns a ansi colored string. This routine calls
-            the ToColoredString() of the payload packet if one
-            is present.
-            </summary>
-            <param name="colored">
-            A <see cref="T:System.Boolean" /></param>
-            <returns>
-            A <see cref="T:System.String" /></returns>
+        <member name="M:PacketDotNet.Packet.ToString">
+            <summary>Output this packet as a readable string</summary>
         </member>
-        <member name="M:PacketDotNet.Packet.ToColoredVerboseString(System.Boolean)">
-            <summary>
-            Returns a verbose ansi colored string. This routine calls
-            the ToColoredVerboseString() of the payload packet if one
-            is present.
+        <member name="M:PacketDotNet.Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString()">
+            Output the packet information in the specified format
+            Normal - outputs the packet info to a single line
+            Colored - outputs the packet info to a single line with coloring
+            Verbose - outputs detailed info about the packet
+            VerboseColored - outputs detailed info about the packet with coloring
             </summary>
-            <param name="colored">
-            A <see cref="T:System.Boolean" /></param>
+            <param name="outputFormat">
+                <see cref="T:PacketDotNet.StringOutputType" />
+            </param>
+        </member>
+        <member name="M:PacketDotNet.Packet.PrintHex">
+            <summary>
+            Prints the Packet PayloadData in Hex format
+            With the 16-byte segment number, raw bytes, and parsed ascii output
+            Ex:
+            0010  00 18 82 6c 7c 7f 00 c0  9f 77 a3 b0 88 64 11 00   ...1|... .w...d..
+            </summary>
             <returns>
             A <see cref="T:System.String" /></returns>
         </member>
@@ -585,12 +1619,10 @@
             Session layer packet
             </summary>
         </member>
-        <member name="M:PacketDotNet.SessionPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.SessionPacket.#ctor">
             <summary>
             Constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="T:PacketDotNet.TcpPacket">
             <summary>
@@ -603,36 +1635,19 @@
             Create a new TCP packet from values
             </summary>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.TcpPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int offset constructor, timeval defaults to the current time
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.TcpPacket.#ctor(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.Packet)">
             <summary>
-            byte[]/int offset/PosixTimeval constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-        </member>
-        <member name="M:PacketDotNet.TcpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
-            <summary>
-            Constructor when this packet is encapsulated in another packet
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="ParentPacket">
             A <see cref="T:PacketDotNet.Packet" /></param>
         </member>
@@ -724,8 +1739,14 @@
             <returns>
             A <see cref="T:System.String" /></returns>
         </member>
+        <member name="P:PacketDotNet.TcpPacket.OptionsCollection">
+            <summary>
+            Contains the Options list attached to the TCP header
+            </summary>
+        </member>
         <member name="M:PacketDotNet.TcpPacket.CalculateTCPChecksum">
-            <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
+            <summary>
+            Computes the TCP checksum. Does not update the current checksum value
             </summary>
             <returns> The calculated TCP checksum.</returns>
         </member>
@@ -734,17 +1755,9 @@
             Update the checksum value.
             </summary>
         </member>
-        <member name="M:PacketDotNet.TcpPacket.ToString">
-            <summary> Convert this TCP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.TcpPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this TCP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.TcpPacket.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert this TCP packet to a verbose.</summary>
+        <!--FIXME: Invalid documentation markup was found for member M:PacketDotNet.TcpPacket.ParseOptions(System.Byte[])-->
+        <member name="M:PacketDotNet.TcpPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.TcpPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
@@ -774,36 +1787,19 @@
             <param name="DestinationPort">
             A <see cref="T:System.UInt16" /></param>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.UdpPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int offset constructor, timeval defaults to the current time
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.UdpPacket.#ctor(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.Packet)">
             <summary>
-            byte[]/int offset/PosixTimeval constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-        </member>
-        <member name="M:PacketDotNet.UdpPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
-            <summary>
-            Constructor when this packet is encapsulated in another packet
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="ParentPacket">
             A <see cref="T:PacketDotNet.Packet" /></param>
         </member>
@@ -849,14 +1845,8 @@
             Update the checksum value.
             </summary>
         </member>
-        <member name="M:PacketDotNet.UdpPacket.ToString">
-            <summary> Convert this UDP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.UdpPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this UDP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
+        <member name="M:PacketDotNet.UdpPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.UdpPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
@@ -905,12 +1895,10 @@
             Transport layer packet
             </summary>
         </member>
-        <member name="M:PacketDotNet.TransportPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.TransportPacket.#ctor">
             <summary>
             Constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="T:PacketDotNet.TransportPacket.TransportChecksumOption">
             <summary>
@@ -951,21 +1939,6 @@
             A <see cref="T:PacketDotNet.TransportPacket.TransportChecksumOption" /></param>
             <returns>
             A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="T:PacketDotNet.IPProtocol">
-            <summary>
-            String representation of an IP protocol value
-            </summary>
-        </member>
-        <member name="F:PacketDotNet.IPProtocol.messages">
-            <summary> 'Human-readable' IP protocol descriptions.</summary>
-        </member>
-        <member name="M:PacketDotNet.IPProtocol.getDescription(System.Int32)">
-            <summary> Fetch a protocol description.</summary>
-            <param name="code">the code associated with the message.
-            </param>
-            <returns> a message describing the significance of the IP protocol.
-            </returns>
         </member>
         <member name="T:PacketDotNet.Utils.AnsiEscapeSequences">
             <summary> String constants for color console output.
@@ -2129,12 +3102,10 @@
             http://en.wikipedia.org/wiki/Internet_Layer
             </summary>
         </member>
-        <member name="M:PacketDotNet.InternetPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.InternetPacket.#ctor">
             <summary>
             Constructor
             </summary>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="T:PacketDotNet.IPv4Fields">
             <summary>
@@ -2216,25 +3187,12 @@
             Construct an instance by values
             </summary>
         </member>
-        <member name="M:PacketDotNet.IPv4Packet.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.IPv4Packet.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Parse bytes into an IP packet
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.IPv4Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Parse bytes into an IP packet
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="T:PacketDotNet.IPv4Packet.TypesOfService_Fields">
             <summary> Type of service code constants for IP. Type of service describes
@@ -2365,17 +3323,8 @@
             <returns>
             A <see cref="T:System.Byte" /></returns>
         </member>
-        <member name="M:PacketDotNet.IPv4Packet.ToString">
-            <summary> Convert this IP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.IPv4Packet.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this IP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.IPv4Packet.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert this IP packet to a more verbose string.</summary>
+        <member name="M:PacketDotNet.IPv4Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.IPv4Packet.RandomPacket">
             <summary>
@@ -2479,25 +3428,12 @@
             <param name="DestinationAddress">
             A <see cref="T:System.Net.IPAddress" /></param>
         </member>
-        <member name="M:PacketDotNet.IPv6Packet.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.IPv6Packet.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int offset constructor, timeval defaults to the current time
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.IPv6Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            byte[]/int offset/PosixTimeval constructor
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="F:PacketDotNet.IPv6Packet.HeaderMinimumLength">
             <value>
@@ -2576,9 +3512,7 @@
             </summary>
         </member>
         <member name="P:PacketDotNet.IPv6Packet.Color">
-            <summary>
-            Converts the packet to a color string. TODO add a method for colored to string.
-            </summary>
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
         <member name="M:PacketDotNet.IPv6Packet.AttachPseudoIPHeader(System.Byte[])">
             <summary>
@@ -2592,21 +3526,8 @@
             <returns>
             A <see cref="T:System.Byte" /></returns>
         </member>
-        <member name="M:PacketDotNet.IPv6Packet.ToString">
-            <summary>
-            Converts the packet to a string.
-            </summary>
-            <returns>
-            </returns>
-        </member>
-        <member name="M:PacketDotNet.IPv6Packet.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this IP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.IPv6Packet.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert this IP packet to a more verbose string.</summary>
+        <member name="M:PacketDotNet.IPv6Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.IPv6Packet.RandomPacket">
             <summary>
@@ -2832,25 +3753,12 @@
             <param name="SenderProtocolAddress">
             A <see cref="T:System.Net.IPAddress" /></param>
         </member>
-        <member name="M:PacketDotNet.ARPPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.ARPPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int Offset constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.ARPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            byte[]/int offset/PosixTimeval constructor
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.ARPPacket.HardwareAddressType">
             <value>
@@ -2903,14 +3811,8 @@
         <member name="P:PacketDotNet.ARPPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.ARPPacket.ToString">
-            <summary> Convert this ARP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.ARPPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this ARP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
+        <member name="M:PacketDotNet.ARPPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.ARPPacket.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
@@ -2955,25 +3857,12 @@
             See http://en.wikipedia.org/wiki/ICMPv6
             </summary>
         </member>
-        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int offset constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            byte[]/int Offset/PosixTimeval constructor
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.ICMPv6Packet.Type">
             <value>
@@ -2991,14 +3880,8 @@
         <member name="P:PacketDotNet.ICMPv6Packet.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.ICMPv6Packet.ToString">
-            <summary> Convert this ICMP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.ICMPv6Packet.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this ICMP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
+        <member name="M:PacketDotNet.ICMPv6Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.ICMPv6Packet.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
@@ -3020,25 +3903,12 @@
             An IGMP packet.
             </summary>
         </member>
-        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int Offset constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            byte[]/int offset/PosixTimeval constructor
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.IGMPv2Packet.Type">
             <value>
@@ -3057,14 +3927,18 @@
         <member name="P:PacketDotNet.IGMPv2Packet.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.IGMPv2Packet.ToString">
-            <summary> Convert this IGMP packet to a readable string.</summary>
+        <member name="M:PacketDotNet.IGMPv2Packet.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the encapsulated IGMPv2Packet of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.IGMPv2Packet" /></returns>
         </member>
-        <member name="M:PacketDotNet.IGMPv2Packet.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this IGMP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
+        <member name="M:PacketDotNet.IGMPv2Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="T:PacketDotNet.InternetLinkLayerPacket">
             <summary>
@@ -3072,12 +3946,10 @@
             See http://en.wikipedia.org/wiki/Link_Layer
             </summary>
         </member>
-        <member name="M:PacketDotNet.InternetLinkLayerPacket.#ctor(PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.InternetLinkLayerPacket.#ctor">
             <summary>
             Constructor
             </summary>
-            <param name="timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
         </member>
         <member name="M:PacketDotNet.InternetLinkLayerPacket.GetInnerPayload(PacketDotNet.InternetLinkLayerPacket)">
             <summary>
@@ -3127,25 +3999,12 @@
             See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
             </summary>
         </member>
-        <member name="M:PacketDotNet.LinuxSLLPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.LinuxSLLPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Create an LinuxSLLPacket from a byte array
+            Constructor
             </summary>
-            <param name="bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.LinuxSLLPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Create an LinuxSLLPacket from a byte array and a Timeval
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.LinuxSLLPacket.Type">
             <value>
@@ -3172,24 +4031,8 @@
             The encapsulated protocol type
             </value>
         </member>
-        <member name="M:PacketDotNet.LinuxSLLPacket.ToString">
-            <summary>
-            ToString implementation
-            </summary>
-            <returns>
-            A <see cref="T:System.String" /></returns>
-        </member>
-        <member name="M:PacketDotNet.LinuxSLLPacket.ToColoredString(System.Boolean)">
-            <summary>
-            Colored string that represents the values in this class instance
-            </summary>
-            <param name="colored">
-            A <see cref="T:System.Boolean" /></param>
-            <returns>
-            A <see cref="T:System.String" /></returns>
-        </member>
-        <member name="M:PacketDotNet.LinuxSLLPacket.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert a more verbose string.</summary>
+        <member name="M:PacketDotNet.LinuxSLLPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="T:PacketDotNet.LinuxSLLFields">
             <summary>
@@ -3367,12 +4210,6 @@
         <member name="F:PacketDotNet.IPProtocolType.RAW">
             <summary> Raw IP packets. </summary>
         </member>
-        <member name="F:PacketDotNet.IPProtocolType.INVALID">
-            <summary> Unrecognized IP protocol.
-            WARNING: this only works because the int storage for the protocol
-            code has more bits than the field in the IP header where it is stored.
-            </summary>
-        </member>
         <member name="F:PacketDotNet.IPProtocolType.MASK">
             <summary> IP protocol mask.</summary>
         </member>
@@ -3465,8 +4302,19 @@
         <member name="F:PacketDotNet.LinkLayers.LinuxSLL">
             <summary> Linux cooked sockets.</summary>
         </member>
-        <member name="F:PacketDotNet.LinkLayers.Unknown">
-            <summary> unknown link-layer type</summary>
+        <member name="F:PacketDotNet.LinkLayers.Ieee80211_Radio">
+            <summary>
+            Header for 802.11 plus a number of bits of link-layer information
+            including radio information, used by some recent BSD drivers as
+            well as the madwifi Atheros driver for Linux.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.LinkLayers.PerPacketInformation">
+            <summary>
+            Per Packet Information encapsulated packets.
+            DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
+            See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
+            </summary>
         </member>
         <member name="T:PacketDotNet.Utils.HexPrinter">
             <summary>
@@ -3484,6 +4332,15 @@
             A <see cref="T:System.Int32" /></param>
             <param name="Length">
             A <see cref="T:System.Int32" /></param>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.HexPrinter.PrintMACAddress(System.Net.NetworkInformation.PhysicalAddress)">
+            <summary>
+            Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
+            </summary>
+            <param name="address">
+            A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
             <returns>
             A <see cref="T:System.String" /></returns>
         </member>
@@ -3620,6 +4477,7 @@
             <returns>
             A <see cref="T:System.Net.IPAddress" /></returns>
         </member>
+        <!--FIXME: Invalid documentation markup was found for member M:PacketDotNet.Utils.RandomUtils.LongestStringLength(System.Collections.Generic.List{System.String})-->
         <member name="T:PacketDotNet.PayloadType">
             <summary>
             Differentiates between a packet class payload, a byte[] payload
@@ -3661,27 +4519,112 @@
         <member name="P:PacketDotNet.RawPacket.Data">
             <summary> Fetch data portion of the packet.</summary>
         </member>
+        <member name="P:PacketDotNet.RawPacket.Color">
+            <value>
+            Color used when generating the text description of a packet
+            </value>
+        </member>
         <member name="M:PacketDotNet.RawPacket.ToString">
-            <summary>
-            ToString() override
-            </summary>
-            <returns>
-            A <see cref="T:System.String" /></returns>
+            <summary>Output this packet as a readable string</summary>
+        </member>
+        <member name="M:PacketDotNet.RawPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="T:PacketDotNet.ARPOperation">
             <summary>
             The possible ARP operation values
             </summary>
+            <remarks>
+            References:
+            - http://www.networksorcery.com/enp/default1101.htm
+            </remarks>
         </member>
         <member name="F:PacketDotNet.ARPOperation.Request">
-            <summary>
-            Arp request
-            </summary>
+            <summary>Request</summary>
+            <remarks>See RFC 826, RFC 5227</remarks>
         </member>
         <member name="F:PacketDotNet.ARPOperation.Response">
-            <summary>
-            Arp response
-            </summary>
+            <summary>Response</summary>
+            <remarks>See RFC 826, RFC 1868, RFC 5227</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.RequestReverse">
+            <summary>Request Reverse</summary>
+            <remarks>See RFC 903</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.ReplyReverse">
+            <summary>Reply Reverse</summary>
+            <remarks>See RFC 903</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.DRARPRequest">
+            <summary>DRARP Request</summary>
+            <remarks>See RFC 1931</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.DRARPReply">
+            <summary>DRARP Reply</summary>
+            <remarks>See RFC 1931</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.DRARPError">
+            <summary>DRARP Error</summary>
+            <remarks>See RFC 1931</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.InARPRequest">
+            <summary>InARP Request</summary>
+            <remarks>See RFC 1293</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.InARPReply">
+            <summary>InARP Reply</summary>
+            <remarks>See RFC 1293</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.ARPNAK">
+            <summary>ARP NAK</summary>
+            <remarks>See RFC 1577</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSRequest">
+            <summary>MARS Request</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSMulti">
+            <summary>MARS Multi</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSMServ">
+            <summary>MARS MServ</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSJoin">
+            <summary>MARS Join</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSLeave">
+            <summary>MARS Leave</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSNAK">
+            <summary>MARS NAK</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSUnserv">
+            <summary>MARS Unserv</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSSJoin">
+            <summary>MARS SJoin</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSSLeave">
+            <summary>MARS SLeave</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSGrouplistRequest">
+            <summary>MARS Grouplist Request</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSGrouplistReply">
+            <summary>MARS Grouplist Reply</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MARSRedirectMap">
+            <summary>MARS Redirect Map</summary>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.MaposUnarp">
+            <summary>MARS UNARP</summary>
+            <remarks>See RFC 2176</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.OP_EXP1">
+            <summary>OP_EXP1</summary>
+            <remarks>See RFC 5494</remarks>
+        </member>
+        <member name="F:PacketDotNet.ARPOperation.OP_EXP2">
+            <summary>OP_EXP2</summary>
         </member>
         <member name="T:PacketDotNet.PPPoEPacket">
             <summary>
@@ -3694,31 +4637,18 @@
             Construct a new PPPoEPacket from source and destination mac addresses
             </summary>
         </member>
-        <member name="M:PacketDotNet.PPPoEPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.PPPoEPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Create an PPPoEPacket from a byte array
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.PPPoEPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Create an PPPoEPacket from a byte array and a Timeval
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.PPPoEPacket.Version">
             <summary>
             PPPoe version, must be 0x1 according to RFC
             </summary>
-        </member>
+            FIXME: This currently outputs the wrong version number</member>
         <member name="P:PacketDotNet.PPPoEPacket.Type">
             <summary>
             Type, must be 0x1 according to RFC
@@ -3727,7 +4657,7 @@
         <member name="P:PacketDotNet.PPPoEPacket.Code">
             <summary>
             </summary>
-        </member>
+            FIXME: This currently outputs the wrong code</member>
         <member name="P:PacketDotNet.PPPoEPacket.SessionId">
             <summary>
             Session identifier for this PPPoe packet
@@ -3741,17 +4671,18 @@
         <member name="P:PacketDotNet.PPPoEPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.PPPoEPacket.ToString">
-            <summary> Convert this packet to a readable string.</summary>
+        <member name="M:PacketDotNet.PPPoEPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
-        <member name="M:PacketDotNet.PPPoEPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.PPPoEPacket.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert a more verbose string.</summary>
+        <member name="M:PacketDotNet.PPPoEPacket.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the encapsulated PPPoE of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.ARPPacket" /></returns>
         </member>
         <member name="M:PacketDotNet.PPPoEPacket.RandomPacket">
             <summary>
@@ -3841,25 +4772,12 @@
             Construct a new PPPPacket from source and destination mac addresses
             </summary>
         </member>
-        <member name="M:PacketDotNet.PPPPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.PPPPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Create an PPPPacket from a byte array
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.PPPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Create an PPPPacket from a byte array and a Timeval
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.PPPPacket.Protocol">
             <summary>
@@ -3869,17 +4787,18 @@
         <member name="P:PacketDotNet.PPPPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.PPPPacket.ToString">
-            <summary> Convert this packet to a readable string.</summary>
+        <member name="M:PacketDotNet.PPPPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
-        <member name="M:PacketDotNet.PPPPacket.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
-        </member>
-        <member name="M:PacketDotNet.PPPPacket.ToColoredVerboseString(System.Boolean)">
-            <summary> Convert a more verbose string.</summary>
+        <member name="M:PacketDotNet.PPPPacket.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the encapsulated PPPPacket of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.PPPPacket" /></returns>
         </member>
         <member name="M:PacketDotNet.PPPPacket.RandomPacket">
             <summary>
@@ -3972,25 +4891,12 @@
             See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
             </summary>
         </member>
-        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            byte[]/int offset constructor
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            byte[]/int Offset/PosixTimeval constructor
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.ICMPv4Packet.TypeCode">
             <value>
@@ -4020,14 +4926,8 @@
         <member name="P:PacketDotNet.ICMPv4Packet.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.ICMPv4Packet.ToString">
-            <summary> Convert this ICMP packet to a readable string.</summary>
-        </member>
-        <member name="M:PacketDotNet.ICMPv4Packet.ToColoredString(System.Boolean)">
-            <summary> Generate string with contents describing this ICMP packet.</summary>
-            <param name="colored">whether or not the string should contain ansi
-            color escape sequences.
-            </param>
+        <member name="M:PacketDotNet.ICMPv4Packet.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="M:PacketDotNet.ICMPv4Packet.GetEncapsulated(PacketDotNet.Packet)">
             <summary>
@@ -4042,7 +4942,16 @@
         <member name="T:PacketDotNet.Utils.ByteArraySegment">
             <summary>
             Container class that refers to a segment of bytes in a byte[]
+            Used to ensure high performance by allowing memory copies to
+            be avoided
             </summary>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.#ctor(System.Byte[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte[]" /></param>
         </member>
         <member name="M:PacketDotNet.Utils.ByteArraySegment.#ctor(System.Byte[],System.Int32,System.Int32)">
             <summary>
@@ -4056,14 +4965,40 @@
             <param name="Length">
             A <see cref="T:System.Int32" /></param>
         </member>
-        <member name="P:PacketDotNet.Utils.ByteArraySegment.Length">
-            <value>
-            Number of bytes beyond the offset into Bytes
-            </value>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="Bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="Offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="Length">
+            A <see cref="T:System.Int32" /></param>
+            <param name="BytesLength">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.#ctor(PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Copy constructor
+            </summary>
+            <param name="original">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.Utils.ByteArraySegment.Bytes">
             <value>
             The byte[] array
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.BytesLength">
+            <value>
+            The maximum number of bytes we should treat Bytes as having, allows
+            for controling the number of bytes produced by EncapsulatedBytes()
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Utils.ByteArraySegment.Length">
+            <value>
+            Number of bytes beyond the offset into Bytes
             </value>
         </member>
         <member name="P:PacketDotNet.Utils.ByteArraySegment.Offset">
@@ -4094,6 +5029,17 @@
             this instance, useful for processing where the parent
             wants to pass the next segment to a sub class for processing
             </summary>
+            <returns>
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Utils.ByteArraySegment.EncapsulatedBytes(System.Int32)">
+            <summary>
+            Create the segment after the current one
+            </summary>
+            <param name="NewSegmentLength">
+            A <see cref="T:System.Int32" /> that can be used to limit the segment length
+            of the ByteArraySegment that is to be returned. Often used to exclude trailing bytes.
+            </param>
             <returns>
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></returns>
         </member>
@@ -4139,25 +5085,12 @@
             Create an empty LLDPPacket
             </summary>
         </member>
-        <member name="M:PacketDotNet.LLDPPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.LLDPPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Creates a LLDP packet from a byte[]
+            Constructor
             </summary>
-            <param name="bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.LLDPPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Creates a LLDP packet from a byte[]
-            </summary>
-            <param name="bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="F:PacketDotNet.LLDPPacket.TlvCollection">
             <summary>
@@ -4226,35 +5159,8 @@
             <returns>
             A <see cref="T:PacketDotNet.Packet" /></returns>
         </member>
-        <member name="M:PacketDotNet.LLDPPacket.ToString">
-            <summary>
-            Convert this LLDP packet to a readable string.
-            </summary>
-            <returns>
-            A human readable string.
-            </returns>
-        </member>
-        <member name="M:PacketDotNet.LLDPPacket.ToColoredString(System.Boolean)">
-            <summary>
-            Convert this LLDP packet to a readable string.
-            </summary>
-            <param name="colored">
-            Sets whether the output includes coloring.
-            </param>
-            <returns>
-            A human readable string.
-            </returns>
-        </member>
-        <member name="M:PacketDotNet.LLDPPacket.ToColoredVerboseString(System.Boolean)">
-            <summary>
-            Convert this LLDP packet to a verbose readable string.
-            </summary>
-            <param name="colored">
-            Sets whether the output includes coloring.
-            </param>
-            <returns>
-            A verbose human readable string.
-            </returns>
+        <member name="M:PacketDotNet.LLDPPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="T:PacketDotNet.LLDP.TLVTypes">
             <summary>
@@ -5298,25 +6204,12 @@
             <param name="destinationMAC">
             A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
         </member>
-        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(System.Byte[],System.Int32)">
+        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            Creates a Wake-On-LAN packet from a byte[]
+            Constructor
             </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-        </member>
-        <member name="M:PacketDotNet.WakeOnLanPacket.#ctor(System.Byte[],System.Int32,PacketDotNet.PosixTimeval)">
-            <summary>
-            Creates a Wake-On-LAN packet from a byte[]
-            </summary>
-            <param name="Bytes">
-            A <see cref="T:System.Byte" /></param>
-            <param name="Offset">
-            A <see cref="T:System.Int32" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
         <member name="P:PacketDotNet.WakeOnLanPacket.DestinationMAC">
             <summary>
@@ -5349,12 +6242,12 @@
             True if the Wake-On-LAN payload is valid
             </returns>
         </member>
-        <member name="M:PacketDotNet.WakeOnLanPacket.IsValid(System.Byte[])">
+        <member name="M:PacketDotNet.WakeOnLanPacket.IsValid(PacketDotNet.Utils.ByteArraySegment)">
             <summary>
-            See IsValid()
+            See IsValid
             </summary>
-            <param name="payloadData">
-            A <see cref="T:System.Byte[]" /></param>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <returns>
             A <see cref="T:System.Boolean" /></returns>
         </member>
@@ -5374,9 +6267,605 @@
             <returns>
             A <see cref="T:System.Int32" /></returns>
         </member>
-        <member name="M:PacketDotNet.WakeOnLanPacket.ToString">
+        <member name="M:PacketDotNet.WakeOnLanPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
+        </member>
+        <member name="T:PacketDotNet.StringOutputType">
             <summary>
-            ToString override
+            The available types of strings that the ToString(StringOutputType) can handle.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.StringOutputType.Normal">
+            <summary>
+            Outputs the packet info on a single line
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.StringOutputType.Colored">
+            <summary>
+            Outputs the packet info on a single line with coloring
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.StringOutputType.Verbose">
+            <summary>
+            Outputs the detailed packet info
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.StringOutputType.VerboseColored">
+            <summary>
+            Outputs the detailed packet info with coloring
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Tcp.NoOperation">
+            <summary>
+            No Operation Option
+            Used in the TCP Options field to pad the length to the next 32 byte boundary
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc793/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.NoOperation.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a No Operation Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="F:PacketDotNet.Tcp.NoOperation.OptionLength">
+            <summary>
+            The length (in bytes) of the NoOperation option
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.NoOperation.Length">
+            <summary>
+            The length of the NoOperation field
+            Returns 1 as opposed to returning the length field because
+            the NoOperation option is only 1 byte long and doesn't
+            contain a length field
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Tcp.EndOfOptions">
+            <summary>
+            End-of-Options Option
+            Marks the end of the Options list
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc793/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.EndOfOptions.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an End Of Options Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="F:PacketDotNet.Tcp.EndOfOptions.OptionLength">
+            <summary>
+            The length (in bytes) of the EndOfOptions option
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.EndOfOptions.Length">
+            <summary>
+            The length of the EndOfOptions field
+            Returns 1 as opposed to returning the length field because
+            the EndOfOptions option is only 1 byte long and doesn't
+            contain a length field
+            </summary>
+        </member>
+        <member name="T:PacketDotNet.Tcp.MaximumSegmentSize">
+            <summary>
+            Maximum Segment Size Option
+            An extension to the DataOffset/HeaderLength field to
+            allow sizes greater than 65,535
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc793/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.MaximumSegmentSize.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a Maximum Segment Size Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.MaximumSegmentSize.Value">
+            <summary>
+            The Maximum Segment Size
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.MaximumSegmentSize.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.Option">
+            <summary>
+            A TCP Option
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.Option.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an Option from a byte[]
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="F:PacketDotNet.Tcp.Option.KindFieldLength">
+            <summary>The length (in bytes) of the Kind field</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.Option.LengthFieldLength">
+            <summary>The length (in bytes) of the Length field</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.Option.KindFieldOffset">
+            <summary>The offset (in bytes) of the Kind Field</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.Option.LengthFieldOffset">
+            <summary>The offset (in bytes) of the Length field</summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.Option.Length">
+            <summary>
+            The Length of the Option type
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.Option.Kind">
+            <summary>
+            The Kind of option
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.Option.Bytes">
+            <summary>
+            Returns a TLV that contains the Option
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.Option.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.WindowScaleFactor">
+            <summary>
+            Window Scale Factor Option
+            Expands the definition of the TCP window to 32 bits
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1323/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.WindowScaleFactor.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a Window Scale Factor Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.WindowScaleFactor.ScaleFactor">
+            <summary>
+            The Window Scale Factor
+            used as a multiplier to the window value
+            The multiplier is equal to 1 left-shifted by the ScaleFactor
+            So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.WindowScaleFactor.ToString">
+            <summary>
+            Returns the Option info as a string
+            The multiplier is equal to a value of 1 left-shifted by the scale factor
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.OptionTypes">
+            <summary>
+            The different types fields that could be found in the Options field
+            </summary>
+            <remarks>
+            References:
+            http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_Timestamps
+            http://www.networksorcery.com/enp/default1101.htm
+            </remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.EndOfOptionList">
+            <summary>End Of List</summary>
+            <remarks>See RFC 793</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.NoOperation">
+            <summary>No Operation</summary>
+            <remarks>See RFC 793</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.MaximumSegmentSize">
+            <summary>Maximum Segment Size</summary>
+            <remarks>See RFC 793</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.WindowScaleFactor">
+            <summary>Window Scale Factor</summary>
+            <remarks>See RFC 1323</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.SACKPermitted">
+            <summary>SACK (Selective Ack) Permitted</summary>
+            <remarks>See RFC 2018</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.SACK">
+            <summary>SACK (Selective Ack)</summary>
+            <remarks>See RFC 2018 and RFC 2883</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.Echo">
+            <summary>Echo (obsolete)</summary>
+            <remarks>See RFC 1072</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.EchoReply">
+            <summary>Echo Reply (obsolete)</summary>
+            <remarks>See RFC 1072</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.Timestamp">
+            <summary>Timestamp</summary>
+            <remarks>See RFC 1323</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.POConnectionPermitted">
+            <summary>Partial Order Connection Permitted (experimental)</summary>
+            <remarks>See RFC 1693</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.POServiceProfile">
+            <summary>Partial Order Service Profile (experimental)</summary>
+            <remarks>See RFC 1693</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.ConnectionCount">
+            <summary>Connection Count (experimental)</summary>
+            <remarks>See RFC 1644</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.ConnectionCountNew">
+            <summary>Connection Count New (experimental)</summary>
+            <remarks>See RFC 1644</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.ConnectionCountEcho">
+            <summary>Connection Count Echo (experimental)</summary>
+            <remarks>See RFC 1644</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.AlternateChecksumRequest">
+            <summary>Alternate Checksum Request</summary>
+            <remarks>See RFC 1146</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.AlternateChecksumData">
+            <summary>Alternate Checksum Data</summary>
+            <remarks>See RFC 1146</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.MD5Signature">
+            <summary>MD5 Signature</summary>
+            <remarks>See RFC 2385</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.QuickStartResponse">
+            <summary>Quick-Start Response (experimental)</summary>
+            <remarks>See RFC 4782</remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.OptionTypes.UserTimeout">
+            <summary>User Timeout</summary>
+            <remarks>See RFC 5482</remarks>
+        </member>
+        <member name="T:PacketDotNet.Tcp.SACKPermitted">
+            <summary>
+            SACK (Selective Ack) Permitted Option
+            Notifies the receiver that SACK is allowed.
+            Must only be sent in a SYN segment
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc2018/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.SACKPermitted.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a Sack Permitted Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="T:PacketDotNet.Tcp.SACK">
+            <summary>
+            SACK (Selective Ack) Option
+            Provides a means for a receiver to notify the sender about
+            all the segments that have arrived successfully.
+            Used to cut down on the number of unnecessary re-transmissions.
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc2018/
+            http://datatracker.ietf.org/doc/rfc2883/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.SACK.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a SACK (Selective Ack) Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.SACK.SACKBlocks">
+            <summary>
+            Contains an array of SACK (Selective Ack) Blocks
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.SACK.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.EchoReply">
+            <summary>
+            Echo Reply Option
+            Marked obsolete in the TCP spec Echo Reply Option has been
+            replaced by the TSOPT (Timestamp Option)
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1072/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.EchoReply.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an Echo Reply Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="T:PacketDotNet.Tcp.TimeStamp">
+            <summary>
+            A Time Stamp Option
+            Used for RTTM (Round Trip Time Measurement)
+            and PAWS (Protect Against Wrapped Sequences)
+            Opsoletes the Echo and EchoReply option fields
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1323/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.TimeStamp.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a Timestamp Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.TimeStamp.Value">
+            <summary>
+            The Timestamp value
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.TimeStamp.EchoReply">
+            <summary>
+            The Echo Reply
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.TimeStamp.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.Echo">
+            <summary>
+            An Echo Option
+            throws an exception because Echo Options
+            are obsolete as per their spec
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.Echo.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an Echo Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="T:PacketDotNet.Tcp.AlternateChecksumRequest">
+            <summary>
+            AlternateChecksumRequest Option
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.AlternateChecksumRequest.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an Alternate Checksum Request Option
+            Used to negotiate an alternative checksum algorithm in a connection
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1146/
+            </remarks>
+        </member>
+        <member name="P:PacketDotNet.Tcp.AlternateChecksumRequest.Checksum">
+            <summary>
+            The Checksum
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.AlternateChecksumRequest.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.ChecksumAlgorighmType">
+            <summary>
+            Specifies the different types of algorithms that the
+            Alternative Checksum option are allowed to use
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1146/
+            </remarks>
+        </member>
+        <member name="F:PacketDotNet.Tcp.ChecksumAlgorighmType.TCPChecksum">
+            <summary>Standard TCP Checksum Algorithm</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.ChecksumAlgorighmType.EightBitFletchersAlgorithm">
+            <summary>8-bit Fletchers Algorighm</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.ChecksumAlgorighmType.SixteenBitFletchersAlgorithm">
+            <summary>16-bit Fletchers Algorithm</summary>
+        </member>
+        <member name="F:PacketDotNet.Tcp.ChecksumAlgorighmType.RedundantChecksumAvoidance">
+            <summary>Redundant Checksum Avoidance</summary>
+        </member>
+        <member name="T:PacketDotNet.Tcp.AlternateChecksumData">
+            <summary>
+            Alternative Checksum Date
+            Used as an extension to Alternative Checksum Response when the
+            checksum is longer than the standard 16bit TCP Checksum field
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc1146/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.AlternateChecksumData.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates an Alternate Checksum Data Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.AlternateChecksumData.Data">
+            <summary>
+            The array of attached Checksum
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.AlternateChecksumData.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.MD5Signature">
+            <summary>
+            MD5 Signature
+            Carries the MD5 Digest used by the BGP protocol to
+            ensure security between two endpoints
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc2385/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.MD5Signature.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a MD5 Signature Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.MD5Signature.MD5Digest">
+            <summary>
+            The MD5 Digest
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.MD5Signature.ToString">
+            <summary>
+            Returns the Option info as a string
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="T:PacketDotNet.Tcp.UserTimeout">
+            <summary>
+            User Timeout Option
+            The TCP user timeout controls how long transmitted data may remain
+            unacknowledged before a connection is forcefully closed
+            </summary>
+            <remarks>
+            References:
+            http://datatracker.ietf.org/doc/rfc5482/
+            </remarks>
+        </member>
+        <member name="M:PacketDotNet.Tcp.UserTimeout.#ctor(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a User Timeout Option
+            </summary>
+            <param name="bytes">
+            A <see cref="T:System.Byte[]" /></param>
+            <param name="offset">
+            A <see cref="T:System.Int32" /></param>
+            <param name="length">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="P:PacketDotNet.Tcp.UserTimeout.Granularity">
+            <summary>
+            The Granularity
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Tcp.UserTimeout.Timeout">
+            <summary>
+            The User Timeout
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Tcp.UserTimeout.ToString">
+            <summary>
+            Returns the Option info as a string
             </summary>
             <returns>
             A <see cref="T:System.String" /></returns>
