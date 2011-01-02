@@ -48,12 +48,8 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Type">
-        /// A <see cref="AirPcapKeyType"/>
-        /// </param>
-        /// <param name="Data">
-        /// A <see cref="System.Byte[]"/>
-        /// </param>
+        /// <param name="Type"></param>
+        /// <param name="Data"></param>
         public AirPcapKey(AirPcapKeyType Type, byte[] Data)
         {
             this.Type = Type;
