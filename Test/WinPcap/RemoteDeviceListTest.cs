@@ -9,7 +9,7 @@ using SharpPcap.WinPcap;
 namespace Test.WinPcap
 {
     [TestFixture]
-    class RemoteDeviceListTest
+    public class RemoteDeviceListTest
     {
         [Test]
         public void RemoteTest()
