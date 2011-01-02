@@ -25,6 +25,9 @@ using System.Text;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Version
+    /// </summary>
     public class AirPcapVersion
     {
         /// <summary>

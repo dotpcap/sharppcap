@@ -22,6 +22,9 @@ using System;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Type of keys in the adapter
+    /// </summary>
     public enum AirPcapKeyType : uint
     {
         /// <summary>

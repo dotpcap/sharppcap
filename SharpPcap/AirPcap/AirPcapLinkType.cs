@@ -22,6 +22,9 @@ using System;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Link type
+    /// </summary>
     public enum AirPcapLinkType : int
     {
         /// <summary>

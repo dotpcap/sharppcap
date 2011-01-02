@@ -25,6 +25,9 @@ using System.Text;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Frequency bands
+    /// </summary>
     [Flags]
     public enum AirPcapBands : int
     {

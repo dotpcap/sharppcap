@@ -8,10 +8,33 @@ namespace SharpPcap.WinPcap
     /// </summary>
     public class RemoteAuthentication
     {
+        /// <summary>
+        /// Type of authentication
+        /// </summary>
         public AuthenticationTypes Type { get; set; }
+
+        /// <summary>
+        /// Username
+        /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// Password
+        /// </summary>
         public string Password { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Type">
+        /// A <see cref="AuthenticationTypes"/>
+        /// </param>
+        /// <param name="Username">
+        /// A <see cref="System.String"/>
+        /// </param>
+        /// <param name="Password">
+        /// A <see cref="System.String"/>
+        /// </param>
         public RemoteAuthentication (AuthenticationTypes Type,
                                      string Username,
                                      string Password)

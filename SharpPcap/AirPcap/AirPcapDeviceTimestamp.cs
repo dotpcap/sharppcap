@@ -22,6 +22,9 @@ using System;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Defines the internal AirPcap device timestamp
+    /// </summary>
     public class AirPcapDeviceTimestamp
     {
         /// <summary>Current value of the device counter, in microseconds.</summary>
@@ -40,6 +43,12 @@ namespace SharpPcap.AirPcap
             SoftwareTimestampAfter = timestamp.SoftwareTimestampAfter;
         }
 
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("[AirPcapDeviceTimestamp DeviceTimestamp {0}, SoftwareTimestampBefore {1}, SoftwareTimestampAfter {2}",

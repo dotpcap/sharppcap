@@ -23,6 +23,9 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Capabilities for the adapter
+    /// </summary>
     public class AirPcapDeviceCapabilities
     {
         /// <summary>
@@ -82,6 +85,12 @@ namespace SharpPcap.AirPcap
             this.SupportedBands = (AirPcapBands)capabilities.SupportedBands;
         }
 
+        /// <summary>
+        /// ToString() overload
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("[AirPcapDeviceCapabilities AdapterId: {0}, AdapterModelName: {1}, AdapterBus: {2}," +

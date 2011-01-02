@@ -27,8 +27,14 @@ using System.Net.NetworkInformation;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// AirPcap device
+    /// </summary>
     public class AirPcapDevice : ICaptureDevice
     {
+        /// <summary>
+        /// See ThrowIfNotOpen(string ExceptionString)
+        /// </summary>
         protected void ThrowIfNotOpen()
         {
             ThrowIfNotOpen("");
@@ -49,6 +55,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Description of the device
+        /// </summary>
         protected AirPcapDeviceDescription DeviceDescription { get; set; }
 
         /// <summary>
@@ -61,16 +70,28 @@ namespace SharpPcap.AirPcap
             DeviceDescription = desc;
         }
 
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("DeviceDescription: {0}", DeviceDescription.ToString());
         }
 
+        /// <summary>
+        /// Name of the device
+        /// </summary>
         public string Name
         {
             get { return DeviceDescription.Name; }
         }
 
+        /// <summary>
+        /// Description of the device
+        /// </summary>
         public string Description
         {
             get { return DeviceDescription.Description; }
@@ -122,6 +143,9 @@ namespace SharpPcap.AirPcap
         /// </summary>
         public event CaptureStoppedEventHandler OnCaptureStopped;
 
+        /// <summary>
+        /// Open a device
+        /// </summary>
         public void Open()
         {
             StringBuilder errbuf = new StringBuilder( AIRPCAP_ERRBUF_SIZE ); //will hold errors
@@ -134,6 +158,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Close a device
+        /// </summary>
         public void Close()
         {
             if (!Opened)
@@ -162,6 +189,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Adapter channel
+        /// </summary>
         public uint Channel
         {
             get
@@ -185,6 +215,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Channel information
+        /// </summary>
         public AirPcapChannelInfo ChannelInfo
         {
             get
@@ -558,6 +591,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Number of leds on this adapter
+        /// </summary>
         public int LedCount
         {
             get
@@ -570,12 +606,31 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Led states
+        /// </summary>
         public enum LedState
         {
+            /// <summary>
+            /// Led on
+            /// </summary>
             On,
+
+            /// <summary>
+            /// Led off
+            /// </summary>
             Off
         };
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="ledIndex">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="newLedState">
+        /// A <see cref="LedState"/>
+        /// </param>
         public void Led(int ledIndex, LedState newLedState)
         {
             ThrowIfNotOpen();
@@ -590,6 +645,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Link type
+        /// </summary>
         public AirPcapLinkType LinkType
         {
             get
@@ -622,6 +680,9 @@ namespace SharpPcap.AirPcap
         /// </summary>
         private const int MacAddressSizeInBytes = 6;
 
+        /// <summary>
+        /// Mac address
+        /// </summary>
         public PhysicalAddress MacAddress
         {
             get
@@ -667,6 +728,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Mac flags
+        /// </summary>
         public AirPcapMacFlags MacFlags
         {
             get
@@ -692,6 +756,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Adapter statistics
+        /// </summary>
         public AirPcapStatistics Statistics
         {
             get
@@ -700,6 +767,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// List of supported channels
+        /// </summary>
         public List<AirPcapChannelInfo> SupportedChannels
         {
             get
@@ -732,6 +802,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Transmit power
+        /// </summary>
         public uint TxPower
         {
             get
@@ -757,6 +830,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Device timestamp
+        /// </summary>
         public AirPcapDeviceTimestamp Timestamp
         {
             get
@@ -839,6 +915,9 @@ namespace SharpPcap.AirPcap
         private Thread captureThread;
         private bool shouldCaptureThreadStop;
 
+        /// <summary>
+        /// Start the capture
+        /// </summary>
         public void StartCapture()
         {
             if(!Started)
@@ -855,6 +934,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// Stop the capture
+        /// </summary>
         public void StopCapture()
         {
             if (Started)
