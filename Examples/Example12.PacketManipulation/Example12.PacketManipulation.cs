@@ -87,7 +87,7 @@ namespace Example12.PacketManipulation
             if(packet is PacketDotNet.EthernetPacket)
             {
                 var eth = ((PacketDotNet.EthernetPacket)packet);
-                Console.WriteLine("Original Eth packet: " + eth.ToColoredString(false));
+                Console.WriteLine("Original Eth packet: " + eth.ToString());
 
                 //Manipulate ethernet parameters
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
@@ -96,7 +96,7 @@ namespace Example12.PacketManipulation
                 var ip = PacketDotNet.IpPacket.GetEncapsulated(packet);
                 if(ip != null)
                 {
-                    Console.WriteLine("Original IP packet: " + ip.ToColoredString(false));
+                    Console.WriteLine("Original IP packet: " + ip.ToString());
 
                     //manipulate IP parameters
                     ip.SourceAddress = System.Net.IPAddress.Parse("1.2.3.4");
@@ -106,7 +106,7 @@ namespace Example12.PacketManipulation
                     var tcp = PacketDotNet.TcpPacket.GetEncapsulated(packet);
                     if (tcp != null)
                     {
-                        Console.WriteLine("Original TCP packet: " + tcp.ToColoredString(false));
+                        Console.WriteLine("Original TCP packet: " + tcp.ToString());
 
                         //manipulate TCP parameters
                         tcp.SourcePort = 9999;
@@ -122,7 +122,7 @@ namespace Example12.PacketManipulation
                     var udp = PacketDotNet.UdpPacket.GetEncapsulated(packet);
                     if (udp != null)
                     {
-                        Console.WriteLine("Original UDP packet: " + udp.ToColoredString(false));
+                        Console.WriteLine("Original UDP packet: " + udp.ToString());
 
                         //manipulate UDP parameters
                         udp.SourcePort = 9999;
@@ -130,7 +130,7 @@ namespace Example12.PacketManipulation
                     }
                 }
 
-                Console.WriteLine("Manipulated Eth packet: " + eth.ToColoredString(false));
+                Console.WriteLine("Manipulated Eth packet: " + eth.ToString());
             }
         }
     }
