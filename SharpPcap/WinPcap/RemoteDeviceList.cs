@@ -11,8 +11,26 @@ namespace SharpPcap.WinPcap
     /// </summary>
     public class RemoteDeviceList
     {
+        /// <summary>
+        /// Port used by rpcapd by default
+        /// </summary>
         public static int RpcapdDefaultPort = 2002;
 
+        /// <summary>
+        /// Returns a list of devices
+        /// </summary>
+        /// <param name="address">
+        /// A <see cref="IPAddress"/>
+        /// </param>
+        /// <param name="port">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="remoteAuthentication">
+        /// A <see cref="RemoteAuthentication"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="List<WinPcapDevice>"/>
+        /// </returns>
         public static List<WinPcapDevice> Devices(IPAddress address,
                                                   int port,
                                                   RemoteAuthentication remoteAuthentication)

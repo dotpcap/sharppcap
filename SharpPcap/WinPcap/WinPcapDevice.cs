@@ -24,6 +24,9 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap.WinPcap
 {
+    /// <summary>
+    /// WinPcap device
+    /// </summary>
     public class WinPcapDevice : LivePcapDevice
     {
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
@@ -42,6 +45,9 @@ namespace SharpPcap.WinPcap
         /// </summary>
         public event StatisticsModeEventHandler OnPcapStatistics;
 
+        /// <summary>
+        /// Open the device
+        /// </summary>
         public override void Open()
         {
             base.Open();
@@ -143,6 +149,9 @@ namespace SharpPcap.WinPcap
             }
         }
 
+        /// <summary>
+        /// Close the device
+        /// </summary>
         public override void Close()
         {
 

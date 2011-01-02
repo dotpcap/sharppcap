@@ -25,8 +25,17 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// AirPcap device list
+    /// </summary>
     public class AirPcapDeviceList
     {
+        /// <summary>
+        /// Retrieve the list of AirPcap devices
+        /// </summary>
+        /// <returns>
+        /// A <see cref="List<AirPcapDevice>"/>
+        /// </returns>
         public static List<AirPcapDevice> GetDevices()
         {
             var deviceList = new List<AirPcapDevice>();

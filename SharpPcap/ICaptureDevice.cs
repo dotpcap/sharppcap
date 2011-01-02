@@ -1,6 +1,9 @@
 using System;
 namespace SharpPcap
 {
+    /// <summary>
+    /// Interfaces for capture devices
+    /// </summary>
     public interface ICaptureDevice
     {
         /// <summary>

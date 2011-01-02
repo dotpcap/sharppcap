@@ -24,13 +24,16 @@ using SharpPcap;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Device statistics
+    /// </summary>
     public class AirPcapStatistics : PcapStatistics
     {
         /// <summary>
         /// Number of packets that pass the BPF filter, find place in the kernel buffer and
         /// therefore reach the application.
         /// </summary>
-	    public uint CapturedPackets { get; set; }
+        public uint CapturedPackets { get; set; }
 
         internal AirPcapStatistics(IntPtr AirPcapDeviceHandle)
         {

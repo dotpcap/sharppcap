@@ -22,6 +22,9 @@ using System;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Medium type
+    /// </summary>
     [Flags]
     public enum AirPcapMediumType : int
     {

@@ -23,14 +23,23 @@ using System.Runtime.InteropServices;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Packet header
+    /// </summary>
     public class AirPcapPacketHeader
     {
+        /// <summary>
+        /// Seconds field
+        /// </summary>
         public ulong TsSec
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Microseconds field
+        /// </summary>
         public ulong TsUsec
         {
             get;
@@ -76,6 +85,12 @@ namespace SharpPcap.AirPcap
             this.Hdrlen         = (long)pkthdr.Hdrlen;
         }
 
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("TsSec {0}, TsUSec {1}, Caplen {2}, Originallen {3}, Hdrlen {4}",

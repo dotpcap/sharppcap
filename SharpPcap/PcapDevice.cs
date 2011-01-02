@@ -50,7 +50,14 @@ namespace SharpPcap
 
         private int            m_mask  = 0; //for filter expression
 
+        /// <summary>
+        /// Device name
+        /// </summary>
         public abstract string Name { get; }
+
+        /// <summary>
+        /// Description
+        /// </summary>
         public abstract string Description { get; }
 
         /// <summary>

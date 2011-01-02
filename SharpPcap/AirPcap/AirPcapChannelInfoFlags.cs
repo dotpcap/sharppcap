@@ -25,6 +25,9 @@ using System.Text;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Channel info flags
+    /// </summary>
     [Flags]
     public enum AirPcapChannelInfoFlags : byte
     {

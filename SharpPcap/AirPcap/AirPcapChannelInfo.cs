@@ -25,6 +25,9 @@ using System.Text;
 
 namespace SharpPcap.AirPcap
 {
+    /// <summary>
+    /// Channel info
+    /// </summary>
     public class AirPcapChannelInfo
     {
         ///<summary>
@@ -69,6 +72,12 @@ namespace SharpPcap.AirPcap
             Flags = channelInfo.Flags;
         }
 
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("[AirPcapChannelInfo Frequency: {0}, ExtChannel: {1}, Flags: {2}]",
