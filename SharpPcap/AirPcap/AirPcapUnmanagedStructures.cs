@@ -57,11 +57,13 @@ namespace SharpPcap.AirPcap
             /// </summary>
             public AirPcapChannelInfoFlags Flags;
 
+#pragma warning disable 0169
             /// <summary>
             /// Reserved. It should be set to {0,0}.
             /// </summary>
             byte Reserved1;
             byte Reserved2;
+#pragma warning enable 0169
         };
 
         /// <summary>
