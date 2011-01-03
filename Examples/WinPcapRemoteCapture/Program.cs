@@ -34,7 +34,7 @@ namespace WinPcapRemoteCapture
             if(args.Length == 2)
                 port = Int32.Parse(args[1]);
 
-            var remoteDevices = RemoteDeviceList.Devices(ipAddress, port, null);
+            var remoteDevices = WinPcapDeviceList.Devices(ipAddress, port, null);
             foreach (var dev in remoteDevices)
             {
                 Console.WriteLine("device: {0}", dev.ToString());
