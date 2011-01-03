@@ -208,7 +208,7 @@ namespace SharpPcap.WinPcap
         /// Set the kernel value buffer size in bytes
         /// WinPcap extension
         /// </value>
-        public int KernelBufferSize
+        public virtual uint KernelBufferSize
         {
             set
             {
@@ -216,12 +216,17 @@ namespace SharpPcap.WinPcap
                 ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
 
                 int retval = WinPcap.SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
-                                                            value);
+                                                                    (int)value);
                 if(retval != 0)
                 {
                     throw new System.InvalidOperationException("pcap_setbuff() failed");
                 }
-            }   
+            }
+
+            get
+            {
+                throw new System.NotImplementedException();
+            }
         }
 
         /// <value>

@@ -59,8 +59,8 @@ namespace SharpPcap
 {
     public partial class PcapDevice
     {
-        private Thread captureThread;
-        private bool shouldCaptureThreadStop;
+        protected Thread captureThread;
+        protected bool shouldCaptureThreadStop;
 
         /// <summary>
         /// If Environment.OSVersion.Platform is unix and MonoUnixFound is true
@@ -249,7 +249,7 @@ namespace SharpPcap
         /// <summary>
         /// The capture thread
         /// </summary>
-        private void CaptureThread()
+        protected virtual void CaptureThread()
         {
             if (!Opened)
                 throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");

@@ -56,7 +56,8 @@ namespace SharpPcap.AirPcap
                     (AirPcapUnmanagedStructures.AirpcapDeviceDescription)Marshal.PtrToStructure(nextDevPtr,
                                                     typeof(AirPcapUnmanagedStructures.AirpcapDeviceDescription));
                 var managedDeviceDesc = new AirPcapDeviceDescription(deviceDescUnmanaged);
-                deviceList.Add(new AirPcapDevice(managedDeviceDesc));
+                throw new System.NotImplementedException("need to fix this");
+//                deviceList.Add(new AirPcapDevice(managedDeviceDesc));
                 nextDevPtr = deviceDescUnmanaged.next;
             }
             AirPcapSafeNativeMethods.AirpcapFreeDeviceList(devicePtr); // Free unmanaged memory

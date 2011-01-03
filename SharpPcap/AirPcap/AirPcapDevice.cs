@@ -30,7 +30,7 @@ namespace SharpPcap.AirPcap
     /// <summary>
     /// AirPcap device
     /// </summary>
-    public class AirPcapDevice : ICaptureDevice
+    public class AirPcapDevice : SharpPcap.WinPcap.WinPcapDevice
     {
         /// <summary>
         /// See ThrowIfNotOpen(string ExceptionString)
@@ -38,21 +38,6 @@ namespace SharpPcap.AirPcap
         protected void ThrowIfNotOpen()
         {
             ThrowIfNotOpen("");
-        }
-
-        /// <summary>
-        /// Helper method for checking that the adapter is open, throws an
-        /// exception with a string of ExceptionString if the device isn't open
-        /// </summary>
-        /// <param name="ExceptionString">
-        /// A <see cref="System.String"/>
-        /// </param>
-        protected void ThrowIfNotOpen(string ExceptionString)
-        {
-            if (!Opened)
-            {
-                throw new DeviceNotReadyException(ExceptionString);
-            }
         }
 
         /// <summary>
@@ -65,9 +50,13 @@ namespace SharpPcap.AirPcap
         /// </summary>
         internal IntPtr DeviceHandle { get; set; }
 
-        internal AirPcapDevice(AirPcapDeviceDescription desc)
+//        internal AirPcapDevice(AirPcapDeviceDescription desc) : base(pcapIf)
+        internal AirPcapDevice(PcapInterface pcapIf) : base(pcapIf)
         {
-            DeviceDescription = desc;
+            //TODO: need to modify this code to call a special routine that
+            // will
+            throw new System.NotImplementedException();
+//            DeviceDescription = desc;
         }
 
         /// <summary>
@@ -84,7 +73,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Name of the device
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return DeviceDescription.Name; }
         }
@@ -92,7 +81,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Description of the device
         /// </summary>
-        public string Description
+        public override string Description
         {
             get { return DeviceDescription.Description; }
         }
@@ -106,7 +95,7 @@ namespace SharpPcap.AirPcap
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        internal static string GetLastError(IntPtr deviceHandle)
+        new internal static string GetLastError(IntPtr deviceHandle)
         {
             IntPtr err_ptr = AirPcapSafeNativeMethods.AirpcapGetLastError(deviceHandle);
             return Marshal.PtrToStringAnsi(err_ptr);
@@ -115,7 +104,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
-        public string LastError
+        public override string LastError
         {
             get { return GetLastError(DeviceHandle); }
         }
@@ -126,27 +115,15 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Return a value indicating if this adapter is opened
         /// </summary>
-        public virtual bool Opened
+        public override bool Opened
         {
             get { return (DeviceHandle != IntPtr.Zero); }
         }
 
         /// <summary>
-        /// Fires whenever a new packet is processed, either when the packet arrives
-        /// from the network device or when the packet is read from the on-disk file.<br/>
-        /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
-        /// </summary>
-        public event PacketArrivalEventHandler OnPacketArrival;
-
-        /// <summary>
-        /// Fired when the capture process of this pcap device is stopped
-        /// </summary>
-        public event CaptureStoppedEventHandler OnCaptureStopped;
-
-        /// <summary>
         /// Open a device
         /// </summary>
-        public void Open()
+        public override void Open()
         {
             StringBuilder errbuf = new StringBuilder( AIRPCAP_ERRBUF_SIZE ); //will hold errors
             DeviceHandle = AirPcapSafeNativeMethods.AirpcapOpen(Name, errbuf);
@@ -161,7 +138,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Close a device
         /// </summary>
-        public void Close()
+        public override void Close()
         {
             if (!Opened)
                 return;
@@ -566,7 +543,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Kernel packet buffer size for this adapter in bytes
         /// </summary>
-        public uint KernelBufferSize
+        public override uint KernelBufferSize
         {
             get
             {
@@ -787,7 +764,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Adapter statistics
         /// </summary>
-        public AirPcapStatistics Statistics
+        public override ICaptureStatistics Statistics
         {
             get
             {
@@ -887,106 +864,7 @@ namespace SharpPcap.AirPcap
             }
         }
 
-        /// <summary>
-        /// Notify the OnPacketArrival delegates about a newly captured packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="PacketDotNet.RawPacket"/>
-        /// </param>
-        protected void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
-        {
-            // invoke the packet arrival handle from the base class
-            var arrivalHandler = OnPacketArrival;
-            if (arrivalHandler != null)
-            {
-                arrivalHandler(this, new SharpPcap.CaptureEventArgs(p, this));
-            }
-        }
-
-        /// <summary>
-        /// Notify the delegates that are subscribed to the capture stopped event
-        /// </summary>
-        /// <param name="status">
-        /// A <see cref="CaptureStoppedEventStatus"/>
-        /// </param>
-        private void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
-        {
-            var handler = OnCaptureStopped;
-            if (handler != null)
-            {
-                handler(this, status);
-            }
-        }
-
-        /// <summary>
-        /// Return a value indicating if the capturing process of this adapter is started
-        /// </summary>
-        public virtual bool Started
-        {
-            get { return (captureThread != null); }
-        }
-
-        // time we give the capture thread to stop before we assume that
-        // there is an error
-        private TimeSpan stopCaptureTimeout = new TimeSpan(0, 0, 1);
-
-        /// <summary>
-        /// Maximum time within which the capture thread must join the main thread (on 
-        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
-        /// </summary>
-        public TimeSpan StopCaptureTimeout
-        {
-            get { return stopCaptureTimeout; }
-            set { stopCaptureTimeout = value; }
-        }
-
-        private Thread captureThread;
-        private bool shouldCaptureThreadStop;
-
-        /// <summary>
-        /// Start the capture
-        /// </summary>
-        public void StartCapture()
-        {
-            if(!Started)
-            {
-                if (!Opened)
-                    throw new DeviceNotReadyException("Can't start capture, AirPcap device is not open");
-
-                if (OnPacketArrival == null)
-                    throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
-
-                shouldCaptureThreadStop = false;
-                captureThread = new Thread(new ThreadStart(this.CaptureThread));
-                captureThread.Start();
-            }
-        }
-
-        /// <summary>
-        /// Stop the capture
-        /// </summary>
-        public void StopCapture()
-        {
-            if (Started)
-            {
-                shouldCaptureThreadStop = true;
-                if(!captureThread.Join(StopCaptureTimeout))
-                {
-                    captureThread.Abort();
-                    captureThread = null;
-                    string error;
-
-                     error = string.Format("captureThread was aborted after {0}",
-                                           StopCaptureTimeout.ToString());
-
-                    throw new PcapException(error);
-                }
-
-                captureThread = null; // otherwise we will always return true from PcapDevice.Started
-            }
-        }
-
-        private void CaptureThread()
+        protected override void CaptureThread()
         {
             IntPtr ReadEvent;
             IntPtr WaitIntervalMilliseconds = (IntPtr)500;

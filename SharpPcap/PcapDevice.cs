@@ -135,7 +135,7 @@ namespace SharpPcap
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
-        public string LastError
+        public virtual string LastError
         {
             get { return GetLastError(PcapHandle);  }
         }
@@ -200,7 +200,7 @@ namespace SharpPcap
         /// <param name="status">
         /// A <see cref="CaptureStoppedEventStatus"/>
         /// </param>
-        private void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
+        protected void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
         {
             var handler = OnCaptureStopped;
             if(handler != null)
@@ -225,8 +225,12 @@ namespace SharpPcap
         /// <summary>
         /// Gets the next packet captured on this device
         /// </summary>
-        /// <param name="p">A packet reference</param>
-        /// <returns>A reference to a packet object</returns>
+        /// <param name="p">
+        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
         public virtual int GetNextPacket(out PacketDotNet.RawPacket p)
         {
             //Pointer to a packet info struct
