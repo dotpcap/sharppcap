@@ -27,18 +27,6 @@ namespace SharpPcap
     public interface ICaptureDevice
     {
         /// <summary>
-        /// Fires whenever a new packet is processed, either when the packet arrives
-        /// from the network device or when the packet is read from the on-disk file.<br/>
-        /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
-        /// </summary>
-        event PacketArrivalEventHandler OnPacketArrival;
-
-        /// <summary>
-        /// Fired when the capture process of this pcap device is stopped
-        /// </summary>
-        event CaptureStoppedEventHandler OnCaptureStopped;
-
-        /// <summary>
         /// Gets the name of the device
         /// </summary>
         string Name { get; }
@@ -54,9 +42,83 @@ namespace SharpPcap
         string LastError { get; }
 
         /// <summary>
+        /// Kernel level filtering expression associated with this device.
+        /// For more info on filter expression syntax, see:
+        /// http://www.winpcap.org/docs/docs31/html/group__language.html
+        /// </summary>
+        string Filter { get; set; }
+
+        /// <summary>
+        /// Retrieves pcap statistics
+        /// </summary>
+        ICaptureStatistics Statistics { get; }
+
+        /// <summary>
+        /// Writes a packet to the pcap dump file associated with this device.
+        /// </summary>
+        /// <param name="p">The packet to write</param>
+        void Dump(PacketDotNet.RawPacket p);
+
+        /// <summary>
+        /// Opens a file for packet writings
+        /// </summary>
+        /// <param name="fileName"></param>
+        void DumpOpen(string fileName);
+
+        /// <summary>
+        /// Closes the opened dump file
+        /// </summary>
+        void DumpClose();
+
+        /// <summary>
+        /// Opens the adapter
+        /// </summary>
+        void Open();
+
+        /// <summary>
         /// Closes this adapter
         /// </summary>
         void Close();
+
+        #region Capture methods and properties
+        /// <summary>
+        /// Fires whenever a new packet is processed, either when the packet arrives
+        /// from the network device or when the packet is read from the on-disk file.<br/>
+        /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
+        /// </summary>
+        event PacketArrivalEventHandler OnPacketArrival;
+
+        /// <summary>
+        /// Fired when the capture process of this pcap device is stopped
+        /// </summary>
+        event CaptureStoppedEventHandler OnCaptureStopped;
+
+        /// <summary>
+        /// Return a value indicating if the capturing process of this adapter is started
+        /// </summary>
+        bool Started { get; }
+
+        /// <summary>
+        /// Maximum time within which the capture thread must join the main thread (on
+        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
+        /// </summary>
+        TimeSpan StopCaptureTimeout { get; set; }
+
+        /// <summary>
+        /// Start the capture
+        /// </summary>
+        void StartCapture();
+
+        /// <summary>
+        /// Stop the capture
+        /// </summary>
+        void StopCapture();
+        #endregion
+
+        /// <summary>
+        /// Gets the next packet captured on this device
+        /// </summary>
+        int GetNextPacket(out PacketDotNet.RawPacket p);
     }
 }
 
