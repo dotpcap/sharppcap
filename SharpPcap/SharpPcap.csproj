@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -83,7 +83,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="PacketDotNet, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
@@ -103,7 +103,6 @@
     <Compile Include="AirPcap\AirPcapDeviceTimestamp.cs" />
     <Compile Include="AirPcap\AirPcapKey.cs" />
     <Compile Include="AirPcap\AirPcapKeyType.cs" />
-    <Compile Include="AirPcap\AirPcapLinkType.cs" />
     <Compile Include="AirPcap\AirPcapMacFlags.cs" />
     <Compile Include="AirPcap\AirPcapMediumType.cs" />
     <Compile Include="AirPcap\AirPcapPacketHeader.cs" />
@@ -172,6 +171,7 @@
     <Compile Include="WinPcap\RemoteAuthentication.cs" />
     <Compile Include="WinPcap\AuthenticationTypes.cs" />
     <Compile Include="WinPcap\RemoteDeviceList.cs" />
+    <Compile Include="AirPcap\AirPcapLinkTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

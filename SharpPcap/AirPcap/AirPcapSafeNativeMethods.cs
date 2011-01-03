@@ -156,7 +156,7 @@ namespace SharpPcap.AirPcap
         /// <returns>TRUE on success</returns>
         [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
         internal extern static bool AirpcapSetLinkType(/* PAirpcapHandle */ IntPtr AdapterHandle,
-                                                       /* AirpcapLinkType */ AirPcapLinkType NewLinkType);
+                                                       /* AirpcapLinkType */ AirPcapLinkTypes NewLinkType);
 
         /// <summary>
         /// Gets the link type of the specified adapter
@@ -180,7 +180,7 @@ namespace SharpPcap.AirPcap
         /// <returns>TRUE on success</returns>
         [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
         internal extern static bool AirpcapGetLinkType(/* PAirpcapHandle */ IntPtr AdapterHandle,
-                                                       /* PAirpcapLinkType */ out AirPcapLinkType PLinkType);
+                                                       /* PAirpcapLinkType */ out AirPcapLinkTypes PLinkType);
 
         /// <summary>
         /// Configures the adapter on whether to include the MAC Frame Check Sequence in the captured packets.

@@ -25,7 +25,7 @@ namespace SharpPcap.AirPcap
     /// <summary>
     /// Link type
     /// </summary>
-    public enum AirPcapLinkType : int
+    public enum AirPcapLinkTypes : int
     {
         /// <summary>
         /// plain 802.11 link type. Every packet in the buffer contains the raw 802.11 frame, including MAC FCS.

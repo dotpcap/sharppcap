@@ -648,13 +648,13 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Link type
         /// </summary>
-        public AirPcapLinkType LinkType
+        public AirPcapLinkTypes AirPcapLinkType
         {
             get
             {
                 ThrowIfNotOpen("Requires an open device");
 
-                AirPcapLinkType linkType;
+                AirPcapLinkTypes linkType;
 
                 AirPcapSafeNativeMethods.AirpcapGetLinkType(DeviceHandle,
                                                             out linkType);
@@ -672,6 +672,34 @@ namespace SharpPcap.AirPcap
                 {
                     throw new InvalidOperationException("Setting link type failed");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Link type in terms of PacketDotNet.LinkLayers
+        /// </summary>
+        public PacketDotNet.LinkLayers LinkType
+        {
+            get
+            {
+                var packetDotNetLinkLayer = PacketDotNet.LinkLayers.Null;
+
+                switch(AirPcapLinkType)
+                {
+                    case AirPcapLinkTypes._802_11_PLUS_RADIO:
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
+                        break;
+                    case AirPcapLinkTypes._802_11:
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee802;
+                        break;
+                    case AirPcapLinkTypes._802_11_PLUS_PPI:
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
+                        break;
+                    default:
+                        throw new System.InvalidOperationException("Unexpected linkType " + AirPcapLinkType);
+                }
+
+                return packetDotNetLinkLayer;
             }
         }
 
@@ -1022,24 +1050,7 @@ namespace SharpPcap.AirPcap
         {
             PacketDotNet.RawPacket p;
 
-            // retrieve the link type and convert to a packet.net link layer type
             var linkType = LinkType;
-
-            PacketDotNet.LinkLayers packetDotNetLinkLayer;
-            switch(linkType)
-            {
-                case AirPcapLinkType._802_11_PLUS_RADIO:
-                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
-                    break;
-                case AirPcapLinkType._802_11:
-                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee802;
-                    break;
-                case AirPcapLinkType._802_11_PLUS_PPI:
-                    packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
-                    break;
-                default:
-                    throw new System.InvalidOperationException("Unexpected linkType " + linkType);
-            }
 
             packets = new List<PacketDotNet.RawPacket>();
 
@@ -1056,7 +1067,7 @@ namespace SharpPcap.AirPcap
                 var pkt_data = new byte[header.Caplen];
                 Marshal.Copy(bufferPointer, pkt_data, 0, (int)header.Caplen);
 
-                p = new PacketDotNet.RawPacket(packetDotNetLinkLayer,
+                p = new PacketDotNet.RawPacket(linkType,
                                                new PacketDotNet.PosixTimeval(header.TsSec,
                                                                              header.TsUsec),
                                                pkt_data);
