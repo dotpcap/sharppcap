@@ -8,7 +8,7 @@ namespace AirPcapDeviceInformation
     {
         static void Main(string[] args)
         {
-            var devices = AirPcapDeviceList.GetDevices();
+            var devices = AirPcapDeviceList.Instance;
 
             if (devices.Count == 0)
             {
@@ -26,7 +26,7 @@ namespace AirPcapDeviceInformation
             Console.Write("-- Please choose a device to retrieve the information for: ");
             var devIndex = int.Parse(Console.ReadLine());
 
-            var device = devices[devIndex];
+            var device = (AirPcapDevice)devices[devIndex];
             device.Open();
 
             Console.WriteLine("Capabilities: {0}", device.Capabilities);

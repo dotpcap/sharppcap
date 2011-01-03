@@ -126,7 +126,18 @@ namespace SharpPcap.WinPcap
                     (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
                                                     typeof(PcapUnmanagedStructures.pcap_if));
                 PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
-                retval.Add(new WinPcapDevice(pcap_if));
+
+                // create an airpcap device if the device appears to be a
+                // airpcap device
+                var winpcapDevice = new WinPcapDevice(pcap_if);
+                if (winpcapDevice.Name.Contains("airpcap"))
+                {
+                    retval.Add(new AirPcap.AirPcapDevice(winpcapDevice));
+                }
+                else
+                {
+                    retval.Add(new WinPcapDevice(pcap_if));
+                }
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
 

@@ -13,7 +13,7 @@ namespace AirPcapLedControl
 
         static void Main(string[] args)
         {
-            var devices = AirPcapDeviceList.GetDevices();
+            var devices = AirPcapDeviceList.Instance;
 
             if (devices.Count == 0)
             {

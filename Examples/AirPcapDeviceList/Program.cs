@@ -12,7 +12,7 @@ namespace SharpPcap.Test.AirPcapDeviceListExample
         {
             Console.WriteLine("AirPcap version {0}", AirPcapVersion.VersionString());
 
-            var devices = AirPcapDeviceList.GetDevices();
+            var devices = AirPcapDeviceList.Instance;
 
             Console.WriteLine("AirPcap devices found:");
             for(var i = 0; i < devices.Count; i++)
