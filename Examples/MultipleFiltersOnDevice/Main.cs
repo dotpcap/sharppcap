@@ -78,8 +78,8 @@ namespace MultipleFiltersOnDevice
             Console.WriteLine("-- Capture stopped.");
 
             // Print out the device statistics
-            Console.WriteLine("device1 {0}", device1.Statistics().ToString());
-            Console.WriteLine("device2 {0}", device2.Statistics().ToString());
+            Console.WriteLine("device1 {0}", device1.Statistics.ToString());
+            Console.WriteLine("device2 {0}", device2.Statistics.ToString());
 
             // Close the pcap device
             device1.Close();

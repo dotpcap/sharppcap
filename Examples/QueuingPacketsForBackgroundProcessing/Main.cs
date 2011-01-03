@@ -119,7 +119,7 @@ namespace QueuingPacketsForBackgroundProcessing
             backgroundThread.Join();
 
             // Print out the device statistics
-            Console.WriteLine(device.Statistics().ToString());
+            Console.WriteLine(device.Statistics.ToString());
 
             // Close the pcap device
             device.Close();
@@ -135,7 +135,7 @@ namespace QueuingPacketsForBackgroundProcessing
             var interval = Now - LastStatisticsOutput;
             if(interval > LastStatisticsInterval)
             {
-                Console.WriteLine("device_OnPacketArrival: " + ((LivePcapDevice)e.Device).Statistics());
+                Console.WriteLine("device_OnPacketArrival: " + ((LivePcapDevice)e.Device).Statistics);
                 LastStatisticsOutput = Now;
             }
 

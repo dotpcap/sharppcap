@@ -64,7 +64,9 @@ namespace Test
             var caughtExpectedException = false;
             try
             {
-                offlineDevice.Statistics();
+#pragma warning disable 0168
+                var stats = offlineDevice.Statistics;
+#pragma warning restore 0168
             } catch(NotSupportedOnOfflineDeviceException)
             {
                 caughtExpectedException = true;

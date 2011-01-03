@@ -52,7 +52,7 @@ namespace Test
             System.Threading.Thread.Sleep(500);
 
             // retrieve the statistics
-            var statistics = dev.Statistics();
+            var statistics = dev.Statistics;
 
             // output the statistics
             Console.WriteLine("statistics: {0}", statistics.ToString());
@@ -82,8 +82,10 @@ namespace Test
             var caughtException = false;
             try
             {
+#pragma warning disable 0168
                 // attempt to retrieve statistics from a closed device
-                devices[0].Statistics();
+                var stats = devices[0].Statistics;
+#pragma warning restore 0168
             } catch(DeviceNotReadyException)
             {
                 caughtException = true;

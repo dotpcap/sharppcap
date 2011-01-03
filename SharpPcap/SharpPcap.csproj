@@ -172,6 +172,7 @@
     <Compile Include="WinPcap\AuthenticationTypes.cs" />
     <Compile Include="WinPcap\RemoteDeviceList.cs" />
     <Compile Include="AirPcap\AirPcapLinkTypes.cs" />
+    <Compile Include="ICaptureStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

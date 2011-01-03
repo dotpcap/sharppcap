@@ -268,12 +268,15 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public override PcapStatistics Statistics()
+        public override ICaptureStatistics Statistics
         {
-            // can only call PcapStatistics on an open device
-            ThrowIfNotOpen("device not open");
+            get
+            {
+                // can only call PcapStatistics on an open device
+                ThrowIfNotOpen("device not open");
 
-            return new PcapStatistics(this.m_pcapAdapterHandle);
+                return new PcapStatistics(this.m_pcapAdapterHandle);
+            }
         }
     }
 }

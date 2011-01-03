@@ -27,8 +27,23 @@ namespace SharpPcap.AirPcap
     /// <summary>
     /// Device statistics
     /// </summary>
-    public class AirPcapStatistics : PcapStatistics
+    public class AirPcapStatistics : ICaptureStatistics
     {
+        /// <value>
+        /// Number of packets received
+        /// </value>
+        public uint ReceivedPackets { get; set; }
+
+        /// <value>
+        /// Number of packets dropped
+        /// </value>
+        public uint DroppedPackets { get; set; }
+
+        /// <value>
+        /// Number of interface dropped packets
+        /// </value>
+        public uint InterfaceDroppedPackets { get; set; }
+
         /// <summary>
         /// Number of packets that pass the BPF filter, find place in the kernel buffer and
         /// therefore reach the application.

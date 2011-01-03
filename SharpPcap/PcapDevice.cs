@@ -176,7 +176,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public abstract PcapStatistics Statistics();
+        public abstract ICaptureStatistics Statistics { get; }
 
         /// <summary>
         /// Notify the OnPacketArrival delegates about a newly captured packet

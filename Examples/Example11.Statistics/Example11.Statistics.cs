@@ -75,7 +75,7 @@ namespace SharpPcap.Test.Example11
             device.StopCapture();
 
             // Print out the device statistics
-            Console.WriteLine(device.Statistics().ToString());
+            Console.WriteLine(device.Statistics.ToString());
 
             // Close the pcap device
             device.Close();

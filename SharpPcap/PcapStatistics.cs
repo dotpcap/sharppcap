@@ -25,7 +25,7 @@ namespace SharpPcap
     /// <summary>
     /// Adapter statistics, received, dropped packet counts etc
     /// </summary>
-    public class PcapStatistics
+    public class PcapStatistics : ICaptureStatistics
     {
         /// <value>
         /// Number of packets received
