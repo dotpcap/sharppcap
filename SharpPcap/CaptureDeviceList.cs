@@ -57,7 +57,7 @@ namespace SharpPcap
         /// filter by calling this routine and picking the same device out of each list.
         /// </summary>
         /// <returns>
-        /// A <see cref="LivePcapDeviceList"/>
+        /// A <see cref="CaptureDeviceList"/>
         /// </returns>
         public static CaptureDeviceList New()
         {
@@ -74,7 +74,7 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Retrieve a list of the current PcapDevices
+        /// Retrieve a list of the current devices
         /// </summary>
         /// <returns>
         /// A <see cref="List&lt;ICaptureDevice&gt;"/>
@@ -95,7 +95,7 @@ namespace SharpPcap
             }
             else // not windows
             {
-                var dl = LivePcapDeviceList.Instance;
+                var dl = LibPcap.LivePcapDeviceList.Instance;
                 foreach (var c in dl)
                 {
                     deviceList.Add(c);
@@ -164,7 +164,7 @@ namespace SharpPcap
                         }
                     }
 
-                    // add the PcapDevice we didn't see in the new list
+                    // add the device we didn't see in the new list
                     if (!found)
                     {
                         itemsToRemove.Add(existingItem);

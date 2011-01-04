@@ -20,7 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Adapter statistics, received, dropped packet counts etc
@@ -66,7 +66,7 @@ namespace SharpPcap
             }
 
             // retrieve the stats
-            var result = (PcapUnmanagedStructures.PcapStatReturnValue)SafeNativeMethods.pcap_stats(pcap_t, stat);
+            var result = (PcapUnmanagedStructures.PcapStatReturnValue)LibPcapSafeNativeMethods.pcap_stats(pcap_t, stat);
 
             // process the return value
             switch(result)

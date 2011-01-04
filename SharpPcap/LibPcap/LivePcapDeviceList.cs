@@ -26,7 +26,7 @@ using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// List of available Pcap Interfaces.
@@ -86,7 +86,7 @@ namespace SharpPcap
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
-            int result = SafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
+            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
             if (result < 0)
                 throw new PcapException(errorBuffer.ToString());
 
@@ -102,7 +102,7 @@ namespace SharpPcap
                 deviceList.Add(new LivePcapDevice(pcap_if));
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
-            SafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
+            LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
 
             // go through the network interfaces to populate the mac address
             // for each of the devices

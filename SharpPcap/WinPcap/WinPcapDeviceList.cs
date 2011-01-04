@@ -123,9 +123,9 @@ namespace SharpPcap.WinPcap
             {
                 // Marshal pointer into a struct
                 var pcap_if_unmanaged =
-                    (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
-                                                    typeof(PcapUnmanagedStructures.pcap_if));
-                PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
+                    (LibPcap.PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
+                                                    typeof(LibPcap.PcapUnmanagedStructures.pcap_if));
+                LibPcap.PcapInterface pcap_if = new LibPcap.PcapInterface(pcap_if_unmanaged);
 
                 // create an airpcap device if the device appears to be a
                 // airpcap device
@@ -141,7 +141,7 @@ namespace SharpPcap.WinPcap
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
 
-            SharpPcap.SafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
+            LibPcap.LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
 
             return retval;
         }

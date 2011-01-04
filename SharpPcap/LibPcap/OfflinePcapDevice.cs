@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Capture packets from an offline pcap file
@@ -98,7 +98,7 @@ namespace SharpPcap
             // holds errors
             StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
             // opens offline pcap file
-            IntPtr adapterHandle = SafeNativeMethods.pcap_open_offline( this.Name, errbuf);
+            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline( this.Name, errbuf);
 
             // handle error
             if ( adapterHandle == IntPtr.Zero)

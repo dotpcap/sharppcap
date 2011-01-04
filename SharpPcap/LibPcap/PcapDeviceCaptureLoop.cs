@@ -55,7 +55,7 @@ using Mono.Unix.Native;
 //       the stop capture code.
 //
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     public partial class PcapDevice
     {
@@ -262,7 +262,7 @@ namespace SharpPcap
             if(usePoll)
             {
                 // retrieve the file descriptor of the adapter for use with poll()
-                captureFileDescriptor = SafeNativeMethods.pcap_fileno(PcapHandle);
+                captureFileDescriptor = LibPcapSafeNativeMethods.pcap_fileno(PcapHandle);
                 if(captureFileDescriptor == -1)
                 {
                     SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
@@ -270,7 +270,7 @@ namespace SharpPcap
                 }
             }
 
-            SafeNativeMethods.pcap_handler Callback = new SafeNativeMethods.pcap_handler(PacketHandler);
+            LibPcapSafeNativeMethods.pcap_handler Callback = new LibPcapSafeNativeMethods.pcap_handler(PacketHandler);
 
             // unix specific code
 #if UseMonoUnixNativeDirectly
@@ -345,7 +345,7 @@ namespace SharpPcap
                     // fall through here to the pcap_dispatch() call
                 }
 
-                int res = SafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                int res = LibPcapSafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative

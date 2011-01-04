@@ -21,13 +21,14 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using SharpPcap.LibPcap;
 
 namespace SharpPcap.WinPcap
 {
     /// <summary>
     /// WinPcap device
     /// </summary>
-    public class WinPcapDevice : LivePcapDevice
+    public class WinPcapDevice : LibPcap.LivePcapDevice
     {
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
 

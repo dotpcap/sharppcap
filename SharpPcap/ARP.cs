@@ -120,7 +120,7 @@ namespace SharpPcap
         {
             PhysicalAddress localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
-            LivePcapDevice device = LivePcapDeviceList.Instance[DeviceName];
+            var device = LibPcap.LivePcapDeviceList.Instance[DeviceName];
 
             // if no local ip address is specified attempt to find one from the adapter
             if (localIP == null)
@@ -129,7 +129,7 @@ namespace SharpPcap
                 {
                     foreach(var address in device.Addresses)
                     {
-                        if(address.Addr.type == Sockaddr.Type.AF_INET_AF_INET6)
+                        if(address.Addr.type == LibPcap.Sockaddr.Type.AF_INET_AF_INET6)
                         {
                             localIP = address.Addr.ipAddress;
                             break; // break out of the foreach
@@ -148,7 +148,7 @@ namespace SharpPcap
             {
                 foreach(var address in device.Addresses)
                 {
-                    if(address.Addr.type == Sockaddr.Type.HARDWARE)
+                    if(address.Addr.type == LibPcap.Sockaddr.Type.HARDWARE)
                     {
                         localMAC = address.Addr.hardwareAddress;
                     }

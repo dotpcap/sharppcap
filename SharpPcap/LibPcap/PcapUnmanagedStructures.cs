@@ -22,7 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     internal class PcapUnmanagedStructures
     {

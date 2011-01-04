@@ -23,7 +23,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Container class that represents either an ip address or a mac address

@@ -15,7 +15,7 @@ namespace SharpPcap.Test.Example4
             Console.WriteLine("SharpPcap {0}, Example4.BasicCapNoCallback.cs", ver);
 
             // Retrieve the device list
-            var devices = LivePcapDeviceList.Instance;
+            var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -32,7 +32,7 @@ namespace SharpPcap.Test.Example4
             int i = 0;
 
             // Print out the devices
-            foreach(LivePcapDevice dev in devices)
+            foreach(var dev in devices)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -42,7 +42,7 @@ namespace SharpPcap.Test.Example4
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse( Console.ReadLine() );
 
-            LivePcapDevice device = devices[i];
+            var device = devices[i];
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;

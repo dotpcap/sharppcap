@@ -25,13 +25,13 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Per http://msdn.microsoft.com/en-us/ms182161.aspx 
     /// </summary>
     [SuppressUnmanagedCodeSecurityAttribute]   
-    internal static class SafeNativeMethods   
+    internal static class LibPcapSafeNativeMethods   
     {
         // NOTE: For mono users on non-windows platforms a .config file is used to map
         //       the windows dll name to the unix/mac library name

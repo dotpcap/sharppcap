@@ -21,7 +21,7 @@ namespace Example12.PacketManipulation
             Console.WriteLine();
 
             // Retrieve the device list
-            var devices = LivePcapDeviceList.Instance;
+            var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count<1)
@@ -37,7 +37,7 @@ namespace Example12.PacketManipulation
             int i = 0;
 
             // Print out the available devices
-            foreach(LivePcapDevice dev in devices)
+            foreach(var dev in devices)
             {
                 Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
@@ -48,12 +48,12 @@ namespace Example12.PacketManipulation
             Console.Write("-- Please choose a device to capture: ");
             var choice = int.Parse( Console.ReadLine() );
 
-            PcapDevice device =null;
+            ICaptureDevice device = null;
             if(choice==i)
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 string capFile = Console.ReadLine();
-                device = new OfflinePcapDevice(capFile);
+                device = new OfflineCaptureDevice(capFile);
             }
             else
             {

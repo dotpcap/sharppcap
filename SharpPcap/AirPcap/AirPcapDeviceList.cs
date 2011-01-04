@@ -56,7 +56,7 @@ namespace SharpPcap.AirPcap
         /// filter by calling this routine and picking the same device out of each list.
         /// </summary>
         /// <returns>
-        /// A <see cref="LivePcapDeviceList"/>
+        /// A <see cref="CaptureDeviceList"/>
         /// </returns>
         public static AirPcapDeviceList New()
         {

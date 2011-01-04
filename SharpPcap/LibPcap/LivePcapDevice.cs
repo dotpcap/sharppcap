@@ -26,7 +26,7 @@ using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Capture live packets from a network device
@@ -113,7 +113,7 @@ namespace SharpPcap
         /// <param name="mode">
         /// A <see cref="DeviceMode"/>
         /// </param>
-        public virtual void Open(DeviceMode mode)
+        public override void Open(DeviceMode mode)
         {
             const int readTimeoutMilliseconds = 1000;
             this.Open(mode, readTimeoutMilliseconds);
@@ -128,7 +128,7 @@ namespace SharpPcap
         /// <param name="read_timeout">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout)
+        public override void Open(DeviceMode mode, int read_timeout)
         {
             if ( !Opened )
             {
@@ -142,7 +142,7 @@ namespace SharpPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
 
-                PcapHandle = SafeNativeMethods.pcap_open_live
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open_live
                     (   Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
                                                 // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
@@ -169,7 +169,7 @@ namespace SharpPcap
             get
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                int ret = SafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
@@ -190,7 +190,7 @@ namespace SharpPcap
                 if (value)
                     block = enableBlocking;
 
-                int ret = SafeNativeMethods.pcap_setnonblock(PcapHandle, block, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(PcapHandle, block, errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
@@ -204,38 +204,9 @@ namespace SharpPcap
         /// <summary>
         /// Sends a raw packet throgh this device
         /// </summary>
-        /// <param name="p">The packet to send</param>
-        public void SendPacket(PacketDotNet.Packet p)
-        {
-            SendPacket(p.Bytes);
-        }
-
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public void SendPacket(PacketDotNet.Packet p, int size)
-        {
-            SendPacket(p.Bytes, size);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        public void SendPacket(byte[] p)
-        {
-            SendPacket(p, p.Length);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public void SendPacket(byte[] p, int size)
+        public override void SendPacket(byte[] p, int size)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
 
@@ -254,7 +225,7 @@ namespace SharpPcap
             p_packet = Marshal.AllocHGlobal( size );
             Marshal.Copy(p, 0, p_packet, size);     
 
-            int res = SafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
+            int res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
             Marshal.FreeHGlobal(p_packet);
             if(res < 0)
             {

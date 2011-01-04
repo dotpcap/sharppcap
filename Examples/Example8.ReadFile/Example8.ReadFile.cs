@@ -26,12 +26,12 @@ namespace SharpPcap.Test.Example8
 
             Console.WriteLine("opening '{0}'", capFile);
 
-            PcapDevice device;
+            ICaptureDevice device;
 
             try
             {
                 // Get an offline device
-                device = new OfflinePcapDevice( capFile );
+                device = new OfflineCaptureDevice( capFile );
 
                 // Open the device
                 device.Open();

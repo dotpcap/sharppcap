@@ -21,7 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Base class for all pcap devices
@@ -85,7 +85,7 @@ namespace SharpPcap
         /// </summary>
         public virtual bool Opened
         {
-            get{ return (PcapHandle != IntPtr.Zero); }
+            get { return (PcapHandle != IntPtr.Zero); }
         }
 
         /// <summary>
@@ -94,18 +94,6 @@ namespace SharpPcap
         public virtual bool DumpOpened
         {
             get { return m_pcapDumpHandle!=IntPtr.Zero; }
-        }
-
-        /// <summary>
-        /// Return the pcap link layer value of an adapter. 
-        /// </summary>
-        public virtual PacketDotNet.LinkLayers PcapDataLink
-        {
-            get
-            {
-                ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
-                return (PacketDotNet.LinkLayers)SafeNativeMethods.pcap_datalink(PcapHandle);
-            }
         }
 
         /// <summary>
@@ -128,7 +116,7 @@ namespace SharpPcap
         /// </returns>
         internal static string GetLastError(IntPtr deviceHandle)
         {
-            IntPtr err_ptr = SafeNativeMethods.pcap_geterr(deviceHandle);
+            IntPtr err_ptr = LibPcapSafeNativeMethods.pcap_geterr(deviceHandle);
             return Marshal.PtrToStringAnsi(err_ptr);
         }
 
@@ -141,9 +129,46 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Link type in terms of PacketDotNet.LinkLayers
+        /// </summary>
+        public virtual PacketDotNet.LinkLayers LinkType
+        {
+            get
+            {
+                ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
+                return (PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);
+            }
+        }
+
+        /// <summary>
         /// Open the device with class specific options
         /// </summary>
         public abstract void Open();
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        public virtual void Open(DeviceMode mode)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public virtual void Open(DeviceMode mode, int read_timeout)
+        {
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// Closes this adapter
@@ -157,7 +182,7 @@ namespace SharpPcap
             {
                 StopCapture();
             }
-            SafeNativeMethods.pcap_close(PcapHandle);
+            LibPcapSafeNativeMethods.pcap_close(PcapHandle);
             PcapHandle = IntPtr.Zero;
 
             //Remove event handlers
@@ -229,7 +254,7 @@ namespace SharpPcap
         /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32"/> that contains the result code
         /// </returns>
         public virtual int GetNextPacket(out PacketDotNet.RawPacket p)
         {
@@ -256,7 +281,7 @@ namespace SharpPcap
             }
 
             //Get a packet from winpcap
-            res = SafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
+            res = LibPcapSafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
             p = null;
 
             if(res>0)
@@ -301,7 +326,7 @@ namespace SharpPcap
             var pkt_data = new byte[pcapHeader.CaptureLength];
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
-            p = new PacketDotNet.RawPacket(PcapDataLink,
+            p = new PacketDotNet.RawPacket(LinkType,
                               new PacketDotNet.PosixTimeval(pcapHeader.Seconds,
                                                        pcapHeader.MicroSeconds),
                               pkt_data);
@@ -322,7 +347,7 @@ namespace SharpPcap
             {
                 throw new PcapException("A dump file is already opened");
             }
-            m_pcapDumpHandle = SafeNativeMethods.pcap_dump_open(PcapHandle, fileName);
+            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, fileName);
             if(!DumpOpened)
                 throw new PcapException("Error openning dump file.");
         }
@@ -334,7 +359,7 @@ namespace SharpPcap
         {
             if(DumpOpened)
             {
-                SafeNativeMethods.pcap_dump_close(m_pcapDumpHandle);
+                LibPcapSafeNativeMethods.pcap_dump_close(m_pcapDumpHandle);
                 m_pcapDumpHandle = IntPtr.Zero;
             }
         }
@@ -346,7 +371,7 @@ namespace SharpPcap
         {
             if (DumpOpened)
             {
-                int result = SafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
+                int result = LibPcapSafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
                 if (result < 0)
                     throw new PcapException("Error writing buffer to dumpfile. " + LastError);
             }
@@ -369,7 +394,7 @@ namespace SharpPcap
             //Marshal header
             IntPtr hdrPtr = h.MarshalToIntPtr();
 
-            SafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
+            LibPcapSafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
 
             Marshal.FreeHGlobal(pktPtr);
             Marshal.FreeHGlobal(hdrPtr);
@@ -425,7 +450,7 @@ namespace SharpPcap
             }
 
             //associate the filter with this device
-            res = SafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
+            res = LibPcapSafeNativeMethods.pcap_setfilter( PcapHandle, bpfProgram );
 
             // Free the program whether or not we were successful in setting the filter
             // we don't want to leak unmanaged memory if we throw an exception.
@@ -477,7 +502,7 @@ namespace SharpPcap
             bpfProgram = Marshal.AllocHGlobal( Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
 
             //compile the expressions
-            result = SafeNativeMethods.pcap_compile(pcapHandle,
+            result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
                                                     bpfProgram,
                                                     filterExpression,
                                                     1,
@@ -509,7 +534,7 @@ namespace SharpPcap
         private static void FreeBpfProgram(IntPtr bpfProgram)
         {
             // free any pcap internally allocated memory from pcap_compile()
-            SafeNativeMethods.pcap_freecode(bpfProgram);
+            LibPcapSafeNativeMethods.pcap_freecode(bpfProgram);
 
             // free allocated buffers
             Marshal.FreeHGlobal(bpfProgram);            
@@ -523,21 +548,59 @@ namespace SharpPcap
                                        out string errorString)
         {
             IntPtr bpfProgram;
-            IntPtr fakePcap = SafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
+            IntPtr fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
 
             uint mask = 0;
             if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))
             {
-                SafeNativeMethods.pcap_close(fakePcap);
+                LibPcapSafeNativeMethods.pcap_close(fakePcap);
                 return false;
             }
 
             FreeBpfProgram(bpfProgram);
 
-            SafeNativeMethods.pcap_close(fakePcap);
+            LibPcapSafeNativeMethods.pcap_close(fakePcap);
             return true;
         }
         #endregion
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet to send</param>
+        public virtual void SendPacket(PacketDotNet.Packet p)
+        {
+            SendPacket(p.Bytes);
+        }
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        public virtual void SendPacket(PacketDotNet.Packet p, int size)
+        {
+            SendPacket(p.Bytes, size);
+        }
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        public virtual void SendPacket(byte[] p)
+        {
+            SendPacket(p, p.Length);
+        }
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        public virtual void SendPacket(byte[] p, int size)
+        {
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// Helper method for checking that the adapter is open, throws an

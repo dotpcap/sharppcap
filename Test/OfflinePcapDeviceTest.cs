@@ -17,7 +17,7 @@ namespace Test
         [Test]
         public void CaptureInfinite()
         {
-            var offlineDevice = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
+            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
             offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
             offlineDevice.Open();
 
@@ -35,7 +35,7 @@ namespace Test
         [Test]
         public void CaptureFinite()
         {
-            var offlineDevice = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
+            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
             offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
             offlineDevice.Open();
 
@@ -59,7 +59,7 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var offlineDevice = new OfflinePcapDevice("../../capture_files/ipv6_http.pcap");
+            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
 
             var caughtExpectedException = false;
             try
@@ -78,7 +78,7 @@ namespace Test
         [Test]
         public void SetFilter()
         {
-            var offlineDevice = new OfflinePcapDevice("../../capture_files/test_stream.pcap");
+            var offlineDevice = new OfflineCaptureDevice("../../capture_files/test_stream.pcap");
 
             offlineDevice.Open();
             offlineDevice.Filter = "port 53";

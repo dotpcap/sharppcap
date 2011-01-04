@@ -15,7 +15,7 @@ namespace SharpPcap.Test.Example3
             Console.WriteLine("SharpPcap {0}, Example3.BasicCap.cs", ver);
 
             // Retrieve the device list
-            var devices = LivePcapDeviceList.Instance;
+            var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -32,7 +32,7 @@ namespace SharpPcap.Test.Example3
             int i = 0;
 
             // Print out the devices
-            foreach(LivePcapDevice dev in devices)
+            foreach(var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -43,7 +43,7 @@ namespace SharpPcap.Test.Example3
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse( Console.ReadLine() );
 
-            LivePcapDevice device = devices[i];
+            var device = devices[i];
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
@@ -51,14 +51,25 @@ namespace SharpPcap.Test.Example3
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if(device is WinPcap.WinPcapDevice)
+            if (device is AirPcap.AirPcapDevice)
+            {
+                // NOTE: AirPcap devices cannot disable local capture
+                var airPcap = device as AirPcap.AirPcapDevice;
+                airPcap.Open(WinPcap.OpenFlags.DataTransferUdp, readTimeoutMilliseconds);
+            }
+            else if(device is WinPcap.WinPcapDevice)
             {
                 var winPcap = device as WinPcap.WinPcapDevice;
                 winPcap.Open(WinPcap.OpenFlags.DataTransferUdp | WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
+            else if (device is LibPcap.LivePcapDevice)
+            {
+                var livePcapDevice = device as LibPcap.LivePcapDevice;
+                livePcapDevice.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            }
             else
             {
-                device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+                throw new System.InvalidOperationException("unknown device type of " + device.GetType().ToString());
             }
 
             Console.WriteLine();

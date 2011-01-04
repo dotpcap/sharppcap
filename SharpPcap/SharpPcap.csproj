@@ -116,16 +116,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaptureDeviceList.cs" />
-    <Compile Include="LivePcapDevice.cs">
+    <Compile Include="LibPcap\LivePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OfflineCaptureDevice.cs" />
     <Compile Include="PcapException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapHeader.cs">
+    <Compile Include="LibPcap\PcapHeader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OfflinePcapDevice.cs">
+    <Compile Include="LibPcap\OfflinePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Pcap.cs">
@@ -134,22 +135,22 @@
     <Compile Include="Version.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PcapUnmanagedStructures.cs" />
-    <Compile Include="SafeNativeMethods.cs" />
-    <Compile Include="PcapDeviceCaptureLoop.cs" />
-    <Compile Include="PcapAddress.cs" />
-    <Compile Include="Sockaddr.cs" />
-    <Compile Include="PcapInterface.cs" />
+    <Compile Include="LibPcap\PcapUnmanagedStructures.cs" />
+    <Compile Include="LibPcap\LibPcapSafeNativeMethods.cs" />
+    <Compile Include="LibPcap\PcapDeviceCaptureLoop.cs" />
+    <Compile Include="LibPcap\PcapAddress.cs" />
+    <Compile Include="LibPcap\Sockaddr.cs" />
+    <Compile Include="LibPcap\PcapInterface.cs" />
     <Compile Include="DeviceNotReadyException.cs" />
-    <Compile Include="PcapStatistics.cs" />
+    <Compile Include="LibPcap\PcapStatistics.cs" />
     <Compile Include="WinPcapRequiredException.cs" />
     <Compile Include="NotSupportedOnOfflineDeviceException.cs" />
     <Compile Include="PacketArrivalEventHandler.cs" />
     <Compile Include="CaptureStoppedEventHandler.cs" />
     <Compile Include="DeviceMode.cs" />
     <Compile Include="CaptureEventArgs.cs" />
-    <Compile Include="PcapDevice.cs" />
-    <Compile Include="LivePcapDeviceList.cs" />
+    <Compile Include="LibPcap\PcapDevice.cs" />
+    <Compile Include="LibPcap\LivePcapDeviceList.cs" />
     <Compile Include="ARP.cs" />
     <Compile Include="CaptureStoppedEventStatus.cs" />
     <Compile Include="InvalidOperationDuringBackgroundCaptureException.cs" />

@@ -55,7 +55,7 @@ namespace SharpPcap
         /// A <see cref="PacketDotNet.RawPacket"/>
         /// </param>
         /// <param name="device">
-        /// A <see cref="PcapDevice"/>
+        /// A <see cref="ICaptureDevice"/>
         /// </param>
         public CaptureEventArgs(PacketDotNet.RawPacket packet, ICaptureDevice device)
         {

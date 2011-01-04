@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test
 {
@@ -25,7 +26,7 @@ namespace Test
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            LivePcapDevice dev = null;
+            SharpPcap.LibPcap.LivePcapDevice dev = null;
             foreach(var d in devices)
             {
                 Console.WriteLine(d.ToString());

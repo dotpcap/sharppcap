@@ -60,7 +60,7 @@ namespace SharpPcap
             {
                 try
                 {
-                    return System.Runtime.InteropServices.Marshal.PtrToStringAnsi (SafeNativeMethods.pcap_lib_version ());
+                    return System.Runtime.InteropServices.Marshal.PtrToStringAnsi (LibPcap.LibPcapSafeNativeMethods.pcap_lib_version ());
                 }
                 catch
                 {

@@ -85,6 +85,45 @@ namespace SharpPcap.AirPcap
         }
 
         /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        public override void Open(DeviceMode mode)
+        {
+            base.Open(mode);
+
+            // reteieve the airpcap device given the winpcap handle
+            AirPcapDeviceHandle = WinPcap.SafeNativeMethods.pcap_get_airpcap_handle(PcapHandle);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout)
+        {
+            base.Open(mode, read_timeout);
+
+            // reteieve the airpcap device given the winpcap handle
+            AirPcapDeviceHandle = WinPcap.SafeNativeMethods.pcap_get_airpcap_handle(PcapHandle);
+        }
+
+        public override void Open(WinPcap.OpenFlags flags, int read_timeout)
+        {
+            base.Open(flags, read_timeout);
+
+            // reteieve the airpcap device given the winpcap handle
+            AirPcapDeviceHandle = WinPcap.SafeNativeMethods.pcap_get_airpcap_handle(PcapHandle);
+        }
+
+        /// <summary>
         /// Close a device
         /// </summary>
         public override void Close()
@@ -604,7 +643,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Link type in terms of PacketDotNet.LinkLayers
         /// </summary>
-        public PacketDotNet.LinkLayers LinkType
+        public override PacketDotNet.LinkLayers LinkType
         {
             get
             {

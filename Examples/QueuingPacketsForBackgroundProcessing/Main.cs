@@ -59,7 +59,7 @@ namespace QueuingPacketsForBackgroundProcessing
             Console.WriteLine("SharpPcap {0}", ver);
 
             // If no device exists, print error
-            if(LivePcapDeviceList.Instance.Count < 1)
+            if(CaptureDeviceList.Instance.Count < 1)
             {
                 Console.WriteLine("No device found on this machine");
                 return;
@@ -73,7 +73,7 @@ namespace QueuingPacketsForBackgroundProcessing
             int i=0;
 
             // Print out all devices
-            foreach(LivePcapDevice dev in LivePcapDeviceList.Instance)
+            foreach(var dev in CaptureDeviceList.Instance)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -87,7 +87,7 @@ namespace QueuingPacketsForBackgroundProcessing
             var backgroundThread = new System.Threading.Thread(BackgroundThread);
             backgroundThread.Start();
 
-            LivePcapDevice device = LivePcapDeviceList.Instance[i];
+            var device = CaptureDeviceList.Instance[i];
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival += 
@@ -135,7 +135,7 @@ namespace QueuingPacketsForBackgroundProcessing
             var interval = Now - LastStatisticsOutput;
             if(interval > LastStatisticsInterval)
             {
-                Console.WriteLine("device_OnPacketArrival: " + ((LivePcapDevice)e.Device).Statistics);
+                Console.WriteLine("device_OnPacketArrival: " + e.Device.Statistics);
                 LastStatisticsOutput = Now;
             }
 

@@ -16,7 +16,7 @@ namespace MultipleFiltersOnDevice
             Console.WriteLine("SharpPcap {0}, MultipleFiltersOnDevice", ver);
 
             // If no devices were found print an error
-            if(LivePcapDeviceList.Instance.Count < 1)
+            if(CaptureDeviceList.Instance.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -30,7 +30,7 @@ namespace MultipleFiltersOnDevice
             int i = 0;
 
             // Print out the devices
-            foreach(LivePcapDevice dev in LivePcapDeviceList.Instance)
+            foreach(var dev in CaptureDeviceList.Instance)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -43,8 +43,8 @@ namespace MultipleFiltersOnDevice
 
             int readTimeoutMilliseconds = 1000;
 
-            var device1 = LivePcapDeviceList.Instance[i];
-            var device2 = LivePcapDeviceList.New()[i]; // NOTE: the call to New()
+            var device1 = CaptureDeviceList.Instance[i];
+            var device2 = CaptureDeviceList.New()[i]; // NOTE: the call to New()
 
             // Register our handler function to the 'packet arrival' event
             device1.OnPacketArrival += 

@@ -53,6 +53,12 @@ namespace SharpPcap
         /// </summary>
         ICaptureStatistics Statistics { get; }
 
+#region Dump related
+        /// <summary>
+        /// Gets a value indicating whether a dump file is already associated with this device
+        /// </summary>
+        bool DumpOpened { get; }
+
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
@@ -71,9 +77,34 @@ namespace SharpPcap
         void DumpClose();
 
         /// <summary>
+        /// Flushes all write buffers of the opened dump file
+        /// </summary>
+        void DumpFlush();
+#endregion
+
+        /// <summary>
         /// Opens the adapter
         /// </summary>
         void Open();
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        void Open(DeviceMode mode);
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        void Open(DeviceMode mode, int read_timeout);
 
         /// <summary>
         /// Closes this adapter
@@ -113,12 +144,50 @@ namespace SharpPcap
         /// Stop the capture
         /// </summary>
         void StopCapture();
+
+        /// <summary>
+        /// Synchronously capture packets on this device. Method blocks forever.
+        /// </summary>
+        void Capture();
+
         #endregion
 
         /// <summary>
-        /// Gets the next packet captured on this device
+        /// Retrieves the next packet from a device
         /// </summary>
-        int GetNextPacket(out PacketDotNet.RawPacket p);
+        /// <returns></returns>
+        PacketDotNet.RawPacket GetNextPacket();
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet to send</param>
+        void SendPacket(PacketDotNet.Packet p);
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        void SendPacket(PacketDotNet.Packet p, int size);
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        void SendPacket(byte[] p);
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        void SendPacket(byte[] p, int size);
+
+        /// <summary>
+        /// Return the pcap link layer value of an adapter. 
+        /// </summary>
+        PacketDotNet.LinkLayers LinkType { get; }
     }
 }
 

@@ -20,12 +20,12 @@ namespace SharpPcap.Test.Example10
             Console.Write("-- Please enter an input capture file name: ");
             string capFile = Console.ReadLine();
 
-            PcapDevice device;
+            ICaptureDevice device;
 
             try
             {
                 // Get an offline file pcap device
-                device = new OfflinePcapDevice(capFile);
+                device = new OfflineCaptureDevice(capFile);
 
                 // Open the device for capturing
                 device.Open();
@@ -40,7 +40,7 @@ namespace SharpPcap.Test.Example10
 
             //Allocate a new send queue
             var squeue = new WinPcap.SendQueue
-                ( (int)((OfflinePcapDevice)device).FileSize );
+                ( (int)((OfflineCaptureDevice)device).FileSize );
             PacketDotNet.RawPacket packet;
             
             try
@@ -71,9 +71,9 @@ namespace SharpPcap.Test.Example10
 
             int i=0;
 
-            var devices = LivePcapDeviceList.Instance;
+            var devices = LibPcap.LivePcapDeviceList.Instance;
             /* Scan the list printing every entry */
-            foreach(LivePcapDevice dev in devices)
+            foreach(var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -86,7 +86,7 @@ namespace SharpPcap.Test.Example10
             devices[i].Open();
             string resp;
 
-            if(devices[i].PcapDataLink != device.PcapDataLink)
+            if(devices[i].LinkType != device.LinkType)
             {
                 Console.Write("Warning: the datalink of the capture" +
                     " differs from the one of the selected interface, continue? [YES|no]");

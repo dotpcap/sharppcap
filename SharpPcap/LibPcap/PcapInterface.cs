@@ -25,7 +25,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using SharpPcap;
 
-namespace SharpPcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// managed version of struct pcap_if
