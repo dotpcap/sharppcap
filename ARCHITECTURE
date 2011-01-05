@@ -1,0 +1,67 @@
+SharpPcap Architecture
+Chris Morgan <chmorgan@gmail.com>
+
+Questions or comments about this or any other document, code file etc
+can be directed to the SharpPcap project website, http://sharppcap.sf.net or to
+chmorgan@gmail.com.
+
+This document is intended to describe the high level architecture of
+the SharpPcap assembly to provide some insight into the namespaces and
+class layout of the project and how to use the various classes.
+
+There are four major namespaces in SharpPcap:
+
+SharpPcap
+SharpPcap.LibPcap
+SharpPcap.WinPcap
+SharpPcap.AirPcap
+
+These correspond to the directories:
+
+SharpPcap/
+    LibPcap/
+    WinPcap/
+    AirPcap/
+
+While at the same level, these directories are a hierarchy of functionality
+
+SharpPcap/ - Base level defines, interfaces to capture devices (ICaptureDevie)
+             and high level classes for retrieving a list of ICaptureDevice entries
+    LibPcap/ - libpcap functionality, background capture code etc
+        WinPcap/ - WinPcap functionality. WinPcap adds several extension methods
+                   that aren't present in libpcap. WinPcap adapters are inherited
+                   from LibPcap adapters to add this functionality.
+            AirPcap/ - AirPcap functionality. AirPcap adapters are inherited from
+                       WinPcap adapters and have additional methods for retrieving
+                       channel frequency, strength, etc that aren't present in
+                       WinPcap or LibPcap adapters
+
+Two usage cases.
+
+1. You want to retrieve a list of all capture devices and maybe for specific
+   types of capture devices you want to do something custom with them like
+   adjusting the capture channel for AirPcap adapters
+
+- You should use the CaptureDeviceList and in your code do something like:
+
+  var captureDevices = SharpPcap.CaptureDeviceList.Instance;
+  foreach(var dev in captureDevices)
+  {
+    if(dev is SharpPcap.AirPcap.AirPcapDevice)
+    {
+      var airPcapDevice = (SharpPcap.AirPcap.AirPcapDevice)dev;
+      // Now you can use the AirPcap specific additions here
+    }
+ ...
+
+
+2. You know you want to get a list of specific devices, say AirPcap adapters, and
+   you don't want to see the other kinds of adapters
+
+- You can use the technique in #1 and simply ignore the ones that aren't the type you want
+or
+- You can use the type specific lists such as SharpPcap.AirPcap.AirPcapDeviceList or
+  SharpPcap.WinPcap.WinPcapDeviceList or SharpPcap.LibPcap.LibPcapDeviceList. These
+  classes will return adapters of a specific type. Note that because
+  AirPcap adapters are WinPcap adapters which are LibPcap adapters that LibPcapDeviceList
+  WILL contain the available AirPcap adapters as those show up as pcap capture devices.
