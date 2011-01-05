@@ -12,7 +12,7 @@ namespace Test
         [Test]
         public void SimpleFilter()
         {
-            var devices = LivePcapDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
@@ -31,7 +31,7 @@ namespace Test
         [Test]
         public void SetFilterExceptionIfDeviceIsClosed()
         {
-            var devices = LivePcapDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No pcap supported devices found, are you running" +

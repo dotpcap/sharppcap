@@ -28,7 +28,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// WinPcap device
     /// </summary>
-    public class WinPcapDevice : LibPcap.LivePcapDevice
+    public class WinPcapDevice : LibPcap.LibPcapLiveDevice
     {
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
 

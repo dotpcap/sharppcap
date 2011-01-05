@@ -62,9 +62,9 @@ namespace SharpPcap.Test.Example3
                 var winPcap = device as WinPcap.WinPcapDevice;
                 winPcap.Open(WinPcap.OpenFlags.DataTransferUdp | WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
-            else if (device is LibPcap.LivePcapDevice)
+            else if (device is LibPcap.LibPcapLiveDevice)
             {
-                var livePcapDevice = device as LibPcap.LivePcapDevice;
+                var livePcapDevice = device as LibPcap.LibPcapLiveDevice;
                 livePcapDevice.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
             }
             else

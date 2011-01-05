@@ -23,7 +23,7 @@ namespace Test
         [Test]
         public void GetNextPacketExceptionIfCaptureLoopRunning ()
         {
-            var devices = SharpPcap.LibPcap.LivePcapDeviceList.Instance;
+            var devices = SharpPcap.LibPcap.LibPcapLiveDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
@@ -59,7 +59,7 @@ namespace Test
         [Test]
         public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival ()
         {
-            var devices = SharpPcap.LibPcap.LivePcapDeviceList.Instance;
+            var devices = SharpPcap.LibPcap.LibPcapLiveDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No pcap supported devices found, are you running" +

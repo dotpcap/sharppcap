@@ -120,7 +120,7 @@ namespace SharpPcap
         {
             PhysicalAddress localMAC = LocalMAC;
             System.Net.IPAddress localIP = LocalIP;
-            var device = LibPcap.LivePcapDeviceList.Instance[DeviceName];
+            var device = LibPcap.LibPcapLiveDeviceList.Instance[DeviceName];
 
             // if no local ip address is specified attempt to find one from the adapter
             if (localIP == null)

@@ -14,10 +14,10 @@ namespace Test
         {
             // test a known failing filter
             string errorString;
-            Assert.IsFalse(LivePcapDevice.CheckFilter("some bogus filter", out errorString));
+            Assert.IsFalse(LibPcapLiveDevice.CheckFilter("some bogus filter", out errorString));
 
             // test a known working filter
-            Assert.IsTrue(LivePcapDevice.CheckFilter("port 23", out errorString));
+            Assert.IsTrue(LibPcapLiveDevice.CheckFilter("port 23", out errorString));
         }
     }
 }

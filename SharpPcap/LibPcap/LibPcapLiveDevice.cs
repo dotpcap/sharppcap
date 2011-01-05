@@ -31,14 +31,14 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class LivePcapDevice : PcapDevice
+    public class LibPcapLiveDevice : PcapDevice
     {
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        internal LivePcapDevice( PcapInterface pcapIf )
+        internal LibPcapLiveDevice( PcapInterface pcapIf )
         {
             m_pcapIf = pcapIf;
         }
@@ -46,14 +46,14 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Default contructor for subclasses
         /// </summary>
-        protected LivePcapDevice()
+        protected LibPcapLiveDevice()
         {
         }
 
         /// <summary>
         /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
         /// </summary>
-        ~LivePcapDevice()
+        ~LibPcapLiveDevice()
         {
             this.Close();
         }

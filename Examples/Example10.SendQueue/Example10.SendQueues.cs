@@ -71,7 +71,7 @@ namespace SharpPcap.Test.Example10
 
             int i=0;
 
-            var devices = LibPcap.LivePcapDeviceList.Instance;
+            var devices = LibPcap.LibPcapLiveDeviceList.Instance;
             /* Scan the list printing every entry */
             foreach(var dev in devices)
             {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -116,9 +116,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaptureDeviceList.cs" />
-    <Compile Include="LibPcap\LivePcapDevice.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="OfflineCaptureDevice.cs" />
     <Compile Include="PcapException.cs">
       <SubType>Code</SubType>
@@ -150,7 +147,6 @@
     <Compile Include="DeviceMode.cs" />
     <Compile Include="CaptureEventArgs.cs" />
     <Compile Include="LibPcap\PcapDevice.cs" />
-    <Compile Include="LibPcap\LivePcapDeviceList.cs" />
     <Compile Include="ARP.cs" />
     <Compile Include="CaptureStoppedEventStatus.cs" />
     <Compile Include="InvalidOperationDuringBackgroundCaptureException.cs" />
@@ -175,6 +171,10 @@
     <Compile Include="AirPcap\AirPcapLinkTypes.cs" />
     <Compile Include="ICaptureStatistics.cs" />
     <Compile Include="WinPcap\WinPcapDeviceList.cs" />
+    <Compile Include="LibPcap\LibPcapLiveDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LibPcap\LibPcapLiveDeviceList.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

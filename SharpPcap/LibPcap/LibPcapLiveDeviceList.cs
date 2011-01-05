@@ -31,20 +31,20 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// List of available Pcap Interfaces.
     /// </summary>
-    public class LivePcapDeviceList : ReadOnlyCollection<LivePcapDevice>
+    public class LibPcapLiveDeviceList : ReadOnlyCollection<LibPcapLiveDevice>
     {
-        private static LivePcapDeviceList instance;
+        private static LibPcapLiveDeviceList instance;
 
         /// <summary>
         /// Method to retrieve this classes singleton instance
         /// </summary>
-        public static LivePcapDeviceList Instance
+        public static LibPcapLiveDeviceList Instance
         {
             get
             {
                 if(instance == null)
                 {
-                    instance = new LivePcapDeviceList();
+                    instance = new LibPcapLiveDeviceList();
                 }
 
                 return instance;
@@ -58,17 +58,17 @@ namespace SharpPcap.LibPcap
         /// filter by calling this routine and picking the same device out of each list.
         /// </summary>
         /// <returns>
-        /// A <see cref="LivePcapDeviceList"/>
+        /// A <see cref="LibPcapLiveDeviceList"/>
         /// </returns>
-        public static LivePcapDeviceList New()
+        public static LibPcapLiveDeviceList New()
         {
-            return new LivePcapDeviceList();
+            return new LibPcapLiveDeviceList();
         }
 
         /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
-        private LivePcapDeviceList() : base(new List<LivePcapDevice>())
+        private LibPcapLiveDeviceList() : base(new List<LibPcapLiveDevice>())
         {
             Refresh();
         }
@@ -77,11 +77,11 @@ namespace SharpPcap.LibPcap
         /// Retrieve a list of the current PcapDevices
         /// </summary>
         /// <returns>
-        /// A <see cref="List&lt;LivePcapDevice&gt;"/>
+        /// A <see cref="List&lt;LibPcapLiveDevice&gt;"/>
         /// </returns>
-        private static List<LivePcapDevice> GetDevices()
+        private static List<LibPcapLiveDevice> GetDevices()
         {
-            var deviceList = new List<LivePcapDevice>();
+            var deviceList = new List<LibPcapLiveDevice>();
 
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
@@ -99,7 +99,7 @@ namespace SharpPcap.LibPcap
                     (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
                                                     typeof(PcapUnmanagedStructures.pcap_if));
                 PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
-                deviceList.Add(new LivePcapDevice(pcap_if));
+                deviceList.Add(new LibPcapLiveDevice(pcap_if));
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
             LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
@@ -107,7 +107,7 @@ namespace SharpPcap.LibPcap
             // go through the network interfaces to populate the mac address
             // for each of the devices
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-            foreach(LivePcapDevice device in deviceList)
+            foreach(LibPcapLiveDevice device in deviceList)
             {
                 foreach(NetworkInterface adapter in nics)
                 {
@@ -177,7 +177,7 @@ namespace SharpPcap.LibPcap
                 }
 
                 // find items that we have that the current list is missing
-                var itemsToRemove = new List<LivePcapDevice>();
+                var itemsToRemove = new List<LibPcapLiveDevice>();
                 foreach(var existingItem in base.Items)
                 {
                     bool found = false;
@@ -209,7 +209,7 @@ namespace SharpPcap.LibPcap
 
         #region PcapDevice Indexers
         /// <param name="Name">The name or description of the pcap interface to get.</param>
-        public LivePcapDevice this[string Name]
+        public LibPcapLiveDevice this[string Name]
         {
             get
             {
@@ -217,9 +217,9 @@ namespace SharpPcap.LibPcap
                 // with other methods
                 lock(this)
                 {
-                    var devices = (List<LivePcapDevice>)base.Items;
-                    var dev = devices.Find(delegate(LivePcapDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(LivePcapDevice i) { return i.Description == Name; });
+                    var devices = (List<LibPcapLiveDevice>)base.Items;
+                    var dev = devices.Find(delegate(LibPcapLiveDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate(LibPcapLiveDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

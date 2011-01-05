@@ -14,7 +14,7 @@ namespace Test
         [Test]
         public void TestStatistics()
         {
-            var devices = LivePcapDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
 
             if(devices.Count == 0)
             {
@@ -26,7 +26,7 @@ namespace Test
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            SharpPcap.LibPcap.LivePcapDevice dev = null;
+            SharpPcap.LibPcap.LibPcapLiveDevice dev = null;
             foreach(var d in devices)
             {
                 Console.WriteLine(d.ToString());
@@ -68,7 +68,7 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var devices = LivePcapDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
 
             if(devices.Count == 0)
             {

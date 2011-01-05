@@ -95,7 +95,7 @@ namespace SharpPcap
             }
             else // not windows
             {
-                var dl = LibPcap.LivePcapDeviceList.Instance;
+                var dl = LibPcap.LibPcapLiveDeviceList.Instance;
                 foreach (var c in dl)
                 {
                     deviceList.Add(c);

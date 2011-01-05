@@ -254,7 +254,7 @@ namespace SharpPcap.LibPcap
             if (!Opened)
                 throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");
 
-            var usePoll = (this is LivePcapDevice) &&
+            var usePoll = (this is LibPcapLiveDevice) &&
                           isLibPcap && MonoUnixFound;
 
             // unix specific code
