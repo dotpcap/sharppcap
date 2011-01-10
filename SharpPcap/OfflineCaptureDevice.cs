@@ -22,8 +22,17 @@ using System;
 
 namespace SharpPcap
 {
+    /// <summary>
+    /// Capture device that reads from a pcap format file
+    /// </summary>
     public class OfflineCaptureDevice : LibPcap.OfflinePcapDevice
     {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="pcapFile">
+        /// A <see cref="System.String"/>
+        /// </param>
         public OfflineCaptureDevice(string pcapFile) : base(pcapFile)
         {
         }
