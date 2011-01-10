@@ -82,6 +82,24 @@ namespace SharpPcap
             }
         }
 
+        private TimeSpan timeout = new TimeSpan(0, 0, 1);
+
+        /// <summary>
+        /// Timeout for a given call to Resolve()
+        /// </summary>
+        public TimeSpan Timeout
+        {
+            get
+            {
+                return timeout;
+            }
+
+            set
+            {
+                timeout = value;
+            }
+        }
+
         /// <summary>
         /// Resolves the MAC address of the specified IP address. The 'DeviceName' propery must be set
         /// prior to using this method.
@@ -102,7 +120,8 @@ namespace SharpPcap
         /// <param name="destIP">The IP address to resolve</param>
         /// <param name="deviceName">The local network device name on which to send the ARP request</param>
         /// <param name="srcIP">The local IP address from which to send the ARP request</param>
-        /// <returns>The MAC address that matches to the given IP address</returns>
+        /// <returns>The MAC address that matches to the given IP address or
+        /// null if there was a timeout</returns>
         public PhysicalAddress Resolve(System.Net.IPAddress destIP, string deviceName, System.Net.IPAddress srcIP)
         {
             DeviceName = deviceName;
@@ -115,7 +134,8 @@ namespace SharpPcap
         /// </summary>
         /// <param name="destIP">The IP address to resolve</param>
         /// <param name="deviceName">The local network device name on which to send the ARP request</param>
-        /// <returns>The MAC address that matches to the given IP address</returns>
+        /// <returns>The MAC address that matches to the given IP address or
+        /// null if there was a timeout</returns>
         public PhysicalAddress Resolve(System.Net.IPAddress destIP, string deviceName)
         {
             PhysicalAddress localMAC = LocalMAC;
@@ -181,15 +201,17 @@ namespace SharpPcap
             // arp request immediately
             var lastRequestTime = DateTime.FromBinary(0);
 
-            var requestInterval = new TimeSpan(0, 0, 5);
+            var requestInterval = new TimeSpan(0, 0, 1);
 
             PacketDotNet.ARPPacket arpPacket = null;
 
-            while(true)
+            // attempt to resolve the address with the current timeout
+            var timeoutDateTime = DateTime.Now + Timeout;
+            while(DateTime.Now < timeoutDateTime)
             {
                 if(requestInterval < (DateTime.Now - lastRequestTime))
                 {
-                    //inject the packet to the wire
+                    // inject the packet to the wire
                     device.SendPacket(request);
                     lastRequestTime = DateTime.Now;
                 }
@@ -198,7 +220,6 @@ namespace SharpPcap
                 var reply = device.GetNextPacket();
                 if(reply == null)
                 {
-
                     continue;
                 }
 
@@ -219,11 +240,18 @@ namespace SharpPcap
                 }
             }
 
-            //free the device
+            // free the device
             device.Close();
 
-            //return the resolved MAC address
-            return arpPacket.SenderHardwareAddress;
+            // the timeout happened
+            if(DateTime.Now >= timeoutDateTime)
+            {
+                return null;
+            } else
+            {
+                //return the resolved MAC address
+                return arpPacket.SenderHardwareAddress;
+            }
         }
 
         private PacketDotNet.Packet BuildRequest(System.Net.IPAddress destinationIP,
