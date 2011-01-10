@@ -115,6 +115,15 @@ namespace SharpPcap.AirPcap
             AirPcapDeviceHandle = WinPcap.SafeNativeMethods.pcap_get_airpcap_handle(PcapHandle);
         }
 
+        /// <summary>
+        /// Opens an Airpcap device with optional WinPcap.OpenFlags
+        /// </summary>
+        /// <param name="flags">
+        /// A <see cref="WinPcap.OpenFlags"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
         public override void Open(WinPcap.OpenFlags flags, int read_timeout)
         {
             base.Open(flags, read_timeout);
@@ -852,6 +861,9 @@ namespace SharpPcap.AirPcap
             }
         }
 
+        /// <summary>
+        /// AirPcap specific capture thread
+        /// </summary>
         protected override void CaptureThread()
         {
             IntPtr ReadEvent;
