@@ -59,7 +59,14 @@ namespace SharpPcap.LibPcap
 {
     public partial class PcapDevice
     {
+        /// <summary>
+        /// Thread that is performing the background packet capture
+        /// </summary>
         protected Thread captureThread;
+
+        /// <summary>
+        /// Flag that indicates that a capture thread should stop
+        /// </summary>
         protected bool shouldCaptureThreadStop;
 
         /// <summary>
