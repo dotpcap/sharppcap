@@ -86,8 +86,15 @@ namespace SharpPcap.Test.Example2
             // Create a new ARP resolver
             ARP arper = new ARP(device);
 
-            // print the resolved address
-            Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
+            // print the resolved address or indicate that none was found
+            var resolvedMacAddress = arper.Resolve(ip);
+            if(resolvedMacAddress == null)
+            {
+                Console.WriteLine("Timeout, no mac address found for ip of " + ip);
+            } else
+            {
+                Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
+            }
         }
     }
 }
