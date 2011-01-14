@@ -155,7 +155,6 @@ namespace SharpPcap.WinPcap
         /// </summary>
         public override void Close()
         {
-
             if ( OnPcapStatistics != null)
             {
                 foreach(StatisticsModeEventHandler pse in OnPcapStatistics.GetInvocationList())
@@ -163,6 +162,9 @@ namespace SharpPcap.WinPcap
                     OnPcapStatistics -= pse;
                 }
             }
+
+            // call the base method
+            base.Close();
         }
 
         /// <summary>
