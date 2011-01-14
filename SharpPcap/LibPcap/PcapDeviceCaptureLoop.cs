@@ -222,7 +222,7 @@ namespace SharpPcap.LibPcap
                         error = string.Format("captureThread was aborted after {0}",
                                               StopCaptureTimeout.ToString());
                     }
-                        
+
                     throw new PcapException(error);
                 }
 
