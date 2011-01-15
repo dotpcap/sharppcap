@@ -21,7 +21,7 @@ namespace WinformsExample
         {
             foreach (var dev in CaptureDeviceList.Instance)
             {
-                var str = String.Format("{0}", dev.Description);
+                var str = String.Format("{0} {1}", dev.Name, dev.Description);
                 deviceList.Items.Add(str);
             }
         }
