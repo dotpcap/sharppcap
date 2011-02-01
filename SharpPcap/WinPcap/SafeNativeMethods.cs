@@ -65,7 +65,7 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="IntPtr"/>
         /// </returns>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_open(string dev,
                                                               int packetLen,
                                                               int flags,
@@ -74,7 +74,7 @@ namespace SharpPcap.WinPcap
                                                               StringBuilder errbuf);
 
         /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs_ex (string /*char **/source,
                                                         IntPtr /*pcap_rmtauth **/auth,
                                                         ref IntPtr /*pcap_if_t ** */alldevs,
@@ -87,7 +87,7 @@ namespace SharpPcap.WinPcap
         /// "\ref wpcap_tut9" for details about statistical mode.
         /// WinPcap specific method
         /// </summary>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        [DllImport(PCAP_DLL)]
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        [DllImport(PCAP_DLL)]
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace SharpPcap.WinPcap
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        [DllImport(PCAP_DLL)]
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr pcap_get_airpcap_handle(IntPtr /* pcap_t* */ p);
 
         #region Send queue functions
@@ -153,14 +153,14 @@ namespace SharpPcap.WinPcap
         /// </summary>
         /// <param name="memsize">The size of the queue</param>
         /// <returns>A pointer to the allocated buffer</returns>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /*pcap_send_queue * */pcap_sendqueue_alloc(int memsize) ;
 
         /// <summary>
         /// Destroy a send queue. 
         /// </summary>
         /// <param name="queue">A pointer to the queue start address</param>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void pcap_sendqueue_destroy(IntPtr /* pcap_send_queue * */queue) ;
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace SharpPcap.WinPcap
         /// <param name="queue">A pointer to a queue</param>
         /// <param name="header">The pcap header of the packet to send</param>
         /// <param name="data">The packet data</param>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_sendqueue_queue(IntPtr /* pcap_send_queue * */queue, IntPtr /* **pkt_header */ header , IntPtr  data);
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace SharpPcap.WinPcap
         /// If it is smaller than the size parameter, an error occurred 
         /// during the send. The error can be caused by a driver/adapter 
         /// problem or by an inconsistent/bogus send queue.</returns>
-        [DllImport(PCAP_DLL, CharSet=CharSet.Ansi)]
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_sendqueue_transmit(IntPtr/*pcap_t * */p, IntPtr /* pcap_send_queue * */queue, int sync);
         #endregion
 

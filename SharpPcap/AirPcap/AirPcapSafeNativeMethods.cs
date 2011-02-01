@@ -42,7 +42,7 @@ namespace SharpPcap.AirPcap
         /// <param name="VersionMinor">Pointer to a variable that will be filled with the minor version number</param>
         /// <param name="VersionRev">Pointer to a variable that will be filled with the revision number</param>
         /// <param name="VersionBuild">Pointer to a variable that will be filled with the build number</param>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void AirpcapGetVersion(/* PUINT */ out UInt32 VersionMajor,
                                                       /* PUINT */ out UInt32 VersionMinor,
                                                       /* PUINT */ out UInt32 VersionRev,
@@ -53,7 +53,7 @@ namespace SharpPcap.AirPcap
         /// </summary>
         /// <param name="AdapterHandle">Handle to an open adapter</param>
         /// <returns>String with the last error, a PCHAR</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr AirpcapGetLastError(/* PAirpcapHandle */ IntPtr AdapterHandle);
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PPAllDevs">Address to a caller allocated pointer. On success this pointer will receive the head of a list of available devices.</param>
         /// <param name="Ebuf">String that will contain error information if FALSE is returned. The size of the string must be AIRPCAP_ERRBUF_SIZE bytes.</param>
         /// <returns>TRUE on success. FALSE is returned on failure, in which case Ebuf is filled in with an appropriate error message.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int AirpcapGetDeviceList(ref IntPtr /* PAircapDeviceDescription* */ PPAllDevs,
                                                         StringBuilder /* PCHAR */ Ebuf);
 
@@ -71,7 +71,7 @@ namespace SharpPcap.AirPcap
         /// </summary>
         /// <param name="PAllDevs">Head of the list of devices returned by AirpcapGetDeviceList()</param>
         /// <returns></returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void AirpcapFreeDeviceList(IntPtr /* PAirpcapDeviceDescription */ PAllDevs);
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace SharpPcap.AirPcap
         /// <param name="DeviceName">Name of the device to open. Use AirpcapGetDeviceList() to get the list of devices.</param>
         /// <param name="Ebuf">String that will contain error information in case of failure. The size of the string must be AIRPCAP_ERRBUF_SIZE bytes.</param>
         /// <returns>A PAirpcapHandle handle on success. NULL is returned on failure, in which case Ebuf is filled in with an appropriate error message.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr AirpcapOpen(string /* PCHAR */ DeviceName, StringBuilder /* PCHAR */ Ebuf);
 
         /// <summary>
         /// Closes an adapter
         /// </summary>
         /// <param name="AdapterHandle">Handle to the adapter to close.</param>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void AirpcapClose(/* PAirpcapHandle */ IntPtr AdapterHandle);
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PCapabilities">Pointer to a library-allocated AirpcapDeviceCapabilities structure that contains
         /// the capabilities of the adapter</param>
         /// <returns>True on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceCapabilities(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                                  /* PAirpcapDeviceCapabilities* */ out IntPtr PCapabilities);
 
@@ -116,7 +116,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="AirpcapMacFlags">Flags word, that contains a bitwise-OR combination of the following flags: \ref AIRPCAP_MF_MONITOR_MODE_ON and \ref AIRPCAP_MF_ACK_FRAMES_ON .</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDeviceMacFlags(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                              /* UINT */ AirPcapMacFlags AirpcapMacFlags);
 
@@ -131,7 +131,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PAirpcapMacFlags">User-provided flags word, that will be filled by the function with an OR combination of the 
         /// following flags: \ref AIRPCAP_MF_MONITOR_MODE_ON and \ref AIRPCAP_MF_ACK_FRAMES_ON.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceMacFlags(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                              /* PUINT */ out AirPcapMacFlags PAirpcapMacFlags);
 
@@ -154,7 +154,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle"></param>
         /// <param name="NewLinkType">the "link type", i.e. the format of the frames that will be received from the adapter.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetLinkType(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                        /* AirpcapLinkType */ AirPcapLinkTypes NewLinkType);
 
@@ -178,7 +178,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PLinkType">Pointer to a caller allocated AirpcapLinkType variable that will contain
         /// the link type of the adapter</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetLinkType(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                        /* PAirpcapLinkType */ out AirPcapLinkTypes PLinkType);
 
@@ -195,7 +195,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="IsFcsPresent">TRUE if the packets should include the FCS, FALSE otherwise</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetFcsPresence(/* PAirpcapHandle */ IntPtr AdapterHandle, bool IsFcsPresent);
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PIsFcsPresent">User-provided variable that will be set to true if the adapter is including the FCS</param>
         /// <returns>TRUE if the operation is successful. FALSE otherwise.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetFcsPresence(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                           /* PBOOL */ out bool PIsFcsPresent);
 
@@ -223,7 +223,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="ValidationType">The type of validation the driver will perform. See the documentation of \ref AirpcapValidationType for details.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetFcsValidation(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                             /* AirpcapValidationType */ AirPcapValidationType ValidationType);
 
@@ -235,7 +235,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="ValidationType">Pointer to a user supplied variable that will contain the type of validation the driver will perform. See the documentation of \ref AirpcapValidationType for details.</param>
         /// <returns>TRUE if the operation is successful, FALSE otherwise</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetFcsValidation(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                             /* PAirpcapValidationType */ out AirPcapValidationType ValidationType);
 
@@ -260,7 +260,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="KeysCollection">Pointer to a \ref PAirpcapKeysCollection structure that contains the keys to be set in the device.</param>
         /// <returns>TRUE if the operation is successful. FALSE otherwise.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDeviceKeys(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapKeysCollection */ IntPtr KeysCollection);
 
@@ -288,7 +288,7 @@ namespace SharpPcap.AirPcap
         /// If the provided buffer is too small to contain the keys, the return value is FALSE and KeysCollectionSize contains the
         /// needed KeysCollection length, in bytes. If the device doesn't have any decryption key configured, the return value is TRUE, and 
         /// KeysCollectionSize will be zero.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceKeys(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapKeysCollection */ IntPtr KeysCollection,
                                                          /* PUINT */ ref UInt32 PKeysCollectionSize);
@@ -314,7 +314,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to an open adapter</param>
         /// <param name="KeysCollection">Pointer to a \ref PAirpcapKeysCollection structure that contains the keys to be set globally.</param>
         /// <returns>TRUE if the operation is successful. FALSE otherwise.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDriverKeys(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapKeysCollection */ IntPtr KeysCollection);
 
@@ -338,7 +338,7 @@ namespace SharpPcap.AirPcap
         /// If the provided buffer is too small to contain the keys, the return value is FALSE and KeysCollectionSize contains the
         /// needed KeysCollection length, in bytes. If no global decryption keys are configured, the return value is TRUE, and 
         /// KeysCollectionSize will be zero.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDriverKeys(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapKeysCollection */ IntPtr KeysCollection,
                                                          /* PUINT */ ref UInt32 PKeysCollectionSize);
@@ -352,7 +352,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="Enable">Either AIRPCAP_DECRYPTION_ON or AIRPCAP_DECRYPTION_OFF</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDecryptionState(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                               /* AirpcapDecryptionState */ AirPcapDecryptionState Enable);
 
@@ -365,7 +365,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PEnable">Pointer to a user supplied variable that will contain the decryption configuration. See \ref PAirpcapDecryptionState for details.</param>
         /// <returns>TRUE if the operation is successful, FALSE otherwise</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDecryptionState(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                               /* PAirpcapDecryptionState */ out AirPcapDecryptionState PEnable);
 
@@ -378,7 +378,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="Enable">Either \ref AIRPCAP_DECRYPTION_ON or \ref AIRPCAP_DECRYPTION_OFF</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDriverDecryptionState(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                                     /* AirpcapDecryptionState */ AirPcapDecryptionState Enable);
 
@@ -391,7 +391,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PEnable">Pointer to a user supplied variable that will contain the decryption configuration. See \ref PAirpcapDecryptionState for details.</param>
         /// <returns>TRUE if the operation is successful. FALSE otherwise.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDriverDecryptionState(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                                     /* PAirpcapDecryptionState */ out AirPcapDecryptionState PEnable);
 
@@ -406,7 +406,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="Channel">The new channel to set</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDeviceChannel(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                             /* uint */ UInt32 Channel);
 
@@ -421,7 +421,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PChannel">Pointer to a user-supplied variable into which the function will copy the currently configured radio channel.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceChannel(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                             /* PUINT */ out UInt32 PChannel);
 
@@ -434,7 +434,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="ChannelInfo">The new channel information to set</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetDeviceChannelEx(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                               /* AirpcapChannelInfo */ AirPcapUnmanagedStructures.AirpcapChannelInfo ChannelInfo);
 
@@ -447,7 +447,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PChannelInfo">Pointer to a user-supplied variable into which the function will copy the currently configured channel information.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceChannelEx(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                               /* PAirpcapChannelInfo */ out AirPcapUnmanagedStructures.AirpcapChannelInfo PChannelInfo);
 
@@ -465,7 +465,7 @@ namespace SharpPcap.AirPcap
         /// <param name="ppChannelInfo">Pointer to a user-supplied variable that will point to an array of supported channel. Such list must not be freed by the caller</param>
         /// <param name="pNumChannelInfo">Number of channels returned in the array</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceSupportedChannels(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                                       /* PAirpcapChannelInfo* */ out IntPtr ppChannelInfo,
                                                                       /* PUINT */ out UInt32 pNumChannelInfo);
@@ -477,7 +477,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PChannel">Pointer to a user-supplied variable that will contain the channel number on success</param>
         /// <param name="PBand">Pointer to a user-supplied variable that will contain the band (a orb/g) of the given channel</param>
         /// <returns>TRUE on success, i.e. the frequency corresponds to a valid a or b/g channel</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapConvertFrequencyToChannel(/* UINT */ UInt32 Frequency,
                                                                      /* PUINT */ out UInt32 PChannel,
                                                                      /* PAirpcapChannelBand */ out UInt32 PBand);
@@ -494,7 +494,7 @@ namespace SharpPcap.AirPcap
         /// <param name="Channel">Channel number to be converted</param>
         /// <param name="PFrequency">Pointer to a user-supplied variable that will contain the channel frequency in MHz on success></param>
         /// <returns></returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapConvertChannelToFrequency(/* UINT */ UInt32 Channel,
                                                                      /* PUINT */ ref UInt32 PFrequency);
 
@@ -512,7 +512,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="BufferSize">New size in bytes</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetKernelBuffer(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                            /* UINT */ UInt32 BufferSize);
 
@@ -525,7 +525,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PSizeBytes">User-allocated variable that will be filled with the size of the kernel buffer.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetKernelBufferSize(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                                /* PUINT */ out UInt32 PSizeBytes);
 
@@ -544,7 +544,7 @@ namespace SharpPcap.AirPcap
         /// <param name="Power">The transmit power. Setting a zero power makes the adapter select the
         /// highest possible power for the current channel.</param>
         /// <returns>TRUE on success. False on failure or if the adapter doesn't support setting the transmit power.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetTxPower(/* PAirpcapHandle */ IntPtr AdapterHandle, /* UINT */ UInt32 Power);
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PPower">User-allocated variable that will be filled with the size of the transmit power</param>
         /// <returns>TRUE on success, false on failure or if the adapter doesn't support getting the transmit power</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetTxPower(/* PAirpcapHandle */ IntPtr AdapterHandle, /* PUINT */ out UInt32 PPower);
 
         /// <summary>
@@ -601,7 +601,7 @@ namespace SharpPcap.AirPcap
         /// </summary>
         /// <param name="AdapterHandle">Handle to an adapter</param>
         /// <returns>TRUE on success. FALSE on failure.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapStoreCurConfigAsAdapterDefault(/* PAirpcapHandle */ IntPtr AdapterHandle);
 
         /// <summary>
@@ -622,7 +622,7 @@ namespace SharpPcap.AirPcap
         /// a a bpf_program structure (see the WinPcap documentation at http://www.winpcap.org/devel.htm).</param>
         /// <param name="Len"></param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetFilter(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                      /* PVOID */ IntPtr Instructions,
                                                      /* UINT */ UInt32 Len);
@@ -633,7 +633,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PMacAddress">Pointer to a user allocated \ref AirpcapMacAddress structure that will receive the MAC address on success. </param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetMacAddress(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapMacAddress */ IntPtr PMacAddress);
 
@@ -649,7 +649,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PMacAddress">Pointer to a user-initialized structure containing the MAC address</param>
         /// <returns>TRUE on success. FALSE on failure, or if the adapter doesn't support changing the address.</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetMacAddress(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PAirpcapMacAddress */ IntPtr PMacAddress);
 
@@ -666,7 +666,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="MinToCopy">is the mintocopy size in bytes</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapSetMinToCopy(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                         /* UINT */ UInt32 MinToCopy);
 
@@ -679,7 +679,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PReadEvent">Pointer to a user-supplied handle in which the read event will be copied.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetReadEvent(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                         /* HANDLE* */ out IntPtr PReadEvent);
 
@@ -700,7 +700,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PReceievedBytes">Pointer to a user supplied variable that will receive the number of bytes copied by AirpcapRead. 
         /// Can be smaller than BufSize.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapRead(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                 /* PBYTE */ IntPtr Buffer,
                                                 /* UINT */ UInt32 BufSize,
@@ -733,7 +733,7 @@ namespace SharpPcap.AirPcap
         /// <param name="TxPacket">Pointer to a buffer that contains the packet to be transmitted.</param>
         /// <param name="PacketLen">Length of the buffer pointed by the TxPacket argument, in bytes</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapWrite(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                  /* PCHAR */ IntPtr TxPacket,
                                                  /* ULONG */ UInt32 PacketLen);
@@ -744,7 +744,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="PStats">Pointer to a user-allocated AirpcapStats structure that will be filled with statistical information.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetStats(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                     /* PAirpcapStats */ IntPtr PStats);
 
@@ -754,7 +754,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="NumberOfLeds">Number of LEDs available on this adapter</param>
         /// <returns></returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetLedsNumber(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                          /* PUINT */ out UInt32 NumberOfLeds);
 
@@ -764,7 +764,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="LedNumber">Zero-based identifier of the LED to turn on</param>
         /// <returns></returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapTurnLedOn(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                      /* UINT */ UInt32 LedNumber);
 
@@ -774,7 +774,7 @@ namespace SharpPcap.AirPcap
         /// <param name="AdapterHandle">Handle to the adapter</param>
         /// <param name="LedNumber">Zero-based identifier of the LED to turn off.</param>
         /// <returns></returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapTurnLedOff(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                       /* UINT */ UInt32 LedNumber);
 
@@ -785,7 +785,7 @@ namespace SharpPcap.AirPcap
         /// <param name="PTimestamp">Pointer to a caller allocated 64bit integer that will receive the device
         /// timestamp, in microseconds.</param>
         /// <returns>TRUE on success</returns>
-        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi)]
+        [DllImport(AIRPCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static bool AirpcapGetDeviceTimestamp(/* PAirpcapHandle */ IntPtr AdapterHandle,
                                                               /* PAirpcapDeviceTimestamp */ IntPtr PTimestamp);
         #endregion
