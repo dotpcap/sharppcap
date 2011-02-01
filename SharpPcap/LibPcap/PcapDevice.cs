@@ -68,6 +68,22 @@ namespace SharpPcap.LibPcap
         public event PacketArrivalEventHandler OnPacketArrival;
 
         /// <summary>
+        /// Implemented because there isn't any way to perform
+        /// if(OnPacketArrival == null) isn't permitted outside of the containing class
+        /// this operation results in a CS0070 compile error
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        internal bool IsOnPacketArrivalNull
+        {
+            get
+            {
+                return (OnPacketArrival == null);
+            }
+        }
+
+        /// <summary>
         /// Fired when the capture process of this pcap device is stopped
         /// </summary>
         public event CaptureStoppedEventHandler OnCaptureStopped;
