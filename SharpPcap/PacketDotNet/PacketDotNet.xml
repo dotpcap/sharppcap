@@ -75,6 +75,16 @@
             <returns>
             A <see cref="T:PacketDotNet.PacketOrByteArraySegment" /></returns>
         </member>
+        <member name="M:PacketDotNet.EthernetPacket.GetEncapsulated(PacketDotNet.Packet)">
+            <summary>
+            Returns the EthernetPacket inside of the Packet p or null if
+            there is no encapsulated packet
+            </summary>
+            <param name="p">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+            <returns>
+            A <see cref="T:PacketDotNet.EthernetPacket" /></returns>
+        </member>
         <member name="M:PacketDotNet.EthernetPacket.ToString(PacketDotNet.StringOutputType)">
             <summary cref="Packet.ToString(StringOutputType)" />
         </member>
@@ -3864,6 +3874,21 @@
             <param name="bas">
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
         </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.#ctor(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.Packet)">
+            <summary>
+            Constructor with parent packet
+            </summary>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
+        </member>
+        <member name="F:PacketDotNet.ICMPv6Packet.skipUpdating">
+            <summary>
+            Used to prevent a recursive stack overflow
+            when recalculating in UpdateCalculatedValues()
+            </summary>
+        </member>
         <member name="P:PacketDotNet.ICMPv6Packet.Type">
             <value>
             The Type value
@@ -3879,6 +3904,11 @@
         </member>
         <member name="P:PacketDotNet.ICMPv6Packet.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.ICMPv6Packet.UpdateCalculatedValues">
+            <summary>
+            Recalculate the checksum
+            </summary>
         </member>
         <member name="M:PacketDotNet.ICMPv6Packet.ToString(PacketDotNet.StringOutputType)">
             <summary cref="Packet.ToString(StringOutputType)" />
@@ -3909,6 +3939,15 @@
             </summary>
             <param name="bas">
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="M:PacketDotNet.IGMPv2Packet.#ctor(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.Packet)">
+            <summary>
+            Constructor with parent
+            </summary>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
         </member>
         <member name="P:PacketDotNet.IGMPv2Packet.Type">
             <value>
@@ -4396,6 +4435,15 @@
             </summary>
             <returns>
             A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.PosixTimeval.CompareTo(PacketDotNet.PosixTimeval)">
+            <summary>
+            Compare this to another
+            </summary>
+            <param name="that">
+            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
         </member>
         <member name="M:PacketDotNet.PosixTimeval.op_LessThan(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
             <summary>
@@ -4897,6 +4945,15 @@
             </summary>
             <param name="bas">
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="M:PacketDotNet.ICMPv4Packet.#ctor(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.Packet)">
+            <summary>
+            Construct with parent packet
+            </summary>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+            <param name="ParentPacket">
+            A <see cref="T:PacketDotNet.Packet" /></param>
         </member>
         <member name="P:PacketDotNet.ICMPv4Packet.TypeCode">
             <value>
