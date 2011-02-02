@@ -41,6 +41,26 @@ namespace SharpPcap.LibPcap
         internal LibPcapLiveDevice( PcapInterface pcapIf )
         {
             m_pcapIf = pcapIf;
+
+            // go through the network interfaces and attempt to populate the mac address, 
+            // friendly name etc of this device
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface adapter in nics)
+            {
+                // if the name and id match then we have found the NetworkInterface
+                // that matches the PcapDevice
+                if (Name.EndsWith(adapter.Id))
+                {
+                    var ipProperties = adapter.GetIPProperties();
+                    if (ipProperties.GatewayAddresses.Count != 0)
+                    {
+                        Interface.GatewayAddress = ipProperties.GatewayAddresses[0].Address;
+                    }
+
+                    Interface.MacAddress = adapter.GetPhysicalAddress();
+                    Interface.FriendlyName = adapter.Name;
+                }
+            }
         }
 
         /// <summary>
