@@ -150,11 +150,8 @@ foreach(AirPcapDevice dev in devices)
 
 
 <h2>Packet.Net architecture and usage</h2>
-<p>If you are familiar with SharpPcap you may recall that SharpPcap used an inheritance model. Tcp packets were represented by a class of type TCPPacket that inherited from IPPacket. IPPacket inherited from EthernetPacket and EthernetPacket inherited from the base packet class. This is convienent as each Tcp packet would have properties for Tcp fields, Ip fields and Ethernet fields. One API downside to this approach was field specific prefixes like TCPWindowSize and IPAddress, to clarify which fields went with which packet header.</p>
-<P>When users asked to be able to construct packets from values a significant issue became apparent. To build say a Udp packet a user needs to provide all of the fields for the Udp packet, including payload, as well as those of all of the other inherited packets, the IP packet and Ethernet packet. This makes for more complex constructors and more complex internal code as headers for derived packets have to be preserved but their data overwritten with the encapsulated packets header and data, ie. the IP packet payload is the Udp header and the Udp payload.</p>
-<p>Another issue with the inherited model is that it makes things like PPPoE difficult to represent as the PPPoE packet is inserted in the hierarchy. We no longer have the straight forward Ethernet->IP->Udp model, we now have Ethernet->PPPoE->PTP->IP->Udp. It's not clear how best to fit this kind of exception case into the inerhitance model.</p>
-<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users static GetEncapsulsted() methods have been added so users can do var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket).</p>
-<p>The GetEncapsulated() methods are intelligent. They are designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets vs writing your own code to do so.</p>
+<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>static GetEncapsulsted()</code> methods have been added so users can do <code>var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket);</code>.</p>
+<p>The GetEncapsulated() methods are intelligent and designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets.</p>
 <p>With Packet.Net constructing packets looks like:
 <pre lang="cs">
 <span class="code-keyword">using</span> PacketDotNet;
@@ -185,6 +182,9 @@ ethernetPacket.PayloadPacket = ipPacket;
 
 <span class="code-comment">// and print out the packet to see that it looks just like we wanted it to</span>
 Console.WriteLine(ethernetPacket.ToString());
+
+<span class="code-comment">// to retrieve the bytes that represent this newly created EthernetPacket use the Bytes property</span>
+byte[] packetBytes = ethernetPacket.Bytes;
 </pre>
 </p>
 
