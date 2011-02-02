@@ -31,7 +31,7 @@
 <p>And so, Tamir decided to start his own library for the task. Several versions in the 1.x series were released. Development slowed towards mid-2007 when the last version in the 1.x series was released, SharpPcap 1.6.2.</p>
 <p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
-
+<p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contains significant API changes as well as WinPcap remote capture and AirPcap support.</p> 
 
 <h2>About SharpPcap</h2>
 <p>The purpose of <a href="http://sourceforge.net/projects/sharppcap" target="_blank">SharpPcap</a> is to provide a framework for capturing, injecting and analyzing network packets for .NET applications.</p>
@@ -41,13 +41,14 @@
 <ul>
     <li><b>Single assembly</b> for <b>Microsoft .NET</b> and <b>Mono</b> platforms on <i>Windows (32 or 64bit)</i>, <i>Linux (32 or 64bit)</i> and <i>Mac</i>.</li>
     <li>High performance - SharpPcap can capture fast enough to keep up with >3MB/s scp transfer rates</li>
-    <li>WinPcap extensions are partially supported:
+    <li><a href="http://www.winpcap.org/docs/docs_412/index.html">WinPcap</a> extensions are partially supported:
         <ul>
             <li>Setting the kernel buffer size</li>
             <li>Injecting packets using send queues.</li>
             <li>Collecting network statistics on a given network interface</li>
         </ul>
     </li>
+    <li><a href="http://www.cacetech.com/products/airpcap.html">AirPcap</a> support</li>
     <li>Enumerating and showing details about the physical network interface on a Windows machine.</li>
     <li>Capturing low-level network packets going through a given interface.</li>
     <li>Analyzing and parsing the following protocols:
@@ -74,14 +75,78 @@
             <li><a href="http://en.wikipedia.org/wiki/Pppoe">PPPoE</a></li>
             <li><a href="http://en.wikipedia.org/wiki/Point-to-Point_Protoco">PTP</a></li>
             <li><a href="http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol">LLDP</a></li>
+            <li><a href="http://http://en.wikipedia.org/wiki/Wake-on-LAN">Wake-on-LAN(WOL)</a></li>
         </ul>
         </i>
     </li>
     <li>Injecting low-level network packets on a given interface.</li>
     <li>Handling (reading and writing) offline packet capture files.</li>
     <li>Retrieving adapter statistics on packets received vs. dropped</li>
-</ul>"
+</ul>
 <p>Please check the project homepage <a href="http://sourceforge.net/projects/sharppcap" target="_blank">homepage</a> for the latest updates and bug fixes.</p>
+
+<h2>SharpPcap architecture</h2>
+<p>SharpPcap has a layered architecture, at the top level are classes that work across all devices:
+<ul>
+  <li><b>CaptureDeviceList</b> - Retrieves a list of all devices on the system</li>
+  <li><b>OfflineCaptureDevice</b> - Device that reads from a pcap capture file</li>
+  <li><b>ICaptureDevice</b> - All capture devices have ICaptureDevice interfaces</li>
+</ul>
+
+The namespaces are layed out hierarchically:
+<ul>
+  <li><b>LibPcap</b>
+    <ul>
+      <li><b>LibPcapLiveDevice</b> - A ICaptureDevice</li>
+      <li><b>LibPcapLiveDeviceList</b> - Retrieves a list of <i>LibPcapLiveDevice</i> devices (these include pcap/winpcap and airpcap devices)</li>
+    </ul>
+  </li>
+  <li><b>WinPcap</b>
+    <ul>
+      <li><b>WinPcapDeviceList</b> - Retrieves a list of <i>WinPcapDevice</i>s (these include winpcap and airpcap devices)</li>
+      <li><b>WinPcapDevice</b> - A LibPcapLiveDevice with additional WinPcap features and interfaces</li>
+    </ul>
+  </li>
+  <li><b>AirPcap</b>
+    <ul>
+      <li><b>AirPcapDeviceList</b> - Retrives a list of <i>AirPcapDevice</i>s</li>
+      <li><b>AirPcapDevice</b> - A WinPcapDevice with additional AirPcap features and interfaces</li>
+    </ul>
+  </li>
+</ul>
+
+CaptureDeviceList returns a list of fully differentiated devices. This means that each ICaptureDevice returned by CaptureDeviceList is either a LibPcapLiveDevice, a WinPcapDevice or a AirPcapDevice. This allows you to retrieve the entire list of devices and differentiate by looking at the type of each device. If you would like to get a specific type of device only you can use one of the particular *DeviceList classes.
+
+<pre lang="cs">
+<span class="code-comment">// Retrieve all capture devices</span>
+var devices = CaptureDeviceList;
+
+<span class="code-comment">// differentiate based upon types</span>
+foreach(ICaptureDevice dev in devices)
+{
+  if(dev is AirPcapDevice)
+  {
+    <span class="code-comment">// process as an AirPcapDevice</span>
+  } else if(dev is WinPcapDevice)
+  {
+    <span class="code-comment">// process as an WinPcapDevice</span>
+  } else if(dev is LibPcapLiveDevice)
+  {
+    <span class="code-comment">// process as an LibPcapLiveDevice</span>
+  }
+}
+</pre>
+
+<pre lang="cs">
+<span class="code-comment">// Retrieve only WinPcap (and AirPcap devices)</span>
+var devices = AirPcapDeviceList;
+foreach(AirPcapDevice dev in devices)
+{
+  <span class="code-comment">// Process this AirPcap device</span>
+}
+</pre>
+
+</p>
 
 
 <h2>Packet.Net architecture and usage</h2>
@@ -143,14 +208,14 @@ Console.WriteLine(ethernetPacket.ToString());
 
 
 <h3 id=ifList>Obtaining the device list (Example 1 in the source package)</h3>
-<p>Typically, the first thing that a SharpPcap-based application does is get a list of attached network adapters. SharpPcap provides a class, <code>LivePcapDeviceList</code> for this purpose. The class is a singleton instance that holds a cached list of network adapters of type <code>LivePcapDevice</code>. In particular, the <code>Name</code> and <code>Description</code> properties contain the name and a human readable description, respectively, of the corresponding device. The following C# sample shows how to retrieve a list of adapters and print it on the screen, printing an error if no adapters are found:</p>
+<p>Typically, the first thing that a SharpPcap-based application does is get a list of attached network adapters. SharpPcap provides a class, <code>CaptureDeviceList</code> for this purpose. The class is a singleton instance that holds a cached list of network adapters of type <code>ICaptureDevice</code>. In particular, the <code>Name</code> and <code>Description</code> properties contain the name and a human readable description, respectively, of the corresponding device. The following C# sample shows how to retrieve a list of adapters and print it on the screen, printing an error if no adapters are found:</p>
 <pre lang="cs">
 <span class="code-comment">// Print SharpPcap version</span> 
 <span class="code-keyword">string</span> ver = SharpPcap.Version.VersionString;
 Console.WriteLine(<span class="code-string">&quot;SharpPcap {0}, Example1.IfList.cs&quot;</span>, ver);
 
 <span class="code-comment">// Retrieve the device list</span>
-<span class="code-SDKkeyword">LivePcapDeviceList</span> devices = LivePcapDeviceList.Instance;
+<span class="code-SDKkeyword">CaptureDeviceList</span> devices = CaptureDeviceList.Instance;
 
 <span class="code-comment">// If no devices were found print an error</span>
 <span class="code-keyword">if</span>(devices.Count &lt; <span class="code-digit">1</span>)
@@ -163,7 +228,7 @@ Console.WriteLine(<span class="code-string">&quot;\nThe following devices are av
 Console.WriteLine(<span class="code-string">&quot;----------------------------------------------------\n&quot;</span>);
 
 <span class="code-comment">// Print out the available network devices</span>
-<span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">LivePcapDevice</span> dev <span class="code-keyword">in</span> devices)
+<span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">ICaptureDevice</span> dev <span class="code-keyword">in</span> devices)
     Console.WriteLine(<span class="code-string">&quot;{0}\n&quot;</span>, dev.ToString());
 
 Console.Write(<span class="code-string">&quot;Hit 'Enter' to exit...&quot;</span>);
@@ -172,7 +237,7 @@ Console.ReadLine();
 <p>The output of the above application will be as something like this:</p>
 <pre>
 c:\sharppcap\Examples\Example1.IfList\bin\Debug>Example1.IfList.exe
-SharpPcap 3.1.0.0, Example1.IfList.cs
+SharpPcap 3.5.0.0, Example1.IfList.cs
 
 The following devices are available on this machine:
 ----------------------------------------------------
@@ -210,10 +275,10 @@ Hit 'Enter' to exit...
 <p>The above two arguments deserve some further explanation.</p>
 <p><code>DeviceMode</code> In normal mode (<code>DeviceMode.Normal</code>), a network adapter only captures packets addressed directly to it; the packets exchanged by other hosts on the network are ignored. Instead, when the adapter is in promiscuous mode (<code>DeviceMode.Promiscuous</code>) it captures all packets whether they are destined to it or not. This means that on shared media (like non-switched Ethernet), libpcap/WinPcap will be able to capture the packets of other hosts. Promiscuous mode is the default for most capture applications, so we enable it in the following example. NOTE: Promiscuous mode can be detected via network means so if you are capturing in promiscuous mode you may be able to be detected by other entities on the network. Search for "detect promiscuous" via a web search engine for more information.</p>
 <p><code>read_timeout</code>: Specifies the read timeout, in milliseconds. A read on the adapter (for example, using the <code>GetNextPacket()</code> function) will always return after <code>read_timeout</code> milliseconds, even if no packets are available from the network. <code>read_timeout</code> also defines the interval between statistical reports if the adapter is in statistical mode (see the <i><a href="#statistics">Gathering statistics on the network traffic</a></i> section). Setting <code>read_timeout</code> to 0 means no timeout, a read on the adapter never returns if no packets arrive. A -1 timeout on the other side causes a read on the adapter to always return immediately.</p>
-<p>The following example shows the use of the <code>OnPacketArrival</code> event for receiving packets. We create an event handler that is being called whenever a new packet is going through the <code>PcapDevice</code>:</p>
+<p>The following example shows the use of the <code>OnPacketArrival</code> event for receiving packets. We create an event handler that is being called whenever a new packet is going through the <code>ICaptureDevice</code>:</p>
 <pre lang="cs">
 <span class="code-comment">// Extract a device from the list</span>
-<span class="code-SDKkeyword">PcapDevice</span> device = devices[i];
+<span class="code-SDKkeyword">ICaptureDevice</span> device = devices[i];
 
 <span class="code-comment">// Register our handler function to the</span>
 <span class="code-comment">// 'packet arrival' event</span>
@@ -253,17 +318,17 @@ device.Close();
 }
 </pre>
 <p>Once the adapter is opened, the capture can be started with the <code>StartCapture()</code> or <code>Capture(<span class="code-keyword">int</span> packetCount)</code> functions. These two functions are very similar, the difference is that <code>StartCapture()</code> is a non-blocking function that starts the capturing process on a new thread, while <code>Capture(<span class="code-keyword">int</span> packetCount)</code> blocks until <code>packetCount</code> packets have been captured. When using <code>StartCapture()</code> we should later call <code>StopCapture()</code> to terminate the capture process. To capture indefinitely call the <code>Capture()</code> method.</p>
-<p>Both of these functions require that an event handler for processing packets registered prior to calling them. This event handler is invoked by <code>PcapDevice</code> for every new packet coming from the network and receives the sender object that invoked this handler (i.e. the <code>PcapDevice</code> object) and the actual received <code>Packet</code>, including all the protocol headers. Note that the frame CRC is normally not present in the packet, because it is removed by the network adapter after the frame validation. Note also that most adapters discard packets with wrong CRCs, so WinPcap (and therefore SharpPcap) is normally not able to capture them.</p>
+<p>Both of these functions require that an event handler for processing packets registered prior to calling them. This event handler is invoked by <code>ICaptureDevice</code> for every new packet coming from the network and receives the sender object that invoked this handler (i.e. the <code>ICaptureDevice</code> object) and the actual received <code>Packet</code>, including all the protocol headers. Note that the frame CRC is normally not present in the packet, because it is removed by the network adapter after the frame validation. Note also that most adapters discard packets with wrong CRCs, so WinPcap (and therefore SharpPcap) is normally not able to capture them.</p>
 <p>The <code>Packet</code> class represents a generic packet captured from the network. Each such packet has a <code>PcapHeader</code> property containing some info (e.g. the timestamp of the capture and the length of the packet) about the captured packet. The above example extracts the timestamp and the length from every <code>Packet</code> object and prints them on the screen.</p>
-<p>Please note that the handler code is called by the <code>PcapDevice</code>; therefore the user application does not have direct control over it. Another approach is to use the <code>GetNextPacket()</code> function, which is presented in the next section.</p>
+<p>Please note that the handler code is called by the <code>ICaptureDevice</code>; therefore the user application does not have direct control over it. Another approach is to use the <code>GetNextPacket()</code> function, which is presented in the next section.</p>
 
 
 <h3 id=basicCapNoCallback>Capturing packets without the event handler (Example 4 in the source package)</h3>
-<p>The example program in this section behaves exactly like the previous sample, but it uses <code>PcapDevice.GetNextPacket()</code> method instead of registering an event handler. The <code>OnPacketArrival</code> event is a good practice and could be a good choice in some situations, such as when capturing from several devices at once. However, handling a callback is sometimes not practical - it often makes the program more complex especially in situations with multithreaded applications. In these cases, <code>GetNextPacket()</code> retrieves a packet with a direct call - using <code>GetNextPacket()</code>, packets are received only when the programmer wants them. In the following program, we re-use the event handler code of the previous example and move it into a loop in the main function right after the call to <code>GetNextPacket()</code>.</p>
+<p>The example program in this section behaves exactly like the previous sample, but it uses <code>ICaptureDevice.GetNextPacket()</code> method instead of registering an event handler. The <code>OnPacketArrival</code> event is a good practice and could be a good choice in some situations, such as when capturing from several devices at once. However, handling a callback is sometimes not practical - it often makes the program more complex especially in situations with multithreaded applications. In these cases, <code>GetNextPacket()</code> retrieves a packet with a direct call - using <code>GetNextPacket()</code>, packets are received only when the programmer wants them. In the following program, we re-use the event handler code of the previous example and move it into a loop in the main function right after the call to <code>GetNextPacket()</code>.</p>
 <p><b>Note</b>: The following example will exit if the timeout of 1000 ms expires with no packets on the network:</p>
 <pre lang="cs">
 <span class="code-comment">// Extract a device from the list</span>
-<span class="code-SDKkeyword">PcapDevice</span> device = devices[i];
+<span class="code-SDKkeyword">ICaptureDevice</span> device = devices[i];
 
 <span class="code-comment">// Open the device for capturing</span>
 <span class="code-keyword">int</span> readTimeoutMilliseconds = <span class="code-digit">1000</span>;
@@ -294,8 +359,8 @@ Console.WriteLine(<span class="code-string">&quot; -- Capture stopped, device cl
 
 <h3 id=filter>Filtering the traffic (Example 5 in the source package)</h3>
 <p>One of the most powerful features offered by libpcap and WinPcap is the filtering engine. It provides a very efficient way to receive subsets of the network traffic. WinPcap and libpcap have an integrated compiler that takes a string containing a high-level Boolean (filter) expression and produces a low-level byte code that can be interpreted by the filter engine of the packet capture driver. The syntax (also known as the <i>tcpdump syntax</i>) of the boolean expression is widely used in many applications other than WinPcap and libpcap. You can find its spec in WinPcap's <a href="http://www.winpcap.org/docs/docs_40_2/html/group__language.html" target="_blank">documentation page</a> or if you are running linux via 'man pcap-filter'.</p>
-<p>The function <code>SetFilter()</code> associates a filter with a capture adapter. Once <code>SetFilter()</code> is called, the associated filter will be applied to all the packets coming from the network, and all the conformant packets (i.e., packets for which the boolean expression evaluates to true) will be actually copied to the application. The following code shows how to compile and set a filter.</p>
-<p>Note that libpcap/winpcap's expression compiler requires that the netmask of the <code>PcapDevice</code> to be passed together with the filter, because some filters created by the compiler require it. However SharpPcap takes care of it for us by automatically extracting the netmask from the adapter.</p>
+<p>The <code>Filter</code> property associates a filter with a capture adapter. Once <code>Filter</code> is set, the associated filter will be applied to all the packets coming from the network, and all the conformant packets (i.e., packets for which the boolean expression evaluates to true) will be actually copied to the application. The following code shows how to compile and set a filter.</p>
+<p>Note that libpcap/winpcap's expression compiler requires that the netmask of the <code>ICaptureDevice</code> to be passed together with the filter, because some filters created by the compiler require it. However SharpPcap takes care of it for us by automatically extracting the netmask from the adapter.</p>
 <p>The filter expression we use in the following snippet is "ip and tcp", which means to "keep only the packets that are both IPv4 and TCP and deliver them to the application":</p>
 <pre lang="cs">
 <span class="code-comment">// Open the device for capturing</span>
@@ -304,7 +369,7 @@ device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
 <span class="code-comment">// tcpdump filter to capture only TCP/IP packets</span>
 <span class="code-keyword">string</span> filter = <span class="code-string">&quot;ip and tcp&quot;</span>;
-device.SetFilter(filter);
+device.Filter = filter;
 
 Console.WriteLine();
 Console.WriteLine(<span class="code-string">&quot;-- The following tcpdump filter will be applied: \&quot;{0}\&quot;&quot;</span>,
@@ -376,7 +441,7 @@ Available devices:
 Console.Write(<span class="code-string">&quot;</span><span class="code-string">-- Please enter the output file name: &quot;</span>);
 <span class="code-keyword">string</span> capFile = Console.ReadLine();
 
-<span class="code-SDKkeyword">PcapDevice</span> device = LivePcapDeviceList.Instance[i];
+<span class="code-SDKkeyword">ICaptureDevice</span> device = CaptureDeviceList.Instance[i];
 
 <span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
 device.OnPacketArrival +=
@@ -409,7 +474,7 @@ device.Close();
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(
     <span class="code-keyword">object</span> sender, <span class="code-SDKkeyword">CaptureEventArgs</span> packet)
 {
-    <span class="code-SDKkeyword">PcapDevice</span> device = (<span class="code-SDKkeyword">PcapDevice</span>)sender;
+    <span class="code-SDKkeyword">ICaptureDevice</span> device = (<span class="code-SDKkeyword">ICaptureDevice</span>)sender;
     <span class="code-comment">// if device has a dump file opened</span>
     <span class="code-keyword">if</span>(device.DumpOpened)
     {
@@ -422,21 +487,21 @@ device.Close();
 <p>As you can see, the structure of the program is very similar to the ones we have seen in the previous sections. The differences are:</p>
 <ul>
     <li>The call to <code>device.DumpOpen( capFile )</code> is issued once the interface is opened. This call opens a dump file and associates it with the interface.</li>
-    <li>The packets are written to this file with the <code>device.Dump( packet )</code> call in the packet handler. Note the use of the sender object parameter passed to the packet handler callback which is casted to a <code>PcapDevice</code>.</li>
+    <li>The packets are written to this file with the <code>device.Dump( packet )</code> call in the packet handler. Note the use of the sender object parameter passed to the packet handler callback which is cast to a <code>ICaptureDevice</code>.</li>
 </ul>
 
 <h4>Reading packets from a dump file</h4>
-<p>Now that we have a dump file available, we can try to read its content. The following code opens a WinPcap/libpcap dump file and displays every packet contained in the file. The <code>SharpPcap.OfflinePcapDevice(capFile)</code> class is a <code>PcapDevice</code> object which represents the offline capture file that we read, then the usual <code>OnPacketArrival</code> event is used to sequence through the packets. As you can see, reading packets from an offline capture is nearly identical to receiving them from a physical interface:</p>
+<p>Now that we have a dump file available, we can try to read its content. The following code opens a WinPcap/libpcap dump file and displays every packet contained in the file. The <code>SharpPcap.OfflineCaptureDevice(capFile)</code> class is a <code>ICaptureDevice</code> object which represents the offline capture file that we read, then the usual <code>OnPacketArrival</code> event is used to sequence through the packets. As you can see, reading packets from an offline capture is nearly identical to receiving them from a physical interface:</p>
 <pre lang="cs">
 Console.Write(<span class="code-string">&quot;-- Please enter an input capture file name: &quot;</span>);
 <span class="code-keyword">string</span> capFile = Console.ReadLine();
 
-<span class="code-SDKkeyword">PcapDevice</span> device;
+<span class="code-SDKkeyword">ICaptureDevice</span> device;
 
 <span class="code-keyword">try</span>
 {
     <span class="code-comment">// Get an offline file pcap device</span>
-    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflinePcapDevice</span>(capFile);
+    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflineCaptureDevice</span>(capFile);
     <span class="code-comment">// Open the device for capturing</span>
     device.Open();
 }
@@ -494,18 +559,18 @@ Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>
 <p> Because SendQueue functionality is WinPcap specific the authors of SharpPcap recommend benchmarking your particular usage of sending packets to determine if the loss of cross platform support is worth the added efficiency of using send queues. The old adage, "avoid premature optimization" should be carefullyl considered.</p>
 <p>SharpPcap represents a send queue using the <code>SendQueue</code> class which is constructed by specifying the size of the new send queue.</p>
 <p>Once the send queue is created, <code>SendQueue.Add()</code> can be called to add a packet to the send queue. This function takes a <code>PcapHeader</code> with the packet's timestamp and length and a buffer or a <code>Packet</code> object holding the data of the packet. These parameters are the same as those received by the <code>OnPacketArrival</code> event, therefore queuing a packet that was just captured or a read from a file is a matter of passing these parameters to <code>SendQueue.Add()</code>.</p>
-<p>To transmit a send queue, SharpPcap provides the <code>PcapDevice.SendQueue(SendQueue q, <span class="code-keyword">SendQueueTransmitModes</span> transmitMode)</code> function. Note the second parameter: if <code lang=cs><span class="code-keyword">SendQueueTransmitModes.Synchronized</span></code>, the send will be <i>synchronized</i>, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).</p>
-<p>Note that transmitting a send queue with <code>PcapDevice.SendQueue()</code> is more efficient than performing a series of <code>PcapDevice.SendPacket()</code>, since the send queue buffered at kernel level drastically decreases the number of context switches.</p>
+<p>To transmit a send queue, SharpPcap provides the <code>WinPcapDevice.SendQueue(SendQueue q, <span class="code-keyword">SendQueueTransmitModes</span> transmitMode)</code> function. Note the second parameter: if <code lang=cs><span class="code-keyword">SendQueueTransmitModes.Synchronized</span></code>, the send will be <i>synchronized</i>, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).</p>
+<p>Note that transmitting a send queue with <code>WinPcapDevice.SendQueue()</code> is more efficient than performing a series of <code>ICaptureDevice.SendPacket()</code>, since the send queue buffered at kernel level drastically decreases the number of context switches.</p>
 <p>When a queue is no longer needed, it can be deleted with <code>SendQueue.Dispose()</code> that frees all the buffers associated with the send queue.</p>
-<p>The next program shows how to use send queues. It opens a capture file by creating a <code>OfflinePcapDevice()</code>, then it stores the packets from the file to a properly allocated send queue. At his point it transmits the queue synchronized.</p>
+<p>The next program shows how to use send queues. It opens a capture file by creating a <code>OfflineCaptureDevice()</code>, then it stores the packets from the file to a properly allocated send queue. At his point it transmits the queue synchronized.</p>
 <p>Note that the link-layer of the dumpfile is compared with one of the interface that will send the packets using the <code>PcapDevice.DataLink</code> property, and a warning is printed if they are different - it is important that the capture-file link-layer be the same as the adapter's link layer for otherwise the transmission is pointless:</p>
 <pre lang="cs">
-<span class="code-SDKkeyword">PcapDevice</span> device;
+<span class="code-SDKkeyword">ICaptureDevice</span> device;
 
 <span class="code-keyword">try</span>
 {
     <span class="code-comment">// Get an offline file pcap device</span>
-    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflinePcapDevice</span>(capFile);
+    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflineCaptureDevice</span>(capFile);
     <span class="code-comment">// Open the device for capturing</span>
     device.Open();
 }
@@ -519,7 +584,7 @@ Console.Write(<span class="code-string">&quot;Queueing packets...&quot;</span>);
 
 <span class="code-comment">// Allocate a new send queue</span>
 SendQueue squeue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">SendQueue</span>
-    ((<span class="code-keyword">int</span>)((<span class="code-SDKkeyword">OfflinePcapDevice</span>)device).PcapFileSize);
+    ((<span class="code-keyword">int</span>)((<span class="code-SDKkeyword">OfflineCaptureDevice</span>)device).PcapFileSize);
 <span class="code-SDKkeyword">Packet</span> packet;
 
 <span class="code-keyword">try</span>
@@ -550,10 +615,10 @@ Console.WriteLine();
 
 <span class="code-keyword">int</span> i=0;
 
-<span class="code-SDKkeyword">var</span> devices = LivePcapDeviceList.Instance;
+<span class="code-SDKkeyword">var</span> devices = CaptureDeviceList.Instance;
 
 <span class="code-comment">// Print out all available devices</span>
-<span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">PcapDevice</span> dev <span class="code-keyword">in</span> devices)
+<span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">ICaptureDevice</span> dev <span class="code-keyword">in</span> devices)
 {
     Console.WriteLine(<span class="code-string">&quot;{0}) {1}&quot;</span>, i, dev.Description);
     i++;
@@ -623,24 +688,24 @@ Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>
 
 
 <h3 id=statistics>Gathering statistics on the network traffic - WinPcap only (Example 11 in the source package)</h3>
-<p>Adapter statistics are available by calling the PcapDevice.Statistics() method but WinPcap has a statistics extension that provides statistics callbacks. WinPcap's statistical engine makes use of the kernel-level packet filter to efficiently classify the incoming packet. You can take a look at the <a href="http://www.winpcap.org/docs/docs_41b5/html/group__NPF.html" target="_blank">NPF driver internals manual</a> if you want to learn more about the details.</p>
+<p>Adapter statistics are available by calling the ICaptureDevice.Statistics property. The Statistics property is supported by all ICaptureDevice types. WinPcap has a statistics extension that provides statistics callbacks that can be more efficient than retrieving device statistics over and over. WinPcap's statistical engine makes use of the kernel-level packet filter to efficiently classify the incoming packet. You can take a look at the <a href="http://www.winpcap.org/docs/docs_41b5/html/group__NPF.html" target="_blank">NPF driver internals manual</a> if you want to learn more about the details.</p>
 <p>In order to use this feature, the programmer must open an adapter and put it in <i>statistical</i> mode. This can be done by setting the <code>PcapDevice.Mode</code> property. In particular, the <code>PcapDevice.Mode</code> property should be set to <code>CaptureMode.Statistics</code>.</p>
 <p>With the statistical mode, making an application that monitors the TCP traffic load is a matter of few lines of code. The following sample shows how to do this:</p>
 <pre lang="cs">
 <span class="code-comment">// Register our handler function to the
 // 'winpcap statistics' event</span>
 device.OnPcapStatistics +=
-    <span class="code-keyword">new</span> <span class="code-SDKkeyword">SharpPcap.StatisticsEventHandler</span>(device_OnPcapStatistics);
+    <span class="code-keyword">new</span> <span class="code-SDKkeyword">WinPcap.StatisticsModeEventHandler</span>(device_OnPcapStatistics);
 
 <span class="code-comment">// Open the device for capturing</span>
 <span class="code-keyword">int</span> readTimeoutMilliseconds = <span class="code-digit">1000</span>;
 device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
 <span class="code-comment">// Handle TCP packets only</span>
-device.SetFilter(<span class="code-string">&quot;tcp&quot;</span>);
+device.Filter = <span class="code-string">&quot;tcp&quot;</span>;
 
 <span class="code-comment">// Set device to statistics mode</span>
-device.PcapMode = CaptureMode.Statistics;
+device.Mode = CaptureMode.Statistics;
 
 Console.WriteLine();
 Console.WriteLine(<span class="code-string">&quot;-- Gathering statistics on \&quot;{0}\&quot;,
@@ -769,7 +834,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
             Console.WriteLine(<span class="code-string">&quot;SharpPcap {0}&quot;</span>, ver);
 
             <span class="code-comment">// If no device exists, print error</span>
-            <span class="code-keyword">if</span>(LivePcapDeviceList.Instance.Count &lt; <span class="code-digit">1</span>)
+            <span class="code-keyword">if</span>(CaptureDeviceList.Instance.Count &lt; <span class="code-digit">1</span>)
             {
                 Console.WriteLine(<span class="code-string">&quot;No device found on this machine&quot;</span>);
                 <span class="code-keyword">return</span>;
@@ -783,7 +848,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
             <span class="code-keyword">int</span> i=0;
 
             <span class="code-comment">// Print out all devices</span>
-            <span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">LivePcapDevice</span> dev <span class="code-keyword">in</span> LivePcapDeviceList.Instance)
+            <span class="code-keyword">foreach</span>(<span class="code-SDKkeyword">ICaptureDevice</span> dev <span class="code-keyword">in</span> CaptureDeviceList.Instance)
             {
                 Console.WriteLine(<span class="code-string">&quot;{0}) {1} {2}&quot;</span>, i, dev.Name, dev.Description);
                 i++;
@@ -797,7 +862,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
             <span class="code-SDKkeyword">var</span> backgroundThread = <span class="code-keyword">new</span> <span class="code-SDKkeyword">System.Threading.Thread</span>(BackgroundThread);
             backgroundThread.Start();
 
-            <span class="code-SDKkeyword">LivePcapDevice</span> device = LivePcapDeviceList.Instance[i];
+            <span class="code-SDKkeyword">ICaptureDevice</span> device = CaptureDeviceList.Instance[i];
 
             <span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
             device.OnPacketArrival +=
@@ -845,7 +910,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
             <span class="code-SDKkeyword">var</span> interval = Now - LastStatisticsOutput;
             <span class="code-keyword">if</span>(interval &gt; LastStatisticsInterval)
             {
-                Console.WriteLine("device_OnPacketArrival: " + ((<span class="code-SDKkeyword">LivePcapDevice</span>)e.Device).Statistics());
+                Console.WriteLine("device_OnPacketArrival: " + ((<span class="code-SDKkeyword">ICaptureDevice</span>)e.Device).Statistics());
                 LastStatisticsOutput = Now;
             }
 
@@ -930,6 +995,13 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 
 
 <h2>History</h2>
+<ul>
+    <li>2011-Feb-01
+        <ul>
+            <li>Updated for SharpPcap v3.5 API changes</li>
+        </ul>
+    </li>
+</ul>
 <ul>
     <li>2010-Nov-07
         <ul>
