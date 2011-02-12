@@ -20,16 +20,10 @@
 
 
 <h2>Background</h2>
-<p>Tamir Gal started the SharpPcap project around 2004. He wanted to use WinPcap in a .NET application while working on his final project for university. The project involved analyzing and decoding VoIP traffic and he wanted to keep coding simple with C# which has time saving features like garbage collection. Accessing the WinPcap API from .NET seemed to be quite a popular requirement, and he found some useful projects on CodeProject's website that let you do just that:</p>
-<ul>
-    <li><a href="http://www.codeproject.com/csharp/pacanal.asp">Packet Capture and Analayzer</a></li>
-    <li><a href="http://www.codeproject.com/csharp/pktcap.asp">Raw Socket Capturing Using C#</a></li>
-    <li><a href="http://www.codeproject.com/dotnet/dotnetwinpcap.asp">Packet sniffing with winpcap functions ported to a .NET library</a></li>
-</ul>
-<p>The first project is a great ethereal .NET clone that lets you capture and analyze numerous types of protocol packets. However, a few issues with this project make it almost impossible to be shared among other .NET applications. Firstly, the author did not provide any generic API for capturing packets that can be used by other .NET applications. He didn't separate his UI code and his analyzing and capturing code, making his capturing code depend on the GUI classes such as <code>ListView</code> to operate. Secondly, for some reason the author chose to re-implement some of WinPcap's functions in C# by himself rather than just wrapping them. This means that his application can't take advantage of the new WinPcap versions since he hard coded a certain version of WinPcap in his application.</p>
-<p>The second and the third articles are nice starts for wrapper projects for WinPcap, however they didn't provide some important WinPcap features such as handling offline pcap files and applying kernel-level packet filters, and most importantly they provide no parser classes for analyzing protocol packets. Both projects didn't post their library source code together with the article in order to let other people extend their work and add new features and new packet parser classes.</p>
+<p>Tamir Gal started the SharpPcap project around 2004. He wanted to use WinPcap in a .NET application while working on his final project for university. The project involved analyzing and decoding VoIP traffic and he wanted to keep coding simple with C# which has time saving features like garbage collection. Accessing the WinPcap API from .NET seemed to be quite a popular requirement, and he found some useful projects on CodeProject's website that let you do just that.</p>
+<p>The projects available at the time did not lend themselves to being used to capture and analyze traffic. Some had mixed ui and capture code, others had reimplemented some of WinPcap's functions in C# and others simply lacked features such as offline file reading or source code.</p>
 <p>And so, Tamir decided to start his own library for the task. Several versions in the 1.x series were released. Development slowed towards mid-2007 when the last version in the 1.x series was released, SharpPcap 1.6.2.</p>
-<p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements.</p>
+<p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements including Linux, Mac support.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
 <p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contains significant API changes as well as WinPcap remote capture and AirPcap support.</p> 
 
@@ -151,7 +145,7 @@ foreach(AirPcapDevice dev in devices)
 
 
 <h2>Packet.Net architecture and usage</h2>
-<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>static GetEncapsulsted()</code> methods have been added so users can do <code>var tcpPacket = TcpPacket.GetEncapsulated(capturedPacket);</code>.</p>
+<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>static GetEncapsulsted()</code> methods have been added so users can do <code>TcpPacket tcpPacket = TcpPacket.GetEncapsulated(capturedPacket);</code>.</p>
 <p>The GetEncapsulated() methods are intelligent and designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets.</p>
 <p>With Packet.Net constructing packets looks like:
 <pre lang="cs">
@@ -997,6 +991,11 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 
 <h2>History</h2>
 <ul>
+    <li>2011-Feb-11
+        <ul>
+            <li>Updates to shorten the document length</li>
+        </ul>
+    </li>
     <li>2011-Feb-01
         <ul>
             <li>Updated for SharpPcap v3.5 API changes</li>
