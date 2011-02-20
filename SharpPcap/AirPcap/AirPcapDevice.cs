@@ -685,7 +685,7 @@ namespace SharpPcap.AirPcap
         /// <summary>
         /// Mac address
         /// </summary>
-        public PhysicalAddress MacAddress
+        public override PhysicalAddress MacAddress
         {
             get
             {

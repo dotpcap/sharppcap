@@ -53,6 +53,11 @@ namespace SharpPcap
         /// </summary>
         ICaptureStatistics Statistics { get; }
 
+        /// <summary>
+        /// Mac address of the physical device
+        /// </summary>
+        System.Net.NetworkInformation.PhysicalAddress MacAddress { get; }
+
 #region Dump related
         /// <summary>
         /// Gets a value indicating whether a dump file is already associated with this device

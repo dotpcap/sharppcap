@@ -220,6 +220,24 @@ namespace SharpPcap.LibPcap
         public abstract ICaptureStatistics Statistics { get; }
 
         /// <summary>
+        /// Mac address of the physical device
+        /// </summary>
+        public virtual System.Net.NetworkInformation.PhysicalAddress MacAddress
+        {
+            get
+            {
+                ThrowIfNotOpen("device not open");
+
+                return Interface.MacAddress;
+            }
+
+            set
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Notify the OnPacketArrival delegates about a newly captured packet
         /// </summary>
         /// <param name="p">
