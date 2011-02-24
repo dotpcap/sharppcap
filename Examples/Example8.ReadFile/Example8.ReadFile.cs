@@ -69,14 +69,14 @@ namespace SharpPcap.Test.Example8
         {
             if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
-                var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+                var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
                 var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
 
                 Console.WriteLine("At: {0}:{1}: MAC:{2} -> MAC:{3}",
-                    ethernetPacket.Timeval.Date.ToString(),
-                    ethernetPacket.Timeval.Date.Millisecond,
-                    ethernetPacket.SourceHwAddress, 
-                    ethernetPacket.DestinationHwAddress);
+                                  e.Packet.Timeval.Date.ToString(),
+                                  e.Packet.Timeval.Date.Millisecond,
+                                  ethernetPacket.SourceHwAddress,
+                                  ethernetPacket.DestinationHwAddress);
             }
         }
     }

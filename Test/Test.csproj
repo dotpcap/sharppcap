@@ -105,6 +105,7 @@
     <Compile Include="LivePcapDeviceSetFilterTest.cs" />
     <Compile Include="PcapDeviceTest.cs" />
     <Compile Include="WinPcap\WinPcapDeviceTest.cs" />
+    <Compile Include="PosixTimevalTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

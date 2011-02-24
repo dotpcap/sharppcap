@@ -68,7 +68,7 @@ namespace SharpPcap
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        void Dump(PacketDotNet.RawPacket p);
+        void Dump(RawCapture p);
 
         /// <summary>
         /// Opens a file for packet writings
@@ -161,7 +161,7 @@ namespace SharpPcap
         /// Retrieves the next packet from a device
         /// </summary>
         /// <returns></returns>
-        PacketDotNet.RawPacket GetNextPacket();
+        RawCapture GetNextPacket();
 
         /// <summary>
         /// Sends a raw packet throgh this device

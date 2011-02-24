@@ -114,7 +114,7 @@ namespace SharpPcap.WinPcap
         /// </summary>
         /// <param name="packet">The packet to add</param>
         /// <returns>True if success, else false</returns>
-        public bool Add( PacketDotNet.RawPacket packet )
+        public bool Add( RawCapture packet )
         {
             var data = packet.Data;
             var timeval = packet.Timeval;

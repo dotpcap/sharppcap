@@ -105,7 +105,7 @@ namespace SharpPcap.Examples
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
 
             // parse the incoming packet
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             if(packet == null)
                 return;
 

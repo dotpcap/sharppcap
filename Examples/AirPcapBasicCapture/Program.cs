@@ -59,7 +59,7 @@ namespace AirPcapBasicCapture
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
             Console.WriteLine(e.Packet.ToString());
 
-            var p = PacketDotNet.Packet.ParsePacket(e.Packet);
+            var p = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             Console.WriteLine(p.ToString(PacketDotNet.StringOutputType.VerboseColored));
         }
     }

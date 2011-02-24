@@ -80,7 +80,7 @@ namespace SharpPcap.Test.Example6
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
 
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
             var tcpPacket = PacketDotNet.TcpPacket.GetEncapsulated(packet);
             if(tcpPacket != null)

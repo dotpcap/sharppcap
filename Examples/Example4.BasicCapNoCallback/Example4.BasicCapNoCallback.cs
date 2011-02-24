@@ -52,7 +52,7 @@ namespace SharpPcap.Test.Example4
             Console.WriteLine("-- Listening on {0}...",
                 device.Description);
 
-            PacketDotNet.RawPacket packet;
+            RawCapture packet;
 
             // Capture packets using GetNextPacket()
             while( (packet = device.GetNextPacket()) != null )

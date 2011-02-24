@@ -95,7 +95,7 @@ namespace MultipleFiltersOnDevice
             var len = e.Packet.Data.Length;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
-            var p = Packet.ParsePacket(e.Packet);
+            var p = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             Console.WriteLine(p.ToString());
         }
     }

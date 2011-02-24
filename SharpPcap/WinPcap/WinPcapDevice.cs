@@ -196,9 +196,9 @@ namespace SharpPcap.WinPcap
         /// Notify the OnPacketArrival delegates about a newly captured packet
         /// </summary>
         /// <param name="p">
-        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// A <see cref="RawCapture"/>
         /// </param>
-        new protected virtual void SendPacketArrivalEvent(PacketDotNet.RawPacket p)
+        new protected virtual void SendPacketArrivalEvent(RawCapture p)
         {
             if(Mode == CaptureMode.Packets)
             {

@@ -32,7 +32,7 @@ namespace SharpPcap.WinPcap
         /// <summary>
         /// This holds time value
         /// </summary>
-        public PacketDotNet.PosixTimeval Timeval
+        public PosixTimeval Timeval
         {
             get;
             set;
@@ -43,7 +43,7 @@ namespace SharpPcap.WinPcap
         /// </summary>
         private byte[]  m_pktData;
 
-        internal StatisticsModePacket(PacketDotNet.RawPacket p)
+        internal StatisticsModePacket(RawCapture p)
         {
             this.Timeval = p.Timeval;
             this.m_pktData  = p.Data;

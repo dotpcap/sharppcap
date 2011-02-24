@@ -83,14 +83,14 @@ namespace Test
             offlineDevice.Open();
             offlineDevice.Filter = "port 53";
 
-            RawPacket rawPacket;
+            RawCapture rawPacket;
             int count = 0;
             do
             {
                 rawPacket = offlineDevice.GetNextPacket();
                 if(rawPacket != null)
                 {
-                    Packet p = Packet.ParsePacket(rawPacket);
+                    Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                     var udpPacket = UdpPacket.GetEncapsulated(p);
                     Assert.IsNotNull(udpPacket);
                     int dnsPort = 53;

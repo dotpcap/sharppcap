@@ -885,7 +885,7 @@ namespace SharpPcap.AirPcap
 
             UInt32 BytesReceived;
 
-            List<PacketDotNet.RawPacket> packets;
+            List<RawCapture> packets;
 
             while (!shouldCaptureThreadStop)
             {
@@ -924,13 +924,13 @@ namespace SharpPcap.AirPcap
         /// <param name="bufferEnd"></param>
         /// <param name="packets"></param>
         protected virtual void MarshalPackets(IntPtr packetsBuffer, IntPtr bufferEnd,
-                                              out List<PacketDotNet.RawPacket> packets)
+                                              out List<RawCapture> packets)
         {
-            PacketDotNet.RawPacket p;
+            RawCapture p;
 
             var linkType = LinkType;
 
-            packets = new List<PacketDotNet.RawPacket>();
+            packets = new List<RawCapture>();
 
             IntPtr bufferPointer = packetsBuffer;
 
@@ -945,10 +945,10 @@ namespace SharpPcap.AirPcap
                 var pkt_data = new byte[header.Caplen];
                 Marshal.Copy(bufferPointer, pkt_data, 0, (int)header.Caplen);
 
-                p = new PacketDotNet.RawPacket(linkType,
-                                               new PacketDotNet.PosixTimeval(header.TsSec,
-                                                                             header.TsUsec),
-                                               pkt_data);
+                p = new RawCapture(linkType,
+                                   new PosixTimeval(header.TsSec,
+                                                    header.TsUsec),
+                                   pkt_data);
 
                 packets.Add(p);
 

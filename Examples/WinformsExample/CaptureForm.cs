@@ -35,7 +35,7 @@ namespace WinformsExample
         /// The queue that the callback thread puts packets in. Accessed by
         /// the background thread when QueueLock is held
         /// </summary>
-        private List<PacketDotNet.RawPacket> PacketQueue = new List<PacketDotNet.RawPacket>();
+        private List<RawCapture> PacketQueue = new List<RawCapture>();
 
         /// <summary>
         /// The last time PcapDevice.Statistics() was called on the active device.
@@ -91,14 +91,14 @@ namespace WinformsExample
 
         public class PacketWrapper
         {
-            private RawPacket p;
+            private RawCapture p;
 
             public int Count { get; private set; }
             public PosixTimeval Timeval { get { return p.Timeval; } }
             public LinkLayers LinkLayerType { get { return p.LinkLayerType; } }
             public int Length { get { return p.Data.Length; } }
 
-            public PacketWrapper(int count, RawPacket p)
+            public PacketWrapper(int count, RawCapture p)
             {
                 this.Count = count;
                 this.p = p;
@@ -245,12 +245,12 @@ namespace WinformsExample
                 }
                 else // should process the queue
                 {
-                    List<PacketDotNet.RawPacket> ourQueue;
+                    List<RawCapture> ourQueue;
                     lock (QueueLock)
                     {
                         // swap queues, giving the capture callback a new one
                         ourQueue = PacketQueue;
-                        PacketQueue = new List<PacketDotNet.RawPacket>();
+                        PacketQueue = new List<RawCapture>();
                     }
 
                     Console.WriteLine("BackgroundThread: ourQueue.Count is {0}", ourQueue.Count);

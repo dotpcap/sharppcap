@@ -61,7 +61,7 @@
         <member name="P:PacketDotNet.EthernetPacket.Color">
             <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         </member>
-        <member name="M:PacketDotNet.EthernetPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.EthernetPacketType,PacketDotNet.PosixTimeval)">
+        <member name="M:PacketDotNet.EthernetPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.EthernetPacketType)">
             <summary>
             Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
             also needs to perform the same operations as it contains an ethernet type
@@ -70,8 +70,6 @@
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="Type">
             A <see cref="T:PacketDotNet.EthernetPacketType" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
             <returns>
             A <see cref="T:PacketDotNet.PacketOrByteArraySegment" /></returns>
         </member>
@@ -1450,7 +1448,7 @@
             <returns>
             A <see cref="T:System.Net.IPAddress" /></returns>
         </member>
-        <member name="M:PacketDotNet.IpPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.IPProtocolType,PacketDotNet.PosixTimeval,PacketDotNet.Packet)">
+        <member name="M:PacketDotNet.IpPacket.ParseEncapsulatedBytes(PacketDotNet.Utils.ByteArraySegment,PacketDotNet.IPProtocolType,PacketDotNet.Packet)">
             <summary>
             Called by IPv4 and IPv6 packets to parse their packet payload
             </summary>
@@ -1458,8 +1456,6 @@
             A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
             <param name="ProtocolType">
             A <see cref="T:PacketDotNet.IPProtocolType" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
             <param name="ParentPacket">
             A <see cref="T:PacketDotNet.Packet" /></param>
             <returns>
@@ -1495,12 +1491,6 @@
             <summary>
             Constructor
             </summary>
-        </member>
-        <member name="P:PacketDotNet.Packet.Timeval">
-            <value>
-            PosixTimeval of this packet, can be the packet arrival time
-            or the packet creation time
-            </value>
         </member>
         <member name="P:PacketDotNet.Packet.SharesMemoryWithSubPackets">
             <value>
@@ -1555,30 +1545,12 @@
             Color used when generating the text description of a packet
             </value>
         </member>
-        <member name="M:PacketDotNet.Packet.Parse(System.Byte[])">
-            <summary>
-            Turns an array of bytes into an EthernetPacket
-            </summary>
-            <param name="data">The packets caught</param>
-            <returns>An ethernet packet which has references to the higher protocols</returns>
-        </member>
-        <member name="M:PacketDotNet.Packet.ParsePacket(PacketDotNet.RawPacket)">
-            <summary>
-            Parse a raw packet into its specific packets and payloads
-            </summary>
-            <param name="rawPacket">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
-            <returns>
-            A <see cref="T:PacketDotNet.Packet" /></returns>
-        </member>
-        <member name="M:PacketDotNet.Packet.ParsePacket(PacketDotNet.LinkLayers,PacketDotNet.PosixTimeval,System.Byte[])">
+        <member name="M:PacketDotNet.Packet.ParsePacket(PacketDotNet.LinkLayers,System.Byte[])">
             <summary>
             Parse bytes into a packet
             </summary>
             <param name="LinkLayer">
             A <see cref="T:PacketDotNet.LinkLayers" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
             <param name="PacketData">
             A <see cref="T:System.Byte" /></param>
             <returns>
@@ -4383,134 +4355,6 @@
             <returns>
             A <see cref="T:System.String" /></returns>
         </member>
-        <member name="T:PacketDotNet.PosixTimeval">
-            <summary> POSIX.4 timeval</summary>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.#ctor(System.UInt64,System.UInt64)">
-            <summary>
-            Constructor with Seconds and MicroSeconds fields
-            </summary>
-            <param name="Seconds">
-            A <see cref="T:System.UInt64" /></param>
-            <param name="MicroSeconds">
-            A <see cref="T:System.UInt64" /></param>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.#ctor">
-            <summary>
-            Construct a PosixTimeval using the current UTC time
-            </summary>
-        </member>
-        <member name="P:PacketDotNet.PosixTimeval.Seconds">
-            <value>
-            Number of seconds in the timeval
-            </value>
-        </member>
-        <member name="P:PacketDotNet.PosixTimeval.MicroSeconds">
-            <value>
-            Number of microseconds in the timeval
-            </value>
-        </member>
-        <member name="P:PacketDotNet.PosixTimeval.Date">
-            <summary> The timeval as a DateTime in Utc </summary>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.Equals(System.Object)">
-            <summary>
-            Equals override
-            </summary>
-            <param name="obj">
-            A <see cref="T:System.Object" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.GetHashCode">
-            <summary>
-            GetHashCode override
-            </summary>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.ToString">
-            <summary>
-            Convert the timeval to a string like 'SECONDS.MICROSECONDSs'
-            </summary>
-            <returns>
-            A <see cref="T:System.String" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.CompareTo(PacketDotNet.PosixTimeval)">
-            <summary>
-            Compare this to another
-            </summary>
-            <param name="that">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Int32" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_LessThan(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator &lt; overload
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_GreaterThan(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator &gt; overload
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_LessThanOrEqual(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator &lt;=
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_GreaterThanOrEqual(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator &gt;=
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_Equality(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator ==
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
-        <member name="M:PacketDotNet.PosixTimeval.op_Inequality(PacketDotNet.PosixTimeval,PacketDotNet.PosixTimeval)">
-            <summary>
-            Operator !=
-            </summary>
-            <param name="a">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="b">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <returns>
-            A <see cref="T:System.Boolean" /></returns>
-        </member>
         <member name="T:PacketDotNet.Utils.RandomUtils">
             <summary>
             Random utility methods
@@ -4537,46 +4381,6 @@
             ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
             http://www.iana.org/assignments/icmpv6-parameters
             </summary>
-        </member>
-        <member name="T:PacketDotNet.RawPacket">
-            <summary>
-            Raw packet as loaded from a pcap device or file
-            </summary>
-        </member>
-        <member name="M:PacketDotNet.RawPacket.#ctor(PacketDotNet.LinkLayers,PacketDotNet.PosixTimeval,System.Byte[])">
-            <summary>
-            Constructor
-            </summary>
-            <param name="LinkLayerType">
-            A <see cref="T:PacketDotNet.LinkLayers" /></param>
-            <param name="Timeval">
-            A <see cref="T:PacketDotNet.PosixTimeval" /></param>
-            <param name="Data">
-            A <see cref="T:System.Byte" /></param>
-        </member>
-        <member name="P:PacketDotNet.RawPacket.LinkLayerType">
-            <value>
-            Link layer from which this packet was captured
-            </value>
-        </member>
-        <member name="P:PacketDotNet.RawPacket.Timeval">
-            <value>
-            The unix timeval when the packet was created
-            </value>
-        </member>
-        <member name="P:PacketDotNet.RawPacket.Data">
-            <summary> Fetch data portion of the packet.</summary>
-        </member>
-        <member name="P:PacketDotNet.RawPacket.Color">
-            <value>
-            Color used when generating the text description of a packet
-            </value>
-        </member>
-        <member name="M:PacketDotNet.RawPacket.ToString">
-            <summary>Output this packet as a readable string</summary>
-        </member>
-        <member name="M:PacketDotNet.RawPacket.ToString(PacketDotNet.StringOutputType)">
-            <summary cref="Packet.ToString(StringOutputType)" />
         </member>
         <member name="T:PacketDotNet.ARPOperation">
             <summary>

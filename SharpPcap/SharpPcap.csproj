@@ -175,6 +175,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LibPcap\LibPcapLiveDeviceList.cs" />
+    <Compile Include="RawCapture.cs" />
+    <Compile Include="PosixTimeval.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

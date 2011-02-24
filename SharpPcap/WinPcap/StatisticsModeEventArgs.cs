@@ -34,12 +34,12 @@ namespace SharpPcap.WinPcap
         /// Constructor for a statistics mode event
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="PacketDotNet.RawPacket"/>
+        /// A <see cref="RawCapture"/>
         /// </param>
         /// <param name="device">
         /// A <see cref="PcapDevice"/>
         /// </param>
-        public StatisticsModeEventArgs(PacketDotNet.RawPacket packet, PcapDevice device)
+        public StatisticsModeEventArgs(RawCapture packet, PcapDevice device)
             : base(packet, device)
         {
         }

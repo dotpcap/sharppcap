@@ -83,7 +83,7 @@ namespace Example12.PacketManipulation
 
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet);
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             if(packet is PacketDotNet.EthernetPacket)
             {
                 var eth = ((PacketDotNet.EthernetPacket)packet);

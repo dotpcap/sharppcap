@@ -30,7 +30,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// The queue that the callback thread puts packets in. Accessed by
         /// the background thread when QueueLock is held
         /// </summary>
-        private static List<PacketDotNet.RawPacket> PacketQueue = new List<PacketDotNet.RawPacket>();
+        private static List<RawCapture> PacketQueue = new List<RawCapture>();
 
         /// <summary>
         /// The last time PcapDevice.Statistics() was called on the active device.
@@ -175,12 +175,12 @@ namespace QueuingPacketsForBackgroundProcessing
                     System.Threading.Thread.Sleep(250);
                 } else // should process the queue
                 {
-                    List<PacketDotNet.RawPacket> ourQueue;
+                    List<RawCapture> ourQueue;
                     lock(QueueLock)
                     {
                         // swap queues, giving the capture callback a new one
                         ourQueue = PacketQueue;
-                        PacketQueue = new List<PacketDotNet.RawPacket>();
+                        PacketQueue = new List<RawCapture>();
                     }
 
                     Console.WriteLine("BackgroundThread: ourQueue.Count is {0}", ourQueue.Count);

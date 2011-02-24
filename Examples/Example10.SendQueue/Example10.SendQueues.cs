@@ -41,7 +41,7 @@ namespace SharpPcap.Test.Example10
             //Allocate a new send queue
             var squeue = new WinPcap.SendQueue
                 ( (int)((OfflineCaptureDevice)device).FileSize );
-            PacketDotNet.RawPacket packet;
+            RawCapture packet;
             
             try
             {
