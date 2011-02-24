@@ -21,7 +21,7 @@
 
 <h2>Background</h2>
 <p>Tamir Gal started the SharpPcap project around 2004. He wanted to use WinPcap in a .NET application while working on his final project for university. The project involved analyzing and decoding VoIP traffic and he wanted to keep coding simple with C# which has time saving features like garbage collection. Accessing the WinPcap API from .NET seemed to be quite a popular requirement, and he found some useful projects on CodeProject's website that let you do just that.</p>
-<p>The projects available at the time did not lend themselves to being used to capture and analyze traffic. Some had mixed ui and capture code, others had reimplemented some of WinPcap's functions in C# and others simply lacked features such as offline file reading or source code.</p>
+<p>The projects available at the time did not lend themselves to being used to capture and analyze traffic. Some had mixed ui and capture code, others had reimplemented some of WinPcap's functions in C# and others lacked features such as offline file reading or source code.</p>
 <p>And so, Tamir decided to start his own library for the task. Several versions in the 1.x series were released. Development slowed towards mid-2007 when the last version in the 1.x series was released, SharpPcap 1.6.2.</p>
 <p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements including Linux, Mac support.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
@@ -46,38 +46,39 @@
     <li><a href="http://www.cacetech.com/products/airpcap.html">AirPcap</a> support</li>
     <li>Enumerating and showing details about the physical network interface on a Windows machine.</li>
     <li>Capturing low-level network packets going through a given interface.</li>
-    <li>Analyzing and parsing the following protocols:
-        <i>
-        <ul>
-            <li><a href="http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field">Ethernet</a></li>
-            <li><a href="http://wiki.wireshark.org/SLL">SLL (Linux Cooked-Mode Capture)</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP (Address Resolution Protocol)</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Internet_Protocol">IP (Internet Protocol)</a>:
-                <ul>
-                    <li><a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a></li>
-                    <li><a href="http://en.wikipedia.org/wiki/IPv6">IPv6</a></li>
-                </ul>
-            </li>
-            <li><a href="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP (Transmission Control Protocol)</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP (User Datagram Protocol)</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMP (Internet Control Message Protocol)</a>:
-                <ul>
-                    <li><a href="http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMPv4</a></li>
-                    <li><a href="http://en.wikipedia.org/wiki/ICMPv6">ICMPv6</a></li>
-                </ul>
-            </li>
-            <li><a href="http://en.wikipedia.org/wiki/IGMP">IGMPv2</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Pppoe">PPPoE</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Point-to-Point_Protoco">PTP</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol">LLDP</a></li>
-            <li><a href="http://http://en.wikipedia.org/wiki/Wake-on-LAN">Wake-on-LAN(WOL)</a></li>
-        </ul>
-        </i>
-    </li>
+    <li><a href="http://packetnet.sf.net">Packet.Net</a> is used for packet parsing</li>
     <li>Injecting low-level network packets on a given interface.</li>
     <li>Handling (reading and writing) offline packet capture files.</li>
     <li>Retrieving adapter statistics on packets received vs. dropped</li>
 </ul>
+
+<b>Packet.Net</b> supports analyzing and parsing the following protocols:
+   <i>
+      <ul>
+         <li><a href="http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field">Ethernet</a></li>
+         <li><a href="http://wiki.wireshark.org/SLL">SLL (Linux Cooked-Mode Capture)</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Address_Resolution_Protocol">ARP (Address Resolution Protocol)</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Internet_Protocol">IP (Internet Protocol)</a>:
+               <ul>
+                  <li><a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a></li>
+                  <li><a href="http://en.wikipedia.org/wiki/IPv6">IPv6</a></li>
+               </ul>
+         </li>
+         <li><a href="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP (Transmission Control Protocol)</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP (User Datagram Protocol)</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMP (Internet Control Message Protocol)</a>:
+               <ul>
+                  <li><a href="http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol">ICMPv4</a></li>
+                  <li><a href="http://en.wikipedia.org/wiki/ICMPv6">ICMPv6</a></li>
+               </ul>
+         </li>
+         <li><a href="http://en.wikipedia.org/wiki/IGMP">IGMPv2</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Pppoe">PPPoE</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Point-to-Point_Protoco">PTP</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol">LLDP</a></li>
+         <li><a href="http://http://en.wikipedia.org/wiki/Wake-on-LAN">Wake-on-LAN(WOL)</a></li>
+      </ul>
+   </i>
 <p>Please check the project homepage <a href="http://sourceforge.net/projects/sharppcap" target="_blank">homepage</a> for the latest updates and bug fixes.</p>
 
 <h2>SharpPcap architecture</h2>
