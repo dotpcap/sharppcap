@@ -801,7 +801,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
         /// <span class="code-comment">The queue that the callback thread puts packets in. Accessed by</span>
         /// <span class="code-comment">the background thread when QueueLock is held</span>
         /// &lt;/summary&gt;</span>
-        <span class="code-keyword">private static</span> <span class="code-SDKkeyword">List</span><PacketDotNet.RawPacket> PacketQueue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">List</span><PacketDotNet.RawPacket>();
+        <span class="code-keyword">private static</span> <span class="code-SDKkeyword">List</span><RawCapture> PacketQueue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">List</span><RawCapture>();
 
         <span class="code-SummaryComment">/// &lt;summary&gt;
         /// <span class="code-comment">The last time PcapDevice.Statistics() was called on the active device.</span>
@@ -947,12 +947,12 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
                 }
                 <span class="code-keyword">else</span> <span class="code-comment">// should process the queue</span>
                 {
-                    <span class="code-SDKkeyword">List&lt;PacketDotNet.RawPacket&gt;</span> ourQueue;
+                    <span class="code-SDKkeyword">List&lt;RawCapture&gt;</span> ourQueue;
                     <span class="code-keyword">lock</span>(QueueLock)
                     {
                         <span class="code-comment">// swap queues, giving the capture callback a new one</span>
                         ourQueue = PacketQueue;
-                        PacketQueue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">List&lt;PacketDotNet.RawPacket&gt;</span>();
+                        PacketQueue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">List&lt;RawCapture&gt;</span>();
                     }
 
                     Console.WriteLine(<span class="code-string">&quot;BackgroundThread: ourQueue.Count is {0}&quot;</span>, ourQueue.Count);
@@ -992,9 +992,11 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 
 <h2>History</h2>
 <ul>
-    <li>2011-Feb-11
+    <li>2011-Feb-24
         <ul>
-            <li>Updates to shorten the document length</li>
+            <li>Separate out Packet.Net packet types from description of SharpPcap</li>
+            <li>Rename PacketDotNet.RawPacket to SharpPcap.RawCapture</li>
+            <li>Shorten the document length</li>
         </ul>
     </li>
     <li>2011-Feb-01
