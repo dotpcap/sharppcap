@@ -221,11 +221,9 @@ namespace SharpPcap
 
         private static DateTime UnixTimeValToDateTime(UInt64 tvSec, UInt64 tvUsec)
         {
-            // add the tvSec value
-            DateTime dt = epochDateTime.AddSeconds(tvSec);
-            dt = dt.AddMilliseconds(tvUsec / 1000); // convert microseconds to milliseconds
-
-            return dt;
+            ulong ticks = (tvUsec * (TimeSpan.TicksPerMillisecond / 1000)) +
+                         (tvSec * TimeSpan.TicksPerSecond);
+            return epochDateTime.AddTicks((long)ticks);
         }
 
         /// <summary>
