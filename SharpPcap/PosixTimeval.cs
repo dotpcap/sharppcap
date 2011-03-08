@@ -152,8 +152,8 @@ namespace SharpPcap
         /// </returns>
         public static bool operator==(PosixTimeval a, PosixTimeval b)
         {
-            return ((a.Seconds == b.Seconds) &&
-                    (a.MicroSeconds == b.MicroSeconds));
+            // Object.Equals() checks for null and then calls a.Equals(b)
+            return Object.Equals(a, b);
         }
 
         /// <summary>
