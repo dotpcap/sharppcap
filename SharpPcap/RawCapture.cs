@@ -80,7 +80,7 @@ namespace SharpPcap
             var buffer = new System.Text.StringBuilder();
 
             // build the output string
-            buffer.AppendFormat("[RawCapture: LinkLayerType={1}, Timeval={2}]",
+            buffer.AppendFormat("[RawCapture: LinkLayerType={0}, Timeval={1}]",
                 LinkLayerType,
                 Timeval);
 
