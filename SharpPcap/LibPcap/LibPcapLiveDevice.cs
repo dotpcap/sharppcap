@@ -166,8 +166,8 @@ namespace SharpPcap.LibPcap
                     (   Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
                                                 // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (short)mode,            // promiscuous mode
-                        (short)read_timeout,    // read timeout
+                        (int)mode,              // promiscuous mode
+                        read_timeout,           // read timeout
                         errbuf );               // error buffer
 
                 if ( PcapHandle == IntPtr.Zero)
