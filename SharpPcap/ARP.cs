@@ -149,7 +149,7 @@ namespace SharpPcap
                 {
                     foreach(var address in device.Addresses)
                     {
-                        if(address.Addr.type == LibPcap.Sockaddr.Type.AF_INET_AF_INET6)
+                        if(address.Addr.type == LibPcap.Sockaddr.AddressTypes.AF_INET_AF_INET6)
                         {
                             localIP = address.Addr.ipAddress;
                             break; // break out of the foreach
@@ -168,7 +168,7 @@ namespace SharpPcap
             {
                 foreach(var address in device.Addresses)
                 {
-                    if(address.Addr.type == LibPcap.Sockaddr.Type.HARDWARE)
+                    if(address.Addr.type == LibPcap.Sockaddr.AddressTypes.HARDWARE)
                     {
                         localMAC = address.Addr.hardwareAddress;
                     }

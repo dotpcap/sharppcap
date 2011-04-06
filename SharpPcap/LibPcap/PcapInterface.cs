@@ -134,7 +134,7 @@ namespace SharpPcap.LibPcap
                 // is this a hardware address?
                 // if so we should set our internal m_macAddress member variable
                 if((newAddress.Addr != null) &&
-                   (newAddress.Addr.type == Sockaddr.Type.HARDWARE))
+                   (newAddress.Addr.type == Sockaddr.AddressTypes.HARDWARE))
                 {
                     if(m_macAddress == null)
                     {
