@@ -34,6 +34,9 @@ namespace SharpPcap
     {
         private static CaptureDeviceList instance;
 
+        private WinPcap.WinPcapDeviceList winPcapDeviceList;
+        private LibPcap.LibPcapLiveDeviceList libPcapDeviceList;
+
         /// <summary>
         /// Method to retrieve this classes singleton instance
         /// </summary>
@@ -61,7 +64,24 @@ namespace SharpPcap
         /// </returns>
         public static CaptureDeviceList New()
         {
-            return new CaptureDeviceList();
+            var newCaptureDevice = new CaptureDeviceList();
+
+            // windows
+            if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
+               (Environment.OSVersion.Platform == PlatformID.Win32Windows))
+            {
+                newCaptureDevice.winPcapDeviceList = WinPcap.WinPcapDeviceList.New();
+            }
+            else // not windows
+            {
+                newCaptureDevice.libPcapDeviceList = LibPcap.LibPcapLiveDeviceList.New();
+            }
+
+            // refresh the device list to flush the original devices and pull the
+            // new ones into the newCaptureDevice
+            newCaptureDevice.Refresh();
+
+            return newCaptureDevice;
         }
 
         /// <summary>
@@ -70,6 +90,17 @@ namespace SharpPcap
         private CaptureDeviceList()
             : base(new List<ICaptureDevice>())
         {
+            // windows
+            if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
+               (Environment.OSVersion.Platform == PlatformID.Win32Windows))
+            {
+                winPcapDeviceList = WinPcap.WinPcapDeviceList.Instance;
+            }
+            else // not windows
+            {
+                libPcapDeviceList = LibPcap.LibPcapLiveDeviceList.Instance;
+            }
+
             Refresh();
         }
 
@@ -79,7 +110,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="List&lt;ICaptureDevice&gt;"/>
         /// </returns>
-        private static List<ICaptureDevice> GetDevices()
+        private List<ICaptureDevice> GetDevices()
         {
             List<ICaptureDevice> deviceList = new List<ICaptureDevice>();
 
@@ -87,7 +118,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                var dl = WinPcap.WinPcapDeviceList.Instance;
+                var dl = winPcapDeviceList;
                 foreach (var c in dl)
                 {
                     deviceList.Add(c);
@@ -95,7 +126,7 @@ namespace SharpPcap
             }
             else // not windows
             {
-                var dl = LibPcap.LibPcapLiveDeviceList.Instance;
+                var dl = libPcapDeviceList;
                 foreach (var c in dl)
                 {
                     deviceList.Add(c);
@@ -112,70 +143,28 @@ namespace SharpPcap
         {
             lock (this)
             {
-                // retrieve the current device list
-                var newDeviceList = GetDevices();
+                // clear out any items we might have
+                base.Items.Clear();
 
-                // update existing devices with values in the new list
-                foreach (var newItem in newDeviceList)
+                // windows
+                if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
+                   (Environment.OSVersion.Platform == PlatformID.Win32Windows))
                 {
-                    foreach (var existingItem in base.Items)
-                    {
-                        if (newItem.Name == existingItem.Name)
-                        {
-                            // TODO: copy things from the new item to the existing item
+                    winPcapDeviceList.Refresh();
 
-                            break; // break out of the foreach(existingItem)
-                        }
+                    foreach(var i in winPcapDeviceList)
+                    {
+                        base.Items.Add(i);
                     }
                 }
-
-                // find items the current list is missing
-                foreach (var newItem in newDeviceList)
+                else // not windows
                 {
-                    bool found = false;
-                    foreach (var existingItem in base.Items)
+                    libPcapDeviceList.Refresh();
+
+                    foreach(var i in libPcapDeviceList)
                     {
-                        if (existingItem.Name == newItem.Name)
-                        {
-                            found = true;
-                            break;
-                        }
+                        base.Items.Add(i);
                     }
-
-                    // add items that we were missing
-                    if (!found)
-                    {
-                        base.Items.Add(newItem);
-                    }
-                }
-
-                // find items that we have that the current list is missing
-                var itemsToRemove = new List<ICaptureDevice>();
-                foreach (var existingItem in base.Items)
-                {
-                    bool found = false;
-
-                    foreach (var newItem in newDeviceList)
-                    {
-                        if (existingItem.Name == newItem.Name)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    // add the device we didn't see in the new list
-                    if (!found)
-                    {
-                        itemsToRemove.Add(existingItem);
-                    }
-                }
-
-                // remove the items outside of the foreach() to avoid
-                // enumeration errors
-                foreach (var itemToRemove in itemsToRemove)
-                {
-                    base.Items.Remove(itemToRemove);
                 }
             }
         }
@@ -190,16 +179,20 @@ namespace SharpPcap
                 // with other methods
                 lock (this)
                 {
-                    var devices = (List<ICaptureDevice>)base.Items;
-                    var dev = devices.Find(delegate(ICaptureDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(ICaptureDevice i) { return i.Description == Name; });
-
-                    if (result == null)
-                        throw new IndexOutOfRangeException();
-                    return result;
+                    // windows
+                    if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
+                       (Environment.OSVersion.Platform == PlatformID.Win32Windows))
+                    {
+                        return winPcapDeviceList[Name];
+                    }
+                    else // not windows
+                    {
+                        return libPcapDeviceList[Name];
+                    }
                 }
             }
         }
+
         #endregion
     }
 }
