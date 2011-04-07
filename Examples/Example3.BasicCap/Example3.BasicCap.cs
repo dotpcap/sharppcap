@@ -73,8 +73,8 @@ namespace SharpPcap.Test.Example3
             }
 
             Console.WriteLine();
-            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
-                device.Description);
+            Console.WriteLine("-- Listening on {0} {1}, hit 'Enter' to stop...",
+                device.Name, device.Description);
 
             // Start the capturing process
             device.StartCapture();
