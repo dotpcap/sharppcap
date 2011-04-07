@@ -56,6 +56,20 @@ namespace SharpPcap.WinPcap
         }
 
         /// <summary>
+        /// Caution: Use the singlton instance unless you know why you need to call this.
+        /// One use is for multiple filters on the same physical device. To apply multiple
+        /// filters open the same physical device multiple times, one for each
+        /// filter by calling this routine and picking the same device out of each list.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="CaptureDeviceList"/>
+        /// </returns>
+        public static WinPcapDeviceList New()
+        {
+            return new WinPcapDeviceList();
+        }
+
+        /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
         private WinPcapDeviceList() : base(new List<WinPcapDevice>())
