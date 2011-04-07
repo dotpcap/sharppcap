@@ -60,9 +60,12 @@ namespace MultipleFiltersOnDevice
             device1.Filter = "tcp port 80"; // http
             device2.Filter = "udp port 53"; // dns
 
+            Console.WriteLine("device1.Filter {0}, device2.Filter {1}",
+                              device1.Filter, device2.Filter);
+
             Console.WriteLine();
-            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
-                device1.Description);
+            Console.WriteLine("-- Listening on {0} {1}, hit 'Enter' to stop...",
+                device1.Name, device1.Description);
 
             // Start the capturing process
             device1.StartCapture();
