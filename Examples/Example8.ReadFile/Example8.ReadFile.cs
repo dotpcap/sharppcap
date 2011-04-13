@@ -1,6 +1,7 @@
 using System;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example8
+namespace Example8
 {
     public class ReadFile
     {

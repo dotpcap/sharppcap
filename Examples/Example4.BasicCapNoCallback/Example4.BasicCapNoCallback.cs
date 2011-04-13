@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example4
+namespace Example4
 {
     /// <summary>
     /// Basic capture example with no callback

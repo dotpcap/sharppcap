@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -76,7 +76,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
     <ProjectGuid>{FEED11A7-3C2C-4D7E-AD85-3ABE02E4E2D1}</ProjectGuid>
-    <RootNamespace>SharpPcap.Test.Example1</RootNamespace>
+    <RootNamespace>Example2</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj">

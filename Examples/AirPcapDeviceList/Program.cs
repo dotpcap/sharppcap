@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SharpPcap.AirPcap;
 
-namespace SharpPcap.Test.AirPcapDeviceListExample
+namespace AirPcapDeviceListExample
 {
     class Program
     {

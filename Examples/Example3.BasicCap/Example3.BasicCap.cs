@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
+using SharpPcap.LibPcap;
+using SharpPcap.AirPcap;
+using SharpPcap.WinPcap;
 
-namespace SharpPcap.Test.Example3
+namespace Example3
 {
     /// <summary>
     /// Basic capture example
@@ -51,20 +55,20 @@ namespace SharpPcap.Test.Example3
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if (device is AirPcap.AirPcapDevice)
+            if (device is AirPcapDevice)
             {
                 // NOTE: AirPcap devices cannot disable local capture
-                var airPcap = device as AirPcap.AirPcapDevice;
-                airPcap.Open(WinPcap.OpenFlags.DataTransferUdp, readTimeoutMilliseconds);
+                var airPcap = device as AirPcapDevice;
+                airPcap.Open(SharpPcap.WinPcap.OpenFlags.DataTransferUdp, readTimeoutMilliseconds);
             }
-            else if(device is WinPcap.WinPcapDevice)
+            else if(device is WinPcapDevice)
             {
-                var winPcap = device as WinPcap.WinPcapDevice;
-                winPcap.Open(WinPcap.OpenFlags.DataTransferUdp | WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                var winPcap = device as WinPcapDevice;
+                winPcap.Open(SharpPcap.WinPcap.OpenFlags.DataTransferUdp | SharpPcap.WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
-            else if (device is LibPcap.LibPcapLiveDevice)
+            else if (device is LibPcapLiveDevice)
             {
-                var livePcapDevice = device as LibPcap.LibPcapLiveDevice;
+                var livePcapDevice = device as LibPcapLiveDevice;
                 livePcapDevice.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
             }
             else

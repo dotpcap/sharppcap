@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example6
+namespace Example6
 {
     public class DumpTCP
     {

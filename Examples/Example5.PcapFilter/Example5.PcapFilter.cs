@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example5
+namespace Example5
 {
     public class PcapFilter
     {

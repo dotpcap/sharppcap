@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example1
+namespace Example1
 {
     /// <summary>
     /// Obtaining the device list

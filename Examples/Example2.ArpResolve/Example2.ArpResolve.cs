@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
@@ -29,7 +30,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-namespace SharpPcap.Test.Example2
+namespace Example2
 {
     /// <summary>
     /// A sample showing how to use the Address Resolution Protocol (ARP)

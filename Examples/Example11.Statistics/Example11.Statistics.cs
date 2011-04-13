@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpPcap;
 
-namespace SharpPcap.Test.Example11
+namespace Example11
 {
     /// <summary>
     /// Stat collection capture example
@@ -46,11 +47,11 @@ namespace SharpPcap.Test.Example11
             Console.Write("-- Please choose a device to gather statistics on: ");
             i = int.Parse( Console.ReadLine() );
 
-            var device = devices[i] as WinPcap.WinPcapDevice;
+            var device = devices[i] as SharpPcap.WinPcap.WinPcapDevice;
 
             // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 
-                new WinPcap.StatisticsModeEventHandler( device_OnPcapStatistics );
+                new SharpPcap.WinPcap.StatisticsModeEventHandler( device_OnPcapStatistics );
 
             // Open the device for capturing
             device.Open();
@@ -59,7 +60,7 @@ namespace SharpPcap.Test.Example11
             device.Filter = "tcp";
 
             // Set device to statistics mode
-            device.Mode = WinPcap.CaptureMode.Statistics;
+            device.Mode = SharpPcap.WinPcap.CaptureMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
@@ -89,7 +90,7 @@ namespace SharpPcap.Test.Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_OnPcapStatistics(object sender, WinPcap.StatisticsModeEventArgs e)
+        private static void device_OnPcapStatistics(object sender, SharpPcap.WinPcap.StatisticsModeEventArgs e)
         {
             // Calculate the delay in microseconds from the last sample.
             // This value is obtained from the timestamp that's associated with the sample.
