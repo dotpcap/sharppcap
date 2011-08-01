@@ -90,7 +90,7 @@
       <Project>{24262E52-1304-4A25-8F73-A3B06E40592E}</Project>
       <Name>SharpPcap</Name>
     </ProjectReference>
-    <Reference Include="PacketDotNet, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet, Version=0.9.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
@@ -106,6 +106,8 @@
     <Compile Include="PcapDeviceTest.cs" />
     <Compile Include="WinPcap\WinPcapDeviceTest.cs" />
     <Compile Include="PosixTimevalTest.cs" />
+    <Compile Include="Performance\PacketParsing.cs" />
+    <Compile Include="Performance\Rate.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -133,4 +135,7 @@
     <ProjectGuid>{24795AED-F26F-4EE7-BCA7-900F54FA5A53}</ProjectGuid>
     <RootNamespace>Test</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Performance\" />
+  </ItemGroup>
 </Project>
