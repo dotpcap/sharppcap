@@ -24,5 +24,6 @@ Pushing changes out to the world
    and click save
 -- Click on the 'i' next to the src file and select Solaris and Others and click
    save
+- Rename the release notes file to 'README' so it is properly detected as the README file by SourceForge
 
 
