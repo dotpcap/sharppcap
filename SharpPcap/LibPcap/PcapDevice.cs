@@ -97,11 +97,19 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
+        /// Cached open and linkType variables, avoids a unsafe pointer comparison
+        /// and a pinvoke call for each packet retrieved as MarshalRawPacket
+        /// retrieves the LinkType
+        /// </summary>
+        private bool isOpen = false;
+        private PacketDotNet.LinkLayers linkType;
+
+        /// <summary>
         /// Return a value indicating if this adapter is opened
         /// </summary>
         public virtual bool Opened
         {
-            get { return (PcapHandle != IntPtr.Zero); }
+            get { return isOpen; }
         }
 
         /// <summary>
@@ -118,7 +126,22 @@ namespace SharpPcap.LibPcap
         internal virtual IntPtr PcapHandle
         {
             get { return m_pcapAdapterHandle; }
-            set { m_pcapAdapterHandle = value; }
+            set
+            {
+                m_pcapAdapterHandle = value;
+
+                // update the cached values
+                if(PcapHandle == IntPtr.Zero)
+                {
+                    isOpen = false;
+                } else
+                {
+                    isOpen = true;
+
+                    // update the cached linktype value
+                    linkType = (PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);
+                }
+            }
         }
 
         /// <summary>
@@ -152,7 +175,7 @@ namespace SharpPcap.LibPcap
             get
             {
                 ThrowIfNotOpen("Cannot get datalink, the pcap device is not opened");
-                return (PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);
+                return linkType;
             }
         }
 
