@@ -63,6 +63,8 @@ namespace Example8
             Console.ReadLine();
         }
 
+        private static int packetIndex = 0;
+
         /// <summary>
         /// Prints the source and dest MAC addresses of each received Ethernet frame
         /// </summary>
@@ -73,11 +75,13 @@ namespace Example8
                 var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
                 var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
 
-                Console.WriteLine("At: {0}:{1}: MAC:{2} -> MAC:{3}",
+                Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
+                                  packetIndex,
                                   e.Packet.Timeval.Date.ToString(),
                                   e.Packet.Timeval.Date.Millisecond,
                                   ethernetPacket.SourceHwAddress,
                                   ethernetPacket.DestinationHwAddress);
+                packetIndex++;
             }
         }
     }
