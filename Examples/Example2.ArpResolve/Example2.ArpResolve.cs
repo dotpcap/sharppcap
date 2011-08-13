@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 /*
 Copyright (c) 2006 Tamir Gal, http://www.tamirgal.com, All rights reserved.
@@ -45,7 +46,7 @@ namespace Example2
             Console.WriteLine("SharpPcap {0}, Example2.ArpResolve.cs\n", ver);
 
             // Retrieve the device list
-            var devices = CaptureDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -71,7 +72,7 @@ namespace Example2
             Console.Write("-- Please choose a device for sending the ARP request: ");
             i = int.Parse( Console.ReadLine() );
 
-            string device = devices[i].Name;
+            var device = devices[i];
 
             System.Net.IPAddress ip;
 
