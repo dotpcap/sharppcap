@@ -91,7 +91,7 @@ namespace WinformsExample
 
         public class PacketWrapper
         {
-            private RawCapture p;
+            public RawCapture p;
 
             public int Count { get; private set; }
             public PosixTimeval Timeval { get { return p.Timeval; } }
@@ -306,6 +306,21 @@ namespace WinformsExample
         private void CaptureForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Shutdown();
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedCells.Count == 0)
+                return;
+
+            var packetWrapper = (PacketWrapper)dataGridView.Rows[dataGridView.SelectedCells[0].RowIndex].DataBoundItem;
+            var packet = Packet.ParsePacket(packetWrapper.p.LinkLayerType, packetWrapper.p.Data);
+            packetInfoTextbox.Text = packet.ToString(StringOutputType.VerboseColored);
         }
     }
 }
