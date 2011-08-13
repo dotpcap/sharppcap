@@ -73,7 +73,8 @@ namespace SharpPcap
         /// Resolves the MAC address of the specified IP address
         /// </summary>
         /// <param name="destIP">The IP address to resolve</param>
-        /// <param name="localIP">The local IP address from which to send the ARP request</param>
+        /// <param name="localIP">The local IP address from which to send the ARP request, if null the local address will be discovered</param>
+        /// <param name="localMAC">The localMAC address to use, if null the local mac will be discovered</param>
         /// <returns>The MAC address that matches to the given IP address or
         /// null if there was a timeout</returns>
         public PhysicalAddress Resolve(System.Net.IPAddress destIP,
