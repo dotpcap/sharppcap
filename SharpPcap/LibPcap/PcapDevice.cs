@@ -253,7 +253,7 @@ namespace SharpPcap.LibPcap
         /// <param name="p">
         /// A <see cref="RawCapture"/>
         /// </param>
-        protected void SendPacketArrivalEvent(RawCapture p)
+        protected virtual void SendPacketArrivalEvent(RawCapture p)
         {
             var handler = OnPacketArrival;
             if(handler != null )

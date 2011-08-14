@@ -198,7 +198,7 @@ namespace SharpPcap.WinPcap
         /// <param name="p">
         /// A <see cref="RawCapture"/>
         /// </param>
-        new protected virtual void SendPacketArrivalEvent(RawCapture p)
+        override protected void SendPacketArrivalEvent(RawCapture p)
         {
             if(Mode == CaptureMode.Packets)
             {
