@@ -393,7 +393,10 @@ namespace SharpPcap.LibPcap
 
         #region Dump methods
         /// <summary>
-        /// Opens a file for packet writings
+        /// Opens a file for packet writing via Dump() methods.
+        ///
+        /// Uses the link-layer type and snapshot length from the currently
+        /// open device
         /// </summary>
         /// <param name="fileName"></param>
         public void DumpOpen(string fileName)
