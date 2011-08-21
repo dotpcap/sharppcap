@@ -184,6 +184,18 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
 
+        /// <summary>
+        /// Returns the snapshot length
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_snapshot(IntPtr /* pcap_t... */ adapter);
+
         #region libpcap specific
         /// <summary>
         /// Returns the file descriptor number from which captured packets are read,
