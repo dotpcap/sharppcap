@@ -25,7 +25,8 @@
 <p>And so, Tamir decided to start his own library for the task. Several versions in the 1.x series were released. Development slowed towards mid-2007 when the last version in the 1.x series was released, SharpPcap 1.6.2.</p>
 <p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements including Linux, Mac support.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
-<p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contains significant API changes as well as WinPcap remote capture and AirPcap support.</p> 
+<p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contained significant API changes as well as WinPcap remote capture and AirPcap support.</p>
+<p>SharpPcap v3.8 was released September X, 2011. The 3.8 release contained API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analagous.
 
 <h2>About SharpPcap</h2>
 <p>The purpose of <a href="http://sourceforge.net/projects/sharppcap" target="_blank">SharpPcap</a> is to provide a framework for capturing, injecting and analyzing network packets for .NET applications.</p>
@@ -48,7 +49,7 @@
     <li>Capturing low-level network packets going through a given interface.</li>
     <li><a href="http://packetnet.sf.net">Packet.Net</a> is used for packet parsing</li>
     <li>Injecting low-level network packets on a given interface.</li>
-    <li>Handling (reading and writing) offline packet capture files.</li>
+    <li>Handling (reading and writing) packet capture files.</li>
     <li>Retrieving adapter statistics on packets received vs. dropped</li>
 </ul>
 
@@ -85,7 +86,6 @@
 <p>SharpPcap has a layered architecture, at the top level are classes that work across all devices:
 <ul>
   <li><b>CaptureDeviceList</b> - Retrieves a list of all devices on the system</li>
-  <li><b>OfflineCaptureDevice</b> - Device that reads from a pcap capture file</li>
   <li><b>ICaptureDevice</b> - All capture devices have ICaptureDevice interfaces</li>
 </ul>
 
@@ -95,6 +95,8 @@ The namespaces are layed out hierarchically:
     <ul>
       <li><b>LibPcapLiveDevice</b> - A ICaptureDevice</li>
       <li><b>LibPcapLiveDeviceList</b> - Retrieves a list of <i>LibPcapLiveDevice</i> devices (these include pcap/winpcap and airpcap devices)</li>
+      <li><b>CaptureFileReaderDevice</b> - Device that reads from a pcap capture file</li>
+      <li><b>CaptureFileWriterDevice</b> - Device that creates or writes to a pcap format capture file</li>
     </ul>
   </li>
   <li><b>WinPcap</b>
@@ -194,8 +196,9 @@ byte[] packetBytes = ethernetPacket.Bytes;
     <li><a href="#basicCap">Opening an adapter and capturing packets (Example 3)</a></li>
     <li><a href="#basicCapNoCallback">Capturing packets without the event  (Example 4)</a></li>
     <li><a href="#filter">Filtering the traffic (Example 5)</a></li>
+    <li><a href="#writeToFile">Writing packets to a capture file (CreatingCaptureFile)</a></li>
+    <li><a href="#readFromFile">Reading packets from a capture file (ReadingCapturefile)</a></li>
     <li><a href="#dumpTCP">Interpreting the packets (Example 6)</a></li>
-    <li><a href="#offline">Handling offline dump files (Example 8)</a></li>
     <li><a href="#sendPackets">Sending packets (Example 9)</a></li>
     <li><a href="#sendqueues">Send Queues (Example 10) - WinPcap only</a></li>
     <li><a href="#statistics">Gathering statistics on the network traffic (Example 11) - WinPcap only</a></li>
@@ -382,6 +385,42 @@ device.Capture();
 device.Close();
 </pre>
 
+<h3 id=writeToFile>Writing packets to a file (CreatingCaptureFile example in the source package)</h3>
+<p>It is useful to be able to write captured packets to a file for offline processing, keeping records etc. Recently SharpPcap gained a new class for writing capture files, CaptureFileWriterDevice. In this example we will be capturing packets from a network device and writing
+them to a newly created capture file.</p>
+<p>
+To write packets to a capture file create a CaptureFileWriterDevice. In this case we are creating one using the settings from
+capture device called 'device'. Capture files need to know the link layer type, a <span class="code-keyword">PacketDotNet.LinkLayers</span>, and the capture packet length. CaptureFileWriterDevice will determine these if given an existing capture device of type
+<span class="code-keyword">LibPcap.LibPcapLiveDevice</span>, or there are other constructors that take them as parameters.
+</p>
+<pre lang="cs">
+<span class="code-comment">// open the output file</span>
+captureFileWriter = <span class="code-keyword">new</span> CaptureFileWriterDevice(device, capFile);
+</pre>
+<p>Now that the captureFileWriter exists we can look at the OnPacketArrival handler to see how simple it is to write them to disk:</p>
+<pre lang="cs">
+<span class="code-comment">// write the packet to the file</span>
+captureFileWriter.Write(e.Packet);
+Console.WriteLine(<span class="code-string">&quot;Packet dumped to file.&quot;</span>);
+</pre>
+
+<h3 id=readFromFile>Reading packets from a file (ReadingCaptureFile example in the source package)</h3>
+<p>Reading packets from a capture file is also quite simple. Create an instance of CaptureFileReaderDevice(string captureFilename)
+and read packets as you would from any device. The ReadingCaptureFile example sets this up like:</p>
+<pre lang="cs">
+<span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
+device.OnPacketArrival +=
+      <span class="code-keyword">new</span> PacketArrivalEventHandler( device_OnPacketArrival );
+
+Console.WriteLine();
+Console.WriteLine
+      (<span class="code-string">&quot;-- Capturing from '{0}', hit 'Ctrl-C' to exit...&quot;</span>,
+      capFile);
+
+<span class="code-comment">// Start capture 'INFINTE' number of packets</span>
+<span class="code-comment">// This method will return when EOF reached.</span>
+device.Capture();
+</pre>
 
 <h3 id=dumpTCP>Interpreting the packets (Example 6 in the source package)</h3>
 <p>Now that we are able to capture and filter network traffic, we want to put our knowledge to work with a simple "real world" application. In this lesson, we will take the code from the previous sections and use these pieces to build a more useful program. The main purpose of the current program is to show how the protocol headers of a captured packet can be parsed and interpreted. The resulting application, called DumpTCP, prints a summary of the TCP traffic on our network. I have chosen to parse and display the TCP protocol (rather than the UDP example posted in the original tutorial) because it is a bit more interesting than UDP and with SharpPcap it doesn't require too much parsing coding.</p>
@@ -428,102 +467,6 @@ Available devices:
 </pre>
 <p>Each of the final three lines represents a different packet.</p>
 
-
-<h3 id=offline>Handling offline dump files (Example 8 in the source package)</h3>
-<p>In this section, we are going to learn how to handle packet capture to a file (dump to file). Libpcap/WinPcap offer built-in functions for saving network traffic to a file and to read the content of dumps - this section will teach you how to accomplish this with SharpPcap. The format for dump files is the libpcap one. This format contains the data of the captured packets in binary form and is a standard widely used by many network tools including wireshark, windump, tcpdump and snort. Therefore, any dump file we create using SharpPcap can be opened with any of the above tools and others and files created by these tools can be opened by SharpPcap.</p>
-<h4>Saving packets to a dump file</h4>
-<p>First of all, let's see how to write packets in libpcap file format. The following example captures the packets from the selected interface and saves them on a file whose name is provided by the user:</p>
-<pre lang="cs">
-Console.Write(<span class="code-string">&quot;</span><span class="code-string">-- Please enter the output file name: &quot;</span>);
-<span class="code-keyword">string</span> capFile = Console.ReadLine();
-
-<span class="code-SDKkeyword">ICaptureDevice</span> device = CaptureDeviceList.Instance[i];
-
-<span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
-device.OnPacketArrival +=
-    <span class="code-keyword">new</span> <span class="code-SDKkeyword">SharpPcap.PacketArrivalEventHandler</span>(device_OnPacketArrival);
-
-<span class="code-comment">// Open the device for capturing</span>
-<span class="code-keyword">int</span> readTimeoutMilliseconds = <span class="code-digit">1000</span>;
-device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
-
-<span class="code-comment">// Open or create a capture output file</span>
-device.DumpOpen(capFile);
-
-Console.WriteLine();
-Console.WriteLine(<span class="code-string">&quot;-- Listening on {0}, hit 'Ctrl-C' to exit...&quot;</span>,
-    device.Description);
-
-<span class="code-comment">// Start capturing indefinitely</span>
-device.Capture();
-
-<span class="code-comment">// Close the pcap device</span>
-<span class="code-comment">// (Note: this line will never be called since</span>
-<span class="code-comment">// we're capturing forever</span>
-device.Close();
-</pre>
-<p>And here is the packet handler that will dump each received packet to the file:</p>
-<pre lang="cs">
-<span class="code-SummaryComment">/// &lt;summary&gt;
-/// <span class="code-comment">Dumps each received packet to a pcap file</span>
-/// &lt;/summary</span>
-<span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(
-    <span class="code-keyword">object</span> sender, <span class="code-SDKkeyword">CaptureEventArgs</span> packet)
-{
-    <span class="code-SDKkeyword">ICaptureDevice</span> device = (<span class="code-SDKkeyword">ICaptureDevice</span>)sender;
-    <span class="code-comment">// if device has a dump file opened</span>
-    <span class="code-keyword">if</span>(device.DumpOpened)
-    {
-        <span class="code-comment">// dump the packet to the file</span>
-        device.Dump(packet);
-        Console.WriteLine(<span class="code-string">&quot;Packet dumped to file.&quot;</span>);
-    }
-}
-</pre>
-<p>As you can see, the structure of the program is very similar to the ones we have seen in the previous sections. The differences are:</p>
-<ul>
-    <li>The call to <code>device.DumpOpen( capFile )</code> is issued once the interface is opened. This call opens a dump file and associates it with the interface.</li>
-    <li>The packets are written to this file with the <code>device.Dump( packet )</code> call in the packet handler. Note the use of the sender object parameter passed to the packet handler callback which is cast to a <code>ICaptureDevice</code>.</li>
-</ul>
-
-<h4>Reading packets from a dump file</h4>
-<p>Now that we have a dump file available, we can try to read its content. The following code opens a WinPcap/libpcap dump file and displays every packet contained in the file. The <code>SharpPcap.OfflineCaptureDevice(capFile)</code> class is a <code>ICaptureDevice</code> object which represents the offline capture file that we read, then the usual <code>OnPacketArrival</code> event is used to sequence through the packets. As you can see, reading packets from an offline capture is nearly identical to receiving them from a physical interface:</p>
-<pre lang="cs">
-Console.Write(<span class="code-string">&quot;-- Please enter an input capture file name: &quot;</span>);
-<span class="code-keyword">string</span> capFile = Console.ReadLine();
-
-<span class="code-SDKkeyword">ICaptureDevice</span> device;
-
-<span class="code-keyword">try</span>
-{
-    <span class="code-comment">// Get an offline file pcap device</span>
-    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflineCaptureDevice</span>(capFile);
-    <span class="code-comment">// Open the device for capturing</span>
-    device.Open();
-}
-<span class="code-keyword">catch</span>(<span class="code-SDKkeyword">Exception</span> e)
-{
-    Console.WriteLine(e.Message);
-    <span class="code-keyword">return</span>;
-}
-
-<span class="code-comment">// Register our handler function to the 'packet arrival' event</span>
-device.OnPacketArrival +=
-    <span class="code-keyword">new</span> <span class="code-SDKkeyword">SharpPcap.PacketArrivalEventHandler</span>(device_OnPacketArrival);
-
-Console.WriteLine();
-Console.WriteLine(<span class="code-string">&quot;-- Capturing from '{0}', hit 'Ctrl-C' to exit...&quot;</span>,
-    capFile);
-
-<span class="code-comment">// Start capturing an indefinite number of packets</span>
-device.Capture();
-
-<span class="code-comment">// Close the pcap device</span>
-device.Close();
-Console.WriteLine(<span class="code-string">&quot;-- End of file reached.&quot;</span>);
-</pre>
-
-
 <h3 id=sendPackets>Sending packets (Example 9 in the source package)</h3>
 <p>The simplest way to send a packet is shown in the following code snippet. After opening an adapter, <code>SendPacket</code> is called to send a hand-crafted packet. <code>SendPacket</code> takes as argument a byte array or a <code>Packet</code> object containing the data to be sent. Notice that the buffer is sent to the network as it was received. This means that the application has to create the correct protocol headers in order to send something meaningful:</p>
 <pre lang="cs">
@@ -558,15 +501,15 @@ Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>
 <p>To transmit a send queue, SharpPcap provides the <code>WinPcapDevice.SendQueue(SendQueue q, <span class="code-keyword">SendQueueTransmitModes</span> transmitMode)</code> function. Note the second parameter: if <code lang=cs><span class="code-keyword">SendQueueTransmitModes.Synchronized</span></code>, the send will be <i>synchronized</i>, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).</p>
 <p>Note that transmitting a send queue with <code>WinPcapDevice.SendQueue()</code> is more efficient than performing a series of <code>ICaptureDevice.SendPacket()</code>, since the send queue buffered at kernel level drastically decreases the number of context switches.</p>
 <p>When a queue is no longer needed, it can be deleted with <code>SendQueue.Dispose()</code> that frees all the buffers associated with the send queue.</p>
-<p>The next program shows how to use send queues. It opens a capture file by creating a <code>OfflineCaptureDevice()</code>, then it stores the packets from the file to a properly allocated send queue. At his point it transmits the queue synchronized.</p>
+<p>The next program shows how to use send queues. It opens a capture file by creating a <code>CaptureFileReaderDevice()</code>, then it stores the packets from the file to a properly allocated send queue. At his point it transmits the queue synchronized.</p>
 <p>Note that the link-layer of the dumpfile is compared with one of the interface that will send the packets using the <code>PcapDevice.DataLink</code> property, and a warning is printed if they are different - it is important that the capture-file link-layer be the same as the adapter's link layer for otherwise the transmission is pointless:</p>
 <pre lang="cs">
 <span class="code-SDKkeyword">ICaptureDevice</span> device;
 
 <span class="code-keyword">try</span>
 {
-    <span class="code-comment">// Get an offline file pcap device</span>
-    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">OfflineCaptureDevice</span>(capFile);
+    <span class="code-comment">// Create a CaptureFileReaderDevice</span>
+    device = <span class="code-keyword">new</span> <span class="code-SDKkeyword">CaptureFileReaderDevice</span>(capFile);
     <span class="code-comment">// Open the device for capturing</span>
     device.Open();
 }
@@ -580,7 +523,7 @@ Console.Write(<span class="code-string">&quot;Queueing packets...&quot;</span>);
 
 <span class="code-comment">// Allocate a new send queue</span>
 SendQueue squeue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">SendQueue</span>
-    ((<span class="code-keyword">int</span>)((<span class="code-SDKkeyword">OfflineCaptureDevice</span>)device).PcapFileSize);
+    ((<span class="code-keyword">int</span>)((<span class="code-SDKkeyword">CaptureFileReaderDevice</span>)device).FileSize);
 <span class="code-SDKkeyword">Packet</span> packet;
 
 <span class="code-keyword">try</span>
@@ -641,7 +584,7 @@ devices[i].Open();
     }
 }
 
-<span class="code-comment">// Close the offline device</span>
+<span class="code-comment">// Close the device device</span>
 device.Close();
 
 <span class="code-comment">// find the network device for sending the packets we read</span>
@@ -991,6 +934,13 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 
 
 <h2>History</h2>
+<ul>
+    <li>2011-Aug-22
+        <ul>
+            <li>Updates for new classes for reading and writing capture files, CaptureFileWriterDevice and CapturefileReaderDevice</li>
+        </ul>
+    </li>
+</ul>
 <ul>
     <li>2011-Feb-24
         <ul>
