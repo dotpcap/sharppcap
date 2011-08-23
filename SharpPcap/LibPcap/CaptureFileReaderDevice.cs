@@ -20,6 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Text;
+using System.IO;
 
 namespace SharpPcap.LibPcap
 {
@@ -50,6 +51,25 @@ namespace SharpPcap.LibPcap
             {
                 return "Capture file reader device";
             }
+        }
+
+        /// <value>
+        /// Number of bytes in the capture file
+        /// </value>
+        public long FileSize
+        {
+            get
+            {
+                return new FileInfo( Name ).Length;
+            }
+        }
+
+        /// <summary>
+        /// The underlying pcap file name
+        /// </summary>
+        public string FileName
+        {
+            get { return System.IO.Path.GetFileName( this.Name ); }
         }
 
         /// <summary>
