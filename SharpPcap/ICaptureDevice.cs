@@ -164,6 +164,15 @@ namespace SharpPcap
         RawCapture GetNextPacket();
 
         /// <summary>
+        /// Gets pointers to the next PCAP header and packet data.
+        /// Data is only valid until next call to GetNextPacketNative.
+        ///
+        /// Advanced use only. Intended to allow unmanaged code to avoid the overhead of
+        /// marshalling PcapHeader and packet contents to allocated memory.
+        /// </summary>
+        int GetNextPacketPointers(ref IntPtr header, ref IntPtr data);
+
+        /// <summary>
         /// Sends a raw packet throgh this device
         /// </summary>
         /// <param name="p">The packet to send</param>

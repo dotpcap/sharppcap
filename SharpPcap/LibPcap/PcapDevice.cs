@@ -353,6 +353,18 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
+        /// Gets pointers to the next PCAP header and packet data.
+        /// Data is only valid until next call to GetNextPacketNative.
+        ///
+        /// Advanced use only. Intended to allow unmanaged code to avoid the overhead of
+        /// marshalling PcapHeader and packet contents to allocated memory.
+        /// </summary>
+        public int GetNextPacketPointers(ref IntPtr header, ref IntPtr data)
+        {
+            return LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
+        }
+
+        /// <summary>
         /// Pcap_loop callback method.
         /// </summary>
         protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
