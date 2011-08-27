@@ -139,7 +139,6 @@
     <Compile Include="DeviceNotReadyException.cs" />
     <Compile Include="LibPcap\PcapStatistics.cs" />
     <Compile Include="WinPcapRequiredException.cs" />
-    <Compile Include="NotSupportedOnOfflineDeviceException.cs" />
     <Compile Include="PacketArrivalEventHandler.cs" />
     <Compile Include="CaptureStoppedEventHandler.cs" />
     <Compile Include="DeviceMode.cs" />
