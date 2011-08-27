@@ -59,6 +59,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SharpPcap</RootNamespace>
     <GenerateDocumentation>true</GenerateDocumentation>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -77,6 +78,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SharpPcap</RootNamespace>
     <GenerateDocumentation>true</GenerateDocumentation>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

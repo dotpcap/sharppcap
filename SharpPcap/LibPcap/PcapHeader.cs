@@ -25,35 +25,29 @@ using System.Runtime.InteropServices;
 namespace SharpPcap.LibPcap
 {
     /// <summary>
-    ///  A wrapper class for libpcap's pcap_pkthdr structure
+    ///  A wrapper for libpcap's pcap_pkthdr structure
     /// </summary>
-    public class PcapHeader
+    public struct PcapHeader
     {
-        /// <summary>
-        /// Constructs a new PcapHeader
-        /// </summary>
-        public PcapHeader()
-        {
-        }
+        static readonly bool isWindows = Environment.OSVersion.Platform != PlatformID.Unix;
 
-        internal PcapHeader (IntPtr pcap_pkthdr)
+        /// <summary>
+        ///  A wrapper class for libpcap's pcap_pkthdr structure
+        /// </summary>
+        unsafe public PcapHeader(IntPtr pcap_pkthdr)
         {
-            if(Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                var pkthdr = (PcapUnmanagedStructures.pcap_pkthdr_unix)Marshal.PtrToStructure(pcap_pkthdr,
-                                                                                              typeof(PcapUnmanagedStructures.pcap_pkthdr_unix));
-                this.CaptureLength = pkthdr.caplen;
-                this.PacketLength = pkthdr.len;
-                this.Seconds = (ulong)pkthdr.ts.tv_sec;
-                this.MicroSeconds = (ulong)pkthdr.ts.tv_usec;
-            } else
-            {
-                var pkthdr = (PcapUnmanagedStructures.pcap_pkthdr_windows)Marshal.PtrToStructure(pcap_pkthdr,
-                                                                                                 typeof(PcapUnmanagedStructures.pcap_pkthdr_windows));
-                this.CaptureLength = pkthdr.caplen;
-                this.PacketLength = pkthdr.len;
-                this.Seconds = (ulong)pkthdr.ts.tv_sec;
-                this.MicroSeconds = (ulong)pkthdr.ts.tv_usec;
+            if (!isWindows) {
+                var pkthdr = *(PcapUnmanagedStructures.pcap_pkthdr_unix*)pcap_pkthdr;
+                this._capturelength = pkthdr.caplen;
+                this._packetlength = pkthdr.len;
+                this._seconds = (uint)pkthdr.ts.tv_sec;
+                this._usec = (uint)pkthdr.ts.tv_usec;
+            } else {
+                var pkthdr = *(PcapUnmanagedStructures.pcap_pkthdr_windows*)pcap_pkthdr;
+                this._capturelength = pkthdr.caplen;
+                this._packetlength = pkthdr.len;
+                this._seconds = (uint)pkthdr.ts.tv_sec;
+                this._usec = (uint)pkthdr.ts.tv_usec;
             }
         }
 
@@ -119,7 +113,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Return the DateTime value of this pcap header
         /// </summary>
-        virtual public System.DateTime Date
+        public System.DateTime Date
         {
             get
             {
@@ -143,7 +137,7 @@ namespace SharpPcap.LibPcap
         {
             IntPtr hdrPtr;
 
-            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            if(!isWindows)
             {
                 // setup the structure to marshal
                 var pkthdr = new PcapUnmanagedStructures.pcap_pkthdr_unix();
