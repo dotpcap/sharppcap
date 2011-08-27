@@ -34,11 +34,6 @@ namespace SharpPcap.LibPcap
         protected PcapInterface m_pcapIf;
 
         /// <summary>
-        /// Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
-        /// </summary>
-        protected IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
-
-        /// <summary>
         /// Handle to a pcap adapter, not equal to IntPtr.Zero if an adapter is open
         /// </summary>
         protected IntPtr       m_pcapAdapterHandle = IntPtr.Zero;
@@ -110,14 +105,6 @@ namespace SharpPcap.LibPcap
         public virtual bool Opened
         {
             get { return isOpen; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating wether pcap dump file is already associated with this device
-        /// </summary>
-        public virtual bool DumpOpened
-        {
-            get { return m_pcapDumpHandle!=IntPtr.Zero; }
         }
 
         /// <summary>
@@ -402,99 +389,6 @@ namespace SharpPcap.LibPcap
 
             return p;
         }
-
-        #region Dump methods
-        /// <summary>
-        /// Opens a file for packet writing via Dump() methods.
-        ///
-        /// Uses the link-layer type and snapshot length from the currently
-        /// open device
-        /// </summary>
-        /// <param name="fileName"></param>
-        public void DumpOpen(string fileName)
-        {
-            ThrowIfNotOpen("Dump requires an open device");
-
-            if(DumpOpened)
-            {
-                throw new PcapException("A dump file is already opened");
-            }
-            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, fileName);
-            if(!DumpOpened)
-                throw new PcapException("Error openning dump file.");
-        }
-
-        /// <summary>
-        /// Closes the opened dump file
-        /// </summary>
-        public void DumpClose()
-        {
-            if(DumpOpened)
-            {
-                LibPcapSafeNativeMethods.pcap_dump_close(m_pcapDumpHandle);
-                m_pcapDumpHandle = IntPtr.Zero;
-            }
-        }
-
-        /// <summary>
-        /// Flushes all write buffers of the opened dump file
-        /// </summary>
-        public void DumpFlush()
-        {
-            if (DumpOpened)
-            {
-                int result = LibPcapSafeNativeMethods.pcap_dump_flush(m_pcapDumpHandle);
-                if (result < 0)
-                    throw new PcapException("Error writing buffer to dumpfile. " + LastError);
-            }
-        }
-
-        /// <summary>
-        /// Writes a packet to the pcap dump file associated with this device.
-        /// </summary>
-        public void Dump(byte[] p, PcapHeader h)
-        {
-            ThrowIfNotOpen("Cannot dump packet, device is not opened");
-            if(!DumpOpened)
-                throw new DeviceNotReadyException("Cannot dump packet, dump file is not opened");
-
-            //Marshal packet
-            IntPtr pktPtr;
-            pktPtr = Marshal.AllocHGlobal(p.Length);
-            Marshal.Copy(p, 0, pktPtr, p.Length);
-
-            //Marshal header
-            IntPtr hdrPtr = h.MarshalToIntPtr();
-
-            LibPcapSafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
-
-            Marshal.FreeHGlobal(pktPtr);
-            Marshal.FreeHGlobal(hdrPtr);
-        }
-
-        /// <summary>
-        /// Writes a packet to the pcap dump file associated with this device.
-        /// </summary>
-        /// <param name="p">The packet to write</param>
-        public void Dump(byte[] p)
-        {
-            Dump(p, new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length));
-        }
-
-        /// <summary>
-        /// Writes a packet to the pcap dump file associated with this device.
-        /// </summary>
-        /// <param name="p">The packet to write</param>
-        public void Dump(RawCapture p)
-        {
-            var data = p.Data;
-            var timeval = p.Timeval;
-            var header = new PcapHeader(timeval.Seconds, timeval.MicroSeconds,
-                                        (uint)data.Length, (uint)data.Length);
-            Dump(data, header);
-        }
-
-        #endregion
 
         #region Filtering
         /// <summary>

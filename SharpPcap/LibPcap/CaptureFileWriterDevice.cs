@@ -33,6 +33,25 @@ namespace SharpPcap.LibPcap
     {
         private string m_pcapFile;
 
+        /// <summary>
+        /// Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
+        /// </summary>
+        protected IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
+
+        /// <summary>
+        /// Whether dump file is open or not
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        protected bool DumpOpened
+        {
+            get
+            {
+                return (m_pcapDumpHandle != IntPtr.Zero);
+            }
+        }
+
         /// <value>
         /// The name of the capture file
         /// </value>
@@ -159,6 +178,7 @@ namespace SharpPcap.LibPcap
                 throw new System.InvalidOperationException("snapshotLength > Pcap.MAX_PACKET_SIZE");
             }
 
+            // set the device handle
             PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)linkLayerType, snapshotLength.Value);
 
             m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, captureFilename);

@@ -116,14 +116,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaptureDeviceList.cs" />
-    <Compile Include="OfflineCaptureDevice.cs" />
     <Compile Include="PcapException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LibPcap\PcapHeader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="LibPcap\OfflinePcapDevice.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Pcap.cs">

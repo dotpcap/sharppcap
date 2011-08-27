@@ -2,6 +2,7 @@ using System;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Example12.PacketManipulation
 {
@@ -53,7 +54,7 @@ namespace Example12.PacketManipulation
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 string capFile = Console.ReadLine();
-                device = new OfflineCaptureDevice(capFile);
+                device = new CaptureFileReaderDevice(capFile);
             }
             else
             {

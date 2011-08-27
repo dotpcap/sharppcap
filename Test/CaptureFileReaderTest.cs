@@ -1,12 +1,13 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 
 namespace Test
 {
     [TestFixture]
-    public class OfflinePcapDeviceTest
+    public class CaptureFileReaderDeviceTest
     {
         private static int capturedPackets;
 
@@ -17,13 +18,13 @@ namespace Test
         [Test]
         public void CaptureInfinite()
         {
-            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
-            offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
-            offlineDevice.Open();
+            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
+            device.OnPacketArrival += HandleDeviceOnPacketArrival;
+            device.Open();
 
             var expectedPackets = 10;
             capturedPackets = 0;
-            offlineDevice.Capture();
+            device.Capture();
 
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
@@ -35,18 +36,18 @@ namespace Test
         [Test]
         public void CaptureFinite()
         {
-            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
-            offlineDevice.OnPacketArrival += HandleOfflineDeviceOnPacketArrival;
-            offlineDevice.Open();
+            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
+            device.OnPacketArrival += HandleDeviceOnPacketArrival;
+            device.Open();
 
             var expectedPackets = 3;
             capturedPackets = 0;
-            offlineDevice.Capture(expectedPackets);
+            device.Capture(expectedPackets);
 
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
 
-        void HandleOfflineDeviceOnPacketArrival (object sender, CaptureEventArgs e)
+        void HandleDeviceOnPacketArrival (object sender, CaptureEventArgs e)
         {
             Console.WriteLine("got packet " + e.Packet.ToString());
             capturedPackets++;
@@ -59,13 +60,13 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var offlineDevice = new OfflineCaptureDevice("../../capture_files/ipv6_http.pcap");
+            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
 
             var caughtExpectedException = false;
             try
             {
 #pragma warning disable 0168
-                var stats = offlineDevice.Statistics;
+                var stats = device.Statistics;
 #pragma warning restore 0168
             } catch(NotSupportedOnOfflineDeviceException)
             {
@@ -78,16 +79,16 @@ namespace Test
         [Test]
         public void SetFilter()
         {
-            var offlineDevice = new OfflineCaptureDevice("../../capture_files/test_stream.pcap");
+            var device = new CaptureFileReaderDevice("../../capture_files/test_stream.pcap");
 
-            offlineDevice.Open();
-            offlineDevice.Filter = "port 53";
+            device.Open();
+            device.Filter = "port 53";
 
             RawCapture rawPacket;
             int count = 0;
             do
             {
-                rawPacket = offlineDevice.GetNextPacket();
+                rawPacket = device.GetNextPacket();
                 if(rawPacket != null)
                 {
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
@@ -101,7 +102,7 @@ namespace Test
 
             Assert.AreEqual(1, count);
 
-            offlineDevice.Close(); // close the device
+            device.Close(); // close the device
         }
     }
 }

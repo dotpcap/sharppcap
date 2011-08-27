@@ -94,8 +94,8 @@ namespace SharpPcap.LibPcap
                 throw new PcapException( err );
             }
 
-            // set the local handle
-            this.PcapHandle = adapterHandle;
+            // set the device handle
+            PcapHandle = adapterHandle;
         }
 
         /// <summary>

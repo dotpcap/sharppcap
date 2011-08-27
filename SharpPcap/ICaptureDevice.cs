@@ -58,35 +58,6 @@ namespace SharpPcap
         /// </summary>
         System.Net.NetworkInformation.PhysicalAddress MacAddress { get; }
 
-#region Dump related
-        /// <summary>
-        /// Gets a value indicating whether a dump file is already associated with this device
-        /// </summary>
-        bool DumpOpened { get; }
-
-        /// <summary>
-        /// Writes a packet to the pcap dump file associated with this device.
-        /// </summary>
-        /// <param name="p">The packet to write</param>
-        void Dump(RawCapture p);
-
-        /// <summary>
-        /// Opens a file for packet writings
-        /// </summary>
-        /// <param name="fileName"></param>
-        void DumpOpen(string fileName);
-
-        /// <summary>
-        /// Closes the opened dump file
-        /// </summary>
-        void DumpClose();
-
-        /// <summary>
-        /// Flushes all write buffers of the opened dump file
-        /// </summary>
-        void DumpFlush();
-#endregion
-
         /// <summary>
         /// Opens the adapter
         /// </summary>

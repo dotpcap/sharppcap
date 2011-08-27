@@ -28,7 +28,7 @@ namespace Example10
             try
             {
                 // Get an offline file pcap device
-                device = new OfflineCaptureDevice(capFile);
+                device = new CaptureFileReaderDevice(capFile);
 
                 // Open the device for capturing
                 device.Open();
@@ -43,7 +43,7 @@ namespace Example10
 
             //Allocate a new send queue
             var squeue = new SharpPcap.WinPcap.SendQueue
-                ( (int)((OfflineCaptureDevice)device).FileSize );
+                ( (int)((CaptureFileReaderDevice)device).FileSize );
             RawCapture packet;
             
             try
