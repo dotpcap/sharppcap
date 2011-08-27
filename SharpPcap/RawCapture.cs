@@ -47,11 +47,11 @@ namespace SharpPcap
         }
 
         /// <summary> Fetch data portion of the packet.</summary>
-        public virtual byte[] Data
-        {
-            get;
-            set;
-        }
+        ///
+        /// Data as a class field vs. a virtual property improves performance
+        /// significantly. ~2.5% when parsing the packet with Packet.Net and
+        /// ~20% when reading each byte of the packet
+        public byte[] Data;
 
         /// <summary>
         /// Constructor
