@@ -68,7 +68,7 @@ namespace Test
 #pragma warning disable 0168
                 var stats = device.Statistics;
 #pragma warning restore 0168
-            } catch(NotSupportedOnOfflineDeviceException)
+            } catch(NotSupportedOnCaptureFileException)
             {
                 caughtExpectedException = true;
             }
