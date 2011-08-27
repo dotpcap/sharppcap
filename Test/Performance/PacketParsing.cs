@@ -15,18 +15,18 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while(packetsRead < packetsToRead)
             {
-                var offlineDevice = new OfflineCaptureDevice("../../capture_files/10k_packets.pcap");
-                offlineDevice.Open();
+                var captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice("../../capture_files/10k_packets.pcap");
+                captureDevice.Open();
 
                 RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = offlineDevice.GetNextPacket();
+                    rawCapture = captureDevice.GetNextPacket();
                     packetsRead++;
                 }
                 while(rawCapture != null);
 
-                offlineDevice.Close();
+                captureDevice.Close();
             }
 
             var endTime = DateTime.Now;
