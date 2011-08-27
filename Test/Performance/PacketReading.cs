@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Test.Performance
 {
     [TestFixture]
-    public class PacketParsing
+    public class PacketReading
     {
         [Test]
         public void Benchmark()
