@@ -118,7 +118,7 @@ namespace SharpPcap.WinPcap
         {
             var data = packet.Data;
             var timeval = packet.Timeval;
-            var header = new PcapHeader(timeval.Seconds, timeval.MicroSeconds,
+            var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
                                         (uint)data.Length, (uint)data.Length);
             return this.AddInternal(data, header);
         }
@@ -132,7 +132,7 @@ namespace SharpPcap.WinPcap
         /// <returns>True if success, else false</returns>
         public bool Add( byte[] packet, int seconds, int microseconds )
         {
-            var header = new PcapHeader((ulong)seconds, (ulong)microseconds,
+            var header = new PcapHeader((uint)seconds, (uint)microseconds,
                                         (uint)packet.Length, (uint)packet.Length);
             
             return this.Add( packet, header );

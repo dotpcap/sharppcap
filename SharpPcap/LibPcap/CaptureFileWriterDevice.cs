@@ -259,7 +259,7 @@ namespace SharpPcap.LibPcap
         {
             var data = p.Data;
             var timeval = p.Timeval;
-            var header = new PcapHeader(timeval.Seconds, timeval.MicroSeconds,
+            var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
                                         (uint)data.Length, (uint)data.Length);
             Write(data, header);
         }
