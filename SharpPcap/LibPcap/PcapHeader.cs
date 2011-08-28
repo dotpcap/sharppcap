@@ -38,16 +38,16 @@ namespace SharpPcap.LibPcap
         {
             if (!isWindows) {
                 var pkthdr = *(PcapUnmanagedStructures.pcap_pkthdr_unix*)pcap_pkthdr;
-                this._capturelength = pkthdr.caplen;
-                this._packetlength = pkthdr.len;
-                this._seconds = (uint)pkthdr.ts.tv_sec;
-                this._usec = (uint)pkthdr.ts.tv_usec;
+                this.CaptureLength = pkthdr.caplen;
+                this.PacketLength = pkthdr.len;
+                this.Seconds = (uint)pkthdr.ts.tv_sec;
+                this.MicroSeconds = (uint)pkthdr.ts.tv_usec;
             } else {
                 var pkthdr = *(PcapUnmanagedStructures.pcap_pkthdr_windows*)pcap_pkthdr;
-                this._capturelength = pkthdr.caplen;
-                this._packetlength = pkthdr.len;
-                this._seconds = (uint)pkthdr.ts.tv_sec;
-                this._usec = (uint)pkthdr.ts.tv_usec;
+                this.CaptureLength = pkthdr.caplen;
+                this.PacketLength = pkthdr.len;
+                this.Seconds = (uint)pkthdr.ts.tv_sec;
+                this.MicroSeconds = (uint)pkthdr.ts.tv_usec;
             }
         }
 
@@ -66,49 +66,25 @@ namespace SharpPcap.LibPcap
             this.CaptureLength = captureLength;
         }
 
-        private ulong _seconds;
-
         /// <summary>
         /// The seconds value of the packet's timestamp
         /// </summary>
-        public ulong Seconds
-        {
-            get { return _seconds; }
-            set { _seconds = value; }
-        }
-
-        private ulong _usec;
+        public ulong Seconds;
 
         /// <summary>
         /// The microseconds value of the packet's timestamp
         /// </summary>
-        public ulong MicroSeconds
-        {
-            get { return _usec; }
-            set { _usec = value; }
-        }
-
-        private uint _packetlength;
+        public ulong MicroSeconds;
 
         /// <summary>
         /// The actual length of the packet
         /// </summary>
-        public uint PacketLength
-        {
-            get { return _packetlength; }
-            set { _packetlength = value; }
-        }
-
-        private uint _capturelength;
+        public uint PacketLength;
 
         /// <summary>
         /// The length of the capture
         /// </summary>
-        public uint CaptureLength
-        {
-            get { return _capturelength; }
-            set { _capturelength = value; }
-        }
+        public uint CaptureLength;
 
         /// <summary>
         /// Return the DateTime value of this pcap header
