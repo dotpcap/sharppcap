@@ -383,9 +383,9 @@ namespace SharpPcap.LibPcap
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
             p = new RawCapture(LinkType,
-                              new PosixTimeval(pcapHeader.Seconds,
-                                               pcapHeader.MicroSeconds),
-                              pkt_data);
+                               new PosixTimeval(pcapHeader.Seconds,
+                                                pcapHeader.MicroSeconds),
+                               pkt_data);
 
             return p;
         }
