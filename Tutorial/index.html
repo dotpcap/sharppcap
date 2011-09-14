@@ -26,7 +26,7 @@
 <p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements including Linux, Mac support.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
 <p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contained significant API changes as well as WinPcap remote capture and AirPcap support.</p>
-<p>SharpPcap v3.8 was released September X, 2011. The 3.8 release contained API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analagous.
+<p>SharpPcap v4.0 was released September 13, 2011. The 4.0 release contains significant performance improvements due to contributions from Michael Giagnocavo. SharpPcap 4.0 is >50% faster than the last revision, v3.7. It also contains API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analagous.
 
 <h2>About SharpPcap</h2>
 <p>The purpose of <a href="http://sourceforge.net/projects/sharppcap" target="_blank">SharpPcap</a> is to provide a framework for capturing, injecting and analyzing network packets for .NET applications.</p>
@@ -935,7 +935,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 
 <h2>History</h2>
 <ul>
-    <li>2011-Aug-22
+    <li>2011-Sep-13
         <ul>
             <li>Updates for new classes for reading and writing capture files, CaptureFileWriterDevice and CapturefileReaderDevice</li>
         </ul>
