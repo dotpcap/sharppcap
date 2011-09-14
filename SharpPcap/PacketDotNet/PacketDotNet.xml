@@ -1673,6 +1673,12 @@
             True if the tcp checksum is valid
             </value>
         </member>
+        <member name="P:PacketDotNet.TcpPacket.AllFlags">
+            <summary>
+            Flags, 9 bits
+            TODO: Handle the NS bit
+            </summary>
+        </member>
         <member name="P:PacketDotNet.TcpPacket.Urg">
             <summary> Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
         </member>
@@ -3772,12 +3778,12 @@
         </member>
         <member name="P:PacketDotNet.ARPPacket.SenderProtocolAddress">
             <value>
-            Upper layer protocol address of the sender, typically an IPv4 or IPv6 address
+            Upper layer protocol address of the sender, arp is used for IPv4, IPv6 uses NDP
             </value>
         </member>
         <member name="P:PacketDotNet.ARPPacket.TargetProtocolAddress">
             <value>
-            Upper layer protocol address of the target, typically an IPv4 or IPv6 address
+            Upper layer protocol address of the target, arp is used for IPv4, IPv6 uses NDP
             </value>
         </member>
         <member name="P:PacketDotNet.ARPPacket.SenderHardwareAddress">
