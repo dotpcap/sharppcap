@@ -7,7 +7,7 @@ echo ""
 
 # upload the docs to the site
 echo "--> Rsyncing htmldocs with the site"
-rsync -r --delete htmldocs chrismorgan,sharppcap@shell.sourceforge.net:/home/groups/s/sh/sharppcap/htdocs
+rsync -r --delete htmldocs chrismorgan,sharppcap@shell.sourceforge.net:/home/project-web/sharppcap/htdocs
 echo ""
 
 # shutdown the remote shell
