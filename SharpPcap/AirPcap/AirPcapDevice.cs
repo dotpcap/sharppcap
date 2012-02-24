@@ -190,6 +190,34 @@ namespace SharpPcap.AirPcap
         }
 
         /// <summary>
+        /// Adapter frequency
+        /// </summary>
+        public uint Frequency
+        {
+            get
+            {
+                ThrowIfNotOpen();
+                AirPcapUnmanagedStructures.AirpcapChannelInfo channelInfo;
+                if (!AirPcapSafeNativeMethods.AirpcapGetDeviceChannelEx(AirPcapDeviceHandle, out channelInfo))
+                {
+                    throw new System.InvalidOperationException("Failed to retrieve frequency");
+                }
+                return channelInfo.Frequency;
+            }
+
+            set
+            {
+                ThrowIfNotOpen();
+                AirPcapUnmanagedStructures.AirpcapChannelInfo channelInfo = new AirPcapUnmanagedStructures.AirpcapChannelInfo();
+                channelInfo.Frequency = value;
+                if (!AirPcapSafeNativeMethods.AirpcapSetDeviceChannelEx(AirPcapDeviceHandle, channelInfo))
+                {
+                    throw new System.InvalidOperationException("Failed to set frequency");
+                }
+            }
+        }
+
+        /// <summary>
         /// Channel information
         /// </summary>
         public AirPcapChannelInfo ChannelInfo
