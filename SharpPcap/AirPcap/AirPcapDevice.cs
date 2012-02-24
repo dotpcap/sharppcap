@@ -692,7 +692,7 @@ namespace SharpPcap.AirPcap
                         packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
                         break;
                     case AirPcapLinkTypes._802_11:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee802;
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211;
                         break;
                     case AirPcapLinkTypes._802_11_PLUS_PPI:
                         packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
