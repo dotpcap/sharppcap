@@ -101,6 +101,11 @@ namespace SharpPcap.AirPcap
         {
             lock (this)
             {
+                // refresh the WinPcapDeviceList as this list is how we build
+                // the airpcap device list
+                var winpcapDeviceList = WinPcap.WinPcapDeviceList.Instance;
+                winpcapDeviceList.Refresh();
+
                 // retrieve the current device list
                 var newDeviceList = GetDevices();
 
