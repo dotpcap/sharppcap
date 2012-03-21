@@ -195,6 +195,13 @@ namespace SharpPcap.LibPcap
                 return;
 
             base.Close();
+
+            // close the dump handle
+            if (m_pcapDumpHandle != IntPtr.Zero)
+            {
+                LibPcapSafeNativeMethods.pcap_dump_close(m_pcapDumpHandle);
+                m_pcapDumpHandle = IntPtr.Zero;
+            }
         }
 
         /// <summary>
