@@ -222,6 +222,5 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="LibPcap\" />
-    <Folder Include="LibPcap\" />
   </ItemGroup>
 </Project>
