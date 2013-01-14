@@ -4075,6 +4075,31 @@
             Constructor
             </summary>
         </member>
+        <member name="F:PacketDotNet.Packet.header">
+            <summary>
+            Used internally when building new packet dissectors
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Packet.payloadPacketOrData">
+            <summary>
+            Used internally when building new packet dissectors
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.Packet.parentPacket">
+            <summary>
+            The parent packet. Accessible via the 'ParentPacket' property
+            </summary>
+        </member>
+        <member name="P:PacketDotNet.Packet.TotalPacketLength">
+            <summary>
+            Gets the total length of the packet.
+            Recursively finds the length of this packet and all of the packets
+            encapsulated by this packet
+            </summary>
+            <value>
+            The total length of the packet.
+            </value>
+        </member>
         <member name="P:PacketDotNet.Packet.SharesMemoryWithSubPackets">
             <value>
             Returns true if we already have a contiguous byte[] in either
@@ -4178,6 +4203,15 @@
             </summary>
             <returns>
             A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:PacketDotNet.Packet.Extract(System.Type)">
+            <summary>
+            Extract a packet of a specific type or null if a packet of the given type isn't found
+            NOTE: a 'dynamic' return type is possible here but costs ~7.8% in performance
+            </summary>
+            <param name="type">
+            Type.
+            </param>
         </member>
         <member name="T:PacketDotNet.SessionPacket">
             <summary>
@@ -6965,6 +6999,21 @@
             or no payload
             </summary>
         </member>
+        <member name="F:PacketDotNet.PayloadType.Packet">
+            <summary>
+            Constant packet.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PayloadType.Bytes">
+            <summary>
+            Constant bytes.
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.PayloadType.None">
+            <summary>
+            Constant none.
+            </summary>
+        </member>
         <member name="T:PacketDotNet.ICMPv6Types">
             <summary>
             ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
@@ -7449,6 +7498,8 @@
         <member name="P:PacketDotNet.Utils.ByteArraySegment.Length">
             <value>
             Number of bytes beyond the offset into Bytes
+            Take care when setting this parameter as many things are based on
+            the value of this property being correct
             </value>
         </member>
         <member name="P:PacketDotNet.Utils.ByteArraySegment.Offset">
@@ -7505,6 +7556,22 @@
             Encapsulates and ensures that we have either a Packet OR
             a ByteArraySegment but not both
             </summary>
+        </member>
+        <member name="P:PacketDotNet.PacketOrByteArraySegment.TheByteArraySegment">
+            <summary>
+            Gets or sets the byte array segment.
+            </summary>
+            <value>
+            The byte array segment.
+            </value>
+        </member>
+        <member name="P:PacketDotNet.PacketOrByteArraySegment.ThePacket">
+            <summary>
+            Gets or sets the packet.
+            </summary>
+            <value>
+            The packet.
+            </value>
         </member>
         <member name="P:PacketDotNet.PacketOrByteArraySegment.Type">
             <value>
@@ -10835,6 +10902,118 @@
             <returns>
             The address string.
             </returns>
+        </member>
+        <member name="T:PacketDotNet.Ieee8021QPacket">
+            <summary>
+            802.1Q vlan packet
+            http://en.wikipedia.org/wiki/IEEE_802.1Q
+            </summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee8021QPacket.#ctor(PacketDotNet.Utils.ByteArraySegment)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="bas">
+            A <see cref="T:PacketDotNet.Utils.ByteArraySegment" /></param>
+        </member>
+        <member name="P:PacketDotNet.Ieee8021QPacket.Type">
+            <value>
+            Type of packet that this vlan packet encapsulates
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Ieee8021QPacket.PriorityControlPoint">
+            <summary>
+            Gets or sets the priority control point.
+            </summary>
+            <value>
+            The priority control point.
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Ieee8021QPacket.CanonicalFormatIndicator">
+            <summary>
+            Gets or sets a value indicating whether this instance canonical format indicator.
+            </summary>
+            <value>
+                <c>true</c> if the mac address is in non-canonical format <c>false</c> if otherwise.
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Ieee8021QPacket.VLANIdentifier">
+            <summary>
+            Gets or sets the VLAN identifier.
+            </summary>
+            <value>
+            The VLAN identifier.
+            </value>
+        </member>
+        <member name="P:PacketDotNet.Ieee8021QPacket.Color">
+            <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        </member>
+        <member name="M:PacketDotNet.Ieee8021QPacket.ToString(PacketDotNet.StringOutputType)">
+            <summary cref="Packet.ToString(StringOutputType)" />
+        </member>
+        <member name="T:PacketDotNet.Ieee8021QFields">
+            <summary> 802.1Q fields </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee8021QFields.TypeLength">
+            <summary> Length of the ethertype value in bytes.</summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee8021QFields.TagControlInformationLength">
+            <summary> Length of the tag control information in bytes. </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee8021QFields.TagControlInformationPosition">
+            <summary> Position of the tag control information </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee8021QFields.TypePosition">
+            <summary> Position of the type field </summary>
+        </member>
+        <member name="F:PacketDotNet.Ieee8021QFields.HeaderLength">
+            <summary> Length in bytes of a Ieee8021Q header.</summary>
+        </member>
+        <member name="T:PacketDotNet.IeeeP8021PPriorities">
+            <summary>
+            Ieee p8021 P priorities.
+            http://en.wikipedia.org/wiki/IEEE_802.1p
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.Background_0">
+            <summary>
+            Background
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.BestEffort_1">
+            <summary>
+            Best effort
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.ExcellentEffort_2">
+            <summary>
+            Excellent effort
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.CriticalApplications_3">
+            <summary>
+            Critical application
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.Video_4">
+            <summary>
+            Video, &lt; 100ms latency and jitter
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.Voice_5">
+            <summary>
+            Voice, &lt; 10ms latency and jitter
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.InternetworkControl_6">
+            <summary>
+            Internetwork control
+            </summary>
+        </member>
+        <member name="F:PacketDotNet.IeeeP8021PPriorities.NetworkControl_7">
+            <summary>
+            Network control
+            </summary>
         </member>
     </members>
 </doc>
