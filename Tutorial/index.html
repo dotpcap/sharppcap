@@ -1,13 +1,14 @@
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="http://www.codeproject.com/App_Themes/NetCommunity/CodeProject.css" />
+    <link type="text/css" rel="stylesheet" href="http://s.codeproject.com/App_Themes/CodeProject/Css/Main.min.css?dt=2.8.140501.1" />
 </head>
 
 <body>
 <!-- Article Starts -->
 
 <ul class=download>
-    <li>Download SharpPcap source code and examples or binaries at the <a href="http://sourceforge.net/projects/sharppcap/">SharpPcap SourceForge project page</a> and check out the <a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">SharpPcap home page</a></li>
+    <li><a href="http://sourceforge.net/projects/sharppcap/">Download SharpPcap source code and examples or binaries</a></li>
+    <li><a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">Check out the SharpPcap home pagect page</a></li>
 </ul>
 
 <p><img height=279 src="sharppcap/SharpPcap.png" width=600></p>
@@ -27,6 +28,7 @@
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
 <p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contained significant API changes as well as WinPcap remote capture and AirPcap support.</p>
 <p>SharpPcap v4.0 was released September 13, 2011. The 4.0 release contains significant performance improvements due to contributions from Michael Giagnocavo. SharpPcap 4.0 is >50% faster than the last revision, v3.7. It also contains API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analagous.
+<p>SharpPcap v4.2 was released January 14th, 2013. 4.2 adds support for IEEE 802.1Q vlan tags, corrects access modifiers in Packet to enable 3rd party assemblies to use this class and introduces Packet.Extract(). Packet.Extract() replaces per-packet GetEncapsulated() methods, now deprecated, with a single high level routine that is a part of the base class of all captured packets.
 
 <h2>About SharpPcap</h2>
 <p>The purpose of <a href="http://sourceforge.net/projects/sharppcap" target="_blank">SharpPcap</a> is to provide a framework for capturing, injecting and analyzing network packets for .NET applications.</p>
@@ -78,6 +80,7 @@
          <li><a href="http://en.wikipedia.org/wiki/Point-to-Point_Protoco">PTP</a></li>
          <li><a href="http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol">LLDP</a></li>
          <li><a href="http://http://en.wikipedia.org/wiki/Wake-on-LAN">Wake-on-LAN(WOL)</a></li>
+         <li><a href="http://en.wikipedia.org/wiki/IEEE_802.1Q">IEEE 802.1Q</a></li>
       </ul>
    </i>
 <p>Please check the project homepage <a href="http://sourceforge.net/projects/sharppcap" target="_blank">homepage</a> for the latest updates and bug fixes.</p>
@@ -117,7 +120,7 @@ CaptureDeviceList returns a list of fully differentiated devices. This means tha
 
 <pre lang="cs">
 <span class="code-comment">// Retrieve all capture devices</span>
-var devices = CaptureDeviceList;
+var devices = CaptureDeviceList.Instance;
 
 <span class="code-comment">// differentiate based upon types</span>
 foreach(ICaptureDevice dev in devices)
@@ -137,7 +140,7 @@ foreach(ICaptureDevice dev in devices)
 
 <pre lang="cs">
 <span class="code-comment">// Retrieve only WinPcap (and AirPcap devices)</span>
-var devices = AirPcapDeviceList;
+var devices = AirPcapDeviceList.Instance;
 foreach(AirPcapDevice dev in devices)
 {
   <span class="code-comment">// Process this AirPcap device</span>
@@ -148,8 +151,9 @@ foreach(AirPcapDevice dev in devices)
 
 
 <h2>Packet.Net architecture and usage</h2>
-<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>static GetEncapsulsted()</code> methods have been added so users can do <code>TcpPacket tcpPacket = TcpPacket.GetEncapsulated(capturedPacket);</code>.</p>
-<p>The GetEncapsulated() methods are intelligent and designed to work in many different cases. UdpPacket.GetEncapsulated() will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the GetEncapsulated() methods to retrieve sub packets.</p>
+<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. Avoiding inheritance makes Packet.Net more flexible and simplifies the construction of complex packets. While the inheritance model made some things easier, a UdpPacket for instance had a SourceHwAddress (the parent ethernet packet's source mac address field), it also made things very difficult. What about ethernet packets that were themselves inside of other packets? When a udp packet was created do I need to specify all of its fields and the fields of all of its parents? The nesting approach solves these problems by separating the different packet layers, and things like Packet.Extract(), discussed further on, make it easy to retrieve sub-packets.
+<p>All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>Packet.Extract(System.Type type)</code> was created so you can do <code>TcpPacket tcpPacket = (TcpPacket)capturedPacket.Extract(typeof(TcpPacket));</code>.</p>
+<p>The Packet.Extract() is a unform method that, when given a type, will retrieve the nested packet of that given type. If 'p' is a udp packet, then (UdpPacket)p.Extract(typeof(UdpPacket) will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the Packet.Extact() approach rather than the older and now deprecated GetEncapsulated() methods, or other more manual approaches.</p>
 <p>With Packet.Net constructing packets looks like:
 <pre lang="cs">
 <span class="code-keyword">using</span> PacketDotNet;
@@ -188,7 +192,7 @@ byte[] packetBytes = ethernetPacket.Bytes;
 
 
 <h2>SharpPcap tutorial: A step by step guide to using SharpPcap</h2>
-<p>Examples can be found in the Examples/ directory of the source package.</p>
+<p>These and many other examples can be found in the Examples/ directory of the source package. Go to the <a href="https://sourceforge.net/projects/sharppcap/files/SharpPcap/">SharpPcap files page</a>, select the release directory you want and download the package named like <i>SharpPcap-X.Y.Z.src.zip</i>.</p>
 <p>The text of this tutorial was taken directly from WinPcap's <a href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut.html" target="_blank">official tutorial</a> but is modified to show the C# use of the SharpPcap library. All examples can be downloaded together with the SharpPcap source code from the top of this page. If you are running on Windows, the WinPcap library must be installed before attempting to run any of these examples so please download and install the latest version from <a href="http://www.winpcap.org/install/default.htm" target="_blank">WinPcap's download page</a>. If running under unix/linux/mac the libpcap library must be installed using your systems software management system.</p>
 <p>The following topics are covered in this tutorial with the name of the example in parenthesis:</p>
 <ol>
@@ -310,8 +314,8 @@ device.Close();
 /// &lt;/summary&gt;</span>
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(<span class="code-keyword">object</span> sender, <span class="code-SDKkeyword">CaptureEventArgs</span> packet)
 {
-    <span class="code-SDKkeyword">DateTime</span> time = packet.Timeval.Date;
-    <span class="code-keyword">int</span> len = packet.Data.Length;
+    <span class="code-SDKkeyword">DateTime</span> time = e.Packet.Timeval.Date;
+    <span class="code-keyword">int</span> len = e.Packet.Data.Length;
     Console.WriteLine(<span class="code-string">&quot;</span><span class="code-string">{0}:{1}:{2},{3} Len={4}&quot;</span>,
         time.Hour, time.Minute, time.Second, time.Millisecond, len);
 }
@@ -433,7 +437,7 @@ device.Capture();
 <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">void</span> device_OnPacketArrival(
     <span class="code-keyword">object</span> sender, <span class="code-SDKkeyword">CaptureEventArgs</span> e)
 {
-    <span class="code-SDKkeyword">var</span> tcp = TcpPacket.GetEncapsulated(e.Packet);
+    <span class="code-SDKkeyword">var</span> tcp = (TcpPacket)e.Packet.Extract(typeof(TcpPacket));
     <span class="code-keyword">if</span>(tcp != <span class="code-keyword">null</span>)
     {
         <span class="code-SDKkeyword">DateTime</span> time = e.Packet.Timeval.Date;
@@ -449,7 +453,7 @@ device.Capture();
     }
 }</pre>
 <p>If you take a look at the <a href="http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut6.html" target="_blank">UDP example</a> of the original WinPcap tutorial you will see how complex it is to parse the packets (although UDP is a bit simpler to parse than TCP in our example) directly from the raw data bytes provided by the WinPcap library. Luckily for us, SharpPcap provides some useful packet analyzing classes for some common protocols (e.g. TCP, UDP, ICMP and others). These analyzing classes were initially a direct C# translation from <a href="http://jpcap.sourceforge.net/" target="_blank">JPcap</a>, a Java wrapper for libpcap/WinPcap similar to SharpPcap, but significant changes have been made to make them fit better into .NET. All of the packet parsing and generation code can be found in the <code>PacketDotNet</code> namespace in the PacketDotNet assembly.</p>
-<P>As you can see, in our packet handler we first attempt to extract the Tcp packet encapsulated in the packet that was captured on the line. If one was found, and it should be since our filter selects only tcp packets, we can then access its properties. If we also wanted to see the IP packet properties these could be accessed via <code>var ip = IpPacket.GetEncapsulated(e.Packet);</code></p>
+<P>As you can see, in our packet handler we first attempt to extract the Tcp packet encapsulated in the packet that was captured on the line. If one was found, and it should be since our filter selects only tcp packets, we can then access its properties. If we also wanted to see the IP packet properties these could be accessed via <code>var ip = (IpPacket)e.Packet.Extract(typeof(IpPacket));</code></p>
 <pre>
 Available devices:
 ------------------
@@ -929,11 +933,19 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
     <li><a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">SharpPcap home page (news / getting started)</a></li>
     <li><a href="http://sourceforge.net/projects/sharppcap" target="_blank">SharpPcap SourceForge project page (File releases / source code)</a>.</li>
     <li><a href="http://www.winpcap.org/" target="_blank">WinPcap</a> - a packet capture framework for Windows.</li>
-    <li><a href="http://www.tamirgal.com/home/dev.aspx?Item=SharpPcap">Tamir's SharpPcap page (currently out-of-date)</a></li>
 </ul>
 
 
 <h2>History</h2>
+<ul>
+    <li>2014-May-2
+        <ul>
+            <li>Corrected some mistakes in the examples that users had reported in the comments section.</li>
+            <li>Removed the link to www.tamirgal.com, Tamir's site appears to have gone away.</li>
+            <li>Adjusted examples to reflect the change from per-packet type GetEncapculated() methods to the Packet.Extract() approach. 
+        </ul>
+    </li>
+</ul>
 <ul>
     <li>2011-Sep-13
         <ul>
