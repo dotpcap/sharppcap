@@ -8,7 +8,7 @@
 
 <ul class=download>
     <li><a href="http://sourceforge.net/projects/sharppcap/">Download SharpPcap source code and examples or binaries</a></li>
-    <li><a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">Check out the SharpPcap home pagect page</a></li>
+    <li><a href="http://sourceforge.net/apps/mediawiki/sharppcap/index.php">Check out the SharpPcap home packet page</a></li>
 </ul>
 
 <p><img height=279 src="sharppcap/SharpPcap.png" width=600></p>
@@ -27,7 +27,7 @@
 <p>Chris Morgan took over development of SharpPcap in November of 2008. Since then SharpPcap has had major internal rewrites and API improvements including Linux, Mac support.</p>
 <p>In late February 2010 SharpPcap v3.0 was released. This release represents a rewrite of SharpPcap's packet parsers. Packet parsing functionality was broken out into a new library, <a href="http://packetnet.sf.net">Packet.Net</a>. SharpPcap takes care of interfacing with libpcap/winpcap and Packet.Net takes care of packet dissection and creation. The details of Packet.Net's architecture will be discussed later in the turotial.</p>
 <p>SharpPcap v3.5 was released February 1st, 2011. The 3.5 release contained significant API changes as well as WinPcap remote capture and AirPcap support.</p>
-<p>SharpPcap v4.0 was released September 13, 2011. The 4.0 release contains significant performance improvements due to contributions from Michael Giagnocavo. SharpPcap 4.0 is >50% faster than the last revision, v3.7. It also contains API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analagous.
+<p>SharpPcap v4.0 was released September 13, 2011. The 4.0 release contains significant performance improvements due to contributions from Michael Giagnocavo. SharpPcap 4.0 is >50% faster than the last revision, v3.7. It also contains API cleanup for reading and writing to capture files in the form of new CaptureFileWriterDevice and CaptureFileReaderDevice that replaces an older and much more confusing way of writing to capture files and makes reading and writing analogous.
 <p>SharpPcap v4.2 was released January 14th, 2013. 4.2 adds support for IEEE 802.1Q vlan tags, corrects access modifiers in Packet to enable 3rd party assemblies to use this class and introduces Packet.Extract(). Packet.Extract() replaces per-packet GetEncapsulated() methods, now deprecated, with a single high level routine that is a part of the base class of all captured packets.
 
 <h2>About SharpPcap</h2>
@@ -151,9 +151,9 @@ foreach(AirPcapDevice dev in devices)
 
 
 <h2>Packet.Net architecture and usage</h2>
-<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. Avoiding inheritance makes Packet.Net more flexible and simplifies the construction of complex packets. While the inheritance model made some things easier, a UdpPacket for instance had a SourceHwAddress (the parent ethernet packet's source mac address field), it also made things very difficult. What about ethernet packets that were themselves inside of other packets? When a udp packet was created do I need to specify all of its fields and the fields of all of its parents? The nesting approach solves these problems by separating the different packet layers, and things like Packet.Extract(), discussed further on, make it easy to retrieve sub-packets.
+<p>Packet.Net switched from the inheritance model of SharpPcap 2.x to one of nesting packets. Avoiding inheritance makes Packet.Net more flexible and simplifies the construction of complex packets. While the inheritance model made some things easier, a UdpPacket for instance had a SourceHwAddress (the parent Ethernet packet's source mac address field), it also made things very difficult. What about Ethernet packets that were themselves inside of other packets? When a udp packet was created do I need to specify all of its fields and the fields of all of its parents? The nesting approach solves these problems by separating the different packet layers, and things like Packet.Extract(), discussed further on, make it easy to retrieve sub-packets.
 <p>All packets contain a Packet PayloadPacket property and a Byte[] PayloadData property. One or neither of these can be valid. A Tcp packet captured on Ethernet may be EthernetPacket -> IPv4 Packet -> Tcp Packet. In Packet.Net the Tcp packet could be accessed like capturedPacket.PayloadPacket.PayloadPacket but to to aid users <code>Packet.Extract(System.Type type)</code> was created so you can do <code>TcpPacket tcpPacket = (TcpPacket)capturedPacket.Extract(typeof(TcpPacket));</code>.</p>
-<p>The Packet.Extract() is a unform method that, when given a type, will retrieve the nested packet of that given type. If 'p' is a udp packet, then (UdpPacket)p.Extract(typeof(UdpPacket) will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the Packet.Extact() approach rather than the older and now deprecated GetEncapsulated() methods, or other more manual approaches.</p>
+<p>The Packet.Extract() is a uniform method that, when given a type, will retrieve the nested packet of that given type. If 'p' is a udp packet, then (UdpPacket)p.Extract(typeof(UdpPacket) will return the Udp packet of a packet that consists of EthernetPacket -> IP packet -> UdpPacket or Linux Cooked Capture -> IP -> UdpPacket or an EthernetPacket -> PPPoE -> PTP -> IP -> UdpPacket. We recommend using the Packet.Extact() approach rather than the older and now deprecated GetEncapsulated() methods, or other more manual approaches.</p>
 <p>With Packet.Net constructing packets looks like:
 <pre lang="cs">
 <span class="code-keyword">using</span> PacketDotNet;
@@ -171,9 +171,9 @@ foreach(AirPcapDevice dev in devices)
 <span class="code-SDKkeyword">var</span> destinationHwAddress = <span class="code-string">&quot;80-80-80-80-80-80&quot;</span>;
 <span class="code-SDKkeyword">var</span> ethernetDestinationHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(destinationHwAddress);
 
-<span class="code-comment">// NOTE: using EthernetPacketType.None to illustrate that the ethernet
+<span class="code-comment">// NOTE: using EthernetPacketType.None to illustrate that the Ethernet
 //       protocol type is updated based on the packet payload that is
-//       assigned to that particular ethernet packet</span>
+//       assigned to that particular Ethernet packet</span>
 <span class="code-SDKkeyword">var</span> ethernetPacket = <span class="code-keyword">new</span> <span class="code-SDKkeyword">EthernetPacket</span>(ethernetSourceHwAddress,
     ethernetDestinationHwAddress,
     EthernetPacketType.None);
@@ -201,7 +201,7 @@ byte[] packetBytes = ethernetPacket.Bytes;
     <li><a href="#basicCapNoCallback">Capturing packets without the event  (Example 4)</a></li>
     <li><a href="#filter">Filtering the traffic (Example 5)</a></li>
     <li><a href="#writeToFile">Writing packets to a capture file (CreatingCaptureFile)</a></li>
-    <li><a href="#readFromFile">Reading packets from a capture file (ReadingCapturefile)</a></li>
+    <li><a href="#readFromFile">Reading packets from a capture file (ReadingCaptureFile)</a></li>
     <li><a href="#dumpTCP">Interpreting the packets (Example 6)</a></li>
     <li><a href="#sendPackets">Sending packets (Example 9)</a></li>
     <li><a href="#sendqueues">Send Queues (Example 10) - WinPcap only</a></li>
@@ -499,7 +499,7 @@ Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>
 
 <h3 id=sendqueues>Send queues - WinPcap specific extension (Example 10 in the source package)</h3>
 <p>While <code>SendPacket</code> offers a simple and immediate way to send a single packet, <b>send queues</b> provide an advanced, powerful and optimized mechanism to send a collection of packets. A send queue is a container for a variable number of packets that will be sent to the network. It has a size, that represents the maximum amount of bytes it can store.</p>
-<p> Because SendQueue functionality is WinPcap specific the authors of SharpPcap recommend benchmarking your particular usage of sending packets to determine if the loss of cross platform support is worth the added efficiency of using send queues. The old adage, "avoid premature optimization" should be carefullyl considered.</p>
+<p> Because SendQueue functionality is WinPcap specific the authors of SharpPcap recommend benchmarking your particular usage of sending packets to determine if the loss of cross platform support is worth the added efficiency of using send queues. The old adage, "avoid premature optimization" should be carefully considered.</p>
 <p>SharpPcap represents a send queue using the <code>SendQueue</code> class which is constructed by specifying the size of the new send queue.</p>
 <p>Once the send queue is created, <code>SendQueue.Add()</code> can be called to add a packet to the send queue. This function takes a <code>PcapHeader</code> with the packet's timestamp and length and a buffer or a <code>Packet</code> object holding the data of the packet. These parameters are the same as those received by the <code>OnPacketArrival</code> event, therefore queuing a packet that was just captured or a read from a file is a matter of passing these parameters to <code>SendQueue.Add()</code>.</p>
 <p>To transmit a send queue, SharpPcap provides the <code>WinPcapDevice.SendQueue(SendQueue q, <span class="code-keyword">SendQueueTransmitModes</span> transmitMode)</code> function. Note the second parameter: if <code lang=cs><span class="code-keyword">SendQueueTransmitModes.Synchronized</span></code>, the send will be <i>synchronized</i>, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).</p>
@@ -523,7 +523,7 @@ Console.WriteLine(<span class="code-string">&quot;-- Device closed.&quot;</span>
     <span class="code-keyword">return</span>;
 }
 
-Console.Write(<span class="code-string">&quot;Queueing packets...&quot;</span>);
+Console.Write(<span class="code-string">&quot;Queuing packets...&quot;</span>);
 
 <span class="code-comment">// Allocate a new send queue</span>
 SendQueue squeue = <span class="code-keyword">new</span> <span class="code-SDKkeyword">SendQueue</span>
@@ -582,7 +582,7 @@ devices[i].Open();
  
     <span class="code-keyword">if</span>((resp!=<span class="code-string">&quot;&quot;</span>)&amp;&amp;(!resp.StartsWith(<span class="code-string">&quot;y&quot;</span>)))
     {
-        Console.WriteLine(<span class="code-string">&quot;Cancelled by user!&quot;</span>);
+        Console.WriteLine(<span class="code-string">&quot;Canceled by user!&quot;</span>);
         devices[i].Close();
         <span class="code-keyword">return</span>;
     }
@@ -600,7 +600,7 @@ resp = Console.ReadLine().ToLower();
  
 <span class="code-keyword">if</span>((resp!=<span class="code-string">&quot;&quot;</span>)&amp;&amp;( !resp.StartsWith(<span class="code-string">&quot;y&quot;</span>)))
 {
-    Console.WriteLine(<span class="code-string">&quot;Cancelled by user!&quot;</span>);
+    Console.WriteLine(<span class="code-string">&quot;Canceled by user!&quot;</span>);
     <span class="code-keyword">return</span>;
 }
 
@@ -723,7 +723,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 <span class="code-keyword">namespace</span> <span class="code-SDKkeyword">QueuingPacketsForBackgroundProcessing</span>
 {
     <span class="code-comment">/// <summary>
-    /// Basic capture example showing simple queueing for background processing
+    /// Basic capture example showing simple queuing for background processing
     /// </summary></span>
     <span class="code-keyword">public class</span> MainClass
     {
@@ -949,7 +949,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
 <ul>
     <li>2011-Sep-13
         <ul>
-            <li>Updates for new classes for reading and writing capture files, CaptureFileWriterDevice and CapturefileReaderDevice</li>
+            <li>Updates for new classes for reading and writing capture files, CaptureFileWriterDevice and CaptureFileReaderDevice</li>
         </ul>
     </li>
 </ul>
@@ -971,7 +971,7 @@ Console.WriteLine(<span class="code-string">&quot;Capture stopped, device closed
     <li>2010-Nov-07
         <ul>
             <li>Updated for SharpPcap v3.x</li>
-            <li>Added queueing example for high packet rates</li>
+            <li>Added queuing example for high packet rates</li>
         </ul>
     </li>
 </ul>
