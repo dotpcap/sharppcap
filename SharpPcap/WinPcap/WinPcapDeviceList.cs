@@ -90,7 +90,7 @@ namespace SharpPcap.WinPcap
         /// A <see cref="RemoteAuthentication"/>
         /// </param>
         /// <returns>
-        /// A <see cref="List<WinPcapDevice>"/>
+        /// A <see cref="List{WinPcapDevice}"/>
         /// </returns>
         public static List<WinPcapDevice> Devices(IPAddress address,
                                                   int port,

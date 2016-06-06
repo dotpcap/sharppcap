@@ -149,7 +149,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="PacketDotNet.LinkLayers"/>
         /// </param>
         /// <param name="snapshotLength">
-        /// A <see cref="System.Nullable&lt;System.Int32&gt;"/>
+        /// A <see cref="Nullable{Int}"/>
         /// </param>
         /// <param name="captureFilename">
         /// A <see cref="System.String"/>

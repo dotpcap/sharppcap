@@ -202,7 +202,7 @@ namespace SharpPcap.AirPcap
         /// but this code is worth keeping around
         /// </summary>
         /// <returns>
-        /// A <see cref="List<AirPcapDevice>"/>
+        /// A <see cref="List{AirPcapDevice}"/>
         /// </returns>
         private static List<AirPcapDevice> GetAirPcapDevices()
         {
