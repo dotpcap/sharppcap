@@ -19,6 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap.LibPcap
@@ -592,6 +593,41 @@ namespace SharpPcap.LibPcap
         public override string ToString ()
         {
             return "interface: " + m_pcapIf.ToString() + "\n";
+        }
+
+
+        /// <summary>
+        /// IEnumerable helper allows for easy foreach usage, extension method and Linq usage
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<RawCapture> GetSequence(ICaptureDevice dev, bool maskExceptions = true)
+        {
+            try
+            {
+                dev.Open();
+
+                while (true)
+                {
+                    RawCapture packet = null;
+                    try
+                    {
+                        packet = dev.GetNextPacket();
+                    }
+                    catch (PcapException pe)
+                    {
+                        if (!maskExceptions)
+                            throw pe;
+                    }
+
+                    if (packet == null)
+                        break;
+                    yield return packet;
+                }
+            }
+            finally
+            {
+                dev.Close();
+            }
         }
     }
 }
