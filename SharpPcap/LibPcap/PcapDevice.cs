@@ -270,7 +270,7 @@ namespace SharpPcap.LibPcap
         /// <param name="status">
         /// A <see cref="CaptureStoppedEventStatus"/>
         /// </param>
-        protected void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
+        protected virtual void SendCaptureStoppedEvent(CaptureStoppedEventStatus status)
         {
             var handler = OnCaptureStopped;
             if(handler != null)
