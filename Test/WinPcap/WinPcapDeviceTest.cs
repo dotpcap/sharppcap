@@ -41,6 +41,7 @@ namespace Test
             }
 
             devices[0].Open();
+            devices[0].OnPcapStatistics += (sender, args) => { };
 
             bool caughtException = false;
 
