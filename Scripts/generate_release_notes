@@ -34,7 +34,7 @@ outputFile=$destinationDirectory/SharpPcap_${toVersion}_ReleaseNotes.txt
 
 echo "SharpPcap ChangeLog" > $outputFile
 echo "v$fromVersion -> v$toVersion" >> $outputFile
-echo "http://sharppcap.sourceforge.net" >> $outputFile
+echo "https://github.com/chmorgan/sharppcap" >> $outputFile
 echo "Chris Morgan <chmorgan@gmail.com>" >> $outputFile
 echo "" >> $outputFile
 
