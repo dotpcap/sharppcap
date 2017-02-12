@@ -30,6 +30,9 @@ with=_
 fromTag=SharpPcap_${fromVersion//$replace/$with}
 toTag=SharpPcap_${toVersion//$replace/$with}
 
+# create the destination directory if it doesn't already exist
+mkdir -p $destinationDirectory
+
 outputFile=$destinationDirectory/SharpPcap_${toVersion}_ReleaseNotes.txt
 
 echo "SharpPcap ChangeLog" > $outputFile
