@@ -19,6 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -37,6 +38,15 @@ namespace SharpPcap.WinPcap
         //       same directory as the assembly
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
         private const string PCAP_DLL = "wpcap";
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+        static SafeNativeMethods()
+        {
+            SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
+        }
 
         #region WinPcap specific
         /// <summary>
