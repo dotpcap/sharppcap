@@ -26,7 +26,7 @@ echo "make_src_release $1 $2"
 
 baseOutputDirectory=$1
 releaseVersion=$2
-gitRemotePublicPath=git://sharppcap.git.sourceforge.net/gitroot/sharppcap/sharppcap
+githubSvnPath=https://github.com/chmorgan/sharppcap/tags/
 
 # setup some variables
 baseOutputDirectory=${baseOutputDirectory}/src
@@ -36,6 +36,8 @@ outputName=SharpPcap-${releaseVersion}
 # build the tag by converting the '.' in the version to '_'
 tag=SharpPcap_${2//./_}
 
-# create a zip file of the appropriate tag
-git archive --format=zip --remote=${gitRemotePublicPath} $tag > ${baseOutputDirectory}/${outputName}.src.zip
+# export the files to a temporary folder
+svn export ${githubSvnPath}/$tag ${baseOutputDirectory}/$tag
 
+# create a zip file
+zip -r ${baseOutputDirectory}/${outputName}.src.zip ${baseOutputDirectory}/$tag
