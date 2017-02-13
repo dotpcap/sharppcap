@@ -268,7 +268,7 @@ namespace SharpPcap
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append(Seconds);
             sb.Append('.');
-            sb.Append(MicroSeconds);
+            sb.AppendFormat("{0:000000}",MicroSeconds);
             sb.Append('s');
 
             return sb.ToString();

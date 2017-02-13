@@ -52,5 +52,14 @@ namespace Test.Misc
             Assert.IsTrue(p1 <= p2, "p1 <= p2");
             Assert.IsTrue(p2 >= p1, "p2 >= p1");
         }
+
+        // Test string formatting output
+        [Test]
+        public void ToStringTest()
+        {
+            var p1 = new PosixTimeval(123, 12345);
+
+            Assert.AreEqual("123.012345s", p1.ToString());
+        }
     }
 }
