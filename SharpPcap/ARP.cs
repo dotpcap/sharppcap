@@ -173,7 +173,7 @@ namespace SharpPcap
                 var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
 
                 // is this an arp packet?
-                arpPacket = PacketDotNet.ARPPacket.GetEncapsulated(packet);
+                arpPacket = (PacketDotNet.ARPPacket)packet.Extract(typeof(PacketDotNet.ARPPacket));
                 if(arpPacket == null)
                 {
                     continue;

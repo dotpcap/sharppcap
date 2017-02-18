@@ -94,7 +94,7 @@ namespace Example12.PacketManipulation
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
                 eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
-                var ip = PacketDotNet.IpPacket.GetEncapsulated(packet);
+                var ip = (PacketDotNet.IpPacket)packet.Extract(typeof(PacketDotNet.IpPacket));
                 if(ip != null)
                 {
                     Console.WriteLine("Original IP packet: " + ip.ToString());
@@ -104,7 +104,7 @@ namespace Example12.PacketManipulation
                     ip.DestinationAddress = System.Net.IPAddress.Parse("44.33.22.11");
                     ip.TimeToLive = 11;
 
-                    var tcp = PacketDotNet.TcpPacket.GetEncapsulated(packet);
+                    var tcp = (PacketDotNet.TcpPacket)packet.Extract(typeof(PacketDotNet.TcpPacket));
                     if (tcp != null)
                     {
                         Console.WriteLine("Original TCP packet: " + tcp.ToString());
@@ -120,7 +120,7 @@ namespace Example12.PacketManipulation
                         tcp.SequenceNumber = 800;
                     }
 
-                    var udp = PacketDotNet.UdpPacket.GetEncapsulated(packet);
+                    var udp = (PacketDotNet.UdpPacket)packet.Extract(typeof(PacketDotNet.UdpPacket));
                     if (udp != null)
                     {
                         Console.WriteLine("Original UDP packet: " + udp.ToString());

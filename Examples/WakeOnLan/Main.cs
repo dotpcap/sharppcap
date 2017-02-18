@@ -109,7 +109,7 @@ namespace SharpPcap.Examples
             if(packet == null)
                 return;
 
-            var wol = PacketDotNet.WakeOnLanPacket.GetEncapsulated(packet);
+            var wol = (PacketDotNet.WakeOnLanPacket)packet.Extract(typeof(PacketDotNet.WakeOnLanPacket));
             if(wol.PayloadData != null)
             {
                 PrintHex(wol.DestinationMAC.GetAddressBytes());
