@@ -2,6 +2,7 @@
 *.usertasks
 *.userprefs
 *.pidb
+.suo
 bin
 obj
 Scripts/htmldocs
