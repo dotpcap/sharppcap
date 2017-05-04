@@ -8,7 +8,7 @@ using System.Reflection;
 [assembly: AssemblyTitle("SharpPcap")]
 [assembly: AssemblyDescription("A packet capture framework for .NET")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("http://sharppcap.sf.net")]
+[assembly: AssemblyCompany("https://github.com/chmorgan/sharppcap")]
 [assembly: AssemblyProduct("SharpPcap")]
 [assembly: AssemblyCopyright("Tamir Gal, Chris Morgan and others")]
 [assembly: AssemblyTrademark("SharpPcap")]
