@@ -72,7 +72,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="PacketDotNet, Version=0.13.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="PacketDotNet">
       <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
