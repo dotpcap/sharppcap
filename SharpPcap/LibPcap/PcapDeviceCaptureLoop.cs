@@ -377,7 +377,7 @@ namespace SharpPcap.LibPcap
                             break;
                         }
                         case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                             return;
                         default:    // This can only be triggered by a bug in libpcap.
                             throw new PcapException("Unknown pcap_loop exit status.");
