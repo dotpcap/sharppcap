@@ -64,8 +64,8 @@ namespace SharpPcap
                 }
                 catch
                 {
-                    return "pcap version can't be identified, you are either using "+
-                        "an older version, or pcap is not installed.";
+                    return "Pcap version can't be identified. It is likely that pcap is not installed " +
+                        "but you could be using a very old version.";
                 }
             }
         }
