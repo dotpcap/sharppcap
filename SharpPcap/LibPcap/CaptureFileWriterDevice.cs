@@ -149,7 +149,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="PacketDotNet.LinkLayers"/>
         /// </param>
         /// <param name="snapshotLength">
-        /// A <see cref="System.Nullable&lt;System.Int32&gt;"/>
+        /// A <see cref="Nullable{T}"/> of <see cref="System.Int32"/>
         /// </param>
         /// <param name="captureFilename">
         /// A <see cref="System.String"/>
@@ -229,6 +229,8 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
+        /// <param name="p">P.</param>
+        /// <param name="h">The height.</param>
         public void Write(byte[] p, PcapHeader h)
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");
