@@ -146,6 +146,20 @@ namespace SharpPcap.WinPcap
         }
 
         /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout)
+        {
+            Open((OpenFlags)mode, read_timeout);
+        }
+
+        /// <summary>
         /// Open a device with specific flags
         /// WinPcap extension - Use of this method will exclude your application
         ///                     from working on Linux or Mac
