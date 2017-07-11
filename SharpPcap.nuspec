@@ -10,7 +10,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>SharpPcap is a cross-platform(Windows, Mac, Linux) packet capture framework for the .NET environment. It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.</description>
         <dependencies>
-            <dependency id="PacketDotNet" version="0.15.0" />
+            <dependency id="PacketDotNet" version="0.16.0" />
         </dependencies>
     </metadata>
 </package>
