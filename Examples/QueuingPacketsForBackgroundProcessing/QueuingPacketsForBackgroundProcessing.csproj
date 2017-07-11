@@ -8,7 +8,7 @@
     <ProjectGuid>{DD778943-C509-427F-B4EA-F2EA14C651D7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>QueuingPacketsForBackgroundProcessing</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <RootNamespace>QueuingPacketsForBackgroundProcessing</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
