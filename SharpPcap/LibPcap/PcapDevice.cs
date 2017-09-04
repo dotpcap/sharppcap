@@ -95,9 +95,13 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Cached open and linkType variables, avoids a unsafe pointer comparison
         /// and a pinvoke call for each packet retrieved as MarshalRawPacket
-        /// retrieves the LinkType
+        /// retrieves the LinkType. Open refers to the device being "created",
+        /// while Active refers to the device being activated. To observers,
+        /// these two properties are the same - but they are controlled
+        /// separately during the Open() process.
         /// </summary>
         private bool isOpen = false;
+        private bool isActive = false;
         private PacketDotNet.LinkLayers linkType;
 
         /// <summary>
@@ -116,6 +120,11 @@ namespace SharpPcap.LibPcap
             get { return m_pcapAdapterHandle; }
             set
             {
+                if (m_pcapAdapterHandle != value)
+                {
+                    Active = false;
+                }
+
                 m_pcapAdapterHandle = value;
 
                 // update the cached values
@@ -125,9 +134,27 @@ namespace SharpPcap.LibPcap
                 } else
                 {
                     isOpen = true;
+                }
+            }
+        }
 
-                    // update the cached linktype value
-                    linkType = (PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);
+        protected bool Active
+        {
+            get { return isActive; }
+            set
+            {
+                isActive = value;
+
+                int dataLink = 0;
+
+                if (isActive && Opened)
+                {
+                    dataLink = LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);                    
+                }
+
+                if (dataLink >= 0)
+                {
+                    linkType = (PacketDotNet.LinkLayers)dataLink;
                 }
             }
         }
@@ -195,6 +222,23 @@ namespace SharpPcap.LibPcap
         public virtual void Open(DeviceMode mode, int read_timeout)
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        public virtual void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

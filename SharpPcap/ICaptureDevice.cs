@@ -83,6 +83,20 @@ namespace SharpPcap
         void Open(DeviceMode mode, int read_timeout);
 
         /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode);
+
+        /// <summary>
         /// Closes this adapter
         /// </summary>
         void Close();
