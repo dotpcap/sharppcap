@@ -103,7 +103,8 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override void Open()
         {
-            // Nothing to do here, device is already opened upon construction
+            // Nothing to do here, device is already opened and active upon construction
+            Active = true;
         }
 
         /// <summary>

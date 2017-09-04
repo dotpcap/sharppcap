@@ -61,7 +61,7 @@ namespace SharpPcap.LibPcap
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr /* pcap_t* */ pcap_open_live(string dev, int packetLen, int promisc, int to_ms, StringBuilder errbuf);
+        internal extern static IntPtr /* pcap_t* */ pcap_create(string dev, StringBuilder errbuf);
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_open_offline( string/*const char* */ fname, StringBuilder/* char* */ errbuf );
@@ -209,6 +209,52 @@ namespace SharpPcap.LibPcap
         /// </returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_snapshot(IntPtr /* pcap_t... */ adapter);
+
+        /// <summary>
+        /// pcap_set_rfmon() sets whether monitor mode should be set on a capture handle when the handle is activated.
+        /// If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.  
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <param name="rfmon">A <see cref="System.Int32"/></param>
+        /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_rfmon(IntPtr /* pcap_t* */ p, int rfmon);
+
+        /// <summary>
+        /// pcap_set_snaplen() sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.  
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <param name="snaplen">A <see cref="System.Int32"/></param>
+        /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_snaplen(IntPtr /* pcap_t* */ p, int snaplen);
+
+        /// <summary>
+        /// pcap_set_promisc() sets whether promiscuous mode should be set on a capture handle when the handle is activated. 
+        /// If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.  
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <param name="promisc">A <see cref="System.Int32"/></param>
+        /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_promisc(IntPtr /* pcap_t* */ p, int promisc);
+
+        /// <summary>
+        /// pcap_set_timeout() sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <param name="to_ms">A <see cref="System.Int32"/></param>
+        /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_timeout(IntPtr /* pcap_t* */ p, int to_ms);
+
+        /// <summary>
+        /// pcap_activate() is used to activate a packet capture handle to look at packets on the network, with the options that were set on the handle being in effect.  
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <returns>Returns 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error. A non-zero return value indicates what warning or error condition occurred.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_activate(IntPtr /* pcap_t* */ p);
 
         #region libpcap specific
         /// <summary>

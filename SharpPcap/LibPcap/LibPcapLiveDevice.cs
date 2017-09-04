@@ -150,6 +150,24 @@ namespace SharpPcap.LibPcap
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout)
         {
+            const MonitorMode monitorMode = MonitorMode.Inactive;
+            this.Open(mode, read_timeout, monitorMode);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
+        {
             if ( !Opened )
             {
                 StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
@@ -162,19 +180,39 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
 
-                PcapHandle = LibPcapSafeNativeMethods.pcap_open_live
-                    (   Name,                   // name of the device
-                        Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture. 
-                                                // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (int)mode,              // promiscuous mode
-                        read_timeout,           // read timeout
-                        errbuf );               // error buffer
+                PcapHandle = LibPcapSafeNativeMethods.pcap_create(
+                    Name, // name of the device
+                    errbuf); // error buffer                
 
                 if ( PcapHandle == IntPtr.Zero)
                 {
                     string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
                     throw new PcapException( err );
                 }
+
+                LibPcapSafeNativeMethods.pcap_set_snaplen(PcapHandle, Pcap.MAX_PACKET_SIZE);
+                if (monitor_mode == MonitorMode.Active)
+                {
+                    try
+                    {
+                        LibPcapSafeNativeMethods.pcap_set_rfmon(PcapHandle, (int)monitor_mode);
+                    }
+                    catch (System.EntryPointNotFoundException)
+                    {
+                        throw new PcapException("This implementation of libpcap does not support monitor mode.");
+                    }
+                }
+                
+                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)mode);
+                LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
+
+                var activationResult = LibPcapSafeNativeMethods.pcap_activate(PcapHandle);
+                if (activationResult < 0)
+                {                    
+                    string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
+                    throw new PcapException(err);
+                }
+                Active = true;
             }
         }
 
