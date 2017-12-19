@@ -25,6 +25,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace SharpPcap.LibPcap
 {
@@ -52,9 +53,14 @@ namespace SharpPcap.LibPcap
                 if (Name.EndsWith(adapter.Id))
                 {
                     var ipProperties = adapter.GetIPProperties();
-                    if (ipProperties.GatewayAddresses.Count != 0)
+                    int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
+                    if (gatewayAddressCount != 0)
                     {
-                        Interface.GatewayAddress = ipProperties.GatewayAddresses[0].Address;
+                        List<System.Net.IPAddress> gatewayAddresses = new List<System.Net.IPAddress>();
+                        foreach(GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses) {
+                            gatewayAddresses.Add(gatewayInfo.Address);
+                        }
+                        Interface.GatewayAddresses = gatewayAddresses;
                     }
 
                     Interface.MacAddress = adapter.GetPhysicalAddress();

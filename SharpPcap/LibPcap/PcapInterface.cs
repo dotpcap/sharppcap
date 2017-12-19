@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using SharpPcap;
+using System.Net;
 
 namespace SharpPcap.LibPcap
 {
@@ -55,7 +56,7 @@ namespace SharpPcap.LibPcap
         /// Gateway address of this device
         /// NOTE: May only be available on Windows
         /// </value>
-        public System.Net.IPAddress GatewayAddress { get; internal set; }
+        public List<System.Net.IPAddress> GatewayAddresses { get; internal set; }
 
         /// <value>
         /// Addresses associated with this device
@@ -165,9 +166,14 @@ namespace SharpPcap.LibPcap
                 sb.AppendFormat("FriendlyName: {0}\n", FriendlyName);
             }
 
-            if (GatewayAddress != null)
+            if (GatewayAddresses != null)
             {
-                sb.AppendFormat("GatewayAddress: {0}\n", GatewayAddress);
+                sb.AppendFormat("GatewayAddresses:\n");
+                int i = 0;
+                foreach(IPAddress gatewayAddr in GatewayAddresses) {
+                    sb.AppendFormat("{0}) {1}\n", i+1, gatewayAddr);
+                    i++;
+                }
             }
 
             sb.AppendFormat("Description: {0}\n", Description);
