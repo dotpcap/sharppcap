@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.Udp;
 
 namespace Test
 {

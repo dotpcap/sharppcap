@@ -19,11 +19,9 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Net.NetworkInformation;
+using PacketDotNet;
 
 namespace SharpPcap.AirPcap
 {
@@ -678,24 +676,24 @@ namespace SharpPcap.AirPcap
         }
 
         /// <summary>
-        /// Link type in terms of PacketDotNet.LinkLayers
+        /// Link type in terms of LinkLayers
         /// </summary>
-        public override PacketDotNet.LinkLayers LinkType
+        public override LinkLayers LinkType
         {
             get
             {
-                var packetDotNetLinkLayer = PacketDotNet.LinkLayers.Null;
+                var packetDotNetLinkLayer = LinkLayers.Null;
 
                 switch(AirPcapLinkType)
                 {
                     case AirPcapLinkTypes._802_11_PLUS_RADIO:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
+                        packetDotNetLinkLayer = LinkLayers.Ieee80211_Radio;
                         break;
                     case AirPcapLinkTypes._802_11:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211;
+                        packetDotNetLinkLayer = LinkLayers.Ieee80211;
                         break;
                     case AirPcapLinkTypes._802_11_PLUS_PPI:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
+                        packetDotNetLinkLayer = LinkLayers.PerPacketInformation;
                         break;
                     default:
                         throw new System.InvalidOperationException("Unexpected linkType " + AirPcapLinkType);

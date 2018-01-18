@@ -21,6 +21,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Net.NetworkInformation;
+using PacketDotNet.ARP;
+using PacketDotNet.Ethernet;
 
 namespace SharpPcap
 {
@@ -149,7 +151,7 @@ namespace SharpPcap
 
             var requestInterval = new TimeSpan(0, 0, 1);
 
-            PacketDotNet.ARPPacket arpPacket = null;
+            ARPPacket arpPacket = null;
 
             // attempt to resolve the address with the current timeout
             var timeoutDateTime = DateTime.Now + Timeout;
@@ -173,7 +175,7 @@ namespace SharpPcap
                 var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
 
                 // is this an arp packet?
-                arpPacket = (PacketDotNet.ARPPacket)packet.Extract(typeof(PacketDotNet.ARPPacket));
+                arpPacket = (ARPPacket)packet.Extract(typeof(ARPPacket));
                 if(arpPacket == null)
                 {
                     continue;
@@ -205,10 +207,10 @@ namespace SharpPcap
                                                  System.Net.IPAddress localIP)
         {
             // an arp packet is inside of an ethernet packet
-            var ethernetPacket = new PacketDotNet.EthernetPacket(localMac,
+            var ethernetPacket = new EthernetPacket(localMac,
                                                                  PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"),
-                                                                 PacketDotNet.EthernetPacketType.Arp);
-            var arpPacket = new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
+                                                                 EthernetPacketType.Arp);
+            var arpPacket = new ARPPacket(ARPOperation.Request,
                                                        PhysicalAddress.Parse("00-00-00-00-00-00"),
                                                        destinationIP,
                                                        localMac,

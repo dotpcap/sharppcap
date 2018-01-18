@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>ReadingCaptureFile</RootNamespace>
     <AssemblyName>ReadingCaptureFile</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,17 +31,23 @@
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="PacketDotNet">
       <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="PacketDotNet.Interface">
+      <HintPath>..\..\SharpPcap\PacketDotNet\PacketDotNet.Interface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj">
-      <Project>{24262E52-1304-4A25-8F73-A3B06E40592E}</Project>
+      <Project>{23f75e13-8f57-4659-b007-e6b7ed849f3e}</Project>
       <Name>SharpPcap</Name>
     </ProjectReference>
   </ItemGroup>

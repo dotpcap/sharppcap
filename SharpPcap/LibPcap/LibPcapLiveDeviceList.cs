@@ -23,7 +23,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap.LibPcap

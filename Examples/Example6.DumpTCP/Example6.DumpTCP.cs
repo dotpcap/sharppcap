@@ -1,5 +1,7 @@
 using System;
-using System.Collections.Generic;
+using PacketDotNet;
+using PacketDotNet.IP;
+using PacketDotNet.Tcp;
 using SharpPcap;
 
 namespace Example6
@@ -81,12 +83,12 @@ namespace Example6
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
 
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var packet = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
-            var tcpPacket = (PacketDotNet.TcpPacket)packet.Extract(typeof(PacketDotNet.TcpPacket));
+            var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
             if(tcpPacket != null)
             {
-                var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;
+                var ipPacket = (IpPacket)tcpPacket.ParentPacket;
                 System.Net.IPAddress srcIp = ipPacket.SourceAddress;
                 System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
                 int srcPort = tcpPacket.SourcePort;

@@ -2,6 +2,7 @@ using System;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.Ethernet;
 
 namespace ReadingCaptureFile
 {
@@ -74,10 +75,10 @@ namespace ReadingCaptureFile
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
+            if(e.Packet.LinkLayerType == LinkLayers.Ethernet)
             {
-                var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-                var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
+                var packet = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+                var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,

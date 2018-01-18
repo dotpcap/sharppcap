@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -38,7 +38,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -73,19 +74,21 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <ProjectReference Include="..\SharpPcap\SharpPcap.csproj">
-      <Project>{24262E52-1304-4A25-8F73-A3B06E40592E}</Project>
-      <Name>SharpPcap</Name>
-    </ProjectReference>
-    <Reference Include="nunit.framework">
-      <HintPath>lib\nunit.framework.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PacketDotNet">
       <HintPath>..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="PacketDotNet.Interface">
+      <HintPath>..\SharpPcap\PacketDotNet\PacketDotNet.Interface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WinPcap\RemoteDeviceListTest.cs" />
@@ -130,6 +133,12 @@
     <RootNamespace>Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Performance\" />
+    <ProjectReference Include="..\SharpPcap\SharpPcap.csproj">
+      <Project>{23f75e13-8f57-4659-b007-e6b7ed849f3e}</Project>
+      <Name>SharpPcap</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
