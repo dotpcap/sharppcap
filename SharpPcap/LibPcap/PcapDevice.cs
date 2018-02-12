@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using PacketDotNet;
 
 namespace SharpPcap.LibPcap
 {
@@ -102,7 +103,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         private bool isOpen = false;
         private bool isActive = false;
-        private PacketDotNet.LinkLayers linkType;
+        private LinkLayers linkType;
 
         /// <summary>
         /// Return a value indicating if this adapter is opened
@@ -154,7 +155,7 @@ namespace SharpPcap.LibPcap
 
                 if (dataLink >= 0)
                 {
-                    linkType = (PacketDotNet.LinkLayers)dataLink;
+                    linkType = (LinkLayers)dataLink;
                 }
             }
         }
@@ -183,9 +184,9 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Link type in terms of PacketDotNet.LinkLayers
+        /// Link type in terms of LinkLayers
         /// </summary>
-        public virtual PacketDotNet.LinkLayers LinkType
+        public virtual LinkLayers LinkType
         {
             get
             {
@@ -559,7 +560,7 @@ namespace SharpPcap.LibPcap
                                        out string errorString)
         {
             IntPtr bpfProgram;
-            IntPtr fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
+            IntPtr fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
 
             uint mask = 0;
             if(!CompileFilter(fakePcap, filterExpression, mask, out bpfProgram, out errorString))

@@ -4,6 +4,7 @@ using SharpPcap.LibPcap;
 using SharpPcap.AirPcap;
 using SharpPcap.WinPcap;
 using PacketDotNet;
+using PacketDotNet.Ethernet;
 
 namespace CreatingCaptureFile
 {
@@ -116,10 +117,10 @@ namespace CreatingCaptureFile
             captureFileWriter.Write(e.Packet);
             Console.WriteLine("Packet dumped to file.");
 
-            if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
+            if(e.Packet.LinkLayerType == LinkLayers.Ethernet)
             {
                 var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-                var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
+                var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,

@@ -18,8 +18,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2017 Noah Potash <noah.potash@outbreaklabs.com>
  */
 
-using System;
-
 namespace SharpPcap
 {
     /// <summary>

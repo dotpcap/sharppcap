@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using PacketDotNet;
 
 namespace SharpPcap.LibPcap
 {
@@ -95,7 +96,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="FileMode"/>
         /// </param>
         public CaptureFileWriterDevice(string captureFilename, FileMode mode) :
-            this(PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE,
+            this(LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE,
                  captureFilename, mode)
         {
         }
@@ -111,7 +112,7 @@ namespace SharpPcap.LibPcap
         /// </param>
         public CaptureFileWriterDevice(LibPcapLiveDevice device,
                                        string captureFilename) :
-            this((PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(device.PcapHandle),
+            this((LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(device.PcapHandle),
                  LibPcapSafeNativeMethods.pcap_snapshot(device.PcapHandle),
                  captureFilename,
                  FileMode.OpenOrCreate)
@@ -134,7 +135,7 @@ namespace SharpPcap.LibPcap
         public CaptureFileWriterDevice(LibPcapLiveDevice device,
                                        string captureFilename,
                                        FileMode mode) :
-            this((PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(device.PcapHandle),
+            this((LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(device.PcapHandle),
                  LibPcapSafeNativeMethods.pcap_snapshot(device.PcapHandle),
                  captureFilename,
                  mode)
@@ -146,7 +147,7 @@ namespace SharpPcap.LibPcap
         /// Constructor
         /// </summary>
         /// <param name="linkLayerType">
-        /// A <see cref="PacketDotNet.LinkLayers"/>
+        /// A <see cref="LinkLayers"/>
         /// </param>
         /// <param name="snapshotLength">
         /// A <see cref="Nullable{T}"/> of <see cref="System.Int32"/>
@@ -157,7 +158,7 @@ namespace SharpPcap.LibPcap
         /// <param name="mode">
         /// A <see cref="FileMode"/>
         /// </param>
-        public CaptureFileWriterDevice(PacketDotNet.LinkLayers linkLayerType,
+        public CaptureFileWriterDevice(LinkLayers linkLayerType,
                                        int? snapshotLength,
                                        string captureFilename,
                                        FileMode mode)

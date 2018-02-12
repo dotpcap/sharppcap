@@ -1,6 +1,9 @@
 using System;
 using System.Net.NetworkInformation;
-using System.Collections.Generic;
+using PacketDotNet.Ethernet;
+using PacketDotNet.IP;
+using PacketDotNet.Tcp;
+using PacketDotNet.Udp;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -85,16 +88,16 @@ namespace Example12.PacketManipulation
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-            if(packet is PacketDotNet.EthernetPacket)
+            if(packet is EthernetPacket)
             {
-                var eth = ((PacketDotNet.EthernetPacket)packet);
+                var eth = ((EthernetPacket)packet);
                 Console.WriteLine("Original Eth packet: " + eth.ToString());
 
                 //Manipulate ethernet parameters
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
                 eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
-                var ip = (PacketDotNet.IpPacket)packet.Extract(typeof(PacketDotNet.IpPacket));
+                var ip = (IpPacket)packet.Extract(typeof(IpPacket));
                 if(ip != null)
                 {
                     Console.WriteLine("Original IP packet: " + ip.ToString());
@@ -104,7 +107,7 @@ namespace Example12.PacketManipulation
                     ip.DestinationAddress = System.Net.IPAddress.Parse("44.33.22.11");
                     ip.TimeToLive = 11;
 
-                    var tcp = (PacketDotNet.TcpPacket)packet.Extract(typeof(PacketDotNet.TcpPacket));
+                    var tcp = (TcpPacket)packet.Extract(typeof(TcpPacket));
                     if (tcp != null)
                     {
                         Console.WriteLine("Original TCP packet: " + tcp.ToString());
@@ -120,7 +123,7 @@ namespace Example12.PacketManipulation
                         tcp.SequenceNumber = 800;
                     }
 
-                    var udp = (PacketDotNet.UdpPacket)packet.Extract(typeof(PacketDotNet.UdpPacket));
+                    var udp = (UdpPacket)packet.Extract(typeof(UdpPacket));
                     if (udp != null)
                     {
                         Console.WriteLine("Original UDP packet: " + udp.ToString());

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using PacketDotNet;
 using SharpPcap;
 using SharpPcap.AirPcap;
 
@@ -60,7 +58,7 @@ namespace AirPcapBasicCapture
             Console.WriteLine(e.Packet.ToString());
 
             var p = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-            Console.WriteLine(p.ToString(PacketDotNet.StringOutputType.VerboseColored));
+            Console.WriteLine(p.ToString(StringOutputType.VerboseColored));
         }
     }
 }
