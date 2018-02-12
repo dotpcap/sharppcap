@@ -19,6 +19,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using PacketDotNet;
+
 namespace SharpPcap
 {
     /// <summary>
@@ -186,7 +188,7 @@ namespace SharpPcap
         /// <summary>
         /// Return the pcap link layer value of an adapter. 
         /// </summary>
-        PacketDotNet.LinkLayers LinkType { get; }
+        LinkLayers LinkType { get; }
     }
 }
 

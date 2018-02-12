@@ -19,7 +19,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2009-2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using SharpPcap.LibPcap;
 
 namespace SharpPcap.WinPcap

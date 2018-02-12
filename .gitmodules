@@ -1,0 +1,3 @@
+[submodule "Libs/packetnet"]
+	path = Libs/packetnet
+	url = https://github.com/nesfit/packetnet.git

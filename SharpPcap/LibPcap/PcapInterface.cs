@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpPcap;
 using System.Net;
 
 namespace SharpPcap.LibPcap
