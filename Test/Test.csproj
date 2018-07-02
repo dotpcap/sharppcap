@@ -74,14 +74,17 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="PacketDotNet, Version=0.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PacketDotNet.0.16.0\lib\PacketDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
       <HintPath>lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="PacketDotNet">
-      <HintPath>..\SharpPcap\PacketDotNet\PacketDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -134,5 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
