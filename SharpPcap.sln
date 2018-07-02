@@ -51,6 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpPcap", "SharpPcap\Shar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BD6EE69B-A22A-4B1B-84B7-B810768D205B}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		ARCHITECTURE = ARCHITECTURE
 		LICENSE = LICENSE
