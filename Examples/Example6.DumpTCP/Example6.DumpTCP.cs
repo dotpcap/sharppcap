@@ -86,7 +86,7 @@ namespace Example6
             var tcpPacket = (PacketDotNet.TcpPacket)packet.Extract(typeof(PacketDotNet.TcpPacket));
             if(tcpPacket != null)
             {
-                var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;
+                var ipPacket = (PacketDotNet.IPPacket)tcpPacket.ParentPacket;
                 System.Net.IPAddress srcIp = ipPacket.SourceAddress;
                 System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
                 int srcPort = tcpPacket.SourcePort;

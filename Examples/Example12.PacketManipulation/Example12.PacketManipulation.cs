@@ -94,7 +94,7 @@ namespace Example12.PacketManipulation
                 eth.SourceHwAddress = PhysicalAddress.Parse("00-11-22-33-44-55");
                 eth.DestinationHwAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
-                var ip = (PacketDotNet.IpPacket)packet.Extract(typeof(PacketDotNet.IpPacket));
+                var ip = (PacketDotNet.IPPacket)packet.Extract(typeof(PacketDotNet.IPPacket));
                 if(ip != null)
                 {
                     Console.WriteLine("Original IP packet: " + ip.ToString());
