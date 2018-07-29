@@ -165,6 +165,16 @@ namespace SharpPcap.LibPcap
             public Int32 tv_sec;
             public Int32 tv_usec;
         };
+        
+        /// <summary>
+        /// MacOSX version of struct timeval
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]    
+        public struct timeval_macosx
+        {
+            public IntPtr tv_sec;
+            public Int32 tv_usec;
+        };
         #endregion
 
         #region pcap_pkthdr
@@ -193,6 +203,15 @@ namespace SharpPcap.LibPcap
             public UInt32           caplen;         /* length of portion present */
             public UInt32           len;            /* length this packet (off wire) */
         };
+        
+        [StructLayout(LayoutKind.Sequential)]
+        public struct pcap_pkthdr_macosx
+        {
+            public timeval_macosx  ts;             /* time stamp */
+            public UInt32          caplen;         /* length of portion present */
+            public UInt32          len;            /* length this packet (off wire) */
+        };
+        
         #endregion
 
         /// <summary>
