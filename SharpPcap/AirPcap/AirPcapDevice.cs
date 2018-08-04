@@ -45,7 +45,7 @@ namespace SharpPcap.AirPcap
         /// </summary>
         internal IntPtr AirPcapDeviceHandle { get; set; }
 
-        internal AirPcapDevice(WinPcap.WinPcapDevice dev) : base(dev.Interface)
+        public AirPcapDevice(WinPcap.WinPcapDevice dev) : base(dev.Interface)
         {
         }
 
