@@ -39,7 +39,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        internal LibPcapLiveDevice( PcapInterface pcapIf )
+        public LibPcapLiveDevice( PcapInterface pcapIf )
         {
             m_pcapIf = pcapIf;
 

@@ -38,7 +38,7 @@ namespace SharpPcap.WinPcap
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        internal WinPcapDevice( PcapInterface pcapIf ) : base(pcapIf)
+        public WinPcapDevice( PcapInterface pcapIf ) : base(pcapIf)
         {}
 
         /// <summary>
