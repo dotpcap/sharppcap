@@ -268,6 +268,20 @@ namespace SharpPcap.WinPcap
             }
         }
         #endregion
+
+        #region Device Factory
+        /// <param name="Name">The name or description of the pcap interface to get.</param>
+        public WinPcapDevice Create(string Name)
+        {
+            // lock to prevent issues with multi-threaded access
+            // with other methods
+            lock (this)
+            {
+                var device = this[Name];
+                return new WinPcapDevice(device.Interface);
+            }
+        }
+        #endregion
     }
 }
 

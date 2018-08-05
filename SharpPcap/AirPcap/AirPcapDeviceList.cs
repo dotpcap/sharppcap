@@ -196,6 +196,20 @@ namespace SharpPcap.AirPcap
         }
         #endregion
 
+        #region Device Factory
+        /// <param name="Name">The name or description of the pcap interface to get.</param>
+        public AirPcapDevice Create(string Name)
+        {
+            // lock to prevent issues with multi-threaded access
+            // with other methods
+            lock (this)
+            {
+                var device = this[Name];
+                return new AirPcapDevice(new WinPcap.WinPcapDevice(device.Interface));
+            }
+        }
+        #endregion
+
         /// <summary>
         /// Example showing how to retrieve a list of AirPcap devices
         /// We can't use this because AirPcap devices don't have a pcap handle
