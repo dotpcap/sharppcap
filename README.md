@@ -6,7 +6,7 @@ The official SharpPcap repository.
 # Features
 Note that packet dissection and creation was split from SharpPcap some years ago into a separate project, [Packet.Net](https://github.com/chmorgan/packetnet). See the Packet.Net page for a full list of supported packet formats.
 
-* On Linux, support for [libpcap](http://www.tcpdump.org/manpages/pcap.3pcap.html}
+* On Linux, support for [libpcap](http://www.tcpdump.org/manpages/pcap.3pcap.html)
 
 * On Windows, support for:
   * Npcap (formerly WinPcap) extensions, see [Npcap API guide](https://nmap.org/npcap/guide/npcap-devguide.html#npcap-api)
