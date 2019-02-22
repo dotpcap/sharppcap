@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyVersion>4.5.0.0</AssemblyVersion>
     <Version>4.5.0</Version>
     <Description>A packet capture framework for .NET</Description>
