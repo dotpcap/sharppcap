@@ -9,6 +9,7 @@ namespace Test.Performance
     {
         private int packetsToRead = 50000000;
 
+        [Category("Performance")]
         [Test]
         public void Benchmark()
         {
@@ -37,6 +38,7 @@ namespace Test.Performance
             Console.WriteLine("{0}", rate.ToString());
         }
 
+        [Category("Performance")]
         [Test]
         public void BenchmarkICaptureDevice()
         {
@@ -65,6 +67,7 @@ namespace Test.Performance
             Console.WriteLine("{0}", rate.ToString());
         }
 
+        [Category("Performance")]
         [Test]
         public unsafe void BenchmarkICaptureDeviceUnsafe()
         {

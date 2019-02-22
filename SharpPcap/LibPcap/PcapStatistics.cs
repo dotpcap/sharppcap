@@ -91,8 +91,8 @@ namespace SharpPcap.LibPcap
                                                                                                  typeof(PcapUnmanagedStructures.pcap_stat_unix));
 
                 // copy the values
-                this.ReceivedPackets = (uint)managedStat.ps_recv;
-                this.DroppedPackets = (uint)managedStat.ps_drop;
+                this.ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
+                this.DroppedPackets = (uint)managedStat.ps_drop.ToInt64();
 //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             } else
             {
