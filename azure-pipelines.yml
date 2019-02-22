@@ -48,3 +48,25 @@ jobs:
     inputs:
       testRunner: VSTest
       testResultsFiles: '**/*.trx'
+
+- job: Windows
+
+  pool:
+    vmImage: 'VS2017-Win2016'
+
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - script: choco install -y winpcap
+    displayName: 'Install WinPcap'
+  - script: |
+      dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --collect "Code coverage"
+    displayName: 'Build and test'
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
