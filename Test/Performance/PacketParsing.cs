@@ -10,6 +10,7 @@ namespace Test.Performance
     {
         private int packetsToRead = 50000000;
 
+        [Category("Performance")]
         [Test]
         public void Benchmark()
         {
@@ -46,6 +47,7 @@ namespace Test.Performance
         /// <summary>
         /// Test the performance of a device used via the ICaptureDevice interface
         /// </summary>
+        [Category("Performance")]
         [Test]
         public void BenchmarkICaptureDevice()
         {
@@ -82,6 +84,7 @@ namespace Test.Performance
         /// <summary>
         /// Test the performance of a device used via the ICaptureDevice interface
         /// </summary>
+        [Category("Performance")]
         [Test]
         public unsafe void BenchmarkICaptureDeviceUnsafe()
         {
