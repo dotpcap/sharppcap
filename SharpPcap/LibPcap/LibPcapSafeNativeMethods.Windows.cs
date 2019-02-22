@@ -34,11 +34,6 @@ namespace SharpPcap.LibPcap
     [SuppressUnmanagedCodeSecurityAttribute]   
     internal static class Windows
     {
-        // NOTE: For mono users on non-windows platforms a .config file is used to map
-        //       the windows dll name to the unix/mac library name
-        //       This file is called $assembly_name.dll.config and is placed in the
-        //       same directory as the assembly
-        //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
         private const string PCAP_DLL = "wpcap";
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
