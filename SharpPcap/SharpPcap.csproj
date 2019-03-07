@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyVersion>4.5.0.0</AssemblyVersion>
-    <Version>4.5.0</Version>
+    <Version>4.6.0</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
