@@ -138,8 +138,10 @@ namespace SharpPcap
             String arpFilter = "arp and ether dst " + localMAC.ToString();
 
             //open the device with 20ms timeout
-            _device.Open(DeviceMode.Promiscuous, 20);
-
+            if (!_device.Opened)
+            {
+                _device.Open(DeviceMode.Promiscuous, 20);
+            }
             //set the filter
             _device.Filter = arpFilter;
 
@@ -185,9 +187,6 @@ namespace SharpPcap
                     break;
                 }
             }
-
-            // free the device
-            _device.Close();
 
             // the timeout happened
             if(DateTime.Now >= timeoutDateTime)
