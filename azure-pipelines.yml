@@ -1,0 +1,72 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+jobs:
+- job: Linux
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - script: |
+      sudo apt-get install -y libpcap-dev
+  - script: |
+      set -e
+      sudo dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+
+- job: macOS
+
+  pool:
+    vmImage: 'macOS-10.13'
+
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - script: |
+      brew install libpcap
+  - script: |
+      sudo sysctl -w net.inet.udp.maxdgram=65535
+      set -e
+      sudo dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+
+- job: Windows
+
+  pool:
+    vmImage: 'VS2017-Win2016'
+
+  variables:
+    solution: '**/*.sln'
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+
+  steps:
+  - script: choco install -y winpcap
+    displayName: 'Install WinPcap'
+  - script: |
+      dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --collect "Code coverage" --filter TestCategory!=Performance
+    displayName: 'Build and test'
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'

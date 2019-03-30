@@ -9,6 +9,7 @@ namespace Test.Performance
     {
         private int packetsToRead = 50000000;
 
+        [Category("Performance")]
         [Test]
         public void Benchmark()
         {
@@ -16,7 +17,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while(packetsRead < packetsToRead)
             {
-                var captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice("../../capture_files/10k_packets.pcap");
+                var captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;
@@ -37,6 +38,7 @@ namespace Test.Performance
             Console.WriteLine("{0}", rate.ToString());
         }
 
+        [Category("Performance")]
         [Test]
         public void BenchmarkICaptureDevice()
         {
@@ -44,7 +46,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while(packetsRead < packetsToRead)
             {
-                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice("../../capture_files/10k_packets.pcap");
+                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;
@@ -65,6 +67,7 @@ namespace Test.Performance
             Console.WriteLine("{0}", rate.ToString());
         }
 
+        [Category("Performance")]
         [Test]
         public unsafe void BenchmarkICaptureDeviceUnsafe()
         {
@@ -72,7 +75,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while(packetsRead < packetsToRead)
             {
-                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice("../../capture_files/10k_packets.pcap");
+                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;

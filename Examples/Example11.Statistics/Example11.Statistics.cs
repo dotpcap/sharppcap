@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example11
@@ -18,6 +17,13 @@ namespace Example11
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
             Console.WriteLine("SharpPcap {0}, Example11.Statistics.cs", ver);
+
+            var os = System.Environment.OSVersion;
+            if(os.Platform != PlatformID.Win32NT)
+            {
+                Console.WriteLine("Your platform is unsupported for this example as it relies on npcap specific functionality only present in Windows.");
+                return;
+            }
 
             // Retrieve the device list
             var devices = CaptureDeviceList.Instance;

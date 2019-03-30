@@ -18,7 +18,7 @@ namespace Test
         [Test]
         public void CaptureInfinite()
         {
-            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
+            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
             device.OnPacketArrival += HandleDeviceOnPacketArrival;
             device.Open();
 
@@ -36,7 +36,7 @@ namespace Test
         [Test]
         public void CaptureFinite()
         {
-            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
+            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
             device.OnPacketArrival += HandleDeviceOnPacketArrival;
             device.Open();
 
@@ -60,7 +60,7 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var device = new CaptureFileReaderDevice("../../capture_files/ipv6_http.pcap");
+            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
 
             var caughtExpectedException = false;
             try
@@ -79,7 +79,7 @@ namespace Test
         [Test]
         public void SetFilter()
         {
-            var device = new CaptureFileReaderDevice("../../capture_files/test_stream.pcap");
+            var device = new CaptureFileReaderDevice(TestHelper.GetFile("test_stream.pcap"));
 
             device.Open();
             device.Filter = "port 53";
