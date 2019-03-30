@@ -45,6 +45,11 @@ namespace SharpPcap.LibPcap
         protected int          m_pcapPacketCount   = Pcap.InfinitePacketCount;
 
         private int            m_mask  = 0; //for filter expression
+        
+        /// <summary>
+        /// Function which when set will be used to allocate RawCapture data buffer
+        /// </summary>
+        private Func<uint, byte[]> m_data_allocator;
 
         /// <summary>
         /// Device name
@@ -157,6 +162,17 @@ namespace SharpPcap.LibPcap
                     linkType = (PacketDotNet.LinkLayers)dataLink;
                 }
             }
+        }
+
+        /// <summary>
+        /// Set custom RawCapture data allocator 
+        /// </summary>
+        /// <param name="data_allocator">
+        /// A <see cref="Func{UInt32,Byte}"/>
+        /// </param>
+        public virtual void SetDataAllocator(Func<uint, byte[]> data_allocator)
+        {
+            this.m_data_allocator = data_allocator;
         }
 
         /// <summary>
@@ -424,7 +440,10 @@ namespace SharpPcap.LibPcap
             // marshal the header
             var pcapHeader = PcapHeader.FromPointer(header);
 
-            var pkt_data = new byte[pcapHeader.CaptureLength];
+            byte[] pkt_data = this.m_data_allocator != null
+                ? this.m_data_allocator.Invoke(pcapHeader.CaptureLength)
+                : new byte[pcapHeader.CaptureLength];
+
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
             p = new RawCapture(LinkType,
