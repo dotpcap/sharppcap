@@ -13,7 +13,6 @@ Note that packet dissection and creation was split from SharpPcap some years ago
 
 * On Windows, support for:
   * Npcap (formerly WinPcap) extensions, see [Npcap API guide](https://nmap.org/npcap/guide/npcap-devguide.html#npcap-api)
-  * AirPcap see (https://support.riverbed.com/content/support/software/steelcentral-npm/airpcap.html)
 
 # Examples
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of examples using SharpPcap
