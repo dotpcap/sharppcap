@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="PacketDotNet">
-      <Version>0.18.0</Version>
+      <Version>1.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -109,10 +109,10 @@ namespace SharpPcap.Examples
             if(packet == null)
                 return;
 
-            var wol = (PacketDotNet.WakeOnLanPacket)packet.Extract(typeof(PacketDotNet.WakeOnLanPacket));
+            var wol = packet.Extract<PacketDotNet.WakeOnLanPacket>();
             if(wol.PayloadData != null)
             {
-                PrintHex(wol.DestinationMAC.GetAddressBytes());
+                PrintHex(wol.DestinationAddress.GetAddressBytes());
             }
         }
 
