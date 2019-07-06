@@ -92,7 +92,7 @@ namespace Test
                 if(rawPacket != null)
                 {
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
-                    var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
+                    var udpPacket = p.Extract<UdpPacket>();
                     Assert.IsNotNull(udpPacket);
                     int dnsPort = 53;
                     Assert.AreEqual(dnsPort, udpPacket.DestinationPort);

@@ -83,7 +83,7 @@ namespace Example6
 
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
-            var tcpPacket = (PacketDotNet.TcpPacket)packet.Extract(typeof(PacketDotNet.TcpPacket));
+            var tcpPacket = packet.Extract<PacketDotNet.TcpPacket>();
             if(tcpPacket != null)
             {
                 var ipPacket = (PacketDotNet.IPPacket)tcpPacket.ParentPacket;

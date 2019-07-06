@@ -83,8 +83,8 @@ namespace ReadingCaptureFile
                                   packetIndex,
                                   e.Packet.Timeval.Date.ToString(),
                                   e.Packet.Timeval.Date.Millisecond,
-                                  ethernetPacket.SourceHwAddress,
-                                  ethernetPacket.DestinationHwAddress);
+                                  ethernetPacket.SourceHardwareAddress,
+                                  ethernetPacket.DestinationHardwareAddress);
                 packetIndex++;
             }
         }
