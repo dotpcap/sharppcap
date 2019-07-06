@@ -689,13 +689,13 @@ namespace SharpPcap.AirPcap
                 switch(AirPcapLinkType)
                 {
                     case AirPcapLinkTypes._802_11_PLUS_RADIO:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211_Radio;
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211Radio;
                         break;
                     case AirPcapLinkTypes._802_11:
                         packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ieee80211;
                         break;
                     case AirPcapLinkTypes._802_11_PLUS_PPI:
-                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.PerPacketInformation;
+                        packetDotNetLinkLayer = PacketDotNet.LinkLayers.Ppi;
                         break;
                     default:
                         throw new System.InvalidOperationException("Unexpected linkType " + AirPcapLinkType);

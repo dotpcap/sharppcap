@@ -149,7 +149,7 @@ namespace SharpPcap
 
             var requestInterval = new TimeSpan(0, 0, 1);
 
-            PacketDotNet.ARPPacket arpPacket = null;
+            PacketDotNet.ArpPacket arpPacket = null;
 
             // attempt to resolve the address with the current timeout
             var timeoutDateTime = DateTime.Now + Timeout;
@@ -173,7 +173,7 @@ namespace SharpPcap
                 var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
 
                 // is this an arp packet?
-                arpPacket = (PacketDotNet.ARPPacket)packet.Extract(typeof(PacketDotNet.ARPPacket));
+                arpPacket = packet.Extract<PacketDotNet.ArpPacket>();
                 if(arpPacket == null)
                 {
                     continue;
@@ -207,8 +207,8 @@ namespace SharpPcap
             // an arp packet is inside of an ethernet packet
             var ethernetPacket = new PacketDotNet.EthernetPacket(localMac,
                                                                  PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"),
-                                                                 PacketDotNet.EthernetPacketType.Arp);
-            var arpPacket = new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
+                                                                 PacketDotNet.EthernetType.Arp);
+            var arpPacket = new PacketDotNet.ArpPacket(PacketDotNet.ArpOperation.Request,
                                                        PhysicalAddress.Parse("00-00-00-00-00-00"),
                                                        destinationIP,
                                                        localMac,
