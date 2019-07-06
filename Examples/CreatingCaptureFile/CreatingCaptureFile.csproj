@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
