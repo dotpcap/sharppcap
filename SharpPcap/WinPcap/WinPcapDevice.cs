@@ -236,7 +236,7 @@ namespace SharpPcap.WinPcap
         /// Set the kernel value buffer size in bytes
         /// WinPcap extension
         /// </value>
-        public virtual uint KernelBufferSize
+        public override uint KernelBufferSize
         {
             set
             {

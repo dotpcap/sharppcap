@@ -91,10 +91,41 @@ namespace SharpPcap
         /// <param name="read_timeout">
         /// A <see cref="System.Int32"/>
         /// </param>
+        /// <param name="kernel_buffer_size">
+        /// A <see cref="System.UInt32"/>
+        /// </param>
+        void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size);
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
         /// <param name="monitor_mode">
         /// A <see cref="MonitorMode"/>
         /// </param>
         void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode);
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        /// <param name="kernel_buffer_size">
+        /// A <see cref="System.UInt32"/>
+        /// </param>
+        void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size);
 
         /// <summary>
         /// Closes this adapter

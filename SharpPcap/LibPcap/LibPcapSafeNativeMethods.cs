@@ -75,6 +75,11 @@ namespace SharpPcap.LibPcap
             return UseWindows ? Windows.pcap_open_dead(linktype, snaplen) : Unix.pcap_open_dead(linktype, snaplen);
         }
 
+        internal static int pcap_set_buffer_size(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes)
+        {
+            return UseWindows ? Windows.pcap_set_buffer_size(adapter, bufferSizeInBytes) : Unix.pcap_set_buffer_size(adapter, bufferSizeInBytes);
+        }
+
         /// <summary>Open a file to write packets. </summary>
         internal static IntPtr /*pcap_dumper_t * */ pcap_dump_open (IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname)
         {
