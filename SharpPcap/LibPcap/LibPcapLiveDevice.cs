@@ -124,6 +124,28 @@ namespace SharpPcap.LibPcap
             get { return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
         }
 
+        /// <value>
+        /// Set the kernel value buffer size in bytes
+        /// WinPcap extension
+        /// </value>
+        public virtual uint KernelBufferSize
+        {
+            set
+            {
+                int retval = LibPcapSafeNativeMethods.pcap_set_buffer_size(this.m_pcapAdapterHandle,
+                    (int)value);
+                if (retval != 0)
+                {
+                    throw new System.InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
+                }
+            }
+
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Open the device with default values of: promiscuous_mode = false, read_timeout = 1000
         /// To start capturing call the 'StartCapture' function
@@ -156,8 +178,25 @@ namespace SharpPcap.LibPcap
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout)
         {
+            Open(mode, read_timeout, (uint)0);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="kernel_buffer_size">
+        /// A <see cref="System.UInt32"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size)
+        {
             const MonitorMode monitorMode = MonitorMode.Inactive;
-            this.Open(mode, read_timeout, monitorMode);
+            this.Open(mode, read_timeout, monitorMode, kernel_buffer_size);
         }
 
         /// <summary>
@@ -174,9 +213,29 @@ namespace SharpPcap.LibPcap
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
         {
-            if ( !Opened )
+            Open(mode, read_timeout, monitor_mode, 0);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="mode">
+        /// A <see cref="DeviceMode"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        /// <param name="kernel_buffer_size">
+        /// A <see cref="System.UInt32"/>
+        /// </param>
+        public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
+        {
+            if (!Opened)
             {
-                StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
+                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
                 // set the StopCaptureTimeout value to twice the read timeout to ensure that
                 // we wait long enough before considering the capture thread to be stuck when stopping
@@ -190,10 +249,10 @@ namespace SharpPcap.LibPcap
                     Name, // name of the device
                     errbuf); // error buffer                
 
-                if ( PcapHandle == IntPtr.Zero)
+                if (PcapHandle == IntPtr.Zero)
                 {
-                    string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
-                    throw new PcapException( err );
+                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
+                    throw new PcapException(err);
                 }
 
                 LibPcapSafeNativeMethods.pcap_set_snaplen(PcapHandle, Pcap.MAX_PACKET_SIZE);
@@ -208,13 +267,16 @@ namespace SharpPcap.LibPcap
                         throw new PcapException("This implementation of libpcap does not support monitor mode.");
                     }
                 }
-                
+
                 LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)mode);
                 LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
 
+                if (kernel_buffer_size != 0)
+                    KernelBufferSize = kernel_buffer_size;
+
                 var activationResult = LibPcapSafeNativeMethods.pcap_activate(PcapHandle);
                 if (activationResult < 0)
-                {                    
+                {
                     string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
                     throw new PcapException(err);
                 }
