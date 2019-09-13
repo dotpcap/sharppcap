@@ -139,28 +139,6 @@ namespace SharpPcap.WinPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
 
-        /// <summary>
-        /// Returns the AirPcap handler associated with an adapter. This handler can be used to change the
-        /// wireless-related settings of the CACE Technologies AirPcap wireless capture adapters.
-        ///
-        /// Note: THIS FUNCTION SHOULD BE CONSIDERED PROVISIONAL, AND MAY BE REPLACED IN THE FUTURE BY A
-        /// MORE COMPLETE SET OF FUNCTIONS FOR WIRELESS SUPPORT.
-        /// pcap_get_airpcap_handle() allows to obtain the airpcap handle of an open adapter. This handle
-        /// can be used with the AirPcap API functions to perform wireless-releated operations, e.g. changing
-        /// the channel or enabling WEP decryption. For more details about the AirPcap wireless capture adapters,
-        /// see http://www.cacetech.com/products/airpcap.html
-        ///
-        /// Parameters:
-        ///   p,: handle to an open libpcap adapter
-        /// Returns:
-        ///   a PAirpcapHandle pointer to an open AirPcap handle, used internally by the libpcap open adapter.
-        ///   NULL if the libpcap adapter doesn't have wireless support through AirPcap.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr pcap_get_airpcap_handle(IntPtr /* pcap_t* */ p);
-
         #region Send queue functions
         /// <summary>
         /// Allocate a send queue. 
