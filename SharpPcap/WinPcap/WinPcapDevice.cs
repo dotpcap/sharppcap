@@ -120,6 +120,8 @@ namespace SharpPcap.WinPcap
                     string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
                     throw new PcapException( err );
                 }
+
+                Active = true;
             }
         }
 
@@ -172,6 +174,8 @@ namespace SharpPcap.WinPcap
                     string err = "Unable to open the adapter ("+Name+"). "+errbuf.ToString();
                     throw new PcapException( err );
                 }
+
+                Active = true;
             }
         }
 
