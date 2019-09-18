@@ -87,6 +87,11 @@ namespace SharpPcap.WinPcap
                                                               IntPtr rmtauth,
                                                               StringBuilder errbuf);
 
+        /// <summary>Construct a list of network devices that can be opened with pcap_open_live().</summary>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_findalldevs(ref IntPtr /*pcap_if_t ** */alldevs,
+                                                    StringBuilder /*char * */errbuf);
+
         /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs_ex (string /*char **/source,
