@@ -27,7 +27,7 @@ using SharpPcap.LibPcap;
 namespace SharpPcap.NPcap
 {
     /// <summary>
-    /// WinPcap device
+    /// NPcap device
     /// </summary>
     public class NPcapDevice : LibPcap.LibPcapLiveDevice
     {
@@ -126,7 +126,7 @@ namespace SharpPcap.NPcap
         }
 
         /// <value>
-        /// WinPcap specific property
+        /// NPcap specific property
         /// </value>
         public virtual CaptureMode Mode
         {
@@ -149,8 +149,8 @@ namespace SharpPcap.NPcap
 
         /// <summary>
         /// Open a device with specific flags
-        /// WinPcap extension - Use of this method will exclude your application
-        ///                     from working on Linux or Mac
+        /// NPcap extension - Use of this method will exclude your application
+        ///                   from working on Linux or Mac
         /// </summary>
         public virtual void Open(OpenFlags flags, int read_timeout)
         {
@@ -238,7 +238,7 @@ namespace SharpPcap.NPcap
 
         /// <value>
         /// Set the kernel value buffer size in bytes
-        /// WinPcap extension
+        /// NPcap extension
         /// </value>
         public override uint KernelBufferSize
         {
@@ -263,7 +263,7 @@ namespace SharpPcap.NPcap
 
         /// <value>
         /// Set the minumum amount of data (in bytes) received by the kernel in a single call. 
-        /// WinPcap extension
+        /// NPcap extension
         /// </value>
         public int MinToCopy
         {

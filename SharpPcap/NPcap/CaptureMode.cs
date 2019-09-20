@@ -35,7 +35,7 @@ namespace SharpPcap.NPcap
             /// <summary>
             /// Set a Pcap device to report statistics.
             /// <br/>
-            /// Statistics mode is only supported in WinPcap
+            /// Statistics mode is only supported in NPcap
             /// </summary>
             Statistics = 1
         };

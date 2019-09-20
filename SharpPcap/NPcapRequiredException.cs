@@ -22,7 +22,7 @@ using System;
 namespace SharpPcap
 {
     /// <summary>
-    /// Exception thrown when a WinPcap extension method is called from
+    /// Exception thrown when a NPcap extension method is called from
     /// a non-Windows platform
     /// </summary>
     public class NPcapRequiredException : PcapException

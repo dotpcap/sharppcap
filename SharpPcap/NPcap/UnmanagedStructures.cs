@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SharpPcap.NPcap
 {
     /// <summary>
-    /// WinPcap specific unmanaged structures
+    /// NPcap specific unmanaged structures
     /// </summary>
     public class UnmanagedStructures
     {

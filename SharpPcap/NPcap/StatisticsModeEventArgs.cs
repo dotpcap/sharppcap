@@ -26,7 +26,7 @@ namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Event that contains statistics mode data
-    /// NOTE: WinPcap only
+    /// NOTE: NPcap only
     /// </summary>
     public class StatisticsModeEventArgs : CaptureEventArgs
     {

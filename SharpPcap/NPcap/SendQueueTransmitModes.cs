@@ -23,7 +23,7 @@ using System;
 namespace SharpPcap.NPcap
 {
     /// <summary>
-    /// The types of transmit modes allowed by the WinPcap specific send queue
+    /// The types of transmit modes allowed by the NPcap specific send queue
     /// implementation
     /// </summary>
     public enum SendQueueTransmitModes

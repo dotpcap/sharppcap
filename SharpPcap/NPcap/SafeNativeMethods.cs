@@ -52,9 +52,9 @@ namespace SharpPcap.NPcap
             }
         }
 
-        #region WinPcap specific
+        #region NPcap specific
         /// <summary>
-        /// Extended pcap_open() method that is WinPcap specific that
+        /// Extended pcap_open() method that is NPcap specific that
         /// provides extra flags and functionality
         /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html#g2b64c7b6490090d1d37088794f1f1791
         /// </summary>
@@ -104,13 +104,13 @@ namespace SharpPcap.NPcap
         /// Valid values for mode are MODE_CAPT (default capture mode) 
         /// and MODE_STAT (statistical mode). See the tutorial 
         /// "\ref wpcap_tut9" for details about statistical mode.
-        /// WinPcap specific method
+        /// NPcap specific method
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
 
         /// <summary>
-        /// WinPcap specific method for setting the kernel buffer size
+        /// NPcap specific method for setting the kernel buffer size
         /// associated with this adapter. The old buffer is discarded
         /// when the buffer size is changed.
         /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html

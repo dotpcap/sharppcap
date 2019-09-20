@@ -7,7 +7,7 @@ using SharpPcap.LibPcap;
 namespace Example10
 {
     /// <summary>
-    /// Example using the WinPcap specific feature of send queues
+    /// Example using the NPcap specific feature of send queues
     /// </summary>
     public class NPcapSendQueues
     {

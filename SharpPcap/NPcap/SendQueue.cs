@@ -27,7 +27,7 @@ using SharpPcap.LibPcap;
 namespace SharpPcap.NPcap
 {
     /// <summary>
-    /// Interface to the WinPcap send queue extension methods
+    /// Interface to the NPcap send queue extension methods
     /// </summary>
     public class SendQueue
     {
