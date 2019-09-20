@@ -21,10 +21,10 @@ using System;
 using NUnit.Framework;
 using SharpPcap;
 
-namespace Test
+namespace Test.NPcap
 {
     [TestFixture]
-    public class WinPcapDeviceTest
+    public class NPcapDeviceTest
     {
         /// <summary>
         /// Test that no exceptions are thrown from NPcapDevice.StartCapture() if

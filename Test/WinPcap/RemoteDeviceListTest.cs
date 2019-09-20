@@ -6,7 +6,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using SharpPcap.NPcap;
 
-namespace Test.WinPcap
+namespace Test.NPcap
 {
     [TestFixture]
     public class RemoteDeviceListTest
