@@ -51,7 +51,7 @@ namespace SharpPcap.NPcap
         /// Starts the capturing process via a background thread
         /// OnPacketArrival() will be called for each captured packet
         ///
-        /// NOTE: Winpcap devices can capture packets or statistics updates
+        /// NOTE: npcap devices can capture packets or statistics updates
         ///       so only if both a packet handler AND a statistics handler
         ///       are defined will an exception be thrown
         /// </summary>
@@ -282,7 +282,7 @@ namespace SharpPcap.NPcap
         }
 
         /// <summary>
-        /// Helper method for ensuring we are running in winpcap. Throws
+        /// Helper method for ensuring we are running in npcap. Throws
         /// a NPcapRequiredException() if not on a windows platform
         /// </summary>
         internal static void ThrowIfNotNPcap()
@@ -290,7 +290,7 @@ namespace SharpPcap.NPcap
             if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
                (Environment.OSVersion.Platform != PlatformID.Win32Windows))
             {
-                throw new NPcapRequiredException("only supported in winpcap");
+                throw new NPcapRequiredException("only supported in npcap");
             }
         }
     }

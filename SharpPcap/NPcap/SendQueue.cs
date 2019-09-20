@@ -41,7 +41,7 @@ namespace SharpPcap.NPcap
         /// to allocate for the queue</param>
         public SendQueue(int memSize)
         {
-            // ensure that we are running under winpcap
+            // ensure that we are running under npcap
             NPcapDevice.ThrowIfNotNPcap();
 
             m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );

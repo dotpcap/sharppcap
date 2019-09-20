@@ -24,7 +24,7 @@ using System;
 namespace SharpPcap.NPcap
 {
     /// <summary>
-    /// Holds network statistics entry from winpcap when in statistics mode
+    /// Holds network statistics entry from npcap when in statistics mode
     /// See http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut9.html
     /// </summary>
     public class StatisticsModePacket

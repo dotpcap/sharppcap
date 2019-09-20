@@ -11,7 +11,7 @@ namespace SharpPcap.NPcap
         #region Unmanaged Structs Implementation
 
         /// <summary>
-        /// Struct to specifiy Remote Address using rpcapd.exe, Winpcaps Remote Packet Capture Daemon
+        /// Struct to specifiy Remote Address using rpcapd.exe, WinPcap's Remote Packet Capture Daemon
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)] //Note: Pack =1 cause problems with Win 7 64b
         public struct pcap_rmtauth

@@ -36,7 +36,7 @@ namespace Test.NPcap
             var devices = SharpPcap.NPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No winpcap devices found, are you running" +
+                throw new System.InvalidOperationException("No npcap devices found, are you running" +
                                                            " on windows?");
             }
 
@@ -70,7 +70,7 @@ namespace Test.NPcap
             var devices = SharpPcap.NPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No winpcap devices found, are you running" +
+                throw new System.InvalidOperationException("No npcap devices found, are you running" +
                                                            " on windows?");
             }
 
