@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SharpPcap.NPcap;
 
-namespace WinPcapRemoteCapture
+namespace NPcapRemoteCapture
 {
     /// <summary>
     /// Example showing how to use the remote capture feature of WinPcap
@@ -22,7 +22,7 @@ namespace WinPcapRemoteCapture
         {
             if ((args.Length < 1) || (args.Length > 2))
             {
-                PrintUsage("WinPcapRemoteCapture");
+                PrintUsage("NPcapRemoteCapture");
                 return;
             }
 
