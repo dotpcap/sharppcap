@@ -8,8 +8,8 @@
     <ProjectGuid>{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinPcapRemoteCapture</RootNamespace>
-    <AssemblyName>WinPcapRemoteCapture</AssemblyName>
+    <RootNamespace>NPcapRemoteCapture</RootNamespace>
+    <AssemblyName>NPcapRemoteCapture</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

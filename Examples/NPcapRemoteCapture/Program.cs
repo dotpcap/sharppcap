@@ -7,7 +7,7 @@ using SharpPcap.NPcap;
 namespace NPcapRemoteCapture
 {
     /// <summary>
-    /// Example showing how to use the remote capture feature of WinPcap
+    /// Example showing how to use the remote capture feature of NPcap
     /// </summary>
     class Program
     {
