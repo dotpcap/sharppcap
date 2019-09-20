@@ -121,7 +121,7 @@ namespace Example10
 
             try
             {
-                var winPcapDevice = device as WinPcapDevice;
+                var winPcapDevice = device as NPcapDevice;
 
                 Console.Write("Sending packets...");
                 int sent = winPcapDevice.SendQueue(squeue, SharpPcap.WinPcap.SendQueueTransmitModes.Synchronized);

@@ -29,7 +29,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// WinPcap device
     /// </summary>
-    public class WinPcapDevice : LibPcap.LibPcapLiveDevice
+    public class NPcapDevice : LibPcap.LibPcapLiveDevice
     {
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;
 
@@ -38,7 +38,7 @@ namespace SharpPcap.WinPcap
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        public WinPcapDevice( PcapInterface pcapIf ) : base(pcapIf)
+        public NPcapDevice( PcapInterface pcapIf ) : base(pcapIf)
         {}
 
         /// <summary>

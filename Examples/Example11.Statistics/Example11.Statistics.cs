@@ -53,7 +53,7 @@ namespace Example11
             Console.Write("-- Please choose a device to gather statistics on: ");
             i = int.Parse( Console.ReadLine() );
 
-            var device = devices[i] as SharpPcap.WinPcap.WinPcapDevice;
+            var device = devices[i] as SharpPcap.WinPcap.NPcapDevice;
 
             // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 

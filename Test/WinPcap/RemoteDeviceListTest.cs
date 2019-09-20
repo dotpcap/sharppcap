@@ -41,8 +41,8 @@ namespace Test.WinPcap
             System.Threading.Thread.Sleep(500);
 
             // retrieve the device list
-            var defaultPort = WinPcapDeviceList.RpcapdDefaultPort;
-            var deviceList = WinPcapDeviceList.Devices(System.Net.IPAddress.Loopback, defaultPort, null);
+            var defaultPort = NPcapDeviceList.RpcapdDefaultPort;
+            var deviceList = NPcapDeviceList.Devices(System.Net.IPAddress.Loopback, defaultPort, null);
 
             foreach (var d in deviceList)
             {

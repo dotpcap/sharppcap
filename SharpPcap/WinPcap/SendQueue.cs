@@ -42,7 +42,7 @@ namespace SharpPcap.WinPcap
         public SendQueue(int memSize)
         {
             // ensure that we are running under winpcap
-            WinPcapDevice.ThrowIfNotWinPcap();
+            NPcapDevice.ThrowIfNotWinPcap();
 
             m_queue = WinPcap.SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)
@@ -151,7 +151,7 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public int Transmit( WinPcapDevice device, SendQueueTransmitModes transmitMode)
+        public int Transmit( NPcapDevice device, SendQueueTransmitModes transmitMode)
         {
             if(!device.Opened)
                 throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");

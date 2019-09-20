@@ -55,9 +55,9 @@ namespace CreatingCaptureFile
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if(device is WinPcapDevice)
+            if(device is NPcapDevice)
             {
-                var winPcap = device as WinPcapDevice;
+                var winPcap = device as NPcapDevice;
                 winPcap.Open(SharpPcap.WinPcap.OpenFlags.DataTransferUdp | SharpPcap.WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)

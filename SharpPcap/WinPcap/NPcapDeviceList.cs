@@ -30,25 +30,25 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// Remote adapter list
     /// </summary>
-    public class WinPcapDeviceList : ReadOnlyCollection<WinPcapDevice>
+    public class NPcapDeviceList : ReadOnlyCollection<NPcapDevice>
     {
         /// <summary>
         /// Port used by rpcapd by default
         /// </summary>
         public static int RpcapdDefaultPort = 2002;
 
-        private static WinPcapDeviceList instance;
+        private static NPcapDeviceList instance;
 
         /// <summary>
         /// Method to retrieve this classes singleton instance
         /// </summary>
-        public static WinPcapDeviceList Instance
+        public static NPcapDeviceList Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new WinPcapDeviceList();
+                    instance = new NPcapDeviceList();
                 }
 
                 return instance;
@@ -64,15 +64,15 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="CaptureDeviceList"/>
         /// </returns>
-        public static WinPcapDeviceList New()
+        public static NPcapDeviceList New()
         {
-            return new WinPcapDeviceList();
+            return new NPcapDeviceList();
         }
 
         /// <summary>
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
-        private WinPcapDeviceList() : base(new List<WinPcapDevice>())
+        private NPcapDeviceList() : base(new List<NPcapDevice>())
         {
             Refresh();
         }
@@ -90,9 +90,9 @@ namespace SharpPcap.WinPcap
         /// A <see cref="RemoteAuthentication"/>
         /// </param>
         /// <returns>
-        /// A <see cref="List<WinPcapDevice>"/>
+        /// A <see cref="List<NPcapDevice>"/>
         /// </returns>
-        public static List<WinPcapDevice> Devices(IPAddress address,
+        public static List<NPcapDevice> Devices(IPAddress address,
                                                   int port,
                                                   RemoteAuthentication remoteAuthentication)
         {
@@ -104,7 +104,7 @@ namespace SharpPcap.WinPcap
                            remoteAuthentication);
         }
 
-        public static List<WinPcapDevice> Devices()
+        public static List<NPcapDevice> Devices()
         {
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
@@ -121,7 +121,7 @@ namespace SharpPcap.WinPcap
             return retval;
         }
 
-        private static List<WinPcapDevice> Devices(string rpcapString,
+        private static List<NPcapDevice> Devices(string rpcapString,
                                                    RemoteAuthentication remoteAuthentication)
         {
             var devicePtr = IntPtr.Zero;
@@ -159,9 +159,9 @@ namespace SharpPcap.WinPcap
             return retval;
         }
 
-        private static List<WinPcapDevice> BuildDeviceList(IntPtr devicePtr)
+        private static List<NPcapDevice> BuildDeviceList(IntPtr devicePtr)
         {
-            var retval = new List<WinPcapDevice>();
+            var retval = new List<NPcapDevice>();
             IntPtr nextDevPtr = devicePtr;
 
             while (nextDevPtr != IntPtr.Zero)
@@ -172,7 +172,7 @@ namespace SharpPcap.WinPcap
                                                     typeof(LibPcap.PcapUnmanagedStructures.pcap_if));
                 LibPcap.PcapInterface pcap_if = new LibPcap.PcapInterface(pcap_if_unmanaged);
 
-                retval.Add(new WinPcapDevice(pcap_if));
+                retval.Add(new NPcapDevice(pcap_if));
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
 
@@ -226,7 +226,7 @@ namespace SharpPcap.WinPcap
                 }
 
                 // find items that we have that the current list is missing
-                var itemsToRemove = new List<WinPcapDevice>();
+                var itemsToRemove = new List<NPcapDevice>();
                 foreach (var existingItem in base.Items)
                 {
                     bool found = false;
@@ -258,7 +258,7 @@ namespace SharpPcap.WinPcap
 
         #region Device Indexers
         /// <param name="Name">The name or description of the pcap interface to get.</param>
-        public WinPcapDevice this[string Name]
+        public NPcapDevice this[string Name]
         {
             get
             {
@@ -266,9 +266,9 @@ namespace SharpPcap.WinPcap
                 // with other methods
                 lock (this)
                 {
-                    var devices = (List<WinPcapDevice>)base.Items;
-                    var dev = devices.Find(delegate(WinPcapDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(WinPcapDevice i) { return i.Description == Name; });
+                    var devices = (List<NPcapDevice>)base.Items;
+                    var dev = devices.Find(delegate(NPcapDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate(NPcapDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

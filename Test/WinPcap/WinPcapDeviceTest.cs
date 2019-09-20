@@ -27,13 +27,13 @@ namespace Test
     public class WinPcapDeviceTest
     {
         /// <summary>
-        /// Test that no exceptions are thrown from WinPcapDevice.StartCapture() if
+        /// Test that no exceptions are thrown from NPcapDevice.StartCapture() if
         /// a statistics event handler is attached but no packet capture handler
         /// </summary>
         [Test]
         public void NoExceptionsWithJustStatisticsHandler ()
         {
-            var devices = SharpPcap.WinPcap.WinPcapDeviceList.Instance;
+            var devices = SharpPcap.WinPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No winpcap devices found, are you running" +
@@ -67,7 +67,7 @@ namespace Test
         [Test]
         public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrivalAndOnPcapStatistics ()
         {
-            var devices = SharpPcap.WinPcap.WinPcapDeviceList.Instance;
+            var devices = SharpPcap.WinPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No winpcap devices found, are you running" +
