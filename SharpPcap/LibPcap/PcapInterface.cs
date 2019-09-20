@@ -48,7 +48,7 @@ namespace SharpPcap.LibPcap
         public string FriendlyName { get; internal set; }
 
         /// <value>
-        /// Text description of the interface as given by pcap/winpcap
+        /// Text description of the interface as given by pcap/npcap
         /// </value>
         public string Description { get; internal set; }
 

@@ -105,7 +105,7 @@ namespace SharpPcap.LibPcap
 //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             }
 
-            // NOTE: Not supported on unix or winpcap, no need to
+            // NOTE: Not supported on unix or npcap, no need to
             //       put a bogus value in this field
             this.InterfaceDroppedPackets = 0;
 

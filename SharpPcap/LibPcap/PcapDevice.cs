@@ -406,8 +406,8 @@ namespace SharpPcap.LibPcap
                 throw new InvalidOperationDuringBackgroundCaptureException("GetNextPacket() invalid during background capture");
             }
 
-            //Get a packet from winpcap
-            res = LibPcapSafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
+            //Get a packet from npcap
+            res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
             p = null;
 
             if(res>0)
