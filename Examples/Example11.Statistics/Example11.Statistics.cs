@@ -7,7 +7,7 @@ namespace Example11
     /// Stat collection capture example
     /// WinPcap specific feature
     /// </summary>
-    public class WinPcapStatisticsMode
+    public class NPcapStatisticsMode
     {
         /// <summary>
         /// Stat collection capture example

@@ -9,7 +9,7 @@ namespace Example10
     /// <summary>
     /// Example using the WinPcap specific feature of send queues
     /// </summary>
-    public class WinPcapSendQueues
+    public class NPcapSendQueues
     {
         /// <summary>
         /// Basic capture example
