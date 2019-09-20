@@ -121,10 +121,10 @@ namespace Example10
 
             try
             {
-                var winPcapDevice = device as NPcapDevice;
+                var nPcapDevice = device as NPcapDevice;
 
                 Console.Write("Sending packets...");
-                int sent = winPcapDevice.SendQueue(squeue, SharpPcap.NPcap.SendQueueTransmitModes.Synchronized);
+                int sent = nPcapDevice.SendQueue(squeue, SharpPcap.NPcap.SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {

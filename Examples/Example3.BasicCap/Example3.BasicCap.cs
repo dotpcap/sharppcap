@@ -55,8 +55,8 @@ namespace Example3
             int readTimeoutMilliseconds = 1000;
             if(device is NPcapDevice)
             {
-                var winPcap = device as NPcapDevice;
-                winPcap.Open(SharpPcap.NPcap.OpenFlags.DataTransferUdp | SharpPcap.NPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                var nPcap = device as NPcapDevice;
+                nPcap.Open(SharpPcap.NPcap.OpenFlags.DataTransferUdp | SharpPcap.NPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {
