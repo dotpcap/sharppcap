@@ -22,7 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using SharpPcap.LibPcap;
 
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Event that contains statistics mode data

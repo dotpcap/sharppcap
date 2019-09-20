@@ -13,7 +13,7 @@ There are four major namespaces in SharpPcap:
 
 SharpPcap
 SharpPcap.LibPcap
-SharpPcap.WinPcap
+SharpPcap.NPcap
 SharpPcap.AirPcap
 
 These correspond to the directories:
@@ -61,7 +61,7 @@ Two usage cases.
 - You can use the technique in #1 and simply ignore the ones that aren't the type you want
 or
 - You can use the type specific lists such as SharpPcap.AirPcap.AirPcapDeviceList or
-  SharpPcap.WinPcap.WinPcapDeviceList or SharpPcap.LibPcap.LibPcapDeviceList. These
+  SharpPcap.NPcap.WinPcapDeviceList or SharpPcap.LibPcap.LibPcapDeviceList. These
   classes will return adapters of a specific type. Note that because
   AirPcap adapters are WinPcap adapters which are LibPcap adapters that LibPcapDeviceList
   WILL contain the available AirPcap adapters as those show up as pcap capture devices.

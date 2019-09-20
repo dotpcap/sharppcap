@@ -25,7 +25,7 @@ using System.Net;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Remote adapter list

@@ -1,7 +1,7 @@
 using System;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using SharpPcap.WinPcap;
+using SharpPcap.NPcap;
 
 namespace Example3
 {
@@ -56,7 +56,7 @@ namespace Example3
             if(device is NPcapDevice)
             {
                 var winPcap = device as NPcapDevice;
-                winPcap.Open(SharpPcap.WinPcap.OpenFlags.DataTransferUdp | SharpPcap.WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                winPcap.Open(SharpPcap.NPcap.OpenFlags.DataTransferUdp | SharpPcap.NPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {

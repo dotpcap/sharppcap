@@ -33,7 +33,7 @@ namespace Test
         [Test]
         public void NoExceptionsWithJustStatisticsHandler ()
         {
-            var devices = SharpPcap.WinPcap.NPcapDeviceList.Instance;
+            var devices = SharpPcap.NPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No winpcap devices found, are you running" +
@@ -67,7 +67,7 @@ namespace Test
         [Test]
         public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrivalAndOnPcapStatistics ()
         {
-            var devices = SharpPcap.WinPcap.NPcapDeviceList.Instance;
+            var devices = SharpPcap.NPcap.NPcapDeviceList.Instance;
             if(devices.Count == 0)
             {
                 throw new System.InvalidOperationException("No winpcap devices found, are you running" +

@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Per http://msdn.microsoft.com/en-us/ms182161.aspx 

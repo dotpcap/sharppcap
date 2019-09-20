@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using SharpPcap.LibPcap;
 
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// WinPcap device
@@ -141,7 +141,7 @@ namespace SharpPcap.WinPcap
                 ThrowIfNotOpen("Mode");
 
                 m_pcapMode = value;
-                int result = WinPcap.SafeNativeMethods.pcap_setmode(this.PcapHandle , (int)m_pcapMode);
+                int result = SafeNativeMethods.pcap_setmode(this.PcapHandle , (int)m_pcapMode);
                 if (result < 0)
                     throw new PcapException("Error setting PcapDevice mode. : " + LastError);
             }
@@ -231,7 +231,7 @@ namespace SharpPcap.WinPcap
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public int SendQueue( WinPcap.SendQueue q, SendQueueTransmitModes transmitMode )
+        public int SendQueue(SendQueue q, SendQueueTransmitModes transmitMode)
         {
             return q.Transmit( this, transmitMode);
         }
@@ -247,7 +247,7 @@ namespace SharpPcap.WinPcap
                 ThrowIfNotWinPcap();
                 ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
 
-                int retval = WinPcap.SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
+                int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
                                                                     (int)value);
                 if(retval != 0)
                 {
@@ -272,7 +272,7 @@ namespace SharpPcap.WinPcap
                 ThrowIfNotWinPcap();
                 ThrowIfNotOpen("Can't set MinToCopy size, the device is not opened");
 
-                int retval = WinPcap.SafeNativeMethods.pcap_setmintocopy(this.m_pcapAdapterHandle,
+                int retval = SafeNativeMethods.pcap_setmintocopy(this.m_pcapAdapterHandle,
                                                                  value);
                 if (retval != 0)
                 {

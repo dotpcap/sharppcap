@@ -19,7 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Types of authentication

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using NUnit.Framework;
-using SharpPcap.WinPcap;
+using SharpPcap.NPcap;
 
 namespace Test.WinPcap
 {

@@ -53,11 +53,11 @@ namespace Example11
             Console.Write("-- Please choose a device to gather statistics on: ");
             i = int.Parse( Console.ReadLine() );
 
-            var device = devices[i] as SharpPcap.WinPcap.NPcapDevice;
+            var device = devices[i] as SharpPcap.NPcap.NPcapDevice;
 
             // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics += 
-                new SharpPcap.WinPcap.StatisticsModeEventHandler( device_OnPcapStatistics );
+                new SharpPcap.NPcap.StatisticsModeEventHandler( device_OnPcapStatistics );
 
             // Open the device for capturing
             device.Open();
@@ -66,7 +66,7 @@ namespace Example11
             device.Filter = "tcp";
 
             // Set device to statistics mode
-            device.Mode = SharpPcap.WinPcap.CaptureMode.Statistics;
+            device.Mode = SharpPcap.NPcap.CaptureMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
@@ -96,7 +96,7 @@ namespace Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_OnPcapStatistics(object sender, SharpPcap.WinPcap.StatisticsModeEventArgs e)
+        private static void device_OnPcapStatistics(object sender, SharpPcap.NPcap.StatisticsModeEventArgs e)
         {
             // Calculate the delay in microseconds from the last sample.
             // This value is obtained from the timestamp that's associated with the sample.

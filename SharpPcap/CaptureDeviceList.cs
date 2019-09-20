@@ -34,7 +34,7 @@ namespace SharpPcap
     {
         private static CaptureDeviceList instance;
 
-        private WinPcap.NPcapDeviceList winPcapDeviceList;
+        private NPcap.NPcapDeviceList winPcapDeviceList;
         private LibPcap.LibPcapLiveDeviceList libPcapDeviceList;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                newCaptureDevice.winPcapDeviceList = WinPcap.NPcapDeviceList.New();
+                newCaptureDevice.winPcapDeviceList = NPcap.NPcapDeviceList.New();
             }
             else // not windows
             {
@@ -94,7 +94,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                winPcapDeviceList = WinPcap.NPcapDeviceList.Instance;
+                winPcapDeviceList = NPcap.NPcapDeviceList.Instance;
             }
             else // not windows
             {

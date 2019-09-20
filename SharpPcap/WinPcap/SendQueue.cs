@@ -24,7 +24,7 @@ using System;
 using System.Runtime.InteropServices;
 using SharpPcap.LibPcap;
 
-namespace SharpPcap.WinPcap
+namespace SharpPcap.NPcap
 {
     /// <summary>
     /// Interface to the WinPcap send queue extension methods
@@ -44,7 +44,7 @@ namespace SharpPcap.WinPcap
             // ensure that we are running under winpcap
             NPcapDevice.ThrowIfNotWinPcap();
 
-            m_queue = WinPcap.SafeNativeMethods.pcap_sendqueue_alloc( memSize );
+            m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)
                 throw new PcapException("Error creating PcapSendQueue");
         }
@@ -78,7 +78,7 @@ namespace SharpPcap.WinPcap
             //Marshal header
             IntPtr hdrPtr = pcapHdr.MarshalToIntPtr();
 
-            int res = WinPcap.SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
+            int res = SafeNativeMethods.pcap_sendqueue_queue( m_queue, hdrPtr, pktPtr);
 
             Marshal.FreeHGlobal(pktPtr);
             Marshal.FreeHGlobal(hdrPtr);    
@@ -162,7 +162,7 @@ namespace SharpPcap.WinPcap
             }
 
             int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
-            return WinPcap.SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
+            return SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
         }
 
         /// <summary>
