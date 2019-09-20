@@ -137,7 +137,7 @@ namespace SharpPcap.NPcap
 
             set
             {
-                ThrowIfNotWinPcap();
+                ThrowIfNotNPcap();
                 ThrowIfNotOpen("Mode");
 
                 m_pcapMode = value;
@@ -154,7 +154,7 @@ namespace SharpPcap.NPcap
         /// </summary>
         public virtual void Open(OpenFlags flags, int read_timeout)
         {
-            ThrowIfNotWinPcap();
+            ThrowIfNotNPcap();
 
             if(!Opened)
             {
@@ -244,7 +244,7 @@ namespace SharpPcap.NPcap
         {
             set
             {
-                ThrowIfNotWinPcap();
+                ThrowIfNotNPcap();
                 ThrowIfNotOpen("Can't set kernel buffer size, the device is not opened");
 
                 int retval = SafeNativeMethods.pcap_setbuff(this.m_pcapAdapterHandle,
@@ -269,7 +269,7 @@ namespace SharpPcap.NPcap
         {
             set
             {
-                ThrowIfNotWinPcap();
+                ThrowIfNotNPcap();
                 ThrowIfNotOpen("Can't set MinToCopy size, the device is not opened");
 
                 int retval = SafeNativeMethods.pcap_setmintocopy(this.m_pcapAdapterHandle,
@@ -285,12 +285,12 @@ namespace SharpPcap.NPcap
         /// Helper method for ensuring we are running in winpcap. Throws
         /// a PcapWinPcapRequiredException() if not on a windows platform
         /// </summary>
-        internal static void ThrowIfNotWinPcap()
+        internal static void ThrowIfNotNPcap()
         {
             if((Environment.OSVersion.Platform != PlatformID.Win32NT) &&
                (Environment.OSVersion.Platform != PlatformID.Win32Windows))
             {
-                throw new WinPcapRequiredException("only supported in winpcap");
+                throw new NPcapRequiredException("only supported in winpcap");
             }
         }
     }

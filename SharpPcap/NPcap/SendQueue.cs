@@ -42,7 +42,7 @@ namespace SharpPcap.NPcap
         public SendQueue(int memSize)
         {
             // ensure that we are running under winpcap
-            NPcapDevice.ThrowIfNotWinPcap();
+            NPcapDevice.ThrowIfNotNPcap();
 
             m_queue = SafeNativeMethods.pcap_sendqueue_alloc( memSize );
             if(m_queue==IntPtr.Zero)

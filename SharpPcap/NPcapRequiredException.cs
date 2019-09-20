@@ -25,7 +25,7 @@ namespace SharpPcap
     /// Exception thrown when a WinPcap extension method is called from
     /// a non-Windows platform
     /// </summary>
-    public class WinPcapRequiredException : PcapException
+    public class NPcapRequiredException : PcapException
     {
         /// <summary>
         /// string constructor
@@ -33,7 +33,7 @@ namespace SharpPcap
         /// <param name="msg">
         /// A <see cref="System.String"/>
         /// </param>
-        public WinPcapRequiredException(string msg) : base(msg)
+        public NPcapRequiredException(string msg) : base(msg)
         {
         }
     }
