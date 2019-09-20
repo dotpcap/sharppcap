@@ -283,7 +283,7 @@ namespace SharpPcap.NPcap
 
         /// <summary>
         /// Helper method for ensuring we are running in winpcap. Throws
-        /// a PcapWinPcapRequiredException() if not on a windows platform
+        /// a NPcapRequiredException() if not on a windows platform
         /// </summary>
         internal static void ThrowIfNotNPcap()
         {
