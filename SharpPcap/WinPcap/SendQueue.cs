@@ -29,6 +29,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// Interface to the WinPcap send queue extension methods
     /// </summary>
+    [Obsolete("WinPcap is obsolete. Use Npcap namespace instead.", false)]
     public class SendQueue
     {
         IntPtr m_queue = IntPtr.Zero;

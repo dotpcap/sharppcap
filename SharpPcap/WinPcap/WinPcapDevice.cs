@@ -29,6 +29,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// WinPcap device
     /// </summary>
+    [Obsolete("WinPcapDevice is obsolete. Use NpcapDevice instead.", false)]
     public class WinPcapDevice : LibPcap.LibPcapLiveDevice
     {
         private CaptureMode    m_pcapMode          = CaptureMode.Packets;

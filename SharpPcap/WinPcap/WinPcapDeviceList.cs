@@ -30,6 +30,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// Remote adapter list
     /// </summary>
+    [Obsolete("WinPcapDeviceList is obsolete. Use NpcapDeviceList instead.", false)]
     public class WinPcapDeviceList : ReadOnlyCollection<WinPcapDevice>
     {
         /// <summary>
