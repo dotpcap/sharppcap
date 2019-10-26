@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using NUnit.Framework;
-using SharpPcap.WinPcap;
+using SharpPcap.Npcap;
 
-namespace Test.WinPcap
+namespace Test.Npcap
 {
     [TestFixture]
     public class RemoteDeviceListTest
@@ -41,8 +41,8 @@ namespace Test.WinPcap
             System.Threading.Thread.Sleep(500);
 
             // retrieve the device list
-            var defaultPort = WinPcapDeviceList.RpcapdDefaultPort;
-            var deviceList = WinPcapDeviceList.Devices(System.Net.IPAddress.Loopback, defaultPort, null);
+            var defaultPort = NpcapDeviceList.RpcapdDefaultPort;
+            var deviceList = NpcapDeviceList.Devices(System.Net.IPAddress.Loopback, defaultPort, null);
 
             foreach (var d in deviceList)
             {

@@ -34,7 +34,7 @@ namespace SharpPcap
     {
         private static CaptureDeviceList instance;
 
-        private WinPcap.WinPcapDeviceList winPcapDeviceList;
+        private Npcap.NpcapDeviceList nPcapDeviceList;
         private LibPcap.LibPcapLiveDeviceList libPcapDeviceList;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                newCaptureDevice.winPcapDeviceList = WinPcap.WinPcapDeviceList.New();
+                newCaptureDevice.nPcapDeviceList = Npcap.NpcapDeviceList.New();
             }
             else // not windows
             {
@@ -94,7 +94,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                winPcapDeviceList = WinPcap.WinPcapDeviceList.Instance;
+                nPcapDeviceList = Npcap.NpcapDeviceList.Instance;
             }
             else // not windows
             {
@@ -118,7 +118,7 @@ namespace SharpPcap
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                (Environment.OSVersion.Platform == PlatformID.Win32Windows))
             {
-                var dl = winPcapDeviceList;
+                var dl = nPcapDeviceList;
                 foreach (var c in dl)
                 {
                     deviceList.Add(c);
@@ -150,9 +150,9 @@ namespace SharpPcap
                 if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                    (Environment.OSVersion.Platform == PlatformID.Win32Windows))
                 {
-                    winPcapDeviceList.Refresh();
+                    nPcapDeviceList.Refresh();
 
-                    foreach(var i in winPcapDeviceList)
+                    foreach(var i in nPcapDeviceList)
                     {
                         base.Items.Add(i);
                     }
@@ -183,7 +183,7 @@ namespace SharpPcap
                     if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
                        (Environment.OSVersion.Platform == PlatformID.Win32Windows))
                     {
-                        return winPcapDeviceList[Name];
+                        return nPcapDeviceList[Name];
                     }
                     else // not windows
                     {

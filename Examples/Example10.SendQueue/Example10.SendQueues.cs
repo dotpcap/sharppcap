@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using SharpPcap;
-using SharpPcap.WinPcap;
+using SharpPcap.Npcap;
 using SharpPcap.LibPcap;
 
 namespace Example10
 {
     /// <summary>
-    /// Example using the WinPcap specific feature of send queues
+    /// Example using the Npcap specific feature of send queues
     /// </summary>
-    public class WinPcapSendQueues
+    public class NpcapSendQueues
     {
         /// <summary>
         /// Basic capture example
@@ -42,7 +42,7 @@ namespace Example10
             Console.Write("Queueing packets...");
 
             //Allocate a new send queue
-            var squeue = new SharpPcap.WinPcap.SendQueue
+            var squeue = new SharpPcap.Npcap.SendQueue
                 ( (int)((CaptureFileReaderDevice)device).FileSize );
             RawCapture packet;
             
@@ -121,10 +121,10 @@ namespace Example10
 
             try
             {
-                var winPcapDevice = device as WinPcapDevice;
+                var npcapDevice = device as NpcapDevice;
 
                 Console.Write("Sending packets...");
-                int sent = winPcapDevice.SendQueue(squeue, SharpPcap.WinPcap.SendQueueTransmitModes.Synchronized);
+                int sent = npcapDevice.SendQueue(squeue, SharpPcap.Npcap.SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if( sent < squeue.CurrentLength )
                 {

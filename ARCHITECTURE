@@ -13,14 +13,14 @@ There are four major namespaces in SharpPcap:
 
 SharpPcap
 SharpPcap.LibPcap
-SharpPcap.WinPcap
+SharpPcap.Npcap
 SharpPcap.AirPcap
 
 These correspond to the directories:
 
 SharpPcap/
     LibPcap/
-    WinPcap/
+    Npcap/
     AirPcap/
 
 While at the same level, these directories are a hierarchy of functionality
@@ -28,13 +28,13 @@ While at the same level, these directories are a hierarchy of functionality
 SharpPcap/ - Base level defines, interfaces to capture devices (ICaptureDevie)
              and high level classes for retrieving a list of ICaptureDevice entries
     LibPcap/ - libpcap functionality, background capture code etc
-        WinPcap/ - WinPcap functionality. WinPcap adds several extension methods
-                   that aren't present in libpcap. WinPcap adapters are inherited
-                   from LibPcap adapters to add this functionality.
-            AirPcap/ - AirPcap functionality. AirPcap adapters are inherited from
-                       WinPcap adapters and have additional methods for retrieving
-                       channel frequency, strength, etc that aren't present in
-                       WinPcap or LibPcap adapters
+    Npcap/   - Npcap functionality. Npcap adds several extension methods
+               that aren't present in libpcap. Npcap adapters are inherited
+               from LibPcap adapters to add this functionality.
+    AirPcap/ - AirPcap functionality. AirPcap adapters are inherited from
+               Npcap adapters and have additional methods for retrieving
+               channel frequency, strength, etc that aren't present in
+               Npcap or LibPcap adapters
 
 Two usage cases.
 
@@ -61,7 +61,7 @@ Two usage cases.
 - You can use the technique in #1 and simply ignore the ones that aren't the type you want
 or
 - You can use the type specific lists such as SharpPcap.AirPcap.AirPcapDeviceList or
-  SharpPcap.WinPcap.WinPcapDeviceList or SharpPcap.LibPcap.LibPcapDeviceList. These
+  SharpPcap.Npcap.NpcapDeviceList or SharpPcap.LibPcap.LibPcapDeviceList. These
   classes will return adapters of a specific type. Note that because
-  AirPcap adapters are WinPcap adapters which are LibPcap adapters that LibPcapDeviceList
+  AirPcap adapters are Npcap adapters which are LibPcap adapters that LibPcapDeviceList
   WILL contain the available AirPcap adapters as those show up as pcap capture devices.

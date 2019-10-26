@@ -44,7 +44,7 @@ namespace SharpPcap
         /// <summary>
         /// Kernel level filtering expression associated with this device.
         /// For more info on filter expression syntax, see:
-        /// http://www.winpcap.org/docs/docs31/html/group__language.html
+        /// https://www.winpcap.org/docs/docs_412/html/group__language.html
         /// </summary>
         string Filter { get; set; }
 

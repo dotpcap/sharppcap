@@ -406,8 +406,8 @@ namespace SharpPcap.LibPcap
                 throw new InvalidOperationDuringBackgroundCaptureException("GetNextPacket() invalid during background capture");
             }
 
-            //Get a packet from winpcap
-            res = LibPcapSafeNativeMethods.pcap_next_ex( PcapHandle, ref header, ref data);
+            //Get a packet from npcap
+            res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
             p = null;
 
             if(res>0)
@@ -517,7 +517,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Kernel level filtering expression associated with this device.
         /// For more info on filter expression syntax, see:
-        /// http://www.winpcap.org/docs/docs31/html/group__language.html
+        /// https://www.winpcap.org/docs/docs_412/html/group__language.html
         /// </summary>
         public virtual string Filter
         {

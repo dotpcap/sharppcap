@@ -1,7 +1,7 @@
 using System;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using SharpPcap.WinPcap;
+using SharpPcap.Npcap;
 using PacketDotNet;
 
 namespace CreatingCaptureFile
@@ -55,10 +55,10 @@ namespace CreatingCaptureFile
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if(device is WinPcapDevice)
+            if(device is NpcapDevice)
             {
-                var winPcap = device as WinPcapDevice;
-                winPcap.Open(SharpPcap.WinPcap.OpenFlags.DataTransferUdp | SharpPcap.WinPcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                var npcap = device as NpcapDevice;
+                npcap.Open(SharpPcap.Npcap.OpenFlags.DataTransferUdp | SharpPcap.Npcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {

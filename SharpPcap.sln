@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WakeOnLan", "Examples\WakeO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{24795AED-F26F-4EE7-BCA7-900F54FA5A53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPcapRemoteCapture", "Examples\WinPcapRemoteCapture\WinPcapRemoteCapture.csproj", "{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NpcapRemoteCapture", "Examples\NpcapRemoteCapture\NpcapRemoteCapture.csproj", "{CCC51D54-EF2A-4064-ADDB-BDA66EB29EF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinformsExample", "Examples\WinformsExample\WinformsExample.csproj", "{697E9825-B33B-40EB-B335-738E8D113A14}"
 EndProject

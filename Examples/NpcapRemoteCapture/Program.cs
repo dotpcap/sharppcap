@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SharpPcap.WinPcap;
+using SharpPcap.Npcap;
 
-namespace WinPcapRemoteCapture
+namespace NpcapRemoteCapture
 {
     /// <summary>
-    /// Example showing how to use the remote capture feature of WinPcap
+    /// Example showing how to use the remote capture feature of Npcap
     /// </summary>
     class Program
     {
@@ -22,7 +22,7 @@ namespace WinPcapRemoteCapture
         {
             if ((args.Length < 1) || (args.Length > 2))
             {
-                PrintUsage("WinPcapRemoteCapture");
+                PrintUsage("NpcapRemoteCapture");
                 return;
             }
 
@@ -34,7 +34,7 @@ namespace WinPcapRemoteCapture
             if(args.Length == 2)
                 port = Int32.Parse(args[1]);
 
-            var remoteDevices = WinPcapDeviceList.Devices(ipAddress, port, null);
+            var remoteDevices = NpcapDeviceList.Devices(ipAddress, port, null);
             foreach (var dev in remoteDevices)
             {
                 Console.WriteLine("device: {0}", dev.ToString());

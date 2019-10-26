@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Compile Remove="LivePcapDeviceListTest.cs" />
-    <Compile Remove="WinPcap\*.cs" Condition=" '$(OS)' != 'Windows_NT'" />
+    <Compile Remove="Npcap\*.cs" Condition=" '$(OS)' != 'Windows_NT'" />
     <Compile Remove="Performance\*.cs" Condition=" '$(OS)' != 'Windows_NT'" />
   </ItemGroup>
 
