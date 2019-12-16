@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PacketDotNet" Version="1.0.1" />
+    <PackageReference Include="PacketDotNet" Version="1.0.3" />
   </ItemGroup>
 
 </Project>
