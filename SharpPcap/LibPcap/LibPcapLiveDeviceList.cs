@@ -90,18 +90,11 @@ namespace SharpPcap.LibPcap
             if (result < 0)
                 throw new PcapException(errorBuffer.ToString());
 
-            IntPtr nextDevPtr = devicePtr;
-
-            while (nextDevPtr != IntPtr.Zero)
+            foreach (var pcap_if in PcapInterface.GetAllPcapInterfaces(devicePtr))
             {
-                // Marshal pointer into a struct
-                PcapUnmanagedStructures.pcap_if pcap_if_unmanaged =
-                    (PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
-                                                    typeof(PcapUnmanagedStructures.pcap_if));
-                PcapInterface pcap_if = new PcapInterface(pcap_if_unmanaged);
                 deviceList.Add(new LibPcapLiveDevice(pcap_if));
-                nextDevPtr = pcap_if_unmanaged.Next;
             }
+
             LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
 
             return deviceList;

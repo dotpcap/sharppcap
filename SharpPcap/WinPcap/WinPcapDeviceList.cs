@@ -163,20 +163,10 @@ namespace SharpPcap.WinPcap
         private static List<WinPcapDevice> BuildDeviceList(IntPtr devicePtr)
         {
             var retval = new List<WinPcapDevice>();
-            IntPtr nextDevPtr = devicePtr;
-
-            while (nextDevPtr != IntPtr.Zero)
+            foreach (var pcap_if in LibPcap.PcapInterface.GetAllPcapInterfaces(devicePtr))
             {
-                // Marshal pointer into a struct
-                var pcap_if_unmanaged =
-                    (LibPcap.PcapUnmanagedStructures.pcap_if)Marshal.PtrToStructure(nextDevPtr,
-                                                    typeof(LibPcap.PcapUnmanagedStructures.pcap_if));
-                LibPcap.PcapInterface pcap_if = new LibPcap.PcapInterface(pcap_if_unmanaged);
-
                 retval.Add(new WinPcapDevice(pcap_if));
-                nextDevPtr = pcap_if_unmanaged.Next;
             }
-
             return retval;
         }
 
