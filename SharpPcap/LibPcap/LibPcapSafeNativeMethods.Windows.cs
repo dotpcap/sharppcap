@@ -94,7 +94,7 @@ namespace SharpPcap.LibPcap
         /// <param name="size">the dimension of the buffer pointed by data</param>
         /// <returns>0 if the packet is succesfully sent, -1 otherwise.</returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, IntPtr  data, int size);
+        internal extern static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, in byte data, int size);
 
         /// <summary>
         /// Compile a packet filter, converting an high level filtering expression (see Filtering expression syntax) in a program that can be interpreted by the kernel-level filtering engine. 

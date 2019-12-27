@@ -132,7 +132,7 @@ namespace SharpPcap.LibPcap
         /// <param name="data">contains the data of the packet to send (including the various protocol headers)</param>
         /// <param name="size">the dimension of the buffer pointed by data</param>
         /// <returns>0 if the packet is succesfully sent, -1 otherwise.</returns>
-        internal static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, IntPtr  data, int size)
+        internal static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, in byte data, int size)
         {
             return UseWindows ? Windows.pcap_sendpacket(adaptHandle, data, size) : Unix.pcap_sendpacket(adaptHandle, data, size);
         }
