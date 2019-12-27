@@ -332,27 +332,17 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public override void SendPacket(byte[] p, int size)
+        public override void SendPacket(ReadOnlySpan<byte> p)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
-
-            if (size > p.Length)
-            {
-                throw new ArgumentException("Invalid packetSize value: "+size+
-                "\nArgument size is larger than the total size of the packet.");
-            }
 
             if (p.Length > Pcap.MAX_PACKET_SIZE) 
             {
                 throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
             }
+            var p_packet = MemoryMarshal.GetReference(p); 
+            int res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, p.Length);
 
-            IntPtr p_packet = IntPtr.Zero;          
-            p_packet = Marshal.AllocHGlobal( size );
-            Marshal.Copy(p, 0, p_packet, size);     
-
-            int res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, size);
-            Marshal.FreeHGlobal(p_packet);
             if(res < 0)
             {
                 throw new PcapException("Can't send packet: " + LastError);

@@ -215,6 +215,13 @@ namespace SharpPcap
         void SendPacket(byte[] p, int size);
 
         /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        void SendPacket(ReadOnlySpan<byte> p);
+
+        /// <summary>
         /// Return the pcap link layer value of an adapter. 
         /// </summary>
         PacketDotNet.LinkLayers LinkType { get; }

@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/chmorgan/sharppcap</RepositoryUrl>
     <Copyright>Tamir Gal, Chris Morgan and others</Copyright>
     <PackageLicenseUrl>https://github.com/chmorgan/sharppcap/blob/master/LICENSE</PackageLicenseUrl>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.0.3" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
 
 </Project>

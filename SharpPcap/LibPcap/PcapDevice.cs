@@ -647,7 +647,22 @@ namespace SharpPcap.LibPcap
         /// <param name="size">The number of bytes to send</param>
         public virtual void SendPacket(byte[] p, int size)
         {
-            throw new System.NotImplementedException();
+            if (size > p.Length)
+            {
+                throw new ArgumentException("Invalid packetSize value: " + size +
+                "\nArgument size is larger than the total size of the packet.");
+            }
+            SendPacket(new ReadOnlySpan<byte>(p, 0, size));
+        }
+
+        /// <summary>
+        /// Sends a raw packet throgh this device
+        /// </summary>
+        /// <param name="p">The packet bytes to send</param>
+        /// <param name="size">The number of bytes to send</param>
+        public virtual void SendPacket(ReadOnlySpan<byte> p)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
