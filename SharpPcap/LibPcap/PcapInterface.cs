@@ -205,7 +205,7 @@ namespace SharpPcap.LibPcap
             return sb.ToString();
         }
 
-        static internal PcapInterface[] GetAllPcapInterfaces(IntPtr devicePtr)
+        static internal List<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr)
         {
             var list = new List<PcapInterface>();
             var nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -229,7 +229,7 @@ namespace SharpPcap.LibPcap
                 nextDevPtr = pcap_if_unmanaged.Next;
             }
 
-            return list.ToArray();
+            return list;
         }
     }
 }
