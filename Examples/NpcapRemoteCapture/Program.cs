@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SharpPcap.Npcap;
 
 namespace NpcapRemoteCapture
@@ -11,7 +8,7 @@ namespace NpcapRemoteCapture
     /// </summary>
     class Program
     {
-        private static int rpcapDefaultPort = 2002;
+        private static readonly int rpcapDefaultPort = 2002;
 
         static void PrintUsage(string programName)
         {
@@ -31,7 +28,7 @@ namespace NpcapRemoteCapture
 
             var ipAddress = System.Net.IPAddress.Parse(args[0]);
             var port = rpcapDefaultPort;
-            if(args.Length == 2)
+            if (args.Length == 2)
                 port = Int32.Parse(args[1]);
 
             var remoteDevices = NpcapDeviceList.Devices(ipAddress, port, null);

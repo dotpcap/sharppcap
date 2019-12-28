@@ -37,7 +37,7 @@ namespace SharpPcap.WinPcap
         /// Defines if the data trasfer (in case of a remote capture)
         /// has to be done with UDP protocol. 
         /// </summary>
-        DataTransferUdp = 2, 
+        DataTransferUdp = 2,
 
         /// <summary>
         /// Defines if the remote probe will capture its own generated traffic. 

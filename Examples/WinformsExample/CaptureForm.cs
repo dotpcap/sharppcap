@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Collections;
 using SharpPcap;
 using PacketDotNet;
 
@@ -18,7 +13,7 @@ namespace WinformsExample
         /// When true the background thread will terminate
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private bool BackgroundThreadStop;
 
@@ -27,7 +22,7 @@ namespace WinformsExample
         /// PacketQueue at the same time
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private object QueueLock = new object();
 
@@ -42,7 +37,7 @@ namespace WinformsExample
         /// Allow periodic display of device statistics
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private DateTime LastStatisticsOutput;
 
@@ -50,7 +45,7 @@ namespace WinformsExample
         /// Interval between PcapDevice.Statistics() output
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private TimeSpan LastStatisticsInterval = new TimeSpan(0, 0, 2);
 

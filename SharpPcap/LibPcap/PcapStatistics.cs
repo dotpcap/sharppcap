@@ -55,11 +55,12 @@ namespace SharpPcap.LibPcap
         {
             IntPtr stat;
 
-            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 // allocate memory for the struct
                 stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_unix)));
-            } else
+            }
+            else
             {
                 // allocate memory for the struct
                 stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_windows)));
@@ -69,23 +70,23 @@ namespace SharpPcap.LibPcap
             var result = (PcapUnmanagedStructures.PcapStatReturnValue)LibPcapSafeNativeMethods.pcap_stats(pcap_t, stat);
 
             // process the return value
-            switch(result)
+            switch (result)
             {
-            case PcapUnmanagedStructures.PcapStatReturnValue.Error:
-                // retrieve the error information
-                var error = LibPcapLiveDevice.GetLastError(pcap_t);
+                case PcapUnmanagedStructures.PcapStatReturnValue.Error:
+                    // retrieve the error information
+                    var error = LibPcapLiveDevice.GetLastError(pcap_t);
 
-                // free the stats memory so we don't leak before we throw
-                Marshal.FreeHGlobal(stat);
+                    // free the stats memory so we don't leak before we throw
+                    Marshal.FreeHGlobal(stat);
 
-                throw new StatisticsException(error);
-            case PcapUnmanagedStructures.PcapStatReturnValue.Success:
-                // nothing to do upon success
-                break;
+                    throw new StatisticsException(error);
+                case PcapUnmanagedStructures.PcapStatReturnValue.Success:
+                    // nothing to do upon success
+                    break;
             }
-  
+
             // marshal the unmanaged memory into an object of the proper type
-            if(Environment.OSVersion.Platform == PlatformID.Unix)
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 var managedStat = (PcapUnmanagedStructures.pcap_stat_unix)Marshal.PtrToStructure(stat,
                                                                                                  typeof(PcapUnmanagedStructures.pcap_stat_unix));
@@ -93,8 +94,9 @@ namespace SharpPcap.LibPcap
                 // copy the values
                 this.ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
                 this.DroppedPackets = (uint)managedStat.ps_drop.ToInt64();
-//                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
-            } else
+                //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
+            }
+            else
             {
                 var managedStat = (PcapUnmanagedStructures.pcap_stat_windows)Marshal.PtrToStructure(stat,
                                                                                                     typeof(PcapUnmanagedStructures.pcap_stat_windows));
@@ -102,7 +104,7 @@ namespace SharpPcap.LibPcap
                 // copy the values
                 this.ReceivedPackets = (uint)managedStat.ps_recv;
                 this.DroppedPackets = (uint)managedStat.ps_drop;
-//                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
+                //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             }
 
             // NOTE: Not supported on unix or npcap, no need to
@@ -117,9 +119,9 @@ namespace SharpPcap.LibPcap
         /// ToString override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </returns>
-        public override string ToString ()
+        public override string ToString()
         {
             return string.Format("[PcapStatistics: ReceivedPackets={0}, DroppedPackets={1}, InterfaceDroppedPackets={2}]",
                                  ReceivedPackets, DroppedPackets, InterfaceDroppedPackets);

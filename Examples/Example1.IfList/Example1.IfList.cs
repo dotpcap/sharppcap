@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example1
@@ -22,7 +21,7 @@ namespace Example1
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -32,8 +31,8 @@ namespace Example1
             Console.WriteLine("----------------------------------------------------\n");
 
             /* Scan the list printing every entry */
-            foreach(var dev in devices)
-                Console.WriteLine("{0}\n",dev.ToString());
+            foreach (var dev in devices)
+                Console.WriteLine("{0}\n", dev.ToString());
 
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

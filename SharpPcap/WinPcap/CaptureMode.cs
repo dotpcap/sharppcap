@@ -18,25 +18,24 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 
 namespace SharpPcap.WinPcap
 {
+    /// <summary>
+    /// The working mode of a Pcap device
+    /// </summary>
+    public enum CaptureMode : int
+    {
         /// <summary>
-        /// The working mode of a Pcap device
+        /// Set a Pcap device to capture packets, Capture mode
         /// </summary>
-        public enum CaptureMode : int
-        {
-            /// <summary>
-            /// Set a Pcap device to capture packets, Capture mode
-            /// </summary>
-            Packets = 0,
+        Packets = 0,
 
-            /// <summary>
-            /// Set a Pcap device to report statistics.
-            /// <br/>
-            /// Statistics mode is only supported in WinPcap
-            /// </summary>
-            Statistics = 1
-        };
+        /// <summary>
+        /// Set a Pcap device to report statistics.
+        /// <br/>
+        /// Statistics mode is only supported in WinPcap
+        /// </summary>
+        Statistics = 1
+    };
 }

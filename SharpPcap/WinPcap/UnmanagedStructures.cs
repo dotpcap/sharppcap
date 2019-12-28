@@ -22,16 +22,16 @@ namespace SharpPcap.WinPcap
             ///
             /// Auth Type, 0=Null, 1= Password
             /// </summary>
-            public IntPtr       type;
+            public IntPtr type;
             /// <summary>
             /// Username
             /// </summary>
-            public string   username;
+            public string username;
 
             /// <summary>
             /// Password
             /// </summary>
-            public string   password;
+            public string password;
         }
 
         #endregion

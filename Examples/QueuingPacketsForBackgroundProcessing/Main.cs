@@ -13,7 +13,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// When true the background thread will terminate
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private static bool BackgroundThreadStop = false;
 
@@ -22,9 +22,9 @@ namespace QueuingPacketsForBackgroundProcessing
         /// PacketQueue at the same time
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
-        private static object QueueLock = new object();
+        private static readonly object QueueLock = new object();
 
         /// <summary>
         /// The queue that the callback thread puts packets in. Accessed by
@@ -37,7 +37,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// Allow periodic display of device statistics
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private static DateTime LastStatisticsOutput = DateTime.Now;
 
@@ -45,7 +45,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// Interval between PcapDevice.Statistics() output
         /// </summary>
         /// <param name="args">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         private static TimeSpan LastStatisticsInterval = new TimeSpan(0, 0, 2);
 
@@ -59,7 +59,7 @@ namespace QueuingPacketsForBackgroundProcessing
             Console.WriteLine("SharpPcap {0}", ver);
 
             // If no device exists, print error
-            if(CaptureDeviceList.Instance.Count < 1)
+            if (CaptureDeviceList.Instance.Count < 1)
             {
                 Console.WriteLine("No device found on this machine");
                 return;
@@ -70,10 +70,10 @@ namespace QueuingPacketsForBackgroundProcessing
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
             // Print out all devices
-            foreach(var dev in CaptureDeviceList.Instance)
+            foreach (var dev in CaptureDeviceList.Instance)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -81,7 +81,7 @@ namespace QueuingPacketsForBackgroundProcessing
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             // start the background thread
             var backgroundThread = new System.Threading.Thread(BackgroundThread);
@@ -90,8 +90,8 @@ namespace QueuingPacketsForBackgroundProcessing
             var device = CaptureDeviceList.Instance[i];
 
             // Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+            device.OnPacketArrival +=
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             device.Open();
@@ -133,7 +133,7 @@ namespace QueuingPacketsForBackgroundProcessing
             // print out periodic statistics about this device
             var Now = DateTime.Now; // cache 'DateTime.Now' for minor reduction in cpu overhead
             var interval = Now - LastStatisticsOutput;
-            if(interval > LastStatisticsInterval)
+            if (interval > LastStatisticsInterval)
             {
                 Console.WriteLine("device_OnPacketArrival: " + e.Device.Statistics);
                 LastStatisticsOutput = Now;
@@ -141,7 +141,7 @@ namespace QueuingPacketsForBackgroundProcessing
 
             // lock QueueLock to prevent multiple threads accessing PacketQueue at
             // the same time
-            lock(QueueLock)
+            lock (QueueLock)
             {
                 PacketQueue.Add(e.Packet);
             }
@@ -158,25 +158,26 @@ namespace QueuingPacketsForBackgroundProcessing
         /// </summary>
         private static void BackgroundThread()
         {
-            while(!BackgroundThreadStop)
+            while (!BackgroundThreadStop)
             {
                 bool shouldSleep = true;
 
-                lock(QueueLock)
+                lock (QueueLock)
                 {
-                    if(PacketQueue.Count != 0)
+                    if (PacketQueue.Count != 0)
                     {
                         shouldSleep = false;
                     }
                 }
 
-                if(shouldSleep)
+                if (shouldSleep)
                 {
                     System.Threading.Thread.Sleep(250);
-                } else // should process the queue
+                }
+                else // should process the queue
                 {
                     List<RawCapture> ourQueue;
-                    lock(QueueLock)
+                    lock (QueueLock)
                     {
                         // swap queues, giving the capture callback a new one
                         ourQueue = PacketQueue;
@@ -185,11 +186,11 @@ namespace QueuingPacketsForBackgroundProcessing
 
                     Console.WriteLine("BackgroundThread: ourQueue.Count is {0}", ourQueue.Count);
 
-                    foreach(var packet in ourQueue)
+                    foreach (var packet in ourQueue)
                     {
                         var time = packet.Timeval.Date;
                         var len = packet.Data.Length;
-                        Console.WriteLine("BackgroundThread: {0}:{1}:{2},{3} Len={4}", 
+                        Console.WriteLine("BackgroundThread: {0}:{1}:{2},{3} Len={4}",
                             time.Hour, time.Minute, time.Second, time.Millisecond, len);
                     }
 

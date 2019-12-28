@@ -78,7 +78,7 @@ namespace SharpPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         void Open(DeviceMode mode, int read_timeout);
 
@@ -89,10 +89,10 @@ namespace SharpPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="kernel_buffer_size">
-        /// A <see cref="System.UInt32"/>
+        /// A <see cref="uint"/>
         /// </param>
         void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size);
 
@@ -103,7 +103,7 @@ namespace SharpPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="monitor_mode">
         /// A <see cref="MonitorMode"/>
@@ -117,13 +117,13 @@ namespace SharpPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="monitor_mode">
         /// A <see cref="MonitorMode"/>
         /// </param>
         /// <param name="kernel_buffer_size">
-        /// A <see cref="System.UInt32"/>
+        /// A <see cref="uint"/>
         /// </param>
         void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size);
 

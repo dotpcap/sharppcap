@@ -41,12 +41,12 @@ namespace Test
         /// call GetNextPacket() while a capture loop is running.
         /// </summary>
         [Test]
-        public void GetNextPacketExceptionIfCaptureLoopRunning ()
+        public void GetNextPacketExceptionIfCaptureLoopRunning()
         {
             var devices = SharpPcap.LibPcap.LibPcapLiveDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                throw new InvalidOperationException("No pcap supported devices found, are you running" +
                                                            " as a user with access to adapters (root on Linux)?");
             }
 
@@ -62,7 +62,8 @@ namespace Test
             try
             {
                 devices[0].GetNextPacket();
-            } catch(InvalidOperationDuringBackgroundCaptureException)
+            }
+            catch (InvalidOperationDuringBackgroundCaptureException)
             {
                 caughtExpectedException = true;
             }
@@ -77,12 +78,12 @@ namespace Test
         /// there hasn't been any delegates assigned to PcapDevice.OnPacketArrival
         /// </summary>
         [Test]
-        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival ()
+        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival()
         {
             var devices = SharpPcap.LibPcap.LibPcapLiveDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                throw new InvalidOperationException("No pcap supported devices found, are you running" +
                                                            " as a user with access to adapters (root on Linux)?");
             }
 
@@ -94,7 +95,8 @@ namespace Test
             {
                 // start background capture
                 devices[0].StartCapture();
-            } catch(DeviceNotReadyException)
+            }
+            catch (DeviceNotReadyException)
             {
                 caughtExpectedException = true;
             }
@@ -104,9 +106,9 @@ namespace Test
             devices[0].Close();
         }
 
-        void HandleOnPacketArrival (object sender, CaptureEventArgs e)
+        void HandleOnPacketArrival(object sender, CaptureEventArgs e)
         {
-            
+
         }
     }
 }

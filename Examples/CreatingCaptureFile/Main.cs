@@ -10,7 +10,7 @@ namespace CreatingCaptureFile
     {
         private static CaptureFileWriterDevice captureFileWriter;
 
-        public static void Main (string[] args)
+        public static void Main(string[] args)
         {
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
@@ -20,7 +20,7 @@ namespace CreatingCaptureFile
             var devices = LibPcapLiveDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -34,7 +34,7 @@ namespace CreatingCaptureFile
             int i = 0;
 
             // Print out the devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -43,7 +43,7 @@ namespace CreatingCaptureFile
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture on: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
             Console.Write("-- Please enter the output file name: ");
             string capFile = Console.ReadLine();
 
@@ -51,11 +51,11 @@ namespace CreatingCaptureFile
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if(device is NpcapDevice)
+            if (device is NpcapDevice)
             {
                 var npcap = device as NpcapDevice;
                 npcap.Open(SharpPcap.Npcap.OpenFlags.DataTransferUdp | SharpPcap.Npcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
@@ -67,7 +67,7 @@ namespace CreatingCaptureFile
             }
             else
             {
-                throw new System.InvalidOperationException("unknown device type of " + device.GetType().ToString());
+                throw new InvalidOperationException("unknown device type of " + device.GetType().ToString());
             }
 
             Console.WriteLine();
@@ -109,10 +109,10 @@ namespace CreatingCaptureFile
             captureFileWriter.Write(e.Packet);
             Console.WriteLine("Packet dumped to file.");
 
-            if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
+            if (e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
                 var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-                var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
+                var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,

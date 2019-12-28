@@ -1,15 +1,12 @@
-using System;
 using NUnit.Framework;
-using SharpPcap;
 using SharpPcap.LibPcap;
-using PacketDotNet;
 
 namespace Test
 {
     [TestFixture]
     public class CaptureFileWriterTest
     {
-        public CaptureFileWriterTest ()
+        public CaptureFileWriterTest()
         {
         }
 
@@ -21,7 +18,7 @@ namespace Test
         public void TestFileCreationAndDeletion()
         {
             var wd = new CaptureFileWriterDevice(@"abc.pcap");
-            wd.Write(new byte[] {1, 2, 3, 4});
+            wd.Write(new byte[] { 1, 2, 3, 4 });
             wd.Close();
             System.IO.File.Delete(@"abc.pcap");
         }

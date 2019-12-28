@@ -67,15 +67,10 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public PhysicalAddress hardwareAddress;
 
-        private int _sa_family;
-
         /// <summary>
         /// Address family
         /// </summary>
-        public int sa_family
-        {
-            get { return _sa_family; }
-        }
+        public int sa_family { get; }
 
         /// <summary>
         /// Create a Sockaddr from a PhysicalAddress which is presumed to
@@ -100,17 +95,18 @@ namespace SharpPcap.LibPcap
                                                      typeof(PcapUnmanagedStructures.sockaddr));
 
             // record the sa_family for informational purposes
-            _sa_family = saddr.sa_family;
+            sa_family = saddr.sa_family;
 
             byte[] addressBytes;
-            if(saddr.sa_family == Pcap.AF_INET)
+            if (saddr.sa_family == Pcap.AF_INET)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
-                PcapUnmanagedStructures.sockaddr_in saddr_in = 
+                PcapUnmanagedStructures.sockaddr_in saddr_in =
                     (PcapUnmanagedStructures.sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
                                                                                 typeof(PcapUnmanagedStructures.sockaddr_in));
                 ipAddress = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
-            } else if(saddr.sa_family == Pcap.AF_INET6)
+            }
+            else if (saddr.sa_family == Pcap.AF_INET6)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
                 addressBytes = new byte[16];
@@ -119,7 +115,8 @@ namespace SharpPcap.LibPcap
                                                          typeof(PcapUnmanagedStructures.sockaddr_in6));
                 Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
                 ipAddress = new System.Net.IPAddress(addressBytes);
-            } else if(saddr.sa_family == Pcap.AF_PACKET)
+            }
+            else if (saddr.sa_family == Pcap.AF_PACKET)
             {
                 type = AddressTypes.HARDWARE;
 
@@ -128,19 +125,20 @@ namespace SharpPcap.LibPcap
                                                       typeof(PcapUnmanagedStructures.sockaddr_ll));
 
                 byte[] hardwareAddressBytes = new byte[saddr_ll.sll_halen];
-                for(int x = 0; x < saddr_ll.sll_halen; x++)
+                for (int x = 0; x < saddr_ll.sll_halen; x++)
                 {
                     hardwareAddressBytes[x] = saddr_ll.sll_addr[x];
                 }
                 hardwareAddress = new PhysicalAddress(hardwareAddressBytes); // copy into the PhysicalAddress class
-            } else
+            }
+            else
             {
                 type = AddressTypes.UNKNOWN;
 
                 // place the sockaddr.sa_data into the hardware address just in case
                 // someone wants access to the bytes
                 byte[] hardwareAddressBytes = new byte[saddr.sa_data.Length];
-                for(int x = 0; x < saddr.sa_data.Length; x++)
+                for (int x = 0; x < saddr.sa_data.Length; x++)
                 {
                     hardwareAddressBytes[x] = saddr.sa_data[x];
                 }
@@ -152,17 +150,19 @@ namespace SharpPcap.LibPcap
         /// ToString override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </returns>
         public override string ToString()
         {
-            if(type == AddressTypes.AF_INET_AF_INET6)
+            if (type == AddressTypes.AF_INET_AF_INET6)
             {
                 return ipAddress.ToString();
-            } else if(type == AddressTypes.HARDWARE)
+            }
+            else if (type == AddressTypes.HARDWARE)
             {
                 return "HW addr: " + hardwareAddress.ToString();
-            } else if(type == AddressTypes.UNKNOWN)
+            }
+            else if (type == AddressTypes.UNKNOWN)
             {
                 return String.Empty;
             }

@@ -1,6 +1,5 @@
 using System;
 using System.Net.NetworkInformation;
-using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -25,7 +24,7 @@ namespace Example12.PacketManipulation
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count<1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -38,7 +37,7 @@ namespace Example12.PacketManipulation
             int i = 0;
 
             // Print out the available devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
@@ -47,10 +46,10 @@ namespace Example12.PacketManipulation
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            var choice = int.Parse( Console.ReadLine() );
+            var choice = int.Parse(Console.ReadLine());
 
             ICaptureDevice device = null;
-            if(choice==i)
+            if (choice == i)
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 string capFile = Console.ReadLine();
@@ -62,7 +61,7 @@ namespace Example12.PacketManipulation
             }
 
             //Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
+            device.OnPacketArrival +=
                 new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
@@ -85,7 +84,7 @@ namespace Example12.PacketManipulation
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-            if(packet is PacketDotNet.EthernetPacket)
+            if (packet is PacketDotNet.EthernetPacket)
             {
                 var eth = ((PacketDotNet.EthernetPacket)packet);
                 Console.WriteLine("Original Eth packet: " + eth.ToString());
@@ -95,7 +94,7 @@ namespace Example12.PacketManipulation
                 eth.DestinationHardwareAddress = PhysicalAddress.Parse("00-99-88-77-66-55");
 
                 var ip = packet.Extract<PacketDotNet.IPPacket>();
-                if(ip != null)
+                if (ip != null)
                 {
                     Console.WriteLine("Original IP packet: " + ip.ToString());
 

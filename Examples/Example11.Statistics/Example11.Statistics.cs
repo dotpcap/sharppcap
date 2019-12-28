@@ -19,7 +19,7 @@ namespace Example11
             Console.WriteLine("SharpPcap {0}, Example11.Statistics.cs", ver);
 
             var os = System.Environment.OSVersion;
-            if(os.Platform != PlatformID.Win32NT)
+            if (os.Platform != PlatformID.Win32NT)
             {
                 Console.WriteLine("Your platform is unsupported for this example as it relies on npcap specific functionality only present in Windows.");
                 return;
@@ -29,12 +29,12 @@ namespace Example11
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
             }
-            
+
             Console.WriteLine();
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
@@ -43,7 +43,7 @@ namespace Example11
             int i = 0;
 
             // Print out the available devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -51,13 +51,13 @@ namespace Example11
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to gather statistics on: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i] as SharpPcap.Npcap.NpcapDevice;
 
             // Register our handler function to the 'pcap statistics' event
-            device.OnPcapStatistics += 
-                new SharpPcap.Npcap.StatisticsModeEventHandler( device_OnPcapStatistics );
+            device.OnPcapStatistics +=
+                new SharpPcap.Npcap.StatisticsModeEventHandler(device_OnPcapStatistics);
 
             // Open the device for capturing
             device.Open();
@@ -91,8 +91,8 @@ namespace Example11
             Console.ReadLine();
         }
 
-        static ulong oldSec=0;
-        static ulong oldUsec=0;
+        static ulong oldSec = 0;
+        static ulong oldUsec = 0;
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
@@ -120,7 +120,7 @@ namespace Example11
             var ts = e.Statistics.Timeval.Date.ToLongTimeString();
 
             // Print Statistics
-            Console.WriteLine("{0}: bps={1}, pps={2}", ts, bps, pps); 
+            Console.WriteLine("{0}: bps={1}, pps={2}", ts, bps, pps);
 
             //store current timestamp
             oldSec = e.Statistics.Timeval.Seconds;

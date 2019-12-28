@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.Npcap;
 using SharpPcap.LibPcap;
@@ -32,8 +31,8 @@ namespace Example10
 
                 // Open the device for capturing
                 device.Open();
-            } 
-            catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return;
@@ -42,24 +41,24 @@ namespace Example10
             Console.Write("Queueing packets...");
 
             //Allocate a new send queue
-            var squeue = new SharpPcap.Npcap.SendQueue
-                ( (int)((CaptureFileReaderDevice)device).FileSize );
+            var squeue = new SendQueue
+                ((int)((CaptureFileReaderDevice)device).FileSize);
             RawCapture packet;
-            
+
             try
             {
                 //Go through all packets in the file and add to the queue
-                while((packet = device.GetNextPacket()) != null )
+                while ((packet = device.GetNextPacket()) != null)
                 {
-                    if( !squeue.Add( packet ) )
+                    if (!squeue.Add(packet))
                     {
-                        Console.WriteLine("Warning: packet buffer too small, "+
+                        Console.WriteLine("Warning: packet buffer too small, " +
                             "not all the packets will be sent.");
                         break;
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return;
@@ -72,11 +71,11 @@ namespace Example10
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
             var devices = LibPcapLiveDeviceList.Instance;
             /* Scan the list printing every entry */
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -85,17 +84,17 @@ namespace Example10
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to transmit on: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
             devices[i].Open();
             string resp;
 
-            if(devices[i].LinkType != device.LinkType)
+            if (devices[i].LinkType != device.LinkType)
             {
                 Console.Write("Warning: the datalink of the capture" +
                     " differs from the one of the selected interface, continue? [YES|no]");
                 resp = Console.ReadLine().ToLower();
 
-                if((resp!="")&&( !resp.StartsWith("y")))
+                if ((resp != "") && (!resp.StartsWith("y")))
                 {
                     Console.WriteLine("Cancelled by user!");
                     devices[i].Close();
@@ -109,11 +108,11 @@ namespace Example10
             // find the network device for sending the packets we read
             device = devices[i];
 
-            Console.Write("This will transmit all queued packets through"+
+            Console.Write("This will transmit all queued packets through" +
                 " this device, continue? [YES|no]");
             resp = Console.ReadLine().ToLower();
 
-            if((resp!="") && ( !resp.StartsWith("y")))
+            if ((resp != "") && (!resp.StartsWith("y")))
             {
                 Console.WriteLine("Cancelled by user!");
                 return;
@@ -126,15 +125,15 @@ namespace Example10
                 Console.Write("Sending packets...");
                 int sent = npcapDevice.SendQueue(squeue, SharpPcap.Npcap.SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
-                if( sent < squeue.CurrentLength )
+                if (sent < squeue.CurrentLength)
                 {
-                    Console.WriteLine("An error occurred sending the packets: {0}. "+
+                    Console.WriteLine("An error occurred sending the packets: {0}. " +
                         "Only {1} bytes were sent\n", device.LastError, sent);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine( "Error: "+e.Message );
+                Console.WriteLine("Error: " + e.Message);
             }
 
             //Free the queue

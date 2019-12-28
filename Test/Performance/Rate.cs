@@ -8,8 +8,8 @@ namespace Test.Performance
     public class Rate
     {
         private TimeSpan Elapsed;
-        private string EventType;
-        private int EventCount;
+        private readonly string EventType;
+        private readonly int EventCount;
 
         public Rate(DateTime Start, DateTime End,
                     int EventCount, string EventType)
@@ -30,7 +30,7 @@ namespace Test.Performance
             }
         }
 
-        public override string ToString ()
+        public override string ToString()
         {
             return String.Format(" {0,10} {1} at a rate of {2,12} / second ({3} seconds elapsed)",
                                  EventCount,

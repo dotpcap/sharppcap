@@ -21,7 +21,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -31,8 +30,8 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Per http://msdn.microsoft.com/en-us/ms182161.aspx 
     /// </summary>
-    [SuppressUnmanagedCodeSecurityAttribute]   
-    internal static class LibPcapSafeNativeMethods   
+    [SuppressUnmanagedCodeSecurity]
+    internal static class LibPcapSafeNativeMethods
     {
         static LibPcapSafeNativeMethods()
         {
@@ -65,7 +64,7 @@ namespace SharpPcap.LibPcap
             return UseWindows ? Windows.pcap_create(dev, errbuf) : Unix.pcap_create(dev, errbuf);
         }
 
-        internal static IntPtr /* pcap_t* */ pcap_open_offline( string/*const char* */ fname, StringBuilder/* char* */ errbuf )
+        internal static IntPtr /* pcap_t* */ pcap_open_offline(string/*const char* */ fname, StringBuilder/* char* */ errbuf)
         {
             return UseWindows ? Windows.pcap_open_offline(fname, errbuf) : Unix.pcap_open_offline(fname, errbuf);
         }
@@ -81,7 +80,7 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>Open a file to write packets. </summary>
-        internal static IntPtr /*pcap_dumper_t * */ pcap_dump_open (IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname)
+        internal static IntPtr /*pcap_dumper_t * */ pcap_dump_open(IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname)
         {
             return UseWindows ? Windows.pcap_dump_open(adaptHandle, fname) : Unix.pcap_dump_open(adaptHandle, fname);
         }
@@ -89,7 +88,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         ///  Save a packet to disk.  
         /// </summary>
-        internal static void  pcap_dump (IntPtr /*u_char * */user, IntPtr /*const struct pcap_pkthdr * */h, IntPtr /*const u_char * */sp)
+        internal static void pcap_dump(IntPtr /*u_char * */user, IntPtr /*const struct pcap_pkthdr * */h, IntPtr /*const u_char * */sp)
         {
             if (UseWindows)
             {
@@ -102,7 +101,7 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary> close the files associated with p and deallocates resources.</summary>
-        internal static void  pcap_close (IntPtr /*pcap_t **/adaptHandle)
+        internal static void pcap_close(IntPtr /*pcap_t **/adaptHandle)
         {
             if (UseWindows)
             {
@@ -117,7 +116,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// To avoid callback, this returns one packet at a time
         /// </summary>
-        internal static int pcap_next_ex(IntPtr /* pcap_t* */ adaptHandle, ref IntPtr /* **pkt_header */ header , ref IntPtr  data)
+        internal static int pcap_next_ex(IntPtr /* pcap_t* */ adaptHandle, ref IntPtr /* **pkt_header */ header, ref IntPtr data)
         {
             return UseWindows ? Windows.pcap_next_ex(adaptHandle, ref header, ref data) : Unix.pcap_next_ex(adaptHandle, ref header, ref data);
         }
@@ -140,12 +139,12 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Compile a packet filter, converting an high level filtering expression (see Filtering expression syntax) in a program that can be interpreted by the kernel-level filtering engine. 
         /// </summary>
-        internal static int pcap_compile (IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp, string /*char * */str, int optimize, UInt32 netmask)
+        internal static int pcap_compile(IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp, string /*char * */str, int optimize, UInt32 netmask)
         {
             return UseWindows ? Windows.pcap_compile(adaptHandle, fp, str, optimize, netmask) : Unix.pcap_compile(adaptHandle, fp, str, optimize, netmask);
         }
 
-        internal static int pcap_setfilter (IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp)
+        internal static int pcap_setfilter(IntPtr /* pcap_t* */ adaptHandle, IntPtr /*bpf_program **/fp)
         {
             return UseWindows ? Windows.pcap_setfilter(adaptHandle, fp) : Unix.pcap_setfilter(adaptHandle, fp);
         }
@@ -168,19 +167,19 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// return the error text pertaining to the last pcap library error.
         /// </summary>
-        internal static IntPtr pcap_geterr (IntPtr /*pcap_t * */ adaptHandle)
+        internal static IntPtr pcap_geterr(IntPtr /*pcap_t * */ adaptHandle)
         {
             return UseWindows ? Windows.pcap_geterr(adaptHandle) : Unix.pcap_geterr(adaptHandle);
         }
 
         /// <summary>Returns a pointer to a string giving information about the version of the libpcap library being used; note that it contains more information than just a version number. </summary>
-        internal static IntPtr /*const char **/  pcap_lib_version ()
+        internal static IntPtr /*const char **/  pcap_lib_version()
         {
             return UseWindows ? Windows.pcap_lib_version() : Unix.pcap_lib_version();
         }
 
         /// <summary>return the standard I/O stream of the 'savefile' opened by pcap_dump_open().</summary>
-        internal static IntPtr /*FILE **/  pcap_dump_file (IntPtr /*pcap_dumper_t **/p)
+        internal static IntPtr /*FILE **/  pcap_dump_file(IntPtr /*pcap_dumper_t **/p)
         {
             return UseWindows ? Windows.pcap_dump_file(p) : Unix.pcap_dump_file(p);
         }
@@ -188,13 +187,13 @@ namespace SharpPcap.LibPcap
         /// <summary>Flushes the output buffer to the 'savefile', so that any packets 
         /// written with pcap_dump() but not yet written to the 'savefile' will be written. 
         /// -1 is returned on error, 0 on success. </summary>
-        internal static int pcap_dump_flush (IntPtr /*pcap_dumper_t **/p)
+        internal static int pcap_dump_flush(IntPtr /*pcap_dumper_t **/p)
         {
             return UseWindows ? Windows.pcap_dump_flush(p) : Unix.pcap_dump_flush(p);
         }
 
         /// <summary>Closes a savefile. </summary>
-        internal static void  pcap_dump_close (IntPtr /*pcap_dumper_t **/p)
+        internal static void pcap_dump_close(IntPtr /*pcap_dumper_t **/p)
         {
             if (UseWindows)
             {
@@ -250,7 +249,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         internal static int pcap_get_selectable_fd(IntPtr /* pcap_t* */ adaptHandle)
         {
@@ -268,7 +267,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         internal static int pcap_stats(IntPtr /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat)
         {
@@ -282,7 +281,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         internal static int pcap_snapshot(IntPtr /* pcap_t... */ adapter)
         {
@@ -294,7 +293,7 @@ namespace SharpPcap.LibPcap
         /// If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.  
         /// </summary>
         /// <param name="p">A <see cref="IntPtr"/></param>
-        /// <param name="rfmon">A <see cref="System.Int32"/></param>
+        /// <param name="rfmon">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         internal static int pcap_set_rfmon(IntPtr /* pcap_t* */ p, int rfmon)
         {
@@ -305,7 +304,7 @@ namespace SharpPcap.LibPcap
         /// pcap_set_snaplen() sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.  
         /// </summary>
         /// <param name="p">A <see cref="IntPtr"/></param>
-        /// <param name="snaplen">A <see cref="System.Int32"/></param>
+        /// <param name="snaplen">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         internal static int pcap_set_snaplen(IntPtr /* pcap_t* */ p, int snaplen)
         {
@@ -317,7 +316,7 @@ namespace SharpPcap.LibPcap
         /// If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.  
         /// </summary>
         /// <param name="p">A <see cref="IntPtr"/></param>
-        /// <param name="promisc">A <see cref="System.Int32"/></param>
+        /// <param name="promisc">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         internal static int pcap_set_promisc(IntPtr /* pcap_t* */ p, int promisc)
         {
@@ -328,7 +327,7 @@ namespace SharpPcap.LibPcap
         /// pcap_set_timeout() sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
         /// </summary>
         /// <param name="p">A <see cref="IntPtr"/></param>
-        /// <param name="to_ms">A <see cref="System.Int32"/></param>
+        /// <param name="to_ms">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         internal static int pcap_set_timeout(IntPtr /* pcap_t* */ p, int to_ms)
         {
@@ -357,7 +356,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         internal static int pcap_fileno(IntPtr /* pcap_t* p */ adapter)
         {

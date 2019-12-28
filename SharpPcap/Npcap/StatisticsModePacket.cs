@@ -41,12 +41,12 @@ namespace SharpPcap.Npcap
         /// <summary>
         /// This holds byte received and packets received
         /// </summary>
-        private byte[]  m_pktData;
+        private readonly byte[] m_pktData;
 
         internal StatisticsModePacket(RawCapture p)
         {
             this.Timeval = p.Timeval;
-            this.m_pktData  = p.Data;
+            this.m_pktData = p.Data;
         }
 
         /// <summary>

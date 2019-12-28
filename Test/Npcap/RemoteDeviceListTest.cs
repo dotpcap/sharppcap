@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using NUnit.Framework;
 using SharpPcap.Npcap;
@@ -21,20 +18,22 @@ namespace Test.Npcap
             try
             {
                 p = System.Diagnostics.Process.Start(exe1, noAuthenticationParameter);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 try
                 {
                     p = System.Diagnostics.Process.Start(exe2, noAuthenticationParameter);
-                } catch(Exception)
+                }
+                catch (Exception)
                 {
                     throw;
                 }
             }
 
-            if(p == null)
+            if (p == null)
             {
-                throw new System.Exception("unable to start process");
+                throw new Exception("unable to start process");
             }
 
             // wait until the process has started up

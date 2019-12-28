@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example6
@@ -17,20 +16,20 @@ namespace Example6
             var devices = CaptureDeviceList.Instance;
 
             /*If no device exists, print error */
-            if(devices.Count<1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No device found on this machine");
                 return;
             }
-            
+
             Console.WriteLine("The following devices are available on this machine:");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i=0;
+            int i = 0;
 
             /* Scan the list printing every entry */
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -39,13 +38,13 @@ namespace Example6
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+            device.OnPacketArrival +=
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
@@ -57,7 +56,7 @@ namespace Example6
 
             Console.WriteLine();
             Console.WriteLine
-                ("-- The following tcpdump filter will be applied: \"{0}\"", 
+                ("-- The following tcpdump filter will be applied: \"{0}\"",
                 filter);
             Console.WriteLine
                 ("-- Listening on {0}, hit 'Ctrl-C' to exit...",
@@ -77,14 +76,14 @@ namespace Example6
         /// for each TCP/IP packet received on the network
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
-        {           
+        {
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
 
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
             var tcpPacket = packet.Extract<PacketDotNet.TcpPacket>();
-            if(tcpPacket != null)
+            if (tcpPacket != null)
             {
                 var ipPacket = (PacketDotNet.IPPacket)tcpPacket.ParentPacket;
                 System.Net.IPAddress srcIp = ipPacket.SourceAddress;
@@ -92,7 +91,7 @@ namespace Example6
                 int srcPort = tcpPacket.SourcePort;
                 int dstPort = tcpPacket.DestinationPort;
 
-                Console.WriteLine("{0}:{1}:{2},{3} Len={4} {5}:{6} -> {7}:{8}", 
+                Console.WriteLine("{0}:{1}:{2},{3} Len={4} {5}:{6} -> {7}:{8}",
                     time.Hour, time.Minute, time.Second, time.Millisecond, len,
                     srcIp, srcPort, dstIp, dstPort);
             }

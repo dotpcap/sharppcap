@@ -20,7 +20,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using PacketDotNet;
-using SharpPcap;
 
 namespace SharpPcap.Examples
 {
@@ -29,7 +28,7 @@ namespace SharpPcap.Examples
         /// <summary>
         /// A basic Wake-On-LAN capture example
         /// </summary>
-        public static void Main (string[] args)
+        public static void Main(string[] args)
         {
             // print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
@@ -39,7 +38,7 @@ namespace SharpPcap.Examples
             var devices = CaptureDeviceList.Instance;
 
             // if no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -52,9 +51,9 @@ namespace SharpPcap.Examples
             int i = 0;
 
             // scan the list printing every entry
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
-                Console.WriteLine("{0}) {1} {2}",i,dev.Name,dev.Description);
+                Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
 
@@ -106,11 +105,11 @@ namespace SharpPcap.Examples
 
             // parse the incoming packet
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-            if(packet == null)
+            if (packet == null)
                 return;
 
-            var wol = packet.Extract<PacketDotNet.WakeOnLanPacket>();
-            if(wol.PayloadData != null)
+            var wol = packet.Extract<WakeOnLanPacket>();
+            if (wol.PayloadData != null)
             {
                 PrintHex(wol.DestinationAddress.GetAddressBytes());
             }
@@ -122,12 +121,12 @@ namespace SharpPcap.Examples
         private static void PrintHex(byte[] hexArr)
         {
             Console.Write("WOL Packet detected for: ");
-            for(int i = 0; i<hexArr.Length; i++)
+            for (int i = 0; i < hexArr.Length; i++)
             {
                 // display the physical address in hexadecimal
                 Console.Write("{0}", hexArr[i].ToString("X2"));
                 // trim the last hyphen from the MAC
-                if (i != hexArr.Length -1)
+                if (i != hexArr.Length - 1)
                 {
                     Console.Write("-");
                 }

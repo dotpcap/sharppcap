@@ -30,12 +30,12 @@ namespace SharpPcap.Npcap
         /// A <see cref="AuthenticationTypes"/>
         /// </param>
         /// <param name="Username">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         /// <param name="Password">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
-        public RemoteAuthentication (AuthenticationTypes Type,
+        public RemoteAuthentication(AuthenticationTypes Type,
                                      string Username,
                                      string Password)
         {
