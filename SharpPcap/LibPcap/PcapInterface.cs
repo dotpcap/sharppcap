@@ -25,6 +25,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using SharpPcap;
 using System.Net;
+using System.Net.NetworkInformation;
 
 namespace SharpPcap.LibPcap
 {
@@ -111,14 +112,33 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf)
+        internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf, NetworkInterface networkInterface)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
             Flags = pcapIf.Flags;
+            Addresses = new List<PcapAddress>();
+
+            // attempt to populate the mac address, 
+            // friendly name etc of this device
+            if (networkInterface != null)
+            {
+                var ipProperties = networkInterface.GetIPProperties();
+                int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
+                if (gatewayAddressCount != 0)
+                {
+                    List<System.Net.IPAddress> gatewayAddresses = new List<System.Net.IPAddress>();
+                    foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
+                    {
+                        gatewayAddresses.Add(gatewayInfo.Address);
+                    }
+                    GatewayAddresses = gatewayAddresses;
+                }
+                MacAddress = networkInterface.GetPhysicalAddress();
+                FriendlyName = networkInterface.Name;
+            }
 
             // retrieve addresses
-            Addresses = new List<PcapAddress>();
             IntPtr address = pcapIf.Addresses;
             while(address != IntPtr.Zero)
             {
@@ -183,6 +203,33 @@ namespace SharpPcap.LibPcap
             }
             sb.AppendFormat("Flags: {0}\n", Flags);
             return sb.ToString();
+        }
+
+        static internal List<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr)
+        {
+            var list = new List<PcapInterface>();
+            var nics = NetworkInterface.GetAllNetworkInterfaces();
+            var nextDevPtr = devicePtr;
+            while (nextDevPtr != IntPtr.Zero)
+            {
+                // Marshal pointer into a struct
+                var pcap_if_unmanaged = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_if>(nextDevPtr);
+                NetworkInterface networkInterface = null;
+                foreach (var nic in nics)
+                {
+                    // if the name and id match then we have found the NetworkInterface
+                    // that matches the PcapDevice
+                    if (pcap_if_unmanaged.Name.EndsWith(nic.Id))
+                    {
+                        networkInterface = nic;
+                    }
+                }
+                var pcap_if = new PcapInterface(pcap_if_unmanaged, networkInterface);
+                list.Add(pcap_if);
+                nextDevPtr = pcap_if_unmanaged.Next;
+            }
+
+            return list;
         }
     }
 }
