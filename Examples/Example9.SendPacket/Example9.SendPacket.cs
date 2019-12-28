@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example9
@@ -16,7 +15,7 @@ namespace Example9
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -29,24 +28,24 @@ namespace Example9
             int i = 0;
 
             // Print out the available devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
-                Console.WriteLine("{0}) {1}",i,dev.Description);
+                Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
             }
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to send a packet on: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
-            Console.Write("-- This will send a random packet out this interface, "+
+            Console.Write("-- This will send a random packet out this interface, " +
                 "continue? [YES|no]");
             string resp = Console.ReadLine().ToLower();
 
             // If user refused, exit program
-            if((resp!="") && ( !resp.StartsWith("y")))
+            if ((resp != "") && (!resp.StartsWith("y")))
             {
                 Console.WriteLine("Cancelled by user!");
                 return;
@@ -54,19 +53,19 @@ namespace Example9
 
             //Open the device
             device.Open();
-            
+
             //Generate a random packet
             byte[] bytes = GetRandomPacket();
 
             try
             {
                 //Send the packet out the network device
-                device.SendPacket( bytes );
+                device.SendPacket(bytes);
                 Console.WriteLine("-- Packet sent successfuly.");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine("-- "+ e.Message );
+                Console.WriteLine("-- " + e.Message);
             }
 
             //Close the pcap device
@@ -75,7 +74,7 @@ namespace Example9
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }
-        
+
         /// <summary>
         /// Generates a random packet of size 200
         /// </summary>
@@ -83,7 +82,7 @@ namespace Example9
         {
             byte[] packet = new byte[200];
             Random rand = new Random();
-            rand.NextBytes( packet );
+            rand.NextBytes(packet);
             return packet;
         }
     }

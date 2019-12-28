@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpPcap;
 using System.Net;
 using System.Net.NetworkInformation;
 
@@ -57,7 +56,7 @@ namespace SharpPcap.LibPcap
         /// Gateway address of this device
         /// NOTE: May only be available on Windows
         /// </value>
-        public List<System.Net.IPAddress> GatewayAddresses { get; internal set; }
+        public List<IPAddress> GatewayAddresses { get; internal set; }
 
         /// <value>
         /// Addresses associated with this device
@@ -74,7 +73,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// MacAddress of the interface
         /// </summary>
-        public System.Net.NetworkInformation.PhysicalAddress MacAddress
+        public PhysicalAddress MacAddress
         {
             get
             {
@@ -84,7 +83,7 @@ namespace SharpPcap.LibPcap
             internal set
             {
                 // do we already have a hardware address for this device?
-                if(m_macAddress != null)
+                if (m_macAddress != null)
                 {
 #if false
                     Console.WriteLine("Overwriting hardware address "
@@ -94,14 +93,17 @@ namespace SharpPcap.LibPcap
 #endif
                     // overwrite the value with the new value
                     m_macAddress.Addr.hardwareAddress = value;
-                } else
+                }
+                else
                 {
 #if false
                     Console.WriteLine("Creating new PcapAddress entry for this hardware address");
 #endif
                     // create a new entry for the mac address
-                    PcapAddress newAddress = new PcapAddress();
-                    newAddress.Addr = new Sockaddr(value);
+                    PcapAddress newAddress = new PcapAddress
+                    {
+                        Addr = new Sockaddr(value)
+                    };
 
                     // add the address to our addresses list
                     Addresses.Add(newAddress);
@@ -127,7 +129,7 @@ namespace SharpPcap.LibPcap
                 int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
                 if (gatewayAddressCount != 0)
                 {
-                    List<System.Net.IPAddress> gatewayAddresses = new List<System.Net.IPAddress>();
+                    List<IPAddress> gatewayAddresses = new List<IPAddress>();
                     foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
                     {
                         gatewayAddresses.Add(gatewayInfo.Address);
@@ -140,7 +142,7 @@ namespace SharpPcap.LibPcap
 
             // retrieve addresses
             IntPtr address = pcapIf.Addresses;
-            while(address != IntPtr.Zero)
+            while (address != IntPtr.Zero)
             {
                 //A sockaddr struct
                 PcapUnmanagedStructures.pcap_addr addr;
@@ -154,15 +156,16 @@ namespace SharpPcap.LibPcap
 
                 // is this a hardware address?
                 // if so we should set our internal m_macAddress member variable
-                if((newAddress.Addr != null) &&
+                if ((newAddress.Addr != null) &&
                    (newAddress.Addr.type == Sockaddr.AddressTypes.HARDWARE))
                 {
-                    if(m_macAddress == null)
+                    if (m_macAddress == null)
                     {
                         m_macAddress = newAddress;
-                    } else
+                    }
+                    else
                     {
-                        throw new System.InvalidOperationException("found multiple hardware addresses, existing addr "
+                        throw new InvalidOperationException("found multiple hardware addresses, existing addr "
                                                                    + MacAddress.ToString() + ", new address " + newAddress.Addr.hardwareAddress.ToString());
                     }
                 }
@@ -175,13 +178,13 @@ namespace SharpPcap.LibPcap
         /// ToString override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Name: {0}\n", Name);
-            if(FriendlyName != null)
+            if (FriendlyName != null)
             {
                 sb.AppendFormat("FriendlyName: {0}\n", FriendlyName);
             }
@@ -190,14 +193,15 @@ namespace SharpPcap.LibPcap
             {
                 sb.AppendFormat("GatewayAddresses:\n");
                 int i = 0;
-                foreach(IPAddress gatewayAddr in GatewayAddresses) {
-                    sb.AppendFormat("{0}) {1}\n", i+1, gatewayAddr);
+                foreach (IPAddress gatewayAddr in GatewayAddresses)
+                {
+                    sb.AppendFormat("{0}) {1}\n", i + 1, gatewayAddr);
                     i++;
                 }
             }
 
             sb.AppendFormat("Description: {0}\n", Description);
-            foreach(PcapAddress addr in Addresses)
+            foreach (PcapAddress addr in Addresses)
             {
                 sb.AppendFormat("Addresses:\n{0}\n", addr);
             }

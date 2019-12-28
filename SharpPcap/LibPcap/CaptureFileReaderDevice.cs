@@ -29,7 +29,7 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public class CaptureFileReaderDevice : PcapDevice
     {
-        private string m_pcapFile;
+        private readonly string m_pcapFile;
 
         /// <value>
         /// The name of the capture file
@@ -60,7 +60,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                return new FileInfo( Name ).Length;
+                return new FileInfo(Name).Length;
             }
         }
 
@@ -69,29 +69,29 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public string FileName
         {
-            get { return System.IO.Path.GetFileName( this.Name ); }
+            get { return System.IO.Path.GetFileName(this.Name); }
         }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
-        public CaptureFileReaderDevice (string captureFilename)
+        public CaptureFileReaderDevice(string captureFilename)
         {
             m_pcapFile = captureFilename;
 
             // holds errors
-            StringBuilder errbuf = new StringBuilder( Pcap.PCAP_ERRBUF_SIZE ); //will hold errors
+            StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
             // opens offline pcap file
-            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline( captureFilename, errbuf);
+            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(captureFilename, errbuf);
 
             // handle error
-            if ( adapterHandle == IntPtr.Zero)
+            if (adapterHandle == IntPtr.Zero)
             {
                 string err = "Unable to open offline adapter: " + errbuf.ToString();
-                throw new PcapException( err );
+                throw new PcapException(err);
             }
 
             // set the device handle

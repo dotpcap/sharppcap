@@ -20,7 +20,7 @@ namespace Example3
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -34,7 +34,7 @@ namespace Example3
             int i = 0;
 
             // Print out the devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -43,17 +43,17 @@ namespace Example3
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
             // Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+            device.OnPacketArrival +=
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if(device is NpcapDevice)
+            if (device is NpcapDevice)
             {
                 var nPcap = device as NpcapDevice;
                 nPcap.Open(SharpPcap.Npcap.OpenFlags.DataTransferUdp | SharpPcap.Npcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
@@ -65,7 +65,7 @@ namespace Example3
             }
             else
             {
-                throw new System.InvalidOperationException("unknown device type of " + device.GetType().ToString());
+                throw new InvalidOperationException("unknown device type of " + device.GetType().ToString());
             }
 
             Console.WriteLine();
@@ -97,7 +97,7 @@ namespace Example3
         {
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
-            Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
+            Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
             Console.WriteLine(e.Packet.ToString());
         }

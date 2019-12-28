@@ -84,7 +84,7 @@ namespace SharpPcap.Npcap
         /// A <see cref="IPAddress"/>
         /// </param>
         /// <param name="port">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="remoteAuthentication">
         /// A <see cref="RemoteAuthentication"/>
@@ -257,8 +257,8 @@ namespace SharpPcap.Npcap
                 lock (this)
                 {
                     var devices = (List<NpcapDevice>)base.Items;
-                    var dev = devices.Find(delegate(NpcapDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(NpcapDevice i) { return i.Description == Name; });
+                    var dev = devices.Find(delegate (NpcapDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate (NpcapDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

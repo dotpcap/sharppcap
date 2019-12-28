@@ -19,13 +19,12 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2008-2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 
 namespace SharpPcap.Npcap
 {
-        /// <summary>
-        /// A delegate for delivering network statistics when using npcap in
-        /// statistics mode
-        /// </summary>
-        public delegate void StatisticsModeEventHandler(object sender, StatisticsModeEventArgs e);
+    /// <summary>
+    /// A delegate for delivering network statistics when using npcap in
+    /// statistics mode
+    /// </summary>
+    public delegate void StatisticsModeEventHandler(object sender, StatisticsModeEventArgs e);
 }

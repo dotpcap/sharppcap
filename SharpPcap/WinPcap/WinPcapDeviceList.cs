@@ -85,7 +85,7 @@ namespace SharpPcap.WinPcap
         /// A <see cref="IPAddress"/>
         /// </param>
         /// <param name="port">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="remoteAuthentication">
         /// A <see cref="RemoteAuthentication"/>
@@ -258,8 +258,8 @@ namespace SharpPcap.WinPcap
                 lock (this)
                 {
                     var devices = (List<WinPcapDevice>)base.Items;
-                    var dev = devices.Find(delegate(WinPcapDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(WinPcapDevice i) { return i.Description == Name; });
+                    var dev = devices.Find(delegate (WinPcapDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate (WinPcapDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

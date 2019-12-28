@@ -8,7 +8,7 @@ namespace Test.Performance
     [TestFixture]
     public class PacketParsing
     {
-        private int packetsToRead = 50000000;
+        private readonly int packetsToRead = 50000000;
 
         [Category("Performance")]
         [Test]
@@ -16,7 +16,7 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
-            while(packetsRead < packetsToRead)
+            while (packetsRead < packetsToRead)
             {
                 var captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
@@ -27,12 +27,12 @@ namespace Test.Performance
                     rawCapture = captureDevice.GetNextPacket();
 
                     // Parse the packet using PacketDotNet
-                    if(rawCapture != null)
+                    if (rawCapture != null)
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                     packetsRead++;
                 }
-                while(rawCapture != null);
+                while (rawCapture != null);
 
                 captureDevice.Close();
             }
@@ -53,7 +53,7 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
-            while(packetsRead < packetsToRead)
+            while (packetsRead < packetsToRead)
             {
                 ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
@@ -64,12 +64,12 @@ namespace Test.Performance
                     rawCapture = captureDevice.GetNextPacket();
 
                     // Parse the packet using PacketDotNet
-                    if(rawCapture != null)
+                    if (rawCapture != null)
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                     packetsRead++;
                 }
-                while(rawCapture != null);
+                while (rawCapture != null);
 
                 captureDevice.Close();
             }
@@ -90,7 +90,7 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
-            while(packetsRead < packetsToRead)
+            while (packetsRead < packetsToRead)
             {
                 ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
@@ -101,12 +101,12 @@ namespace Test.Performance
                     rawCapture = captureDevice.GetNextPacket();
 
                     // Parse the packet using PacketDotNet
-                    if(rawCapture != null)
+                    if (rawCapture != null)
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                     packetsRead++;
                 }
-                while(rawCapture != null);
+                while (rawCapture != null);
 
                 captureDevice.Close();
             }

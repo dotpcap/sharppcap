@@ -47,7 +47,7 @@ namespace Test
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
 
-        void HandleDeviceOnPacketArrival (object sender, CaptureEventArgs e)
+        void HandleDeviceOnPacketArrival(object sender, CaptureEventArgs e)
         {
             Console.WriteLine("got packet " + e.Packet.ToString());
             capturedPackets++;
@@ -68,7 +68,8 @@ namespace Test
 #pragma warning disable 0168
                 var stats = device.Statistics;
 #pragma warning restore 0168
-            } catch(NotSupportedOnCaptureFileException)
+            }
+            catch (NotSupportedOnCaptureFileException)
             {
                 caughtExpectedException = true;
             }
@@ -89,7 +90,7 @@ namespace Test
             do
             {
                 rawPacket = device.GetNextPacket();
-                if(rawPacket != null)
+                if (rawPacket != null)
                 {
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                     var udpPacket = p.Extract<UdpPacket>();
@@ -98,7 +99,7 @@ namespace Test
                     Assert.AreEqual(dnsPort, udpPacket.DestinationPort);
                     count++;
                 }
-            } while(rawPacket != null);
+            } while (rawPacket != null);
 
             Assert.AreEqual(1, count);
 

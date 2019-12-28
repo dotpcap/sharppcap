@@ -31,12 +31,12 @@ namespace Test.Npcap
         /// a statistics event handler is attached but no packet capture handler
         /// </summary>
         [Test]
-        public void NoExceptionsWithJustStatisticsHandler ()
+        public void NoExceptionsWithJustStatisticsHandler()
         {
             var devices = SharpPcap.Npcap.NpcapDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No npcap devices found, are you running" +
+                throw new InvalidOperationException("No npcap devices found, are you running" +
                                                            " on windows?");
             }
 
@@ -49,7 +49,8 @@ namespace Test.Npcap
             {
                 // start background capture
                 devices[0].StartCapture();
-            } catch(DeviceNotReadyException)
+            }
+            catch (DeviceNotReadyException)
             {
                 caughtException = true;
             }
@@ -65,12 +66,12 @@ namespace Test.Npcap
         /// OnPcapStatistics
         /// </summary>
         [Test]
-        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrivalAndOnPcapStatistics ()
+        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrivalAndOnPcapStatistics()
         {
             var devices = SharpPcap.Npcap.NpcapDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No npcap devices found, are you running" +
+                throw new InvalidOperationException("No npcap devices found, are you running" +
                                                            " on windows?");
             }
 
@@ -82,7 +83,8 @@ namespace Test.Npcap
             {
                 // start background capture
                 devices[0].StartCapture();
-            } catch(DeviceNotReadyException)
+            }
+            catch (DeviceNotReadyException)
             {
                 caughtExpectedException = true;
             }

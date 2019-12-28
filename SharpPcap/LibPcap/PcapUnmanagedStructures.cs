@@ -32,20 +32,20 @@ namespace SharpPcap.LibPcap
         /// Item in a list of interfaces.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_if 
+        public struct pcap_if
         {
-            public IntPtr /* pcap_if* */    Next;           
-            public string                   Name;           /* name to hand to "pcap_open_live()" */                
-            public string                   Description;    /* textual description of interface, or NULL */
+            public IntPtr /* pcap_if* */    Next;
+            public string Name;           /* name to hand to "pcap_open_live()" */
+            public string Description;    /* textual description of interface, or NULL */
             public IntPtr /*pcap_addr * */  Addresses;
-            public UInt32                   Flags;          /* PCAP_IF_ interface flags */
+            public UInt32 Flags;          /* PCAP_IF_ interface flags */
         };
 
         /// <summary>
         /// Representation of an interface address.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_addr 
+        public struct pcap_addr
         {
             public IntPtr /* pcap_addr* */  Next;
             public IntPtr /* sockaddr * */  Addr;       /* address */
@@ -60,11 +60,11 @@ namespace SharpPcap.LibPcap
         /// 'struct sockaddr'
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct sockaddr 
+        public struct sockaddr
         {
-            public UInt16       sa_family;      /* address family */
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=14)]
-            public byte[]       sa_data;        /* 14 bytes of protocol address */
+            public UInt16 sa_family;      /* address family */
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 14)]
+            public byte[] sa_data;        /* 14 bytes of protocol address */
         };
 
         /// <summary>
@@ -82,18 +82,18 @@ namespace SharpPcap.LibPcap
         [StructLayout(LayoutKind.Sequential)]
         public struct sockaddr_in
         {
-            public UInt16       sa_family;      /* address family */
-            public UInt16       sa_port;        /* port */
-            public in_addr      sin_addr;       /* address */
+            public UInt16 sa_family;      /* address family */
+            public UInt16 sa_port;        /* port */
+            public in_addr sin_addr;       /* address */
 
             // TODO: I'm not sure that we can define a fixed field in another easier to
             //       understand way
 
             // pad the size of sockaddr_in out to 16 bytes
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
-// Disable warnings around this unused field
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            // Disable warnings around this unused field
 #pragma warning disable 0169
-            private byte[]       pad;
+            private readonly byte[] pad;
 #pragma warning restore 0169
         };
 
@@ -105,12 +105,12 @@ namespace SharpPcap.LibPcap
         [StructLayout(LayoutKind.Sequential)]
         internal struct sockaddr_in6
         {
-            public UInt16       sin6_family;    /* address family */
-            public UInt16       sin6_port;      /* Transport layer port # */
-            public UInt32       sin6_flowinfo;  /* IPv6 flow information */
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=16)]
-            public byte[]       sin6_addr;      /* IPv6 address */
-            public UInt32       sin6_scope_id;  /* scope id (new in RFC2553) */
+            public UInt16 sin6_family;    /* address family */
+            public UInt16 sin6_port;      /* Transport layer port # */
+            public UInt32 sin6_flowinfo;  /* IPv6 flow information */
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            public byte[] sin6_addr;      /* IPv6 address */
+            public UInt32 sin6_scope_id;  /* scope id (new in RFC2553) */
         };
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace SharpPcap.LibPcap
             public UInt16 sll_protocol;
             public UInt32 sll_ifindex;
             public UInt16 sll_hatype;
-            public byte   sll_pkttype;
-            public byte   sll_halen;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
+            public byte sll_pkttype;
+            public byte sll_halen;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             public byte[] sll_addr;
         };
 
@@ -144,7 +144,7 @@ namespace SharpPcap.LibPcap
         /// Thanks to Jon Pryor for his help in figuring out both the issue with Linux
         /// 32/64bit and the issue between Windows and Unix
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]    
+        [StructLayout(LayoutKind.Sequential)]
         public struct timeval_unix
         {
             // NOTE: The use of IntPtr here is due to the issue with the timeval structure
@@ -159,17 +159,17 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Windows version of struct timeval, the longs are 32bit even on 64-bit versions of Windows
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]    
+        [StructLayout(LayoutKind.Sequential)]
         public struct timeval_windows
         {
             public Int32 tv_sec;
             public Int32 tv_usec;
         };
-        
+
         /// <summary>
         /// MacOSX version of struct timeval
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]    
+        [StructLayout(LayoutKind.Sequential)]
         public struct timeval_macosx
         {
             public IntPtr tv_sec;
@@ -186,9 +186,9 @@ namespace SharpPcap.LibPcap
         [StructLayout(LayoutKind.Sequential)]
         public struct pcap_pkthdr_unix
         {
-            public timeval_unix     ts;             /* time stamp */
-            public UInt32           caplen;         /* length of portion present */
-            public UInt32           len;            /* length this packet (off wire) */
+            public timeval_unix ts;             /* time stamp */
+            public UInt32 caplen;         /* length of portion present */
+            public UInt32 len;            /* length this packet (off wire) */
         };
 
         /// <summary>
@@ -199,19 +199,19 @@ namespace SharpPcap.LibPcap
         [StructLayout(LayoutKind.Sequential)]
         public struct pcap_pkthdr_windows
         {
-            public timeval_windows  ts;             /* time stamp */
-            public UInt32           caplen;         /* length of portion present */
-            public UInt32           len;            /* length this packet (off wire) */
+            public timeval_windows ts;             /* time stamp */
+            public UInt32 caplen;         /* length of portion present */
+            public UInt32 len;            /* length this packet (off wire) */
         };
-        
+
         [StructLayout(LayoutKind.Sequential)]
         public struct pcap_pkthdr_macosx
         {
-            public timeval_macosx  ts;             /* time stamp */
-            public UInt32          caplen;         /* length of portion present */
-            public UInt32          len;            /* length this packet (off wire) */
+            public timeval_macosx ts;             /* time stamp */
+            public UInt32 caplen;         /* length of portion present */
+            public UInt32 len;            /* length this packet (off wire) */
         };
-        
+
         #endregion
 
         /// <summary>
@@ -221,30 +221,30 @@ namespace SharpPcap.LibPcap
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         internal struct PCAP_PKTDATA
-        {   
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst=SharpPcap.Pcap.MAX_PACKET_SIZE)]                     
-            public byte[]       bytes;
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = SharpPcap.Pcap.MAX_PACKET_SIZE)]
+            public byte[] bytes;
         };
 
         /// <summary>
         /// A BPF pseudo-assembly program for packet filtering
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal struct bpf_program 
+        internal struct bpf_program
         {
-            public uint bf_len;                
-            public IntPtr /* bpf_insn **/ bf_insns;  
+            public uint bf_len;
+            public IntPtr /* bpf_insn **/ bf_insns;
         };
 
         /// <summary>
         /// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal struct pcap_send_queue 
+        internal struct pcap_send_queue
         {
-            public uint maxlen;   
-            public uint len;   
-            public IntPtr /* char **/ ptrBuff;  
+            public uint maxlen;
+            public uint len;
+            public IntPtr /* char **/ ptrBuff;
         };
 
         /// <summary>

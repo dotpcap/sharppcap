@@ -29,7 +29,7 @@ namespace SharpPcap.Npcap
     /// <summary>
     /// Per http://msdn.microsoft.com/en-us/ms182161.aspx 
     /// </summary>
-    [SuppressUnmanagedCodeSecurityAttribute]
+    [SuppressUnmanagedCodeSecurity]
     internal static class SafeNativeMethods
     {
         // NOTE: For mono users on non-windows platforms a .config file is used to map
@@ -45,7 +45,7 @@ namespace SharpPcap.Npcap
 
         static SafeNativeMethods()
         {
-            if((Environment.OSVersion.Platform != PlatformID.MacOSX) &&
+            if ((Environment.OSVersion.Platform != PlatformID.MacOSX) &&
                (Environment.OSVersion.Platform != PlatformID.Unix))
             {
                 SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
@@ -59,16 +59,16 @@ namespace SharpPcap.Npcap
         /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html#g2b64c7b6490090d1d37088794f1f1791
         /// </summary>
         /// <param name="dev">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         /// <param name="packetLen">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="flags">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="rmtauth">
         /// A <see cref="IntPtr"/>
@@ -94,7 +94,7 @@ namespace SharpPcap.Npcap
 
         /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_findalldevs_ex (string /*char **/source,
+        internal extern static int pcap_findalldevs_ex(string /*char **/source,
                                                         IntPtr /*pcap_rmtauth **/auth,
                                                         ref IntPtr /*pcap_if_t ** */alldevs,
                                                         StringBuilder /*char * */errbuf);
@@ -107,7 +107,7 @@ namespace SharpPcap.Npcap
         /// Npcap specific method
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_setmode  ( IntPtr/* pcap_t * */ p, int  mode );
+        internal extern static int pcap_setmode(IntPtr/* pcap_t * */ p, int mode);
 
         /// <summary>
         /// Npcap specific method for setting the kernel buffer size
@@ -119,10 +119,10 @@ namespace SharpPcap.Npcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <param name="bufferSizeInBytes">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
@@ -136,10 +136,10 @@ namespace SharpPcap.Npcap
         /// A <see cref="IntPtr"/>
         /// </param>
         /// <param name="sizeInBytes">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
@@ -151,14 +151,14 @@ namespace SharpPcap.Npcap
         /// <param name="memsize">The size of the queue</param>
         /// <returns>A pointer to the allocated buffer</returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr /*pcap_send_queue * */pcap_sendqueue_alloc(int memsize) ;
+        internal extern static IntPtr /*pcap_send_queue * */pcap_sendqueue_alloc(int memsize);
 
         /// <summary>
         /// Destroy a send queue. 
         /// </summary>
         /// <param name="queue">A pointer to the queue start address</param>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static void pcap_sendqueue_destroy(IntPtr /* pcap_send_queue * */queue) ;
+        internal extern static void pcap_sendqueue_destroy(IntPtr /* pcap_send_queue * */queue);
 
         /// <summary>
         /// Add a packet to a send queue. 
@@ -167,7 +167,7 @@ namespace SharpPcap.Npcap
         /// <param name="header">The pcap header of the packet to send</param>
         /// <param name="data">The packet data</param>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendqueue_queue(IntPtr /* pcap_send_queue * */queue, IntPtr /* **pkt_header */ header , IntPtr  data);
+        internal extern static int pcap_sendqueue_queue(IntPtr /* pcap_send_queue * */queue, IntPtr /* **pkt_header */ header, IntPtr data);
 
         /// <summary>
         /// Send a queue of raw packets to the network. 

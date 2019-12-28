@@ -7,7 +7,7 @@ namespace ReadingCaptureFile
 {
     class MainClass
     {
-        public static void Main (string[] args)
+        public static void Main(string[] args)
         {
             string ver = SharpPcap.Version.VersionString;
 
@@ -19,11 +19,12 @@ namespace ReadingCaptureFile
 
             // read the file from stdin or from the command line arguments
             string capFile;
-            if(args.Length == 0)
+            if (args.Length == 0)
             {
                 Console.Write("-- Please enter an input capture file name: ");
                 capFile = Console.ReadLine();
-            } else
+            }
+            else
             {
                 // use the first argument as the filename
                 capFile = args[0];
@@ -36,12 +37,12 @@ namespace ReadingCaptureFile
             try
             {
                 // Get an offline device
-                device = new CaptureFileReaderDevice( capFile );
+                device = new CaptureFileReaderDevice(capFile);
 
                 // Open the device
                 device.Open();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Caught exception when opening file" + e.ToString());
                 return;
@@ -49,7 +50,7 @@ namespace ReadingCaptureFile
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             Console.WriteLine();
             Console.WriteLine
@@ -74,10 +75,10 @@ namespace ReadingCaptureFile
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            if(e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
+            if (e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
                 var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-                var ethernetPacket = (PacketDotNet.EthernetPacket)packet;
+                var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,

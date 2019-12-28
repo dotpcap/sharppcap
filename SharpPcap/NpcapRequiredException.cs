@@ -17,7 +17,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 /* 
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
-using System;
 
 namespace SharpPcap
 {
@@ -31,7 +30,7 @@ namespace SharpPcap
         /// string constructor
         /// </summary>
         /// <param name="msg">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         public NpcapRequiredException(string msg) : base(msg)
         {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example5
@@ -16,7 +15,7 @@ namespace Example5
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -29,21 +28,21 @@ namespace Example5
             int i = 0;
 
             // Scan the list printing every entry
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
-                Console.WriteLine("{0}) {1}",i,dev.Description);
+                Console.WriteLine("{0}) {1}", i, dev.Description);
                 i++;
             }
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
-                new PacketArrivalEventHandler( device_OnPacketArrival );
+            device.OnPacketArrival +=
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             //Open the device for capturing
             int readTimeoutMilliseconds = 1000;
@@ -55,7 +54,7 @@ namespace Example5
 
             Console.WriteLine();
             Console.WriteLine
-                ("-- The following tcpdump filter will be applied: \"{0}\"", 
+                ("-- The following tcpdump filter will be applied: \"{0}\"",
                 filter);
             Console.WriteLine
                 ("-- Listening on {0}, hit 'Ctrl-C' to exit...",
@@ -77,7 +76,7 @@ namespace Example5
         {
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
-            Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
+            Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
         }
     }

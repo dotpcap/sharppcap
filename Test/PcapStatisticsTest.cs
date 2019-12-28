@@ -36,22 +36,23 @@ namespace Test
         {
             var devices = LibPcapLiveDeviceList.Instance;
 
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
                 var error = "No pcap supported devices found, are you running" +
                             " as a user with access to adapters (root on Linux)?";
-                throw new System.InvalidOperationException(error);
-            } else
+                throw new InvalidOperationException(error);
+            }
+            else
             {
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            SharpPcap.LibPcap.LibPcapLiveDevice dev = null;
-            foreach(var d in devices)
+            LibPcapLiveDevice dev = null;
+            foreach (var d in devices)
             {
                 Console.WriteLine(d.ToString());
 
-                if(d.Name == "any")
+                if (d.Name == "any")
                 {
                     dev = d;
                 }
@@ -90,12 +91,13 @@ namespace Test
         {
             var devices = LibPcapLiveDeviceList.Instance;
 
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
                 var error = "No pcap supported devices found, are you running" +
                             " as a user with access to adapters (root on Linux)?";
-                throw new System.InvalidOperationException(error);
-            } else
+                throw new InvalidOperationException(error);
+            }
+            else
             {
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
@@ -107,7 +109,8 @@ namespace Test
                 // attempt to retrieve statistics from a closed device
                 var stats = devices[0].Statistics;
 #pragma warning restore 0168
-            } catch(DeviceNotReadyException)
+            }
+            catch (DeviceNotReadyException)
             {
                 caughtException = true;
             }

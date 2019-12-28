@@ -31,18 +31,18 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public class CaptureFileWriterDevice : PcapDevice
     {
-        private string m_pcapFile;
+        private readonly string m_pcapFile;
 
         /// <summary>
         /// Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
         /// </summary>
-        protected IntPtr       m_pcapDumpHandle    = IntPtr.Zero;
+        protected IntPtr m_pcapDumpHandle = IntPtr.Zero;
 
         /// <summary>
         /// Whether dump file is open or not
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        /// A <see cref="bool"/>
         /// </returns>
         protected bool DumpOpened
         {
@@ -78,9 +78,9 @@ namespace SharpPcap.LibPcap
         /// Constructor
         /// </summary>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
-        public CaptureFileWriterDevice (string captureFilename) : this(captureFilename, FileMode.OpenOrCreate)
+        public CaptureFileWriterDevice(string captureFilename) : this(captureFilename, FileMode.OpenOrCreate)
         {
 
         }
@@ -89,7 +89,7 @@ namespace SharpPcap.LibPcap
         /// Constructor
         /// </summary>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         /// <param name="mode">
         /// A <see cref="FileMode"/>
@@ -107,7 +107,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="LibPcapLiveDevice"/>
         /// </param>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         public CaptureFileWriterDevice(LibPcapLiveDevice device,
                                        string captureFilename) :
@@ -126,7 +126,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="LibPcapLiveDevice"/>
         /// </param>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         /// <param name="mode">
         /// A <see cref="FileMode"/>
@@ -149,10 +149,10 @@ namespace SharpPcap.LibPcap
         /// A <see cref="PacketDotNet.LinkLayers"/>
         /// </param>
         /// <param name="snapshotLength">
-        /// A <see cref="Nullable{T}"/> of <see cref="System.Int32"/>
+        /// A <see cref="Nullable{T}"/> of <see cref="int"/>
         /// </param>
         /// <param name="captureFilename">
-        /// A <see cref="System.String"/>
+        /// A <see cref="string"/>
         /// </param>
         /// <param name="mode">
         /// A <see cref="FileMode"/>
@@ -165,24 +165,25 @@ namespace SharpPcap.LibPcap
             m_pcapFile = captureFilename;
 
             // append isn't possible without some difficulty and not implemented yet
-            if(mode == FileMode.Append)
+            if (mode == FileMode.Append)
             {
-                throw new System.InvalidOperationException("FileMode.Append is not supported, please contact the developers if you are interested in helping to implementing it");
+                throw new InvalidOperationException("FileMode.Append is not supported, please contact the developers if you are interested in helping to implementing it");
             }
 
-            if(!snapshotLength.HasValue)
+            if (!snapshotLength.HasValue)
             {
                 snapshotLength = Pcap.MAX_PACKET_SIZE;
-            } else if(snapshotLength > Pcap.MAX_PACKET_SIZE)
+            }
+            else if (snapshotLength > Pcap.MAX_PACKET_SIZE)
             {
-                throw new System.InvalidOperationException("snapshotLength > Pcap.MAX_PACKET_SIZE");
+                throw new InvalidOperationException("snapshotLength > Pcap.MAX_PACKET_SIZE");
             }
 
             // set the device handle
             PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)linkLayerType, snapshotLength.Value);
 
             m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, captureFilename);
-            if(m_pcapDumpHandle == IntPtr.Zero)
+            if (m_pcapDumpHandle == IntPtr.Zero)
                 throw new PcapException("Error opening dump file '" + LastError + "'");
         }
 
@@ -235,7 +236,7 @@ namespace SharpPcap.LibPcap
         public void Write(byte[] p, PcapHeader h)
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");
-            if(!DumpOpened)
+            if (!DumpOpened)
                 throw new DeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
             //Marshal packet

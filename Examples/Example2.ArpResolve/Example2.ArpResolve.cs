@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -49,7 +48,7 @@ namespace Example2
             var devices = LibPcapLiveDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -62,7 +61,7 @@ namespace Example2
             int i = 0;
 
             // Print out the available devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -70,17 +69,17 @@ namespace Example2
 
             Console.WriteLine();
             Console.Write("-- Please choose a device for sending the ARP request: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
             System.Net.IPAddress ip;
 
             // loop until a valid ip address is parsed
-            while(true)
+            while (true)
             {
                 Console.Write("-- Please enter IP address to be resolved by ARP: ");
-                if(System.Net.IPAddress.TryParse(Console.ReadLine(), out ip))
+                if (System.Net.IPAddress.TryParse(Console.ReadLine(), out ip))
                     break;
                 Console.WriteLine("Bad IP address format, please try again");
             }
@@ -90,10 +89,11 @@ namespace Example2
 
             // print the resolved address or indicate that none was found
             var resolvedMacAddress = arper.Resolve(ip);
-            if(resolvedMacAddress == null)
+            if (resolvedMacAddress == null)
             {
                 Console.WriteLine("Timeout, no mac address found for ip of " + ip);
-            } else
+            }
+            else
             {
                 Console.WriteLine(ip + " is at: " + arper.Resolve(ip));
             }

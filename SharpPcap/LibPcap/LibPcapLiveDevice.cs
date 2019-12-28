@@ -23,9 +23,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 namespace SharpPcap.LibPcap
 {
@@ -39,7 +37,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        public LibPcapLiveDevice( PcapInterface pcapIf )
+        public LibPcapLiveDevice(PcapInterface pcapIf)
         {
             m_pcapIf = pcapIf;
         }
@@ -96,7 +94,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual bool Loopback
         {
-            get { return (Flags & Pcap.PCAP_IF_LOOPBACK)==1; }
+            get { return (Flags & Pcap.PCAP_IF_LOOPBACK) == 1; }
         }
 
         /// <value>
@@ -111,13 +109,13 @@ namespace SharpPcap.LibPcap
                     (int)value);
                 if (retval != 0)
                 {
-                    throw new System.InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
+                    throw new InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
                 }
             }
 
             get
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -149,7 +147,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout)
         {
@@ -163,10 +161,10 @@ namespace SharpPcap.LibPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="kernel_buffer_size">
-        /// A <see cref="System.UInt32"/>
+        /// A <see cref="uint"/>
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size)
         {
@@ -181,7 +179,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="monitor_mode">
         /// A <see cref="MonitorMode"/>
@@ -198,13 +196,13 @@ namespace SharpPcap.LibPcap
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="int"/>
         /// </param>
         /// <param name="monitor_mode">
         /// A <see cref="MonitorMode"/>
         /// </param>
         /// <param name="kernel_buffer_size">
-        /// A <see cref="System.UInt32"/>
+        /// A <see cref="uint"/>
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
         {
@@ -237,7 +235,7 @@ namespace SharpPcap.LibPcap
                     {
                         LibPcapSafeNativeMethods.pcap_set_rfmon(PcapHandle, (int)monitor_mode);
                     }
-                    catch (System.EntryPointNotFoundException)
+                    catch (EntryPointNotFoundException)
                     {
                         throw new PcapException("This implementation of libpcap does not support monitor mode.");
                     }
@@ -279,11 +277,11 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
 
-                if(ret == enableBlocking)
+                if (ret == enableBlocking)
                     return true;
                 return false;
             }
-            set 
+            set
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
@@ -311,14 +309,14 @@ namespace SharpPcap.LibPcap
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
 
-            if (p.Length > Pcap.MAX_PACKET_SIZE) 
+            if (p.Length > Pcap.MAX_PACKET_SIZE)
             {
-                throw new ArgumentException("Packet length can't be larger than "+Pcap.MAX_PACKET_SIZE);
+                throw new ArgumentException("Packet length can't be larger than " + Pcap.MAX_PACKET_SIZE);
             }
-            var p_packet = MemoryMarshal.GetReference(p); 
+            var p_packet = MemoryMarshal.GetReference(p);
             int res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, p.Length);
 
-            if(res < 0)
+            if (res < 0)
             {
                 throw new PcapException("Can't send packet: " + LastError);
             }

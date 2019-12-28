@@ -18,7 +18,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2011 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using PacketDotNet;
 
 namespace SharpPcap
@@ -63,7 +62,7 @@ namespace SharpPcap
         /// A <see cref="PosixTimeval"/>
         /// </param>
         /// <param name="Data">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="byte"/>
         /// </param>
         public RawCapture(LinkLayers LinkLayerType,
                           PosixTimeval Timeval,

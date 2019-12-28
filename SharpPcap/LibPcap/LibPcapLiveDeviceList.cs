@@ -23,8 +23,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 
 namespace SharpPcap.LibPcap
 {
@@ -42,7 +40,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
                     instance = new LibPcapLiveDeviceList();
                 }
@@ -105,17 +103,17 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public void Refresh()
         {
-            lock(this)
+            lock (this)
             {
                 // retrieve the current device list
                 var newDeviceList = GetDevices();
 
                 // update existing devices with values in the new list
-                foreach(var newItem in newDeviceList)
+                foreach (var newItem in newDeviceList)
                 {
-                    foreach(var existingItem in base.Items)
+                    foreach (var existingItem in base.Items)
                     {
-                        if(newItem.Name == existingItem.Name)
+                        if (newItem.Name == existingItem.Name)
                         {
                             // copy the flags and addresses over
                             existingItem.Interface.Flags = newItem.Interface.Flags;
@@ -127,12 +125,12 @@ namespace SharpPcap.LibPcap
                 }
 
                 // find items the current list is missing
-                foreach(var newItem in newDeviceList)
+                foreach (var newItem in newDeviceList)
                 {
                     bool found = false;
-                    foreach(var existingItem in base.Items)
+                    foreach (var existingItem in base.Items)
                     {
-                        if(existingItem.Name == newItem.Name)
+                        if (existingItem.Name == newItem.Name)
                         {
                             found = true;
                             break;
@@ -140,7 +138,7 @@ namespace SharpPcap.LibPcap
                     }
 
                     // add items that we were missing
-                    if(!found)
+                    if (!found)
                     {
                         base.Items.Add(newItem);
                     }
@@ -148,13 +146,13 @@ namespace SharpPcap.LibPcap
 
                 // find items that we have that the current list is missing
                 var itemsToRemove = new List<LibPcapLiveDevice>();
-                foreach(var existingItem in base.Items)
+                foreach (var existingItem in base.Items)
                 {
                     bool found = false;
 
-                    foreach(var newItem in newDeviceList)
+                    foreach (var newItem in newDeviceList)
                     {
-                        if(existingItem.Name == newItem.Name)
+                        if (existingItem.Name == newItem.Name)
                         {
                             found = true;
                             break;
@@ -162,7 +160,7 @@ namespace SharpPcap.LibPcap
                     }
 
                     // add the PcapDevice we didn't see in the new list
-                    if(!found)
+                    if (!found)
                     {
                         itemsToRemove.Add(existingItem);
                     }
@@ -170,7 +168,7 @@ namespace SharpPcap.LibPcap
 
                 // remove the items outside of the foreach() to avoid
                 // enumeration errors
-                foreach(var itemToRemove in itemsToRemove)
+                foreach (var itemToRemove in itemsToRemove)
                 {
                     base.Items.Remove(itemToRemove);
                 }
@@ -185,11 +183,11 @@ namespace SharpPcap.LibPcap
             {
                 // lock to prevent issues with multi-threaded access
                 // with other methods
-                lock(this)
+                lock (this)
                 {
                     var devices = (List<LibPcapLiveDevice>)base.Items;
-                    var dev = devices.Find(delegate(LibPcapLiveDevice i) { return i.Name == Name; });
-                    var result = dev ?? devices.Find(delegate(LibPcapLiveDevice i) { return i.Description == Name; });
+                    var dev = devices.Find(delegate (LibPcapLiveDevice i) { return i.Name == Name; });
+                    var result = dev ?? devices.Find(delegate (LibPcapLiveDevice i) { return i.Description == Name; });
 
                     if (result == null)
                         throw new IndexOutOfRangeException();

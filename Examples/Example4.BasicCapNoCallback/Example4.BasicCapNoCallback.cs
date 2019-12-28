@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using SharpPcap;
 
 namespace Example4
@@ -19,7 +18,7 @@ namespace Example4
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -33,7 +32,7 @@ namespace Example4
             int i = 0;
 
             // Print out the devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
@@ -41,7 +40,7 @@ namespace Example4
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             var device = devices[i];
 
@@ -56,12 +55,12 @@ namespace Example4
             RawCapture packet;
 
             // Capture packets using GetNextPacket()
-            while( (packet = device.GetNextPacket()) != null )
+            while ((packet = device.GetNextPacket()) != null)
             {
                 // Prints the time and length of each received packet
                 var time = packet.Timeval.Date;
                 var len = packet.Data.Length;
-                Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
+                Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                     time.Hour, time.Minute, time.Second, time.Millisecond, len);
             }
 

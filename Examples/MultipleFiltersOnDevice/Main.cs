@@ -16,7 +16,7 @@ namespace MultipleFiltersOnDevice
             Console.WriteLine("SharpPcap {0}, MultipleFiltersOnDevice", ver);
 
             // If no devices were found print an error
-            if(CaptureDeviceList.Instance.Count < 1)
+            if (CaptureDeviceList.Instance.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -30,7 +30,7 @@ namespace MultipleFiltersOnDevice
             int i = 0;
 
             // Print out the devices
-            foreach(var dev in CaptureDeviceList.Instance)
+            foreach (var dev in CaptureDeviceList.Instance)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -39,7 +39,7 @@ namespace MultipleFiltersOnDevice
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = int.Parse(Console.ReadLine());
 
             int readTimeoutMilliseconds = 1000;
 
@@ -47,10 +47,10 @@ namespace MultipleFiltersOnDevice
             var device2 = CaptureDeviceList.New()[i]; // NOTE: the call to New()
 
             // Register our handler function to the 'packet arrival' event
-            device1.OnPacketArrival += 
-                        new PacketArrivalEventHandler( device_OnPacketArrival );
-            device2.OnPacketArrival += 
-                        new PacketArrivalEventHandler( device_OnPacketArrival );
+            device1.OnPacketArrival +=
+                        new PacketArrivalEventHandler(device_OnPacketArrival);
+            device2.OnPacketArrival +=
+                        new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the devices for capturing
             device1.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
@@ -96,7 +96,7 @@ namespace MultipleFiltersOnDevice
         {
             var time = e.Packet.Timeval.Date;
             var len = e.Packet.Data.Length;
-            Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
+            Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
             var p = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
             Console.WriteLine(p.ToString());

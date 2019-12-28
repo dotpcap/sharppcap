@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -13,9 +12,9 @@ namespace Test
         public void SimpleFilter()
         {
             var devices = LibPcapLiveDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                throw new InvalidOperationException("No pcap supported devices found, are you running" +
                                                            " as a user with access to adapters (root on Linux)?");
             }
 
@@ -32,9 +31,9 @@ namespace Test
         public void SetFilterExceptionIfDeviceIsClosed()
         {
             var devices = LibPcapLiveDeviceList.Instance;
-            if(devices.Count == 0)
+            if (devices.Count == 0)
             {
-                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                throw new InvalidOperationException("No pcap supported devices found, are you running" +
                                                            " as a user with access to adapters (root on Linux)?");
             }
 
@@ -42,7 +41,8 @@ namespace Test
             try
             {
                 devices[0].Filter = "tcp port 80";
-            } catch(DeviceNotReadyException)
+            }
+            catch (DeviceNotReadyException)
             {
                 caughtExpectedException = true;
             }

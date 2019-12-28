@@ -36,9 +36,7 @@ namespace SharpPcap
         {
             get
             {
-                System.Reflection.Assembly asm
-                    = System.Reflection.Assembly.GetAssembly(typeof(SharpPcap.Version));
-                return asm.GetName().Version.ToString();
+                return typeof(SharpPcap.Version).Assembly.GetName().Version.ToString();
             }
         }
     }

@@ -18,7 +18,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using NUnit.Framework;
 using SharpPcap;
 
@@ -29,7 +28,7 @@ namespace Test.Misc
     {
         // Test posix timeval comparison operators
         [Test]
-        public void OperatorTest ()
+        public void OperatorTest()
         {
             var p1 = new PosixTimeval(100, 50);
             var p2 = new PosixTimeval(100, 100);
