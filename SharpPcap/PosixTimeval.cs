@@ -242,6 +242,21 @@ namespace SharpPcap
         }
 
         /// <summary>
+        /// Construct a PosixTimeval with DateTime object
+        /// </summary>
+        /// <param name="time">
+        /// The DateTime object to use
+        /// </param>
+        public PosixTimeval(DateTime time)
+        {
+            DateTimeToUnixTimeVal(time.ToUniversalTime(),
+                                  out ulong seconds,
+                                  out ulong microseconds);
+
+            this.Seconds = seconds;
+            this.MicroSeconds = microseconds;
+        }
+        /// <summary>
         /// Construct a PosixTimeval using the current UTC time
         /// </summary>
         public PosixTimeval()
