@@ -24,6 +24,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
 {
@@ -131,7 +132,7 @@ namespace SharpPcap.LibPcap
         /// <param name="data">contains the data of the packet to send (including the various protocol headers)</param>
         /// <param name="size">the dimension of the buffer pointed by data</param>
         /// <returns>0 if the packet is succesfully sent, -1 otherwise.</returns>
-        internal static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, in byte data, int size)
+        internal static int pcap_sendpacket(IntPtr /* pcap_t* */ adaptHandle, IntPtr data, int size)
         {
             return UseWindows ? Windows.pcap_sendpacket(adaptHandle, data, size) : Unix.pcap_sendpacket(adaptHandle, data, size);
         }
@@ -361,6 +362,28 @@ namespace SharpPcap.LibPcap
         internal static int pcap_fileno(IntPtr /* pcap_t* p */ adapter)
         {
             return UseWindows ? Windows.pcap_fileno(adapter) : Unix.pcap_fileno(adapter);
+        }
+        #endregion
+
+        #region Send queue functions
+
+        /// <summary>
+        /// Send a queue of raw packets to the network. 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="queue"></param>
+        /// <param name="sync">determines if the send operation must be synchronized: 
+        /// if it is non-zero, the packets are sent respecting the timestamps, 
+        /// otherwise they are sent as fast as possible</param>
+        /// <returns>The amount of bytes actually sent. 
+        /// If it is smaller than the size parameter, an error occurred 
+        /// during the send. The error can be caused by a driver/adapter 
+        /// problem or by an inconsistent/bogus send queue.</returns>
+        internal static int pcap_sendqueue_transmit(IntPtr/*pcap_t * */p, ref pcap_send_queue queue, int sync)
+        {
+            return UseWindows
+                ? Windows.pcap_sendqueue_transmit(p, ref queue, sync)
+                : Unix.pcap_sendqueue_transmit(p, ref queue, sync);
         }
         #endregion
     }

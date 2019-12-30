@@ -144,47 +144,6 @@ namespace SharpPcap.WinPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
 
-        #region Send queue functions
-        /// <summary>
-        /// Allocate a send queue. 
-        /// </summary>
-        /// <param name="memsize">The size of the queue</param>
-        /// <returns>A pointer to the allocated buffer</returns>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr /*pcap_send_queue * */pcap_sendqueue_alloc(int memsize);
-
-        /// <summary>
-        /// Destroy a send queue. 
-        /// </summary>
-        /// <param name="queue">A pointer to the queue start address</param>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static void pcap_sendqueue_destroy(IntPtr /* pcap_send_queue * */queue);
-
-        /// <summary>
-        /// Add a packet to a send queue. 
-        /// </summary>
-        /// <param name="queue">A pointer to a queue</param>
-        /// <param name="header">The pcap header of the packet to send</param>
-        /// <param name="data">The packet data</param>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendqueue_queue(IntPtr /* pcap_send_queue * */queue, IntPtr /* **pkt_header */ header, IntPtr data);
-
-        /// <summary>
-        /// Send a queue of raw packets to the network. 
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="queue"></param>
-        /// <param name="sync">determines if the send operation must be synchronized: 
-        /// if it is non-zero, the packets are sent respecting the timestamps, 
-        /// otherwise they are sent as fast as possible</param>
-        /// <returns>The amount of bytes actually sent. 
-        /// If it is smaller than the size parameter, an error occurred 
-        /// during the send. The error can be caused by a driver/adapter 
-        /// problem or by an inconsistent/bogus send queue.</returns>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendqueue_transmit(IntPtr/*pcap_t * */p, IntPtr /* pcap_send_queue * */queue, int sync);
-        #endregion
-
         #endregion
     }
 }
