@@ -35,6 +35,21 @@ namespace SharpPcap.LibPcap
 
         static readonly bool is32BitTs = IntPtr.Size == 4 || isWindows;
 
+        internal static int MemorySize = GetMemorySize();
+
+        private static int GetMemorySize()
+        {
+            if (isWindows)
+            {
+                return Marshal.SizeOf<PcapUnmanagedStructures.pcap_pkthdr_windows>();
+            }
+            if (isMacOSX)
+            {
+                return Marshal.SizeOf<PcapUnmanagedStructures.pcap_pkthdr_macosx>();
+            }
+            return Marshal.SizeOf<PcapUnmanagedStructures.pcap_pkthdr_unix>();
+        }
+
         /// <summary>
         ///  A wrapper class for libpcap's pcap_pkthdr structure
         /// </summary>

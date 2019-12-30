@@ -21,7 +21,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Runtime.InteropServices;
 using SharpPcap.LibPcap;
 
 namespace SharpPcap.WinPcap
@@ -29,11 +28,9 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// Interface to the WinPcap send queue extension methods
     /// </summary>
-    [Obsolete("WinPcap is obsolete. Use Npcap namespace instead.", false)]
-    public class SendQueue
+    [Obsolete("Obsolete. Use LibPcap namespace instead.")]
+    public class SendQueue : LibPcap.SendQueue
     {
-        readonly IntPtr m_queue = IntPtr.Zero;
-
         /// <summary>
         /// Creates and allocates a new SendQueue
         /// </summary>
@@ -41,61 +38,8 @@ namespace SharpPcap.WinPcap
         /// The maximun amount of memory (in bytes) 
         /// to allocate for the queue</param>
         public SendQueue(int memSize)
+            : base(memSize)
         {
-            // ensure that we are running under winpcap
-            WinPcapDevice.ThrowIfNotWinPcap();
-
-            m_queue = WinPcap.SafeNativeMethods.pcap_sendqueue_alloc(memSize);
-            if (m_queue == IntPtr.Zero)
-                throw new PcapException("Error creating PcapSendQueue");
-        }
-
-        /// <summary>
-        /// Add a packet to this send queue. The PcapHeader defines the packet length.
-        /// </summary>
-        /// <param name="packet">The packet bytes to add</param>
-        /// <param name="pcapHdr">The pcap header of the packet</param>
-        /// <returns>True if success, else false</returns>
-        internal bool AddInternal(byte[] packet, PcapHeader pcapHdr)
-        {
-            if (m_queue == IntPtr.Zero)
-            {
-                throw new PcapException("Can't add packet, this queue is disposed");
-            }
-
-            // the header defines the size to send
-            if (pcapHdr.CaptureLength > packet.Length)
-            {
-                var error = string.Format("pcapHdr.CaptureLength of {0} > packet.Length {1}",
-                                          pcapHdr.CaptureLength, packet.Length);
-                throw new InvalidOperationException(error);
-            }
-
-            //Marshal packet
-            IntPtr pktPtr;
-            pktPtr = Marshal.AllocHGlobal(packet.Length);
-            Marshal.Copy(packet, 0, pktPtr, packet.Length);
-
-            //Marshal header
-            IntPtr hdrPtr = pcapHdr.MarshalToIntPtr();
-
-            int res = WinPcap.SafeNativeMethods.pcap_sendqueue_queue(m_queue, hdrPtr, pktPtr);
-
-            Marshal.FreeHGlobal(pktPtr);
-            Marshal.FreeHGlobal(hdrPtr);
-
-            return (res != -1);
-        }
-
-        /// <summary>
-        /// Add a packet to this send queue. 
-        /// </summary>
-        /// <param name="packet">The packet bytes to add</param>
-        /// <param name="pcapHdr">The pcap header of the packet</param>
-        /// <returns>True if success, else false</returns>
-        internal bool Add(byte[] packet, PcapHeader pcapHdr)
-        {
-            return this.AddInternal(packet, pcapHdr);
         }
 
         /// <summary>
@@ -105,11 +49,7 @@ namespace SharpPcap.WinPcap
         /// <returns>True if success, else false</returns>
         public bool Add(byte[] packet)
         {
-            PcapHeader hdr = new PcapHeader
-            {
-                CaptureLength = (uint)packet.Length
-            };
-            return this.AddInternal(packet, hdr);
+            return SendQueueExtensions.Add(this, packet);
         }
 
         /// <summary>
@@ -119,11 +59,7 @@ namespace SharpPcap.WinPcap
         /// <returns>True if success, else false</returns>
         public bool Add(RawCapture packet)
         {
-            var data = packet.Data;
-            var timeval = packet.Timeval;
-            var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
-                                        (uint)data.Length, (uint)data.Length);
-            return this.AddInternal(data, header);
+            return SendQueueExtensions.Add(this, packet);
         }
 
         /// <summary>
@@ -135,10 +71,7 @@ namespace SharpPcap.WinPcap
         /// <returns>True if success, else false</returns>
         public bool Add(byte[] packet, int seconds, int microseconds)
         {
-            var header = new PcapHeader((uint)seconds, (uint)microseconds,
-                                        (uint)packet.Length, (uint)packet.Length);
-
-            return this.Add(packet, header);
+            return SendQueueExtensions.Add(this, packet, seconds, microseconds);
         }
 
         /// <summary>
@@ -156,45 +89,7 @@ namespace SharpPcap.WinPcap
         /// </returns>
         public int Transmit(WinPcapDevice device, SendQueueTransmitModes transmitMode)
         {
-            if (!device.Opened)
-                throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");
-
-            if (m_queue == IntPtr.Zero)
-            {
-                throw new PcapException("Can't transmit queue, this queue is disposed");
-            }
-
-            int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
-            return WinPcap.SafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, m_queue, sync);
-        }
-
-        /// <summary>
-        /// Destroy the send queue. 
-        /// </summary>
-        public void Dispose()
-        {
-            if (m_queue != IntPtr.Zero)
-            {
-                SafeNativeMethods.pcap_sendqueue_destroy(m_queue);
-            }
-        }
-
-        /// <summary>
-        /// The current length in bytes of this queue
-        /// </summary>
-        public int CurrentLength
-        {
-            get
-            {
-                if (m_queue == IntPtr.Zero)
-                {
-                    throw new PcapException("Can't perform operation, this queue is disposed");
-                }
-                PcapUnmanagedStructures.pcap_send_queue q =
-                    (PcapUnmanagedStructures.pcap_send_queue)Marshal.PtrToStructure
-                    (m_queue, typeof(PcapUnmanagedStructures.pcap_send_queue));
-                return (int)q.len;
-            }
+            return Transmit(device, transmitMode == SendQueueTransmitModes.Synchronized);
         }
     }
 }

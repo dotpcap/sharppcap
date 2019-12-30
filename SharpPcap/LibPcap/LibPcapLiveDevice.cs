@@ -313,9 +313,14 @@ namespace SharpPcap.LibPcap
             {
                 throw new ArgumentException("Packet length can't be larger than " + Pcap.MAX_PACKET_SIZE);
             }
-            var p_packet = MemoryMarshal.GetReference(p);
-            int res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, p_packet, p.Length);
-
+            int res;
+            unsafe
+            {
+                fixed (byte* p_packet = p)
+                {
+                    res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, new IntPtr(p_packet), p.Length);
+                }
+            }
             if (res < 0)
             {
                 throw new PcapException("Can't send packet: " + LastError);
