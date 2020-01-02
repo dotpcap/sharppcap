@@ -6,6 +6,8 @@ using SharpPcap.Npcap;
 namespace Test.Npcap
 {
     [TestFixture]
+    [Category("RemotePcap")]
+    [Platform("Win")]
     public class RemoteDeviceListTest
     {
         [Test]
@@ -17,13 +19,13 @@ namespace Test.Npcap
             Process p;
             try
             {
-                p = System.Diagnostics.Process.Start(exe1, noAuthenticationParameter);
+                p = Process.Start(exe1, noAuthenticationParameter);
             }
             catch (Exception)
             {
                 try
                 {
-                    p = System.Diagnostics.Process.Start(exe2, noAuthenticationParameter);
+                    p = Process.Start(exe2, noAuthenticationParameter);
                 }
                 catch (Exception)
                 {

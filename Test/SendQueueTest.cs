@@ -12,6 +12,7 @@ namespace Test
 {
     [TestFixture]
     [NonParallelizable]
+    [Category("SendPacket")]
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
@@ -19,6 +20,7 @@ namespace Test
         private static readonly int DeltaMs = 10;
 
         [Test]
+        [Platform("Win")]
         public void TestNativeTransmitNormal()
         {
             var received = RunCapture(Filter, (device) =>
@@ -29,6 +31,7 @@ namespace Test
         }
 
         [Test]
+        [Platform("Win")]
         public void TestNativeTransmitSync()
         {
             var received = RunCapture(Filter, (device) =>
@@ -78,6 +81,7 @@ namespace Test
         }
 
         [Test]
+        [Platform("Win")]
         public void TestReturnValue()
         {
             var device = GetPcapDevice();

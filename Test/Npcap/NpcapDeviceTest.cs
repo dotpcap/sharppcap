@@ -24,6 +24,7 @@ using SharpPcap;
 namespace Test.Npcap
 {
     [TestFixture]
+    [Platform("Win")]
     public class NpcapDeviceTest
     {
         /// <summary>
