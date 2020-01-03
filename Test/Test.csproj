@@ -2,7 +2,6 @@
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
-    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Npcap\*.cs" Condition=" '$(OS)' != 'Windows_NT'" />
