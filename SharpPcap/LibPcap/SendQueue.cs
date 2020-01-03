@@ -35,16 +35,22 @@ namespace SharpPcap.LibPcap
 
         private static bool GetIsHardwareAccelerated()
         {
+            var handle = LibPcapSafeNativeMethods.pcap_open_dead(1, 60);
             try
             {
+
                 pcap_send_queue queue = default;
-                LibPcapSafeNativeMethods.pcap_sendqueue_transmit(IntPtr.Zero, ref queue, 0);
+                LibPcapSafeNativeMethods.pcap_sendqueue_transmit(handle, ref queue, 0);
                 return true;
             }
             catch (TypeLoadException)
             {
                 // Function pcap_sendqueue_transmit not found
                 return false;
+            }
+            finally
+            {
+                LibPcapSafeNativeMethods.pcap_close(handle);
             }
         }
 
