@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Threading;
 
 namespace Test
 {
@@ -28,22 +29,31 @@ namespace Test
             var nics = NetworkInterface.GetAllNetworkInterfaces();
             foreach (var device in LibPcapLiveDeviceList.Instance)
             {
+                var friendlyName = device.Interface.FriendlyName ?? string.Empty;
+                if (friendlyName.ToLower().Contains("loopback") || friendlyName == "any")
+                {
+                    continue;
+                }
+                var nic = nics.FirstOrDefault(ni => ni.Name == friendlyName);
+                if (nic?.OperationalStatus != OperationalStatus.Up)
+                {
+                    continue;
+                }
+                LinkLayers link;
                 try
                 {
                     device.Open();
-                    if (device.LinkType == LinkLayers.Ethernet)
-                    {
-                        var nic = nics.FirstOrDefault(ni => ni.Name == device.Interface.FriendlyName);
-                        if (nic.OperationalStatus == OperationalStatus.Up)
-                        {
-                            return device;
-                        }
-                    }
+                    link = device.LinkType;
                     device.Close();
                 }
-                catch (Exception)
+                catch (PcapException ex)
                 {
+                    Console.WriteLine(ex);
                     continue;
+                }
+                if (link == LinkLayers.Ethernet)
+                {
+                    return device;
                 }
             }
             return null;
