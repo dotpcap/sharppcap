@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyVersion>5.1.0.0</AssemblyVersion>
     <Version>5.1.0</Version>
     <Description>A packet capture framework for .NET</Description>
@@ -11,19 +10,10 @@
     <Copyright>Tamir Gal, Chris Morgan and others</Copyright>
     <PackageLicenseUrl>https://github.com/chmorgan/sharppcap/blob/master/LICENSE</PackageLicenseUrl>
     <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.0.3" />
     <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
-
 </Project>
