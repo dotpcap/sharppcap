@@ -11,11 +11,12 @@ using static System.TimeSpan;
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
         private const int PacketCount = 8;
-        private static readonly long DeltaTicks = FromMilliseconds(1).Ticks;
+        private static readonly int DeltaMs = 10;
 
         [Test]
         public void TestNativeTransmitNormal()
@@ -61,7 +62,7 @@ namespace Test
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
             var times = received.Select(r => r.Timeval.Date);
-            Assert.That(times.Max() - times.Min(), Is.LessThan(FromMilliseconds(1)));
+            Assert.That(times.Max() - times.Min(), Is.LessThan(FromMilliseconds(10)));
         }
 
         private static void AssertGoodTransmitSync(List<RawCapture> received)
@@ -70,9 +71,9 @@ namespace Test
             var times = received.Select(r => r.Timeval.Date).ToArray();
             for (int i = 1; i < PacketCount; i++)
             {
-                var delta = (times[i] - times[i - 1]).Ticks;
-                Assert.That(delta, Is.LessThan(DeltaTicks * 1.1));
-                Assert.That(delta, Is.GreaterThan(DeltaTicks * 0.9));
+                var delta = (times[i] - times[i - 1]).TotalMilliseconds;
+                Assert.That(delta, Is.LessThan(DeltaMs * 1.5));
+                Assert.That(delta, Is.GreaterThan(DeltaMs * 0.5));
             }
         }
 
@@ -80,10 +81,18 @@ namespace Test
         public void TestReturnValue()
         {
             var device = GetPcapDevice();
-            var queue = GetSendQueue();
-            var managed = queue.ManagedTransmit(device, false);
-            var native = queue.NativeTransmit(device, false);
-            Assert.AreEqual(managed, native);
+            device.Open();
+            try
+            {
+                var queue = GetSendQueue();
+                var managed = queue.ManagedTransmit(device, false);
+                var native = queue.NativeTransmit(device, false);
+                Assert.AreEqual(managed, native);
+            }
+            finally
+            {
+                device.Close();
+            }
         }
 
         [Test]
@@ -106,8 +115,7 @@ namespace Test
             packet.Type = (EthernetType)0x1234;
             for (var i = 0; i < PacketCount; i++)
             {
-                var time = i * DeltaTicks * 1e6 / TicksPerSecond;
-                Assert.IsTrue(queue.Add(packet.Bytes, 123456, (int)time));
+                Assert.IsTrue(queue.Add(packet.Bytes, 123456, i * DeltaMs * 1000));
             }
             return queue;
         }
