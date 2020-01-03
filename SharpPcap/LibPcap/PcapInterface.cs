@@ -163,7 +163,7 @@ namespace SharpPcap.LibPcap
                     {
                         m_macAddress = newAddress;
                     }
-                    else
+                    else if (!MacAddress.Equals(newAddress.Addr.hardwareAddress))
                     {
                         throw new InvalidOperationException("found multiple hardware addresses, existing addr "
                                                                    + MacAddress.ToString() + ", new address " + newAddress.Addr.hardwareAddress.ToString());
