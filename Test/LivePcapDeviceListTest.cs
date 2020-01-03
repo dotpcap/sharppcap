@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test
 {
@@ -11,16 +10,16 @@ namespace Test
         [Test]
         public void AllDevicesTest()
         {
-            if(LivePcapDeviceList.Instance.Count == 0)
+            if(LibPcapLiveDeviceList.Instance.Count == 0)
             {
-                throw new System.InvalidOperationException("No pcap supported devices found, are you running" +
+                throw new InvalidOperationException("No pcap supported devices found, are you running" +
                                                            " as a user with access to adapters (root on Linux)?");
             } else
             {
-                Console.WriteLine("Found {0} devices", LivePcapDeviceList.Instance.Count);
+                Console.WriteLine("Found {0} devices", LibPcapLiveDeviceList.Instance.Count);
             }
 
-            foreach(LivePcapDevice d in LivePcapDeviceList.Instance)
+            foreach(var d in LibPcapLiveDeviceList.Instance)
             {
                 Console.WriteLine(d.ToString());
             }
