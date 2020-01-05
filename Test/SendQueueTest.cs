@@ -21,21 +21,33 @@ namespace Test
         [Test]
         public void TestNativeTransmitNormal()
         {
-            var received = RunCapture(Filter, (device) =>
+            if (SendQueue.IsHardwareAccelerated)
             {
-                GetSendQueue().NativeTransmit(device, false);
-            });
-            AssertGoodTransmitNormal(received);
+                var received = RunCapture(Filter, (device) =>
+                {
+                    GetSendQueue().NativeTransmit(device, false);
+                });
+                AssertGoodTransmitNormal(received);
+            } else
+            {
+                Assert.Ignore("Skipping test as no hardware acceleration is present");
+            }
         }
 
         [Test]
         public void TestNativeTransmitSync()
         {
-            var received = RunCapture(Filter, (device) =>
+            if (SendQueue.IsHardwareAccelerated)
             {
-                GetSendQueue().NativeTransmit(device, true);
-            });
-            AssertGoodTransmitSync(received);
+                var received = RunCapture(Filter, (device) =>
+                {
+                    GetSendQueue().NativeTransmit(device, true);
+                });
+                AssertGoodTransmitSync(received);
+            } else
+            {
+                Assert.Ignore("Skipping test as no hardware acceleration is present");
+            }
         }
 
         [Test]
@@ -80,18 +92,24 @@ namespace Test
         [Test]
         public void TestReturnValue()
         {
-            var device = GetPcapDevice();
-            device.Open();
-            try
+            if (SendQueue.IsHardwareAccelerated)
             {
-                var queue = GetSendQueue();
-                var managed = queue.ManagedTransmit(device, false);
-                var native = queue.NativeTransmit(device, false);
-                Assert.AreEqual(managed, native);
-            }
-            finally
+                var device = GetPcapDevice();
+                device.Open();
+                try
+                {
+                    var queue = GetSendQueue();
+                    var managed = queue.ManagedTransmit(device, false);
+                    var native = queue.NativeTransmit(device, false);
+                    Assert.AreEqual(managed, native);
+                }
+                finally
+                {
+                    device.Close();
+                }
+            } else
             {
-                device.Close();
+                Assert.Ignore("Skipping test as no hardware acceleration is present");
             }
         }
 
