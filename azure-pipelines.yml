@@ -19,7 +19,7 @@ jobs:
       sudo apt-get install -y libpcap-dev
   - script: |
       set -e
-      sudo dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
+      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
@@ -42,7 +42,7 @@ jobs:
   - script: |
       sudo sysctl -w net.inet.udp.maxdgram=65535
       set -e
-      sudo dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
+      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
@@ -63,7 +63,7 @@ jobs:
   - script: choco install -y winpcap
     displayName: 'Install WinPcap'
   - script: |
-      dotnet test Test/Test.csproj --configuration $(buildConfiguration) --logger trx --collect "Code coverage" --filter TestCategory!=Performance
+      dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --collect "Code coverage" --filter TestCategory!=Performance
     displayName: 'Build and test'
   - task: PublishTestResults@2
     condition: succeededOrFailed()
