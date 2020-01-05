@@ -23,3 +23,10 @@ Note that packet dissection and creation was split from SharpPcap some years ago
 
 # Examples
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of examples using SharpPcap
+
+# CI support
+We have support for a number of CI systems for a few reasons:
+
+* Diversity of CI systems in case one of them shuts down
+* Examples in case you'd like to customize SharpPcap and make use of one of these CI systems for internal builds. Note that we assume you are following the license for the library.
+
