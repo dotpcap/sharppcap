@@ -65,8 +65,8 @@ namespace SharpPcap.Npcap
                 if ((IsOnPacketArrivalNull == true) && (OnPcapStatistics == null))
                     throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival or OnPcapStatistics, no where for captured packets to go.");
 
-                shouldCaptureThreadStop = false;
-                captureThread = new Thread(new ThreadStart(this.CaptureThread));
+                var cancellationToken = threadCancellationTokenSource.Token;
+                captureThread = new Thread(() => this.CaptureThread(cancellationToken));
                 captureThread.Start();
             }
         }
