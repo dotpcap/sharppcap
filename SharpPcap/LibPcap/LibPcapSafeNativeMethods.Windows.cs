@@ -244,6 +244,14 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_activate(IntPtr /* pcap_t* */ p);
 
+        /// <summary>
+        /// Force a pcap_dispatch() or pcap_loop() call to return
+        /// </summary>
+        /// <param name="p">A <see cref="IntPtr"/></param>
+        /// <returns>Returns 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error. A non-zero return value indicates what warning or error condition occurred.</returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_breakloop(IntPtr /* pcap_t* */ p);
+
         #region libpcap specific
         /// <summary>
         /// Returns the file descriptor number from which captured packets are read,

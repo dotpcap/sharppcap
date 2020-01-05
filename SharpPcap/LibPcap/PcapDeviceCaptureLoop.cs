@@ -198,6 +198,7 @@ namespace SharpPcap.LibPcap
             if (Started)
             {
                 shouldCaptureThreadStop = true;
+                LibPcapSafeNativeMethods.pcap_breakloop(PcapHandle);
                 if (!captureThread.Join(StopCaptureTimeout))
                 {
                     captureThread.Abort();

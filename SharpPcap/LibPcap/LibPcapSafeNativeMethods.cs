@@ -345,6 +345,16 @@ namespace SharpPcap.LibPcap
             return UseWindows ? Windows.pcap_activate(p) : Unix.pcap_activate(p);
         }
 
+        /// <summary>
+        /// Force a pcap_dispatch() or pcap_loop() call to return
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        internal static int pcap_breakloop(IntPtr /* pcap_t_* */ p)
+        {
+            return UseWindows ? Windows.pcap_breakloop(p) : Unix.pcap_breakloop(p);
+        }
+
         #region libpcap specific
         /// <summary>
         /// Returns the file descriptor number from which captured packets are read,
