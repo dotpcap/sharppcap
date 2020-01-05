@@ -1,5 +1,6 @@
 [![NuGet Version](https://img.shields.io/nuget/v/SharpPcap.svg?style=flat-square&label=NuGet&logo=nuget)](https://www.nuget.org/packages/SharpPcap/)
 [![AppVeyor CI builds](https://img.shields.io/appveyor/ci/chmorgan/sharppcap/master.svg?style=flat-square&label=AppVeyor&logo=appveyor)](https://ci.appveyor.com/project/chmorgan/sharppcap/branch/master)
+[![Build Status](https://dev.azure.com/chmorgan/chmorgan/_apis/build/status/chmorgan.sharppcap?branchName=master)](https://dev.azure.com/chmorgan/chmorgan/_build/latest?definitionId=1&branchName=master)
 
 # sharppcap
 Fully managed, cross platform (Windows, Mac, Linux) .NET library for capturing packets from live and file based devices
