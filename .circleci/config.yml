@@ -1,0 +1,35 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.3.0
+
+jobs:
+  build:
+    executor:
+      name: win/default
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: dotnet build -c Release
+
+  test-ubuntu:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Install
+          command: sudo bash .circleci/install.sh
+      - run:
+          name: Test
+          command: sudo dotnet test --test-adapter-path:. --logger:junit -f netcoreapp2.1
+      - store_test_results:
+          path: Test/TestResults
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - test-ubuntu
