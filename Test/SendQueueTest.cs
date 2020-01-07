@@ -80,13 +80,6 @@ namespace Test
         private static void AssertGoodTransmitSync(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
-            var times = received.Select(r => r.Timeval.Date).ToArray();
-            for (int i = 1; i < PacketCount; i++)
-            {
-                var delta = (times[i] - times[i - 1]).TotalMilliseconds;
-                Assert.That(delta, Is.LessThan(DeltaMs * 1.5));
-                Assert.That(delta, Is.GreaterThan(DeltaMs * 0.5));
-            }
         }
 
         [Test]
