@@ -11,6 +11,7 @@ using static System.TimeSpan;
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     public class SendPacketTest
     {
         private const string Filter = "ether proto 0x1234";
