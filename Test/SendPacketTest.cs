@@ -23,8 +23,10 @@ namespace Test
             packet.Type = (EthernetType)0x1234;
             var received = RunCapture(Filter, (device) =>
             {
-
                 device.SendPacket(packet);
+                // Test hack: MacOS 10.15, delay of 1000ms causes this test to pass on cmorgan's 2019 macbook pro,
+                // 500ms does not
+                System.Threading.Thread.Sleep(1000);
             });
             Assert.That(received, Has.Count.EqualTo(1));
             CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);

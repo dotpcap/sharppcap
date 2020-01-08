@@ -56,6 +56,10 @@ namespace Test
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, false);
+
+                // Test hack: MacOS 10.15, delay of 1000ms causes this test to pass on cmorgan's 2019 macbook pro,
+                // delay of 500ms does not
+                System.Threading.Thread.Sleep(1000);
             });
             AssertGoodTransmitNormal(received);
         }
@@ -66,6 +70,10 @@ namespace Test
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, true);
+
+                // Test hack: MacOS 10.15, delay of 2000ms causes this test to pass on cmorgan's 2019 macbook pro,
+                // delay of 1500ms does not
+                System.Threading.Thread.Sleep(2000);
             });
             AssertGoodTransmitSync(received);
         }
