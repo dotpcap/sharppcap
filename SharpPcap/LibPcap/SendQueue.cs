@@ -152,9 +152,11 @@ namespace SharpPcap.LibPcap
                     if (synchronized)
                     {
                         var timestamp = TimeSpan.FromTicks(header.Date.Ticks);
-                        while (sw.Elapsed < timestamp - firstTimestamp)
+                        var remainingTime = timestamp.Subtract(firstTimestamp);
+                        while (sw.Elapsed < remainingTime)
                         {
                             // Wait for packet time
+                            System.Threading.Thread.Sleep((int)remainingTime.TotalMilliseconds / 2);
                         }
                     }
                     // Send the packet
