@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
+using NUnit.Framework;
 
 namespace Test
 {
@@ -94,6 +95,21 @@ namespace Test
                 device.Close();
             }
             return received;
+        }
+
+        internal static void ConfirmIdleState()
+        {
+            var devices = LibPcapLiveDeviceList.Instance;
+            foreach (var d in devices)
+            {
+                var isOpened = d.Opened;
+                var isStarted = d.Started;
+                if (isStarted) d.StopCapture();
+                if (isOpened) d.Close();
+
+                Assert.IsFalse(isOpened, "Expected device to not to be Opened");
+                Assert.IsFalse(isStarted, "Expected device to not be Started");
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using NUnit.Framework;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test
 {
@@ -114,6 +115,18 @@ namespace Test
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
         {
 
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestHelper.ConfirmIdleState();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestHelper.ConfirmIdleState();
         }
     }
 }
