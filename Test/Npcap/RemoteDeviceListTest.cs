@@ -9,6 +9,8 @@ namespace Test.Npcap
     public class RemoteDeviceListTest
     {
         [Test]
+        [Category("RemotePcap")]
+        [Platform("Win")]
         public void RemoteTest()
         {
             var noAuthenticationParameter = "-n";
