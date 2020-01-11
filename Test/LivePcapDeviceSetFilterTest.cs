@@ -50,5 +50,17 @@ namespace Test
 
             Assert.IsTrue(caughtExpectedException, "Did not catch the expected PcapDeviceNotReadyException");
         }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestHelper.ConfirmIdleState();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestHelper.ConfirmIdleState();
+        }
     }
 }

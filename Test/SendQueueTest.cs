@@ -161,6 +161,18 @@ namespace Test
                 return base.ManagedTransmit(device, synchronized);
             }
         }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestHelper.ConfirmIdleState();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestHelper.ConfirmIdleState();
+        }
     }
 
 

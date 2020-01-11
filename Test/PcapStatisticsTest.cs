@@ -119,5 +119,17 @@ namespace Test
             // ensure that we caught an exception
             Assert.IsTrue(caughtException, "Did not catch PcapDeviceNotReadyException");
         }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestHelper.ConfirmIdleState();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestHelper.ConfirmIdleState();
+        }
     }
 }

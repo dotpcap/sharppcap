@@ -32,5 +32,17 @@ namespace Test
             Assert.That(received, Has.Count.EqualTo(1));
             CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);
         }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestHelper.ConfirmIdleState();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestHelper.ConfirmIdleState();
+        }
     }
 }
