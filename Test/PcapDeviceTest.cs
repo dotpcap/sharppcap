@@ -51,11 +51,15 @@ namespace Test
                                                            " as a user with access to adapters (root on Linux)?");
             }
 
+            Assert.IsFalse(devices[0].Started, "Expected device not to be Started");
+
             devices[0].Open();
             devices[0].OnPacketArrival += HandleOnPacketArrival;
 
             // start background capture
             devices[0].StartCapture();
+
+            Assert.IsTrue(devices[0].Started, "Expected device to be Started");
 
             // attempt to get the next packet via GetNextPacket()
             // to ensure that we get the exception we expect
