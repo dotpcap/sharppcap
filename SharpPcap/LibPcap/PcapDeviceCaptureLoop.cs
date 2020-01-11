@@ -201,7 +201,15 @@ namespace SharpPcap.LibPcap
                 LibPcapSafeNativeMethods.pcap_breakloop(PcapHandle);
                 if (!captureThread.Join(StopCaptureTimeout))
                 {
-                    captureThread.Abort();
+                    try
+                    {
+                        captureThread.Abort();
+                    } catch(PlatformNotSupportedException)
+                    {
+                        // ignore exception, .net platforms lack support for Thread.Abort() and aborting threads
+                        // is a hack
+                    }
+
                     captureThread = null;
                     string error;
 
