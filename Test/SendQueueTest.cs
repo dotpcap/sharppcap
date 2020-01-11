@@ -12,6 +12,7 @@ namespace Test
 {
     [TestFixture]
     [NonParallelizable]
+    [Category("SendPacket")]
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
