@@ -6,6 +6,7 @@ using SharpPcap.LibPcap;
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     public class LivePcapDeviceSetFilterTest
     {
         [Test]
