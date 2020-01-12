@@ -24,6 +24,7 @@ using SharpPcap;
 namespace Test.Npcap
 {
     [TestFixture]
+    [NonParallelizable]
     public class NpcapDeviceTest
     {
         /// <summary>
