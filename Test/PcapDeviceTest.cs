@@ -107,9 +107,9 @@ namespace Test
                 caughtExpectedException = true;
             }
 
-            Assert.IsTrue(caughtExpectedException);
-
             devices[0].Close();
+
+            Assert.IsTrue(caughtExpectedException);
         }
 
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
