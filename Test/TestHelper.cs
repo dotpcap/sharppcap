@@ -45,13 +45,16 @@ namespace Test
                 {
                     device.Open();
                     link = device.LinkType;
-                    device.Close();
                 }
                 catch (PcapException ex)
                 {
                     Console.WriteLine(ex);
                     continue;
+                } finally
+                {
+                    if (device.Opened) device.Close();
                 }
+
                 if (link == LinkLayers.Ethernet)
                 {
                     return device;
