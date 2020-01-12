@@ -44,6 +44,8 @@ namespace Test
             capturedPackets = 0;
             device.Capture(expectedPackets);
 
+            device.Close();
+
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
 
