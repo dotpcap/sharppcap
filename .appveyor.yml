@@ -6,7 +6,7 @@ skip_branch_with_pr: true
 image:
   - Visual Studio 2017
   - Visual Studio 2019
-  - Ubuntu1604
+  - Ubuntu1804
   - macos
 
 for:
@@ -36,7 +36,7 @@ for:
 -
   matrix:
     only:
-      - image: Ubuntu1604
+      - image: Ubuntu1804
   install:
     - sudo apt-get -qy install libpcap-dev
   test_script:
