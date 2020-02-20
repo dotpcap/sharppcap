@@ -50,7 +50,8 @@ namespace Test
                 {
                     Console.WriteLine(ex);
                     continue;
-                } finally
+                }
+                finally
                 {
                     if (device.Opened) device.Close();
                 }
@@ -79,22 +80,25 @@ namespace Test
             }
             Console.WriteLine($"Using device {device}");
             var received = new List<RawCapture>();
-            device.Open();
+            device.Open(DeviceMode.Normal, 1);
             device.Filter = filter;
-            void OnPacketArrival(object sender, CaptureEventArgs e)
-            {
-                received.Add(e.Packet);
-            }
-            device.OnPacketArrival += OnPacketArrival;
-            device.StartCapture();
             try
             {
                 routine(device);
+                // waiting for any queued packets to be sent
+                Thread.Sleep(10);
+                while (true)
+                {
+                    var packet = device.GetNextPacket();
+                    if (packet == null)
+                    {
+                        break;
+                    }
+                    received.Add(packet);
+                }
             }
             finally
             {
-                device.StopCapture();
-                device.OnPacketArrival -= OnPacketArrival;
                 device.Close();
             }
             return received;

@@ -42,6 +42,7 @@ namespace Test
         /// Test that the proper exception is thrown if a user tries to
         /// call GetNextPacket() while a capture loop is running.
         /// </summary>
+        [NonParallelizable]
         [Test]
         public void GetNextPacketExceptionIfCaptureLoopRunning()
         {
