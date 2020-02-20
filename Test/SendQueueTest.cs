@@ -20,7 +20,6 @@ namespace Test
         private static readonly int DeltaMs = 10;
 
         [Test]
-        [Ignore("Not sure why test fails")]
         public void TestNativeTransmitNormal()
         {
             if (SendQueue.IsHardwareAccelerated)
@@ -37,7 +36,6 @@ namespace Test
         }
 
         [Test]
-        [Ignore("Not sure why test fails")]
         public void TestNativeTransmitSync()
         {
             if (SendQueue.IsHardwareAccelerated)
@@ -54,31 +52,21 @@ namespace Test
         }
 
         [Test]
-        [Ignore("Not sure why test fails")]
         public void TestManagedTransmitNormal()
         {
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, false);
-
-                // Test hack: MacOS 10.15, delay of 1000ms causes this test to pass on cmorgan's 2019 macbook pro,
-                // delay of 500ms does not
-                System.Threading.Thread.Sleep(1000);
             });
             AssertGoodTransmitNormal(received);
         }
 
         [Test]
-        [Ignore("Not sure why test fails")]
         public void TestManagedTransmitSync()
         {
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, true);
-
-                // Test hack: MacOS 10.15, delay of 2000ms causes this test to pass on cmorgan's 2019 macbook pro,
-                // delay of 1500ms does not
-                System.Threading.Thread.Sleep(2000);
             });
             AssertGoodTransmitSync(received);
         }
@@ -96,7 +84,6 @@ namespace Test
         }
 
         [Test]
-        [Ignore("Not sure why test fails")]
         public void TestReturnValue()
         {
             if (SendQueue.IsHardwareAccelerated)

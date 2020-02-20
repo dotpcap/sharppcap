@@ -10,5 +10,5 @@ fi
 # Test on linux
 if [ "$TRAVIS_OS_NAME" = "linux" ]
 then
-    sudo dotnet test -f netcoreapp2.1
+    sudo dotnet test -f netcoreapp2.1 --filter TestCategory!=SendPacket
 fi

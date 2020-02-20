@@ -29,7 +29,7 @@ jobs:
       sudo apt-get install -y libpcap-dev
   - script: |
       set -e
-      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
+      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter "TestCategory!=Performance&TestCategory!=SendPacket"
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
