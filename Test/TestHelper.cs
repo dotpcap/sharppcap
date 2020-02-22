@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Test
 {
@@ -50,7 +51,8 @@ namespace Test
                 {
                     Console.WriteLine(ex);
                     continue;
-                } finally
+                }
+                finally
                 {
                     if (device.Opened) device.Close();
                 }
@@ -109,9 +111,13 @@ namespace Test
                 var isStarted = d.Started;
                 if (isStarted) d.StopCapture();
                 if (isOpened) d.Close();
-
-                Assert.IsFalse(isOpened, "Expected device to not to be Opened");
-                Assert.IsFalse(isStarted, "Expected device to not be Started");
+                var status = TestContext.CurrentContext.Result.Outcome.Status;
+                // If test already failed, no point asserting here
+                if (status != TestStatus.Failed)
+                {
+                    Assert.IsFalse(isOpened, "Expected device to not to be Opened");
+                    Assert.IsFalse(isStarted, "Expected device to not be Started");
+                }
             }
         }
     }
