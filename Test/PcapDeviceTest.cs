@@ -21,7 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using NUnit.Framework;
 using SharpPcap;
-using SharpPcap.LibPcap;
+using static Test.TestHelper;
 
 namespace Test
 {
@@ -46,38 +46,25 @@ namespace Test
         [Test]
         public void GetNextPacketExceptionIfCaptureLoopRunning()
         {
-            var devices = LibPcapLiveDeviceList.Instance;
-            if (devices.Count == 0)
-            {
-                throw new InvalidOperationException("No pcap supported devices found, are you running" +
-                                                           " as a user with access to adapters (root on Linux)?");
-            }
+            var device = GetPcapDevice();
 
-            Assert.IsFalse(devices[0].Started, "Expected device not to be Started");
+            Assert.IsFalse(device.Started, "Expected device not to be Started");
 
-            devices[0].Open();
-            devices[0].OnPacketArrival += HandleOnPacketArrival;
+            device.Open();
+            device.OnPacketArrival += HandleOnPacketArrival;
 
             // start background capture
-            devices[0].StartCapture();
+            device.StartCapture();
 
-            Assert.IsTrue(devices[0].Started, "Expected device to be Started");
+            Assert.IsTrue(device.Started, "Expected device to be Started");
 
             // attempt to get the next packet via GetNextPacket()
             // to ensure that we get the exception we expect
-            bool caughtExpectedException = false;
-            try
-            {
-                devices[0].GetNextPacket();
-            }
-            catch (InvalidOperationDuringBackgroundCaptureException)
-            {
-                caughtExpectedException = true;
-            }
+            Assert.Throws<InvalidOperationDuringBackgroundCaptureException>(
+                () => device.GetNextPacket()
+            );
 
-            devices[0].Close();
-
-            Assert.IsTrue(caughtExpectedException);
+            device.Close();
         }
 
         /// <summary>
@@ -87,30 +74,15 @@ namespace Test
         [Test]
         public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival()
         {
-            var devices = LibPcapLiveDeviceList.Instance;
-            if (devices.Count == 0)
-            {
-                throw new InvalidOperationException("No pcap supported devices found, are you running" +
-                                                           " as a user with access to adapters (root on Linux)?");
-            }
+            var device = GetPcapDevice();
 
-            devices[0].Open();
+            device.Open();
 
-            bool caughtExpectedException = false;
+            Assert.Throws<DeviceNotReadyException>(
+                () => device.StartCapture()
+            );
 
-            try
-            {
-                // start background capture
-                devices[0].StartCapture();
-            }
-            catch (DeviceNotReadyException)
-            {
-                caughtExpectedException = true;
-            }
-
-            devices[0].Close();
-
-            Assert.IsTrue(caughtExpectedException);
+            device.Close();
         }
 
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
@@ -121,13 +93,13 @@ namespace Test
         [SetUp]
         public void SetUp()
         {
-            TestHelper.ConfirmIdleState();
+            ConfirmIdleState();
         }
 
         [TearDown]
         public void Cleanup()
         {
-            TestHelper.ConfirmIdleState();
+            ConfirmIdleState();
         }
     }
 }

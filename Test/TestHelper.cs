@@ -62,7 +62,8 @@ namespace Test
                     return device;
                 }
             }
-            return null;
+            throw new InvalidOperationException("No ethernet pcap supported devices found, are you running" +
+                                           " as a user with access to adapters (root on Linux)?");
         }
 
         /// <summary>
@@ -74,11 +75,6 @@ namespace Test
         internal static List<RawCapture> RunCapture(string filter, Action<PcapDevice> routine)
         {
             var device = GetPcapDevice();
-            if (device == null)
-            {
-                throw new InvalidOperationException("No ethernet pcap supported devices found, are you running" +
-                                                           " as a user with access to adapters (root on Linux)?");
-            }
             Console.WriteLine($"Using device {device}");
             var received = new List<RawCapture>();
             device.Open(DeviceMode.Normal, 1);
