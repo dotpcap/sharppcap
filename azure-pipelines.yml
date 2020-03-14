@@ -3,6 +3,16 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
+trigger:
+- master
+- releases/8
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - '*' # quote since "*" is a YAML reserved character
+
 jobs:
 - job: Linux
 
