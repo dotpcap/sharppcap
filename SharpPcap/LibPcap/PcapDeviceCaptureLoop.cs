@@ -198,6 +198,7 @@ namespace SharpPcap.LibPcap
             if (Started)
             {
                 threadCancellationTokenSource.Cancel();
+                threadCancellationTokenSource = new CancellationTokenSource();
                 LibPcapSafeNativeMethods.pcap_breakloop(PcapHandle);
                 if (!captureThread.Join(StopCaptureTimeout))
                 {
@@ -209,26 +210,7 @@ namespace SharpPcap.LibPcap
                         // ignore exception, .net platforms lack support for Thread.Abort() and aborting threads
                         // is a hack
                     }
-
-                    captureThread = null;
-                    string error;
-
-                    if (isLibPcap && !MonoUnixFound)
-                    {
-                        error = string.Format("captureThread was aborted after {0}. Using a Mono" +
-                                              " version >= 2.4 and installing Mono.Posix should" +
-                                              " enable smooth thread shutdown",
-                                              StopCaptureTimeout.ToString());
-                    }
-                    else
-                    {
-                        error = string.Format("captureThread was aborted after {0}",
-                                              StopCaptureTimeout.ToString());
-                    }
-
-                    throw new PcapException(error);
                 }
-
                 captureThread = null; // otherwise we will always return true from PcapDevice.Started
             }
         }
