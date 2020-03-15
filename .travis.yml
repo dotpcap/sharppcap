@@ -4,6 +4,9 @@ dotnet: 2.1.502
 matrix:
     include:
         - os: linux
+          arch: amd64
+        - os: linux
+          arch: arm64
         - os: osx
 
 install: bash .config/travis/install.sh
