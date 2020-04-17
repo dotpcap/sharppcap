@@ -33,3 +33,6 @@ We have support for a number of CI systems for a few reasons:
 * Diversity of CI systems in case one of them shuts down
 * Examples in case you'd like to customize SharpPcap and make use of one of these CI systems for internal builds. Note that we assume you are following the license for the library.
 
+# Releases
+SharpPcap is released via nuget
+
