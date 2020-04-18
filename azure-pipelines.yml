@@ -5,7 +5,6 @@
 
 trigger:
 - master
-- releases/8
 
 pr:
   autoCancel: true
@@ -14,69 +13,28 @@ pr:
     - '*' # quote since "*" is a YAML reserved character
 
 jobs:
-- job: Linux
-
+- job: linux
   pool:
     vmImage: 'ubuntu-18.04'
-
-  variables:
-    solution: '**/*.sln'
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-
   steps:
-  - script: |
-      sudo apt-get install -y libpcap-dev
-  - script: |
-      set -e
-      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter "TestCategory!=Performance&TestCategory!=SendPacket"
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
+  - script: sudo apt-get install -y libpcap-dev
+  - script: sudo dotnet test --logger trx -p:CollectCoverage=true --filter "TestCategory!=Performance&TestCategory!=SendPacket"
+  - script: bash <(curl -s https://codecov.io/bash) -F linux
 
-- job: macOS
-
+- job: macos
   pool:
     vmImage: 'macOS-10.14'
-
-  variables:
-    solution: '**/*.sln'
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-
   steps:
-  - script: |
-      brew install libpcap
-  - script: |
-      sudo sysctl -w net.inet.udp.maxdgram=65535
-      set -e
-      sudo dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --filter TestCategory!=Performance
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
+  - script: brew install libpcap
+  - script: sudo sysctl -w net.inet.udp.maxdgram=65535
+  - script: sudo dotnet test --logger trx -p:CollectCoverage=true --filter TestCategory!=Performance
+  - script: bash <(curl -s https://codecov.io/bash) -F macos
 
-- job: Windows
-
+- job: windows
   pool:
     vmImage: 'VS2017-Win2016'
-
-  variables:
-    solution: '**/*.sln'
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-
   steps:
   - script: choco install -y winpcap
-    displayName: 'Install WinPcap'
-  - script: |
-      dotnet test -f netcoreapp2.1 Test/Test.csproj --configuration $(buildConfiguration) --logger trx --collect "Code coverage" --filter TestCategory!=Performance
-    displayName: 'Build and test'
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
+  - script: choco install -y codecov
+  - script: dotnet test --logger trx -p:CollectCoverage=true --filter TestCategory!=Performance
+  - script: codecov -f **\*.opencover.xml --flag windows

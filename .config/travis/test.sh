@@ -4,11 +4,13 @@ set -e
 # Test on osx
 if [ "$TRAVIS_OS_NAME" = "osx" ]
 then
-    sudo dotnet test -f netcoreapp2.1
+    sudo dotnet test -p:CollectCoverage=true
 fi
 
 # Test on linux
 if [ "$TRAVIS_OS_NAME" = "linux" ]
 then
-    sudo dotnet test -f netcoreapp2.1 --filter TestCategory!=SendPacket
+    sudo dotnet test -p:CollectCoverage=true --filter TestCategory!=SendPacket
 fi
+
+bash <(curl -s https://codecov.io/bash)
