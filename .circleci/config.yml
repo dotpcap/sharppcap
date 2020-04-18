@@ -23,7 +23,10 @@ jobs:
           command: sudo bash .circleci/install.sh
       - run:
           name: Test
-          command: sudo dotnet test --test-adapter-path:. --logger:junit -f netcoreapp2.1 --filter TestCategory!=SendPacket
+          command: sudo dotnet test --test-adapter-path:. --logger:junit -p:CollectCoverage=true --filter TestCategory!=SendPacket
+      - run:
+          name: Coverage
+          command: bash <(curl -s https://codecov.io/bash)
       - store_test_results:
           path: Test/TestResults
 
