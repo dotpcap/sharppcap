@@ -44,9 +44,11 @@ namespace Test
         /// </summary>
         [NonParallelizable]
         [Test]
-        public void GetNextPacketExceptionIfCaptureLoopRunning()
+        public void GetNextPacketExceptionIfCaptureLoopRunning(
+            [CaptureDevices] DeviceFixture fixture
+        )
         {
-            var device = GetPcapDevice();
+            var device = fixture.GetDevice();
 
             Assert.IsFalse(device.Started, "Expected device not to be Started");
 
@@ -72,10 +74,11 @@ namespace Test
         /// there hasn't been any delegates assigned to PcapDevice.OnPacketArrival
         /// </summary>
         [Test]
-        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival()
+        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival(
+           [CaptureDevices] DeviceFixture fixture
+        )
         {
-            var device = GetPcapDevice();
-
+            var device = fixture.GetDevice();
             device.Open();
 
             Assert.Throws<DeviceNotReadyException>(

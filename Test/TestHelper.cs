@@ -103,7 +103,7 @@ namespace Test
 
         internal static void ConfirmIdleState()
         {
-            var devices = LibPcapLiveDeviceList.Instance;
+            var devices = DeviceFixture.GetDevices().OfType<PcapDevice>();
             foreach (var d in devices)
             {
                 var isOpened = d.Opened;

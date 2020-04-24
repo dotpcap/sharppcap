@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
+using PacketDotNet;
 using SharpPcap;
-using SharpPcap.LibPcap;
 
 namespace Test
 {
@@ -10,18 +11,25 @@ namespace Test
     public class LivePcapDeviceSetFilterTest
     {
         [Test]
-        public void SimpleFilter()
+        public void SimpleFilter([CaptureDevices] DeviceFixture fixture)
         {
-            var devices = LibPcapLiveDeviceList.Instance;
-            if (devices.Count == 0)
+            // BPF is known to support those link layers, 
+            // support for other link layers such as NFLOG and USB is unknown
+            var supportedLinks = new[]
             {
-                throw new InvalidOperationException("No pcap supported devices found, are you running" +
-                                                           " as a user with access to adapters (root on Linux)?");
+                LinkLayers.Ethernet,
+                LinkLayers.Raw,
+                LinkLayers.Null
+            };
+            var device = fixture.GetDevice();
+            device.Open();
+            if (!supportedLinks.Contains(device.LinkType))
+            {
+                device.Close();
+                Assert.Inconclusive("NFLOG link-layer not supported");
             }
-
-            devices[0].Open();
-            devices[0].Filter = "tcp port 80";
-            devices[0].Close(); // close the device
+            device.Filter = "tcp port 80";
+            device.Close(); // close the device
         }
 
         /// <summary>
@@ -29,26 +37,13 @@ namespace Test
         /// is called on a PcapDevice that has not been opened
         /// </summary>
         [Test]
-        public void SetFilterExceptionIfDeviceIsClosed()
+        public void SetFilterExceptionIfDeviceIsClosed([CaptureDevices] DeviceFixture fixture)
         {
-            var devices = LibPcapLiveDeviceList.Instance;
-            if (devices.Count == 0)
-            {
-                throw new InvalidOperationException("No pcap supported devices found, are you running" +
-                                                           " as a user with access to adapters (root on Linux)?");
-            }
-
-            bool caughtExpectedException = false;
-            try
-            {
-                devices[0].Filter = "tcp port 80";
-            }
-            catch (DeviceNotReadyException)
-            {
-                caughtExpectedException = true;
-            }
-
-            Assert.IsTrue(caughtExpectedException, "Did not catch the expected PcapDeviceNotReadyException");
+            var device = fixture.GetDevice();
+            Assert.Throws<DeviceNotReadyException>(
+                () => device.Filter = "tcp port 80",
+                "Did not catch the expected DeviceNotReadyException"
+            );
         }
 
         [SetUp]
