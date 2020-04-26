@@ -1,10 +1,10 @@
-[![NuGet Version](https://img.shields.io/nuget/v/SharpPcap.svg?style=flat-square&label=NuGet&logo=nuget)](https://www.nuget.org/packages/SharpPcap/)
-[![AppVeyor CI builds](https://img.shields.io/appveyor/ci/chmorgan/sharppcap/master.svg?style=flat-square&label=AppVeyor&logo=appveyor)](https://ci.appveyor.com/project/chmorgan/sharppcap/branch/master)
-[![Build Status](https://dev.azure.com/chmorgan/chmorgan/_apis/build/status/chmorgan.sharppcap?branchName=master)](https://dev.azure.com/chmorgan/chmorgan/_build/latest?definitionId=1&branchName=master)
-[![CircleCI](https://circleci.com/gh/chmorgan/sharppcap.svg?style=svg)](https://circleci.com/gh/chmorgan/sharppcap)
-[![Travis-CI](https://travis-ci.com/chmorgan/sharppcap.svg?branch=master)](https://travis-ci.com/chmorgan/sharppcap)
-[![codecov](https://codecov.io/gh/chmorgan/sharppcap/branch/master/graph/badge.svg)](https://codecov.io/gh/chmorgan/sharppcap)
-[![Gitter](https://badges.gitter.im/SharpPcap/community.svg)](https://gitter.im/SharpPcap/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![](https://img.shields.io/nuget/v/SharpPcap.svg?label=NuGet&logo=nuget)](https://www.nuget.org/packages/SharpPcap/)
+[![](https://img.shields.io/appveyor/ci/chmorgan/sharppcap/master.svg?label=AppVeyor&logo=appveyor)](https://ci.appveyor.com/project/chmorgan/sharppcap/branch/master)
+[![](https://dev.azure.com/chmorgan/chmorgan/_apis/build/status/chmorgan.sharppcap)](https://dev.azure.com/chmorgan/chmorgan/_build/latest?definitionId=1&branchName=master)
+[![](https://img.shields.io/circleci/build/gh/chmorgan/sharppcap?label=CircleCI&logo=circleci)](https://circleci.com/gh/chmorgan/sharppcap)
+[![](https://img.shields.io/travis/com/chmorgan/sharppcap/master?label=Travis%20CI&logo=travis)](https://travis-ci.com/chmorgan/sharppcap)
+[![](https://codecov.io/gh/chmorgan/sharppcap/branch/master/graph/badge.svg)](https://codecov.io/gh/chmorgan/sharppcap)
+[![](https://badges.gitter.im/SharpPcap/community.svg)](https://gitter.im/SharpPcap/community)
 
 # sharppcap
 Fully managed, cross platform (Windows, Mac, Linux) .NET library for capturing packets from live and file based devices
