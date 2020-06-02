@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Text;
 using System.Runtime.InteropServices;
+using SharpPcap.LibPcap;
 
 namespace SharpPcap.WinPcap
 {
@@ -97,77 +98,23 @@ namespace SharpPcap.WinPcap
                                                   int port,
                                                   RemoteAuthentication remoteAuthentication)
         {
-            // build the remote string
-            var rmStr = string.Format("rpcap://{0}:{1}",
-                                      address,
-                                      port);
-            return Devices(rmStr,
-                           remoteAuthentication);
+            var source = new IPEndPoint(address, port);
+            return BuildDeviceList(PcapInterface.GetAllPcapInterfaces(source, remoteAuthentication));
         }
 
         public static List<WinPcapDevice> Devices()
         {
-            var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
-            var result = SafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
-
-            if (result < 0)
-                throw new PcapException(errorBuffer.ToString());
-
-            var retval = BuildDeviceList(devicePtr);
-
-            LibPcap.LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
-
-            return retval;
+            return BuildDeviceList(PcapInterface.GetAllPcapInterfaces());
         }
 
-        private static List<WinPcapDevice> Devices(string rpcapString,
-                                                   RemoteAuthentication remoteAuthentication)
+        private static List<WinPcapDevice> BuildDeviceList(IReadOnlyList<PcapInterface> pcapInterfaces)
         {
-            var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
-            // convert the remote authentication structure to unmanaged memory if
-            // one was specified
-            int result;
-            IntPtr rmAuthPointer;
-            if (remoteAuthentication == null)
-                rmAuthPointer = IntPtr.Zero;
-            else
-                rmAuthPointer = remoteAuthentication.GetUnmanaged();
-
-            try
+            var deviceList = new List<WinPcapDevice>();
+            foreach (var pcap_if in pcapInterfaces)
             {
-                result = SafeNativeMethods.pcap_findalldevs_ex(rpcapString, rmAuthPointer, ref devicePtr, errorBuffer);
+                deviceList.Add(new WinPcapDevice(pcap_if));
             }
-            finally
-            {
-                // free the memory if any was allocated
-                if (rmAuthPointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(rmAuthPointer);
-            }
-
-            if (result < 0)
-                throw new PcapException(errorBuffer.ToString());
-
-            IntPtr nextDevPtr = devicePtr;
-
-            var retval = BuildDeviceList(devicePtr);
-
-            LibPcap.LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
-
-            return retval;
-        }
-
-        private static List<WinPcapDevice> BuildDeviceList(IntPtr devicePtr)
-        {
-            var retval = new List<WinPcapDevice>();
-            foreach (var pcap_if in LibPcap.PcapInterface.GetAllPcapInterfaces(devicePtr))
-            {
-                retval.Add(new WinPcapDevice(pcap_if));
-            }
-            return retval;
+            return deviceList;
         }
 
         /// <summary>

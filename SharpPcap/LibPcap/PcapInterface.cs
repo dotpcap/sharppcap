@@ -25,6 +25,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.NetworkInformation;
+using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
 {
@@ -62,6 +63,11 @@ namespace SharpPcap.LibPcap
         /// Addresses associated with this device
         /// </value>
         public List<PcapAddress> Addresses { get; internal set; }
+
+        /// <summary>
+        /// Credentials to use in case of remote pcap
+        /// </summary>
+        internal ICredentials Credentials { get; }
 
         /// <value>
         /// Pcap interface flags
@@ -114,12 +120,13 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf, NetworkInterface networkInterface)
+        internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf, NetworkInterface networkInterface, ICredentials credentials)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
             Flags = pcapIf.Flags;
             Addresses = new List<PcapAddress>();
+            Credentials = credentials;
 
             // attempt to populate the mac address, 
             // friendly name etc of this device
@@ -209,7 +216,59 @@ namespace SharpPcap.LibPcap
             return sb.ToString();
         }
 
-        static internal List<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr)
+        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IPEndPoint source, ICredentials credentials)
+        {
+            return GetAllPcapInterfaces("rpcap://" + source, credentials);
+        }
+
+        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(string source, ICredentials credentials)
+        {
+            var devicePtr = IntPtr.Zero;
+            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
+            var auth = RemotePcap.CreateAuth(source, credentials);
+
+            try
+            {
+                var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, errorBuffer);
+                if (result < 0)
+                {
+                    throw new PcapException(errorBuffer.ToString());
+                }
+            }
+            catch (TypeLoadException ex)
+            {
+                throw new PlatformNotSupportedException(
+                    "Operation is not supported on this platform.",
+                    ex
+                );
+            }
+
+            var pcapInterfaces = GetAllPcapInterfaces(devicePtr, credentials);
+
+            // Free unmanaged memory allocation
+            LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);
+
+            return pcapInterfaces;
+        }
+
+        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces()
+        {
+            var devicePtr = IntPtr.Zero;
+            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
+
+            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
+            if (result < 0)
+            {
+                throw new PcapException(errorBuffer.ToString());
+            }
+            var pcapInterfaces = GetAllPcapInterfaces(devicePtr, null);
+
+            // Free unmanaged memory allocation
+            LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);
+
+            return pcapInterfaces;
+        }
+        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, ICredentials credentials)
         {
             var list = new List<PcapInterface>();
             var nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -217,7 +276,7 @@ namespace SharpPcap.LibPcap
             while (nextDevPtr != IntPtr.Zero)
             {
                 // Marshal pointer into a struct
-                var pcap_if_unmanaged = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_if>(nextDevPtr);
+                var pcap_if_unmanaged = Marshal.PtrToStructure<pcap_if>(nextDevPtr);
                 NetworkInterface networkInterface = null;
                 foreach (var nic in nics)
                 {
@@ -228,7 +287,7 @@ namespace SharpPcap.LibPcap
                         networkInterface = nic;
                     }
                 }
-                var pcap_if = new PcapInterface(pcap_if_unmanaged, networkInterface);
+                var pcap_if = new PcapInterface(pcap_if_unmanaged, networkInterface, credentials);
                 list.Add(pcap_if);
                 nextDevPtr = pcap_if_unmanaged.Next;
             }

@@ -20,6 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Net;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap.LibPcap
@@ -307,6 +308,32 @@ namespace SharpPcap.LibPcap
             public uint bs_capt;
         }
 
+        /// <summary>
+        /// Struct to specifiy Remote Address using rpcapd, Remote Packet Capture Daemon
+        /// Declared as class instead of struct, to allow passing null value
+        /// See https://stackoverflow.com/a/47997943/1438522
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)] //Note: Pack =1 cause problems with Win 7 64b
+        public struct pcap_rmtauth
+        {
+            /// <summary>
+            /// NOTE: IntPtr used to ensure that the correct data size is used depending on
+            /// the platform being used, 32bits on a 32bit machine, 64bits on a 64bit machine
+            ///
+            /// Auth Type, 0=Null, 1= Password
+            /// </summary>
+            public IntPtr type;
+            /// <summary>
+            /// Username
+            /// </summary>
+            public string username;
+
+            /// <summary>
+            /// Password
+            /// </summary>
+            public string password;
+        }
         #endregion Unmanaged Structs Implementation
+
     }
 }

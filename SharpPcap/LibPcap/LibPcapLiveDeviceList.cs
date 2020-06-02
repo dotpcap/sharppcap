@@ -80,21 +80,11 @@ namespace SharpPcap.LibPcap
         private static List<LibPcapLiveDevice> GetDevices()
         {
             var deviceList = new List<LibPcapLiveDevice>();
-
-            var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
-
-            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
-            if (result < 0)
-                throw new PcapException(errorBuffer.ToString());
-
-            foreach (var pcap_if in PcapInterface.GetAllPcapInterfaces(devicePtr))
+            var pcapInterfaces = PcapInterface.GetAllPcapInterfaces();
+            foreach (var pcap_if in pcapInterfaces)
             {
                 deviceList.Add(new LibPcapLiveDevice(pcap_if));
             }
-
-            LibPcapSafeNativeMethods.pcap_freealldevs(devicePtr);  // Free unmanaged memory allocation.
-
             return deviceList;
         }
 

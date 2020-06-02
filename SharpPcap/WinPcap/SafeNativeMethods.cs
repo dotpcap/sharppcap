@@ -53,51 +53,6 @@ namespace SharpPcap.WinPcap
         }
 
         #region WinPcap specific
-        /// <summary>
-        /// Extended pcap_open() method that is WinPcap specific that
-        /// provides extra flags and functionality
-        /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html#g2b64c7b6490090d1d37088794f1f1791
-        /// </summary>
-        /// <param name="dev">
-        /// A <see cref="string"/>
-        /// </param>
-        /// <param name="packetLen">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="flags">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="rmtauth">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        /// <param name="errbuf">
-        /// A <see cref="StringBuilder"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="IntPtr"/>
-        /// </returns>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static IntPtr /* pcap_t* */ pcap_open(string dev,
-                                                              int packetLen,
-                                                              int flags,
-                                                              int read_timeout,
-                                                              IntPtr rmtauth,
-                                                              StringBuilder errbuf);
-
-        /// <summary>Construct a list of network devices that can be opened with pcap_open_live().</summary>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_findalldevs(ref IntPtr /*pcap_if_t ** */alldevs,
-                                                    StringBuilder /*char * */errbuf);
-
-        /// <summary>Create a list of network devices that can be opened with pcap_open().</summary>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_findalldevs_ex(string /*char **/source,
-                                                        IntPtr /*pcap_rmtauth **/auth,
-                                                        ref IntPtr /*pcap_if_t ** */alldevs,
-                                                        StringBuilder /*char * */errbuf);
 
         /// <summary>
         /// Set the working mode of the interface p to mode. 
