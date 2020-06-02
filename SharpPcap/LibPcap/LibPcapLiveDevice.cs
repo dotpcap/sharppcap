@@ -218,9 +218,25 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
 
-                PcapHandle = LibPcapSafeNativeMethods.pcap_create(
-                    Name, // name of the device
-                    errbuf); // error buffer                
+                if (Interface.Credentials == null)
+                {
+                    PcapHandle = LibPcapSafeNativeMethods.pcap_create(
+                        Name, // name of the device
+                        errbuf); // error buffer
+                }
+                else
+                {
+                    // We got authentication, so this is an rpcap device
+                    var auth = RemotePcap.CreateAuth(Name, Interface.Credentials);
+                    PcapHandle = LibPcapSafeNativeMethods.pcap_open
+                        (Name,                   // name of the device
+                            Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
+                                                    // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
+                            (short)0,               // No flags here
+                            (short)read_timeout,    // read timeout
+                            ref auth,              // authentication
+                            errbuf);               // error buffer
+                }
 
                 if (PcapHandle == IntPtr.Zero)
                 {

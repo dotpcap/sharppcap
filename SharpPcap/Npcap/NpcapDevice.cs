@@ -99,21 +99,14 @@ namespace SharpPcap.Npcap
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
-                IntPtr rmAuthPointer;
-                if (remoteAuthentication == null)
-                    rmAuthPointer = IntPtr.Zero;
-                else
-                    rmAuthPointer = remoteAuthentication.GetUnmanaged();
+                var auth = RemotePcap.CreateAuth(Name, remoteAuthentication);
 
-                PcapHandle = SafeNativeMethods.pcap_open(Name,
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
                                                          Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                          (int)flags,
                                                          readTimeoutMilliseconds,
-                                                         rmAuthPointer,
+                                                         ref auth,
                                                          errbuf);
-
-                if (rmAuthPointer != IntPtr.Zero)
-                    Marshal.FreeHGlobal(rmAuthPointer);
 
                 if (PcapHandle == IntPtr.Zero)
                 {
@@ -159,14 +152,15 @@ namespace SharpPcap.Npcap
             if (!Opened)
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
+                var auth = RemotePcap.CreateAuth(Name, Interface.Credentials);
 
-                PcapHandle = SafeNativeMethods.pcap_open
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open
                     (Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                 // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
                         (short)flags,           // one or more flags
                         (short)read_timeout,    // read timeout
-                        IntPtr.Zero,            // no authentication right now
+                        ref auth,              // no authentication right now
                         errbuf);               // error buffer
 
                 if (PcapHandle == IntPtr.Zero)

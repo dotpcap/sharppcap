@@ -50,10 +50,24 @@ namespace SharpPcap.LibPcap
         internal extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_findalldevs_ex(string /*char **/source,
+                                                        ref pcap_rmtauth /*pcap_rmtauth **/auth,
+                                                        ref IntPtr /*pcap_if_t ** */alldevs,
+                                                        StringBuilder /*char * */errbuf);
+
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_create(string dev, StringBuilder errbuf);
+
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_t* */ pcap_open(string dev,
+                                                              int packetLen,
+                                                              int flags,
+                                                              int read_timeout,
+                                                              ref pcap_rmtauth rmtauth,
+                                                              StringBuilder errbuf);
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_open_offline(string/*const char* */ fname, StringBuilder/* char* */ errbuf);

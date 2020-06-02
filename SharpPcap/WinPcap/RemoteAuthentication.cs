@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap.WinPcap
@@ -6,7 +7,7 @@ namespace SharpPcap.WinPcap
     /// <summary>
     /// Remote authentication type and parameters
     /// </summary>
-    public class RemoteAuthentication
+    public class RemoteAuthentication : ICredentials
     {
         /// <summary>
         /// Type of authentication
@@ -44,27 +45,10 @@ namespace SharpPcap.WinPcap
             this.Password = Password;
         }
 
-        /// <summary>
-        /// Converts this structure to an unmanaged IntPtr. Should be
-        /// freed with Marshal.FreeHGlobal(IntPtr);
-        /// </summary>
-        /// <returns>
-        /// A <see cref="IntPtr"/>
-        /// </returns>
-        internal IntPtr GetUnmanaged()
+        NetworkCredential ICredentials.GetCredential(Uri uri, string authType)
         {
-            UnmanagedStructures.pcap_rmtauth rmauth;
-            rmauth.type = (IntPtr)Type;
-            rmauth.username = Username;
-            rmauth.password = Password;
-
-            // Initialize unmanged memory to hold the struct.
-            IntPtr rmAuthPointer = Marshal.AllocHGlobal(Marshal.SizeOf(rmauth));
-
-            // marshal pcap_rmtauth
-            Marshal.StructureToPtr(rmauth, rmAuthPointer, false);
-
-            return rmAuthPointer;
+            var domain = ((int)Type).ToString();
+            return new NetworkCredential(Username, Password, domain);
         }
     }
 }

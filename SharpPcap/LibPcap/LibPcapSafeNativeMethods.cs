@@ -48,6 +48,15 @@ namespace SharpPcap.LibPcap
                 : Unix.pcap_findalldevs(ref alldevs, errbuf);
         }
 
+        internal static int pcap_findalldevs_ex(string /*char **/source,
+                                                ref pcap_rmtauth /*pcap_rmtauth **/auth,
+                                                ref IntPtr /*pcap_if_t ** */alldevs,
+                                                StringBuilder /*char * */errbuf)
+        {
+            return UseWindows ? Windows.pcap_findalldevs_ex(source, ref auth, ref alldevs, errbuf)
+                : Unix.pcap_findalldevs_ex(source, ref auth, ref alldevs, errbuf);
+        }
+
         internal static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs)
         {
             if (UseWindows)
@@ -58,6 +67,44 @@ namespace SharpPcap.LibPcap
             {
                 Unix.pcap_freealldevs(alldevs);
             }
+        }
+
+        /// <summary>
+        /// Extended pcap_open() method that is Npcap/Winpcap specific that
+        /// provides extra flags and functionality
+        /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html#g2b64c7b6490090d1d37088794f1f1791
+        /// </summary>
+        /// <param name="dev">
+        /// A <see cref="string"/>
+        /// </param>
+        /// <param name="packetLen">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <param name="flags">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <param name="rmtauth">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="errbuf">
+        /// A <see cref="StringBuilder"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="IntPtr"/>
+        /// </returns>
+        internal static IntPtr /* pcap_t* */ pcap_open(string dev,
+                                                      int packetLen,
+                                                      int flags,
+                                                      int read_timeout,
+                                                      ref pcap_rmtauth rmtauth,
+                                                      StringBuilder errbuf)
+        {
+            return UseWindows ?
+                Windows.pcap_open(dev, packetLen, flags, read_timeout, ref rmtauth, errbuf) :
+                Unix.pcap_open(dev, packetLen, flags, read_timeout, ref rmtauth, errbuf);
         }
 
         internal static IntPtr /* pcap_t* */ pcap_create(string dev, StringBuilder errbuf)
