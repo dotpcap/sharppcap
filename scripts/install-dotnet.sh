@@ -8,7 +8,4 @@ dpkg -i packages-microsoft-prod.deb
 apt-get update
 
 # Install DotNet
-apt-get install dotnet-sdk-2.2
-
-# Install Libpcap
-apt-get install -y libpcap-dev
+apt-get install -y dotnet-sdk-2.2

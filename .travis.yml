@@ -6,5 +6,5 @@ matrix:
         - os: linux
         - os: osx
 
-install: bash .config/travis/install.sh
-script: bash .config/travis/test.sh
+install: sudo -E bash scripts/install-libpcap.sh
+script: sudo -E bash scripts/test-travis.sh

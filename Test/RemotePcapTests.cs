@@ -6,21 +6,18 @@ using NUnit.Framework;
 using SharpPcap.Npcap;
 using System.Threading;
 using System.Net;
-using System.DirectoryServices.AccountManagement;
 using SharpPcap.LibPcap;
 using SharpPcap;
 
-namespace Test.Npcap
+namespace Test
 {
     [TestFixture]
     [Category("RemotePcap")]
-    [Platform("Win")]
     public class RemotePcapTests
     {
         private const string NullAuthArgs = "-n";
         private const string PwdAuthArgs = "";
-        private const string Username = "SharpPcap.Test.User";
-        private const string Password = "password";
+
         public static readonly IPEndPoint LoopbackSource = new IPEndPoint(IPAddress.Loopback, 2002);
 
         public static readonly ICredentials[] NullAuthCredentials = new ICredentials[]
@@ -61,15 +58,16 @@ namespace Test.Npcap
         /// if the test gets too long, it would be moved to its own file
         /// </summary>
         [Test]
+        [Platform("Win")]
         public void PwdAuthTest()
         {
             try
             {
-                if (!CreateTestUser())
+                if (!TestUser.Create())
                 {
                     Assert.Inconclusive("Please rerun the test as administrator.");
                 }
-                var goodCred = new RemoteAuthentication(AuthenticationTypes.Password, Username, Password);
+                var goodCred = new RemoteAuthentication(AuthenticationTypes.Password, TestUser.Username, TestUser.Password);
                 var badCred = new RemoteAuthentication(AuthenticationTypes.Password, "foo", "bar");
                 using (new RemotePcapServer(PwdAuthArgs))
                 {
@@ -103,33 +101,8 @@ namespace Test.Npcap
             }
             finally
             {
-                DeleteTestUser();
+                TestUser.Delete();
             }
-        }
-
-        private static bool CreateTestUser()
-        {
-            try
-            {
-                DeleteTestUser();
-                var ctx = new PrincipalContext(ContextType.Machine);
-                using (var user = new UserPrincipal(ctx, Username, Password, true))
-                {
-                    user.Save();
-                }
-                return true;
-            }
-            catch (PrincipalException)
-            {
-                return false;
-            }
-        }
-
-        private static void DeleteTestUser()
-        {
-            var ctx = new PrincipalContext(ContextType.Machine);
-            var user = UserPrincipal.FindByIdentity(ctx, Username);
-            user?.Delete();
         }
 
     }
@@ -162,7 +135,8 @@ namespace Test.Npcap
             var binFile = new[]
             {
                 @"C:\Program Files (x86)\WinPcap\rpcapd.exe",
-                @"C:\Program Files\WinPcap\rpcapd.exe"
+                @"C:\Program Files\WinPcap\rpcapd.exe",
+                "/usr/local/sbin/rpcapd"
             }.FirstOrDefault(File.Exists) ?? "rpcapd";
             process = Process.Start(new ProcessStartInfo
             {

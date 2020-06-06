@@ -9,24 +9,16 @@ jobs:
       name: win/default
     steps:
       - checkout
-      - run:
-          name: Build
-          command: dotnet build -c Release
+      - run: dotnet build -c Release
 
   test-ubuntu:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run:
-          name: Install
-          command: sudo bash .circleci/install.sh
-      - run:
-          name: Test
-          command: sudo dotnet test --test-adapter-path:. --logger:junit -p:CollectCoverage=true --filter TestCategory!=SendPacket
-      - run:
-          name: Coverage
-          command: bash <(curl -s https://codecov.io/bash)
+      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-libpcap.sh
+      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
       - store_test_results:
           path: Test/TestResults
 

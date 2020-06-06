@@ -17,24 +17,20 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - script: sudo apt-get install -y libpcap-dev
-  - script: sudo dotnet test --logger trx -p:CollectCoverage=true --filter "TestCategory!=Performance&TestCategory!=SendPacket"
-  - script: bash <(curl -s https://codecov.io/bash) -F linux
+  - script: sudo -E bash scripts/install-libpcap.sh
+  - script: sudo -E bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=SendPacket"
 
 - job: macos
   pool:
     vmImage: 'macOS-10.14'
   steps:
-  - script: brew install libpcap
+  - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
-  - script: sudo dotnet test --logger trx -p:CollectCoverage=true --filter TestCategory!=Performance
-  - script: bash <(curl -s https://codecov.io/bash) -F macos
+  - script: sudo -E bash scripts/test.sh --filter TestCategory!=Performance
 
 - job: windows
   pool:
     vmImage: 'VS2017-Win2016'
   steps:
   - script: choco install -y winpcap
-  - script: choco install -y codecov
-  - script: dotnet test --logger trx -p:CollectCoverage=true --filter TestCategory!=Performance
-  - script: codecov -f **\*.opencover.xml --flag windows
+  - script: bash scripts/test.sh --filter
