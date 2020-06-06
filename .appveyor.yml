@@ -16,44 +16,37 @@ for:
       - image: Visual Studio 2017
   install:
     - choco install -y winpcap
-    - choco install -y codecov
   build_script:
     - dotnet build -c Release
   test_script:
-    - dotnet test --test-adapter-path:. --logger:Appveyor -p:CollectCoverage=true
-    - codecov -f **\*.opencover.xml
+    - bash scripts/test.sh --filter TestCategory!=Performance
 
 -
   matrix:
     only:
       - image: Visual Studio 2019
   install:
-    - choco install -y codecov
     # an OEM installer is required for newer versions of npcap
     - choco install -y npcap --version 0.86
   build_script:
     - dotnet build -c Release
   test_script:
-    - dotnet test --test-adapter-path:. --logger:Appveyor -p:CollectCoverage=true --filter TestCategory!=RemotePcap
-    - codecov -f **\*.opencover.xml
+    - bash scripts/test.sh --filter TestCategory!=RemotePcap
 
 -
   matrix:
     only:
       - image: Ubuntu1804
   install:
-    - sudo apt-get -qy install libpcap-dev
+    - sudo -E bash scripts/install-libpcap.sh
   test_script:
-    - sudo -E dotnet test --test-adapter-path:. --logger:Appveyor -p:CollectCoverage=true --filter TestCategory!=SendPacket
-    - bash <(curl -s https://codecov.io/bash)
+    - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=SendPacket"
 
 -
   matrix:
     only:
       - image: macos
   install:
-    - brew update
-    - brew install libpcap
+    - sudo -E bash scripts/install-libpcap.sh
   test_script:
-    - sudo -E dotnet test --test-adapter-path:. --logger:Appveyor -p:CollectCoverage=true
-    - bash <(curl -s https://codecov.io/bash)
+    - sudo -E bash scripts/test.sh
