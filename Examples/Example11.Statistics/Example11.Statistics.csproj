@@ -1,56 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <AssemblyKeyContainerName />
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <OutputType>Exe</OutputType>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <FileUpgradeFlags />
-    <UpgradeBackupLocation />
     <TargetFramework>net461</TargetFramework>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <BaseAddress>285212672</BaseAddress>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <ConfigurationOverrideFile />
-    <FileAlignment>4096</FileAlignment>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <PreBuildEvent />
-    <PostBuildEvent />
-    <PreBuildEvent />
-    <PostBuildEvent />
-    <PreBuildEvent />
-    <PostBuildEvent />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent />
-    <PostBuildEvent />
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj" />
