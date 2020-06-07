@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net461</TargetFramework>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
@@ -39,15 +38,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\play_icon_enabled.png" />
@@ -60,7 +50,7 @@
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
+    <PackageReference Include="System.Resources.Extensions" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="PacketDotNet" Version="1.0.5" />
   </ItemGroup>

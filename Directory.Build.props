@@ -1,0 +1,7 @@
+<Project>
+ <PropertyGroup>
+   <Deterministic>true</Deterministic>
+   <DebugType>full</DebugType>
+   <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+ </PropertyGroup>
+</Project>
