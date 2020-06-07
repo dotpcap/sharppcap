@@ -19,8 +19,12 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using NUnit.Framework;
+using PacketDotNet;
 using SharpPcap;
+using SharpPcap.LibPcap;
 using static Test.TestHelper;
 
 namespace Test
@@ -91,6 +95,59 @@ namespace Test
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
         {
 
+        }
+
+        [Test]
+        public void ReceivePacketsWithStartCapture()
+        {
+            const int PacketsCount = 10;
+            var packets = new List<RawCapture>();
+            var statuses = new List<CaptureStoppedEventStatus>();
+            void Receiver_OnPacketArrival(object s, CaptureEventArgs e)
+            {
+                packets.Add(e.Packet);
+            }
+            void Receiver_OnCaptureStopped(object s, CaptureStoppedEventStatus status)
+            {
+                statuses.Add(status);
+            }
+            // We can't use the same device for async capturing and sending
+            var device = GetPcapDevice();
+            var receiver = new LibPcapLiveDevice(device.Interface);
+            var sender = new LibPcapLiveDevice(receiver.Interface);
+            try
+            {
+                // Configure sender
+                sender.Open();
+
+                // Configure receiver
+                receiver.Open(DeviceMode.Promiscuous);
+                receiver.Filter = "ether proto 0x1234";
+                receiver.OnPacketArrival += Receiver_OnPacketArrival;
+                receiver.OnCaptureStopped += Receiver_OnCaptureStopped;
+                receiver.StartCapture();
+
+                // Send the packets
+                var packet = EthernetPacket.RandomPacket();
+                packet.Type = (EthernetType)0x1234;
+                for (var i = 0; i < PacketsCount; i++)
+                {
+                    sender.SendPacket(packet);
+                }
+                // Wait for packets to arrive
+                Thread.Sleep(2000);
+                receiver.StopCapture();
+            }
+            finally
+            {
+                receiver.OnPacketArrival -= Receiver_OnPacketArrival;
+                sender.Close();
+                receiver.Close();
+            }
+            // Checks
+            Assert.That(packets, Has.Count.EqualTo(PacketsCount));
+            Assert.That(statuses, Has.Count.EqualTo(1));
+            Assert.AreEqual(statuses[0], CaptureStoppedEventStatus.CompletedWithoutError);
         }
 
         [SetUp]
