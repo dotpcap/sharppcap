@@ -20,6 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using PacketDotNet;
@@ -33,6 +34,31 @@ namespace Test
     [NonParallelizable]
     public class PcapDeviceTest
     {
+        [Test]
+        public void DeviceProperties([PcapDevices] DeviceFixture fixture)
+        {
+            var device = (PcapDevice)fixture.GetDevice();
+
+            device.Open();
+            var pcapIf = device.Interface;
+
+            Assert.IsTrue(device.Opened);
+
+            Assert.IsNotEmpty(device.Name);
+            Assert.AreEqual(device.Name, pcapIf.Name);
+            Assert.AreEqual(device.Description, pcapIf.Description);
+
+            Assert.IsNotNull(pcapIf.GatewayAddresses);
+            Assert.IsNotNull(pcapIf.Addresses);
+
+            if (pcapIf.MacAddress != null)
+            {
+                Assert.That(pcapIf.MacAddress.GetAddressBytes(), Has.Length.EqualTo(6));
+            }
+
+            device.Close();
+        }
+
         /// <summary>
         /// Calling PcapDevice.GetNextPacket() while a capture loop is running
         /// in another thread causes errors inside of libpcap where at some point the
