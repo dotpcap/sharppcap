@@ -79,7 +79,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public PhysicalAddress MacAddress { get; }
 
-        internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf, NetworkInterface networkInterface, ICredentials credentials)
+        internal PcapInterface(pcap_if pcapIf, NetworkInterface networkInterface, ICredentials credentials)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
@@ -105,15 +105,11 @@ namespace SharpPcap.LibPcap
             }
 
             // retrieve addresses
-            IntPtr address = pcapIf.Addresses;
+            var address = pcapIf.Addresses;
             while (address != IntPtr.Zero)
             {
-                //A sockaddr struct
-                PcapUnmanagedStructures.pcap_addr addr;
-
-                //Marshal memory pointer into a struct
-                addr = (PcapUnmanagedStructures.pcap_addr)Marshal.PtrToStructure(address,
-                                                                                 typeof(PcapUnmanagedStructures.pcap_addr));
+                // Marshal memory pointer into a sockaddr struct
+                var addr = Marshal.PtrToStructure<pcap_addr>(address);
 
                 PcapAddress newAddress = new PcapAddress(addr);
                 Addresses.Add(newAddress);

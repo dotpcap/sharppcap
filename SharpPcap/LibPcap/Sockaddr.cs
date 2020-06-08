@@ -22,6 +22,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Runtime.InteropServices;
 using System.Net.NetworkInformation;
+using System.Net;
+using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
 {
@@ -60,7 +62,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// If type == AF_INET_AF_INET6
         /// </summary>
-        public System.Net.IPAddress ipAddress;
+        public IPAddress ipAddress;
 
         /// <summary>
         /// If type == HARDWARE
@@ -87,49 +89,33 @@ namespace SharpPcap.LibPcap
 
         internal Sockaddr(IntPtr sockaddrPtr)
         {
-            // A sockaddr struct. We use this to determine the address family
-            PcapUnmanagedStructures.sockaddr saddr;
-
             // Marshal memory pointer into a struct
-            saddr = (PcapUnmanagedStructures.sockaddr)Marshal.PtrToStructure(sockaddrPtr,
-                                                     typeof(PcapUnmanagedStructures.sockaddr));
+            var saddr = Marshal.PtrToStructure<sockaddr>(sockaddrPtr);
 
             // record the sa_family for informational purposes
             sa_family = saddr.sa_family;
 
-            byte[] addressBytes;
             if (saddr.sa_family == Pcap.AF_INET)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
-                PcapUnmanagedStructures.sockaddr_in saddr_in =
-                    (PcapUnmanagedStructures.sockaddr_in)Marshal.PtrToStructure(sockaddrPtr,
-                                                                                typeof(PcapUnmanagedStructures.sockaddr_in));
-                ipAddress = new System.Net.IPAddress(saddr_in.sin_addr.s_addr);
+                var saddr_in = Marshal.PtrToStructure<sockaddr_in>(sockaddrPtr);
+                ipAddress = new IPAddress(saddr_in.sin_addr.s_addr);
             }
             else if (saddr.sa_family == Pcap.AF_INET6)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
-                addressBytes = new byte[16];
-                PcapUnmanagedStructures.sockaddr_in6 sin6 =
-                    (PcapUnmanagedStructures.sockaddr_in6)Marshal.PtrToStructure(sockaddrPtr,
-                                                         typeof(PcapUnmanagedStructures.sockaddr_in6));
-                Array.Copy(sin6.sin6_addr, addressBytes, addressBytes.Length);
-                ipAddress = new System.Net.IPAddress(addressBytes);
+                var sin6 = Marshal.PtrToStructure<sockaddr_in6>(sockaddrPtr);
+                ipAddress = new IPAddress(sin6.sin6_addr, sin6.sin6_scope_id);
             }
             else if (saddr.sa_family == Pcap.AF_PACKET)
             {
                 type = AddressTypes.HARDWARE;
 
-                PcapUnmanagedStructures.sockaddr_ll saddr_ll =
-                    (PcapUnmanagedStructures.sockaddr_ll)Marshal.PtrToStructure(sockaddrPtr,
-                                                      typeof(PcapUnmanagedStructures.sockaddr_ll));
+                var saddr_ll = Marshal.PtrToStructure<sockaddr_ll>(sockaddrPtr);
 
-                byte[] hardwareAddressBytes = new byte[saddr_ll.sll_halen];
-                for (int x = 0; x < saddr_ll.sll_halen; x++)
-                {
-                    hardwareAddressBytes[x] = saddr_ll.sll_addr[x];
-                }
-                hardwareAddress = new PhysicalAddress(hardwareAddressBytes); // copy into the PhysicalAddress class
+                var hwAddrBytes = new byte[saddr_ll.sll_halen];
+                Buffer.BlockCopy(saddr_ll.sll_addr, 0, hwAddrBytes, 0, hwAddrBytes.Length);
+                hardwareAddress = new PhysicalAddress(hwAddrBytes); // copy into the PhysicalAddress class
             }
             else
             {
