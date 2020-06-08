@@ -74,51 +74,10 @@ namespace SharpPcap.LibPcap
         /// </value>
         public uint Flags { get; internal set; }
 
-        private PcapAddress m_macAddress;
-
         /// <summary>
         /// MacAddress of the interface
         /// </summary>
-        public PhysicalAddress MacAddress
-        {
-            get
-            {
-                return m_macAddress.Addr.hardwareAddress;
-            }
-
-            internal set
-            {
-                // do we already have a hardware address for this device?
-                if (m_macAddress != null)
-                {
-#if false
-                    Console.WriteLine("Overwriting hardware address "
-                                      + m_macAddress.Addr.hardwareAddress.ToString()
-                                      + " with " +
-                                      value.ToString());
-#endif
-                    // overwrite the value with the new value
-                    m_macAddress.Addr.hardwareAddress = value;
-                }
-                else
-                {
-#if false
-                    Console.WriteLine("Creating new PcapAddress entry for this hardware address");
-#endif
-                    // create a new entry for the mac address
-                    PcapAddress newAddress = new PcapAddress
-                    {
-                        Addr = new Sockaddr(value)
-                    };
-
-                    // add the address to our addresses list
-                    Addresses.Add(newAddress);
-
-                    // m_macAddress should point to this hardware address
-                    m_macAddress = newAddress;
-                }
-            }
-        }
+        public PhysicalAddress MacAddress { get; }
 
         internal PcapInterface(PcapUnmanagedStructures.pcap_if pcapIf, NetworkInterface networkInterface, ICredentials credentials)
         {
@@ -126,6 +85,7 @@ namespace SharpPcap.LibPcap
             Description = pcapIf.Description;
             Flags = pcapIf.Flags;
             Addresses = new List<PcapAddress>();
+            GatewayAddresses = new List<IPAddress>();
             Credentials = credentials;
 
             // attempt to populate the mac address, 
@@ -136,14 +96,11 @@ namespace SharpPcap.LibPcap
                 int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
                 if (gatewayAddressCount != 0)
                 {
-                    List<IPAddress> gatewayAddresses = new List<IPAddress>();
                     foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
                     {
-                        gatewayAddresses.Add(gatewayInfo.Address);
+                        GatewayAddresses.Add(gatewayInfo.Address);
                     }
-                    GatewayAddresses = gatewayAddresses;
                 }
-                MacAddress = networkInterface.GetPhysicalAddress();
                 FriendlyName = networkInterface.Name;
             }
 
@@ -162,13 +119,12 @@ namespace SharpPcap.LibPcap
                 Addresses.Add(newAddress);
 
                 // is this a hardware address?
-                // if so we should set our internal m_macAddress member variable
-                if ((newAddress.Addr != null) &&
-                   (newAddress.Addr.type == Sockaddr.AddressTypes.HARDWARE))
+                // if so we should set our MacAddress
+                if (newAddress.Addr?.type == Sockaddr.AddressTypes.HARDWARE)
                 {
-                    if (m_macAddress == null)
+                    if (MacAddress == null)
                     {
-                        m_macAddress = newAddress;
+                        MacAddress = newAddress.Addr.hardwareAddress;
                     }
                     else if (!MacAddress.Equals(newAddress.Addr.hardwareAddress))
                     {
