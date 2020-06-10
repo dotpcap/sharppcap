@@ -5,7 +5,7 @@ using PacketDotNet;
 
 namespace ReadingCaptureFile
 {
-    class MainClass
+    public class Program
     {
         public static void Main(string[] args)
         {

@@ -7,7 +7,7 @@ namespace QueuingPacketsForBackgroundProcessing
     /// <summary>
     /// Basic capture example showing simple queueing for background processing
     /// </summary>
-    public class MainClass
+    public class Program
     {
         /// <summary>
         /// When true the background thread will terminate

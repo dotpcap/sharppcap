@@ -9,7 +9,7 @@ namespace Example10
     /// <summary>
     /// Example using the Npcap specific feature of send queues
     /// </summary>
-    public class NpcapSendQueues
+    public class Program
     {
         /// <summary>
         /// Basic capture example

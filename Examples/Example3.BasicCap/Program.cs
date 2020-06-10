@@ -8,7 +8,7 @@ namespace Example3
     /// <summary>
     /// Basic capture example
     /// </summary>
-    public class BasicCap
+    public class Program
     {
         public static void Main(string[] args)
         {

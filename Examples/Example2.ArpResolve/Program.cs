@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -36,7 +37,7 @@ namespace Example2
     /// A sample showing how to use the Address Resolution Protocol (ARP)
     /// with the SharpPcap library.
     /// </summary>
-    public class ArpTest
+    public class Program
     {
         public static void Main(string[] args)
         {
@@ -79,7 +80,7 @@ namespace Example2
             while (true)
             {
                 Console.Write("-- Please enter IP address to be resolved by ARP: ");
-                if (System.Net.IPAddress.TryParse(Console.ReadLine(), out ip))
+                if (IPAddress.TryParse(Console.ReadLine(), out ip))
                     break;
                 Console.WriteLine("Bad IP address format, please try again");
             }

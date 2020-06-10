@@ -3,7 +3,7 @@ using SharpPcap;
 
 namespace Example5
 {
-    public class PcapFilter
+    public class Program
     {
         public static void Main(string[] args)
         {

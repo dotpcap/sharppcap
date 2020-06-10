@@ -3,7 +3,7 @@ using SharpPcap;
 
 namespace Example6
 {
-    public class DumpTCP
+    public class Program
     {
         public static void Main(string[] args)
         {

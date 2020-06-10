@@ -6,7 +6,7 @@ namespace Example4
     /// <summary>
     /// Basic capture example with no callback
     /// </summary>
-    public class BasicCapNoCallback
+    public class Program
     {
         public static void Main(string[] args)
         {
