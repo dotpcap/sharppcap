@@ -7,7 +7,7 @@ namespace MultipleFiltersOnDevice
     /// <summary>
     /// Example that shows how to apply multiple filters to the same device
     /// </summary>
-    class MainClass
+    public class Program
     {
         public static void Main(string[] args)
         {

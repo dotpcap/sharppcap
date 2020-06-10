@@ -20,10 +20,11 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using PacketDotNet;
+using SharpPcap;
 
-namespace SharpPcap.Examples
+namespace WakeOnLan
 {
-    class WakeOnLanCapture
+    public class Program
     {
         /// <summary>
         /// A basic Wake-On-LAN capture example

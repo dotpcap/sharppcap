@@ -3,12 +3,12 @@ using System.Net.NetworkInformation;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Example12.PacketManipulation
+namespace Example12
 {
     /// <summary>
     /// Example showing packet manipulation
     /// </summary>
-    class PacketManipulation
+    public class Program
     {
         /// <summary>
         /// The main entry point for the application.

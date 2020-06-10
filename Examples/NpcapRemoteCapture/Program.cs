@@ -6,7 +6,7 @@ namespace NpcapRemoteCapture
     /// <summary>
     /// Example showing how to use the remote capture feature of Npcap
     /// </summary>
-    class Program
+    public class Program
     {
         private static readonly int rpcapDefaultPort = 2002;
 

@@ -6,7 +6,7 @@ using PacketDotNet;
 
 namespace CreatingCaptureFile
 {
-    class MainClass
+    public class Program
     {
         private static CaptureFileWriterDevice captureFileWriter;
 

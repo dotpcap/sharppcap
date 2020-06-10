@@ -6,7 +6,7 @@ namespace Example1
     /// <summary>
     /// Obtaining the device list
     /// </summary>
-    public class IfListAdv
+    public class Program
     {
         /// <summary>
         /// Obtaining the device list
