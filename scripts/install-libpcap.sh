@@ -23,7 +23,7 @@ git clone --depth 1 -b libpcap-1.9.1 https://github.com/the-tcpdump-group/libpca
 pushd /tmp/install-libpcap
 
 # remote is disabled by default, so we need to enable it
-./configure --enable-remote
+./configure --enable-remote --without-gcc
 
 # install the library
 make install
