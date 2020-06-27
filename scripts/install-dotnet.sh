@@ -8,4 +8,4 @@ dpkg -i packages-microsoft-prod.deb
 apt-get update
 
 # Install DotNet
-apt-get install -y dotnet-sdk-2.2
+apt-get install -y dotnet-sdk-3.1
