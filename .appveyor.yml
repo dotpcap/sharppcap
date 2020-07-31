@@ -23,6 +23,7 @@ for:
     - bash scripts/test.sh --filter TestCategory!=Performance
   deploy:
     provider: NuGet
+    server: https://www.nuget.org/api/v2/package
     on:
       branch: master
     api_key:
