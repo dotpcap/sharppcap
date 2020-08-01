@@ -28,7 +28,7 @@ for:
       branch: master
     api_key:
       secure: e/rj6hp/aV3IG+FWzVGZgwGdvyCMpRZwb5wlC0DREF3ycBhXmYcLgjgn0iUXrzcN
-    artifact: /.*(\.|\.s)nupkg/
+    artifact: /.*\.nupkg/
 
 -
   matrix:
