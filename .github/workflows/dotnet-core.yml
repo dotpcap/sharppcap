@@ -53,7 +53,7 @@ jobs:
         # TAG_FORMAT: v*
 
         # API key to authenticate with NuGet server
-        # NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
         # NuGet server uri hosting the packages, defaults to https://api.nuget.org
         # NUGET_SOURCE: https://api.nuget.org
