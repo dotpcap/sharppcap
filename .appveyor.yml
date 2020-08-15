@@ -23,8 +23,8 @@ for:
     - choco install -y winpcap
   before_build:
      - nuget restore
-#  build_script:
-#    - dotnet build -c Release
+  build_script:
+    - dotnet build -c Release
   test_script:
     - bash scripts/test.sh --filter TestCategory!=Performance
   deploy:
