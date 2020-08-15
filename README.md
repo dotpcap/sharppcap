@@ -1,4 +1,5 @@
 [![](https://img.shields.io/nuget/v/SharpPcap.svg?label=NuGet&logo=nuget)](https://www.nuget.org/packages/SharpPcap/)
+![.NET Core](https://github.com/chmorgan/sharppcap/workflows/.NET%20Core/badge.svg)
 [![](https://img.shields.io/appveyor/ci/chmorgan/sharppcap/master.svg?label=AppVeyor&logo=appveyor)](https://ci.appveyor.com/project/chmorgan/sharppcap/branch/master)
 [![](https://dev.azure.com/chmorgan/chmorgan/_apis/build/status/chmorgan.sharppcap)](https://dev.azure.com/chmorgan/chmorgan/_build/latest?definitionId=1&branchName=master)
 [![](https://img.shields.io/circleci/build/gh/chmorgan/sharppcap?label=CircleCI&logo=circleci)](https://circleci.com/gh/chmorgan/sharppcap)
