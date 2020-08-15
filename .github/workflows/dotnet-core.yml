@@ -23,11 +23,13 @@ jobs:
       run: sudo -E bash scripts/install-libpcap.sh
 #    - name: Build
 #      run: dotnet build --configuration Release --no-restore
+    - name: Build sharppcap assembly
+      run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
 #      run: dotnet test --no-restore --verbosity normal
       run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
-    - name: Create missing directory
-      run: mkdir SharpPcap/bin/Release/netstandard2.0 -p
+#    - name: Create missing directory
+#      run: mkdir SharpPcap/bin/Release/netstandard2.0 -p
     - name: publish on version change
       id: publish_nuget
       uses: rohith/publish-nuget@v2
