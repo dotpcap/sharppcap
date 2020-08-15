@@ -1,6 +1,6 @@
 
 # Disable automatic AppVeyor build logic
-#build: off
+build: off
 skip_branch_with_pr: true
 
 image:
@@ -15,17 +15,17 @@ for:
     only:
       - image: Visual Studio 2017
   configuration: Release
-  build:
-    publish_nuget: true
-    project: SharpPcap.sln
-    verbosity: minimal
+#  build:
+#    publish_nuget: true
+#    project: SharpPcap.sln
+#    verbosity: minimal
   install:
     - choco install -y dotnetcore-sdk --version=3.1.301
     - choco install -y winpcap
   before_build:
      - nuget restore
-#  build_script:
-#    - dotnet build -c Release
+  build_script:
+    - dotnet build -c Release
   test_script:
     - bash scripts/test.sh --filter TestCategory!=Performance
   deploy:
