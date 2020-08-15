@@ -1,6 +1,6 @@
 
 # Disable automatic AppVeyor build logic
-build: off
+#build: off
 skip_branch_with_pr: true
 
 image:
