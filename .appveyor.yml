@@ -19,7 +19,6 @@ for:
     - choco install -y winpcap
   build_script:
     - dotnet build -c Release
-    - nuget pack SharpPcap/SharpPcap.csproj
   test_script:
     - bash scripts/test.sh --filter TestCategory!=Performance
   deploy:
