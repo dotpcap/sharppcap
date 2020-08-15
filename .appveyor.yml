@@ -26,6 +26,7 @@ for:
 #     - nuget restore
   build_script:
     - dotnet build -c Release
+    - nuget pack
   test_script:
     - bash scripts/test.sh --filter TestCategory!=Performance
   deploy:
