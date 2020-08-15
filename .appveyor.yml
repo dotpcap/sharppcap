@@ -21,6 +21,8 @@ for:
   install:
     - choco install -y dotnetcore-sdk --version=3.1.301
     - choco install -y winpcap
+  before_build:
+     - nuget restore
 #  build_script:
 #    - dotnet build -c Release
   test_script:
