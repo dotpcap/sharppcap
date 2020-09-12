@@ -88,22 +88,6 @@ namespace SharpPcap.LibPcap
             GatewayAddresses = new List<IPAddress>();
             Credentials = credentials;
 
-            // attempt to populate the mac address, 
-            // friendly name etc of this device
-            if (networkInterface != null)
-            {
-                var ipProperties = networkInterface.GetIPProperties();
-                int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
-                if (gatewayAddressCount != 0)
-                {
-                    foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
-                    {
-                        GatewayAddresses.Add(gatewayInfo.Address);
-                    }
-                }
-                FriendlyName = networkInterface.Name;
-            }
-
             // retrieve addresses
             var address = pcapIf.Addresses;
             while (address != IntPtr.Zero)
@@ -130,6 +114,34 @@ namespace SharpPcap.LibPcap
                 }
 
                 address = addr.Next; // move to the next address
+            }
+
+            // attempt to populate the mac address,
+            // friendly name etc of this device
+            if (networkInterface != null)
+            {
+                var ipProperties = networkInterface.GetIPProperties();
+                int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
+                if (gatewayAddressCount != 0)
+                {
+                    foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
+                    {
+                        GatewayAddresses.Add(gatewayInfo.Address);
+                    }
+                }
+                FriendlyName = networkInterface.Name;
+
+                PhysicalAddress mac = networkInterface.GetPhysicalAddress();
+                if (MacAddress == null && mac != null)
+                {
+                    PcapAddress pcapAddress = new PcapAddress();
+                    pcapAddress.Addr = new Sockaddr(mac);
+                    Addresses.Add(pcapAddress);
+                    if(pcapAddress.Addr.hardwareAddress.GetAddressBytes().Length != 0)
+                    {
+                        MacAddress = pcapAddress.Addr.hardwareAddress;
+                    }
+                }
             }
         }
 
