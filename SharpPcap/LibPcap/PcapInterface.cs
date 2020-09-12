@@ -90,19 +90,6 @@ namespace SharpPcap.LibPcap
 
             // attempt to populate the mac address, 
             // friendly name etc of this device
-            if (networkInterface != null)
-            {
-                var ipProperties = networkInterface.GetIPProperties();
-                int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
-                if (gatewayAddressCount != 0)
-                {
-                    foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
-                    {
-                        GatewayAddresses.Add(gatewayInfo.Address);
-                    }
-                }
-                FriendlyName = networkInterface.Name;
-            }
 
             // retrieve addresses
             var address = pcapIf.Addresses;
@@ -131,6 +118,34 @@ namespace SharpPcap.LibPcap
 
                 address = addr.Next; // move to the next address
             }
+            
+            if (networkInterface != null)
+            {
+                var ipProperties = networkInterface.GetIPProperties();
+                int gatewayAddressCount = ipProperties.GatewayAddresses.Count;
+                if (gatewayAddressCount != 0)
+                {
+                    foreach (GatewayIPAddressInformation gatewayInfo in ipProperties.GatewayAddresses)
+                    {
+                        GatewayAddresses.Add(gatewayInfo.Address);
+                    }
+                }
+                FriendlyName = networkInterface.Name;
+
+                PhysicalAddress mac = networkInterface.GetPhysicalAddress();
+                if (MacAddress != null)
+                {
+                    MacAddress = mac;
+                }
+                else
+                {
+                    PcapAddress pcapAddress = new PcapAddress();
+                    pcapAddress.Addr = new Sockaddr(mac);
+                    Addresses.Add(pcapAddress);
+                    MacAddress = mac;
+                }
+            }
+
         }
 
         /// <summary>
