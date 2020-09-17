@@ -85,7 +85,7 @@ namespace SharpPcap.Npcap
         /// A <see cref="SendQueueTransmitModes"/>
         /// </param>
         /// <returns>
-        /// A <see cref="int"/>
+        /// The number of bytes sent as an <see cref="int"/>
         /// </returns>
         public int Transmit(NpcapDevice device, SendQueueTransmitModes transmitMode)
         {

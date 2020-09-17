@@ -111,7 +111,7 @@ namespace SharpPcap.LibPcap
         /// Should the timestamps be respected
         /// </param>
         /// <returns>
-        /// A <see cref="int"/>
+        /// The number of bytes sent as an <see cref="int"/>
         /// </returns>
         public int Transmit(PcapDevice device, bool synchronized)
         {
