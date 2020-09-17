@@ -42,7 +42,7 @@ namespace Example10
             Console.Write("Queueing packets...");
 
             //Allocate a new send queue
-            var squeue = new SendQueue
+            var squeue = new SharpPcap.LibPcap.SendQueue
                 ((int)((CaptureFileReaderDevice)device).FileSize);
             RawCapture packet;
 
@@ -124,7 +124,7 @@ namespace Example10
                 var npcapDevice = device as NpcapDevice;
 
                 Console.Write("Sending packets...");
-                int sent = npcapDevice.SendQueue(squeue, SharpPcap.Npcap.SendQueueTransmitModes.Synchronized);
+                int sent = squeue.Transmit(npcapDevice, SharpPcap.LibPcap.SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if (sent < squeue.CurrentLength)
                 {
