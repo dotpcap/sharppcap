@@ -55,7 +55,6 @@ namespace Test
             lists.Add(nameof(LibPcapLiveDeviceList), LibPcapLiveDeviceList.Instance);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                lists.Add(nameof(WinPcapDeviceList), WinPcapDeviceList.Instance);
                 lists.Add(nameof(NpcapDeviceList), NpcapDeviceList.Instance);
             }
             foreach (var list in lists)
