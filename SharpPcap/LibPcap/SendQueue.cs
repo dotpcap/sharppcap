@@ -115,6 +115,24 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int Transmit(PcapDevice device, bool synchronized)
         {
+            return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal);
+        }
+
+        /// <summary>
+        /// Send a queue of raw packets to the network.
+        /// </summary>
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="transmitMode">
+        /// Should the timestamps be respected
+        /// </param>
+        /// <returns>
+        /// The number of bytes sent as an <see cref="int"/>
+        /// </returns>
+        public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+        {
             if (buffer == null)
             {
                 throw new ObjectDisposedException(nameof(SendQueue));
@@ -125,12 +143,12 @@ namespace SharpPcap.LibPcap
             }
             if (IsHardwareAccelerated)
             {
-                return NativeTransmit(device, synchronized);
+                return NativeTransmit(device, transmitMode);
             }
-            return ManagedTransmit(device, synchronized);
+            return ManagedTransmit(device, transmitMode);
         }
 
-        protected unsafe int ManagedTransmit(PcapDevice device, bool synchronized)
+        protected unsafe int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
         {
             if (CurrentLength == 0)
             {
@@ -149,7 +167,7 @@ namespace SharpPcap.LibPcap
                     var header = PcapHeader.FromPointer(bufPtr + position);
                     var pktSize = (int)header.CaptureLength;
                     var p = new ReadOnlySpan<byte>(buffer, position + hdrSize, pktSize);
-                    if (synchronized)
+                    if (transmitMode == SendQueueTransmitModes.Synchronized)
                     {
                         var timestamp = TimeSpan.FromTicks(header.Date.Ticks);
                         var remainingTime = timestamp.Subtract(firstTimestamp);
@@ -180,9 +198,9 @@ namespace SharpPcap.LibPcap
             return position;
         }
 
-        protected unsafe int NativeTransmit(PcapDevice device, bool synchronized)
+        protected unsafe int NativeTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
         {
-            int sync = synchronized ? 1 : 0;
+            int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
             fixed (byte* buf = buffer)
             {
                 var pcap_queue = new pcap_send_queue
