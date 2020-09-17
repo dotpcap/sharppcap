@@ -26,7 +26,7 @@ namespace Test
             {
                 var received = RunCapture(Filter, (device) =>
                 {
-                    GetSendQueue().NativeTransmit(device, false);
+                    GetSendQueue().NativeTransmit(device, SendQueueTransmitModes.Normal);
                 });
                 AssertGoodTransmitNormal(received);
             } else
@@ -42,7 +42,7 @@ namespace Test
             {
                 var received = RunCapture(Filter, (device) =>
                 {
-                    GetSendQueue().NativeTransmit(device, true);
+                    GetSendQueue().NativeTransmit(device, SendQueueTransmitModes.Synchronized);
                 });
                 AssertGoodTransmitSync(received);
             } else
@@ -56,7 +56,7 @@ namespace Test
         {
             var received = RunCapture(Filter, (device) =>
             {
-                GetSendQueue().ManagedTransmit(device, false);
+                GetSendQueue().ManagedTransmit(device, SendQueueTransmitModes.Normal);
             });
             AssertGoodTransmitNormal(received);
         }
@@ -66,7 +66,7 @@ namespace Test
         {
             var received = RunCapture(Filter, (device) =>
             {
-                GetSendQueue().ManagedTransmit(device, true);
+                GetSendQueue().ManagedTransmit(device, SendQueueTransmitModes.Synchronized);
             });
             AssertGoodTransmitSync(received);
         }
@@ -93,8 +93,8 @@ namespace Test
                 try
                 {
                     var queue = GetSendQueue();
-                    var managed = queue.ManagedTransmit(device, false);
-                    var native = queue.NativeTransmit(device, false);
+                    var managed = queue.ManagedTransmit(device, SendQueueTransmitModes.Normal);
+                    var native = queue.NativeTransmit(device, SendQueueTransmitModes.Normal);
                     Assert.AreEqual(managed, native);
                 }
                 finally
@@ -138,14 +138,14 @@ namespace Test
             {
             }
 
-            internal new int NativeTransmit(PcapDevice device, bool synchronized)
+            internal new int NativeTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
             {
-                return base.NativeTransmit(device, synchronized);
+                return base.NativeTransmit(device, transmitMode);
             }
 
-            internal new int ManagedTransmit(PcapDevice device, bool synchronized)
+            internal new int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
             {
-                return base.ManagedTransmit(device, synchronized);
+                return base.ManagedTransmit(device, transmitMode);
             }
         }
 

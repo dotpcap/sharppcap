@@ -19,7 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-namespace SharpPcap.Npcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// The types of transmit modes allowed by the Npcap specific send queue
