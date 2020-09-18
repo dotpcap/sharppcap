@@ -1,12 +1,11 @@
 using System;
 using SharpPcap;
-using SharpPcap.Npcap;
 using SharpPcap.LibPcap;
 
 namespace Example10
 {
     /// <summary>
-    /// Example using the Npcap specific feature of send queues
+    /// Example using send queues
     /// </summary>
     public class Program
     {
@@ -120,10 +119,10 @@ namespace Example10
 
             try
             {
-                var npcapDevice = device as NpcapDevice;
+                var liveDevice = device as LibPcapLiveDevice;
 
                 Console.Write("Sending packets...");
-                int sent = squeue.Transmit(npcapDevice, SharpPcap.LibPcap.SendQueueTransmitModes.Synchronized);
+                int sent = squeue.Transmit(liveDevice, SendQueueTransmitModes.Synchronized);
                 Console.WriteLine("Done!");
                 if (sent < squeue.CurrentLength)
                 {
