@@ -68,6 +68,9 @@ namespace SharpPcap.LibPcap
             public byte[] sa_data;        /* 14 bytes of protocol address */
         };
 
+        // silence a warning about uninitialized in_addr, this value is assigned in unmanaged mode
+        // so the compiler isn't aware of its assignment
+#pragma warning disable 0649
         /// <summary>
         /// Structure that holds an ipv4 address
         /// </summary>
@@ -75,6 +78,7 @@ namespace SharpPcap.LibPcap
         {
             public UInt32 s_addr;
         }
+#pragma warning restore 0649
 
         /// <summary>
         /// Structure that holds an ipv4 address
