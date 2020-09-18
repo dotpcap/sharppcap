@@ -2,7 +2,6 @@ using System;
 using SharpPcap;
 using SharpPcap.Npcap;
 using SharpPcap.LibPcap;
-using SendQueue = SharpPcap.Npcap.SendQueue;
 
 namespace Example10
 {

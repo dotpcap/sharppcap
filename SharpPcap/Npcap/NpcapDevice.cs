@@ -208,23 +208,6 @@ namespace SharpPcap.Npcap
             }
         }
 
-        /// <summary>
-        /// Sends all packets in a 'PcapSendQueue' out this pcap device
-        /// </summary>
-        /// <param name="q">
-        /// A <see cref="SendQueue"/>
-        /// </param>
-        /// <param name="transmitMode">
-        /// A <see cref="SendQueueTransmitModes"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="int"/>
-        /// </returns>
-        public int SendQueue(SendQueue q, SendQueueTransmitModes transmitMode)
-        {
-            return q.Transmit(this, transmitMode);
-        }
-
         /// <value>
         /// Set the kernel value buffer size in bytes
         /// Npcap extension
