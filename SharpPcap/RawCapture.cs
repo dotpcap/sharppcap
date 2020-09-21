@@ -53,6 +53,15 @@ namespace SharpPcap
         public byte[] Data;
 
         /// <summary>
+        /// Creates a Packet object from the LinkLayerType and Data
+        /// </summary>
+        /// <returns></returns>
+        public virtual Packet GetPacket()
+        {
+            return Packet.ParsePacket(LinkLayerType, Data);
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="LinkLayerType">

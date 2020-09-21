@@ -25,5 +25,8 @@ namespace SharpPcap.WinDivert
 
         [DllImport(WINDIVERT_DLL, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
         internal static extern bool WinDivertHelperCompileFilter([MarshalAs(UnmanagedType.LPStr)] string filter, WinDivertLayer layer, IntPtr obj, uint objLen, out IntPtr errorStr, out uint errorPos);
+
+        [DllImport(WINDIVERT_DLL, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+        internal static extern bool WinDivertSend(IntPtr handle, IntPtr pPacket, uint packetLen, out uint pSendLen, ref WinDivertAddress pAddr);
     }
 }

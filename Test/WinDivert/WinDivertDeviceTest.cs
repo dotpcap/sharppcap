@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.WinDivert;
@@ -7,8 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
-using System.Text;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace Test.WinDivert
@@ -102,6 +102,39 @@ namespace Test.WinDivert
             Assert.IsInstanceOf<IPPacket>(packet.PayloadPacket);
             Assert.IsInstanceOf<TcpPacket>(packet.PayloadPacket.PayloadPacket);
         }
+
+        [Test]
+        public void TestSend()
+        {
+            var dst = IPAddress.Parse("8.8.8.8");
+            var nic = IpHelper.GetBestInterface(dst);
+            Assert.NotNull(nic, "No internet connected interface found");
+            var src = nic.GetIPProperties().UnicastAddresses
+                .Select(addr => addr.Address)
+                .FirstOrDefault(addr => addr.AddressFamily == AddressFamily.InterNetwork);
+            var ifIndex = nic.GetIPProperties().GetIPv4Properties().Index;
+            Console.WriteLine($"Using NIC {nic.Name} [{ifIndex}]");
+            Console.WriteLine($"Sending from {src} to {dst}");
+            var device = new WinDivertDevice();
+            device.Open();
+            try
+            {
+                var udp = new UdpPacket(5000, 5000);
+                udp.PayloadData = new byte[100];
+                var ip = IPv4Packet.RandomPacket();
+                ip.PayloadPacket = udp;
+
+                ip.SourceAddress = src;
+                ip.DestinationAddress = dst;
+
+                device.SendPacket(ip);
+            }
+            finally
+            {
+                device.Close();
+            }
+        }
+
     }
 
 }
