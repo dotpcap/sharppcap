@@ -8,12 +8,12 @@ namespace SharpPcap.WinDivert
     /// address includes the packet's timestamp, network interfaces, direction and other information.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct WinDivertAddress
+    struct WinDivertAddress
     {
         public long Timestamp;
         public byte Layer;
         public byte Event;
-        public byte Flags;
+        public WinDivertPacketFlags Flags;
         public uint IfIdx;
         public uint SubIfIdx;
     }

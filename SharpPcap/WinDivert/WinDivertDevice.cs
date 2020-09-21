@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -94,7 +95,12 @@ namespace SharpPcap.WinDivert
                 }
                 var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
                 var data = buffer.Slice(0, (int)readLen).ToArray();
-                var raw = new RawCapture(LinkType, timestamp, data);
+                var raw = new WinDivertCapture(timestamp, data)
+                {
+                    InterfaceIndex = addr.IfIdx,
+                    SubInterfaceIndex = addr.SubIfIdx,
+                    Flags = addr.Flags,
+                };
                 return raw;
             }
         }
@@ -106,7 +112,7 @@ namespace SharpPcap.WinDivert
 
         public void Open()
         {
-            var handle = WinDivertNative.WinDivertOpen(Filter, WinDivertLayer.Network, 0, 1);
+            var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
             if (handle == IntPtr.Zero || handle == new IntPtr(-1))
             {
                 ThrowLastWin32Error("Failed to open");
@@ -171,11 +177,29 @@ namespace SharpPcap.WinDivert
 
         public void SendPacket(Packet p)
         {
+            if (p is WinDivertPacket packet)
+            {
+                WinDivertAddress address = default;
+                address.IfIdx = packet.InterfaceIndex;
+                address.SubIfIdx = packet.SubInterfaceIndex;
+                address.Flags = packet.Flags;
+                SendPacket(new ReadOnlySpan<byte>(p.Bytes), address);
+                return;
+            }
             SendPacket(new ReadOnlySpan<byte>(p.Bytes));
         }
 
         public void SendPacket(Packet p, int size)
         {
+            if (p is WinDivertPacket packet)
+            {
+                WinDivertAddress address = default;
+                address.IfIdx = packet.InterfaceIndex;
+                address.SubIfIdx = packet.SubInterfaceIndex;
+                address.Flags = packet.Flags;
+                SendPacket(new ReadOnlySpan<byte>(p.Bytes, 0, size), address);
+                return;
+            }
             SendPacket(new ReadOnlySpan<byte>(p.Bytes, 0, size));
         }
 
@@ -191,13 +215,58 @@ namespace SharpPcap.WinDivert
 
         public void SendPacket(ReadOnlySpan<byte> p)
         {
-            // TODO
-            throw new NotSupportedException();
+            SendPacket(p, GetAddress(p));
+        }
+
+        private void SendPacket(ReadOnlySpan<byte> p, WinDivertAddress addr)
+        {
+            ThrowIfNotOpen();
+            bool res;
+            unsafe
+            {
+                fixed (byte* p_packet = p)
+                {
+                    res = WinDivertNative.WinDivertSend(Handle, new IntPtr(p_packet), (uint)p.Length, out var pSendLen, ref addr);
+                }
+            }
+            if (!res)
+            {
+                ThrowLastWin32Error("Can't send packet");
+            }
+        }
+
+        private static WinDivertAddress GetAddress(ReadOnlySpan<byte> p)
+        {
+            var version = p[0] >> 4;
+            ReadOnlySpan<byte> srcBytes;
+            ReadOnlySpan<byte> dstytes;
+            if (version == 4)
+            {
+                srcBytes = p.Slice(IPv4Fields.SourcePosition, IPv4Fields.AddressLength);
+                dstytes = p.Slice(IPv4Fields.DestinationPosition, IPv4Fields.AddressLength);
+            }
+            else
+            {
+                srcBytes = p.Slice(IPv6Fields.SourceAddressPosition, IPv6Fields.AddressLength);
+                dstytes = p.Slice(IPv6Fields.DestinationAddressPosition, IPv6Fields.AddressLength);
+            }
+            var src = new IPAddress(srcBytes.ToArray());
+            var dst = new IPAddress(dstytes.ToArray());
+            WinDivertAddress addr = default;
+            addr.IfIdx = (uint)IpHelper.GetBestInterfaceIndex(dst);
+            if (IpHelper.IsOutbound((int)addr.IfIdx, src, dst))
+            {
+                addr.Flags |= WinDivertPacketFlags.Outbound;
+            }
+            return addr;
         }
 
         public bool Started => captureThread?.IsAlive ?? false;
 
         public TimeSpan StopCaptureTimeout { get; set; } = new TimeSpan(0, 0, 1);
+        public WinDivertLayer Layer { get; set; } = WinDivertLayer.Network;
+        public short Priority { get; set; }
+        public ulong Flags { get; set; } = 1;
 
         public event PacketArrivalEventHandler OnPacketArrival;
         public event CaptureStoppedEventHandler OnCaptureStopped;
