@@ -19,7 +19,7 @@ Note that packet dissection and creation was split from SharpPcap some years ago
 
 * On Windows, support for:
   * Npcap (formerly WinPcap) extensions, see [Npcap API guide](https://nmap.org/npcap/guide/npcap-devguide.html#npcap-api)
-
+  * WinDivert (https://www.reqrypt.org/windivert.html)
 * Live device lists
 * Statistics
 * Reading packets from Live Devices (actual network devices) and Offline Devices (Capture files)
