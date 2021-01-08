@@ -18,7 +18,7 @@ fi
 rm -rf /tmp/install-libpcap
 
 # 1.9.1 is the version we tested to work
-git clone --depth 1 -b libpcap-1.9.1 https://github.com/the-tcpdump-group/libpcap.git /tmp/install-libpcap
+git clone --depth 1 -b libpcap-1.10 https://github.com/the-tcpdump-group/libpcap.git /tmp/install-libpcap
 
 pushd /tmp/install-libpcap
 
