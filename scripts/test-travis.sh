@@ -10,5 +10,5 @@ fi
 # Test on linux
 if [ "$TRAVIS_OS_NAME" = "linux" ]
 then
-    sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+    sudo -E bash scripts/test.sh
 fi

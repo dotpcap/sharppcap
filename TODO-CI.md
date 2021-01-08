@@ -6,7 +6,7 @@ linux can't send packets
 at least when you make StartCapture on the same adapter nothing is received
 possibly related to https://github.com/the-tcpdump-group/libpcap/issues/400
 
-tests for linux have to run using `--filter TestCategory!=SendPacket`
+tests for linux require different device instances for sending and capturing
 
 ## Npcap & rpcapd
 

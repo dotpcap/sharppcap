@@ -123,13 +123,37 @@ namespace SharpPcap.LibPcap
             m_pcapPacketCount = Pcap.InfinitePacketCount;
         }
 
-        internal protected virtual bool UsePosixPoll
+        /// <summary>
+        /// unix specific code, we want to poll for packets
+        /// otherwise if we call pcap_dispatch() the read() will block
+        /// and won't resume until a packet arrives OR until a signal
+        /// occurs
+        /// </summary>
+        /// <param name="timeout">
+        /// Timeout chosen to allow the capture thread to loop frequently enough
+        /// to enable it to properly exit when the user requests it to but
+        /// infrequently enough to cause any noticable performance overhead
+        /// </param>
+        /// <returns>true if poll was successfull and we have data to read, false otherwise</returns>
+        protected internal bool PollFileDescriptor(int timeout = 500)
         {
-            get
+            if (FileDescriptor < 0)
             {
-                var platform = Environment.OSVersion.Platform;
-                return platform == PlatformID.Unix || platform == PlatformID.MacOSX;
+                // Either this is a File Capture, or Windows
+                // Assume we have data to read
+                return true;
             }
+            var pollFds = new Posix.Pollfd[1];
+            pollFds[0].fd = FileDescriptor;
+            pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
+
+            var result = Posix.Poll(pollFds, (uint)pollFds.Length, timeout);
+
+            // if we have no poll results, we don't have anything to read
+            // -1 means error
+            // 0 means timeout
+            // non-negative means we got something
+            return result != 0;
         }
 
         /// <summary>
@@ -142,44 +166,13 @@ namespace SharpPcap.LibPcap
 
             var Callback = new LibPcapSafeNativeMethods.pcap_handler(PacketHandler);
 
-            Posix.Pollfd[] pollFds = null;
-            // unix specific code
-            if (UsePosixPoll)
-            {
-                // retrieve the file descriptor of the adapter for use with poll()
-                var captureFileDescriptor = LibPcapSafeNativeMethods.pcap_fileno(PcapHandle);
-                if (captureFileDescriptor == -1)
-                {
-                    SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                    return;
-                }
-                pollFds = new Posix.Pollfd[1];
-                pollFds[0].fd = captureFileDescriptor;
-                pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
-            }
-
             while (!cancellationToken.IsCancellationRequested)
             {
-                // unix specific code, we want to poll for packets
-                // otherwise if we call pcap_dispatch() the read() will block
-                // and won't resume until a packet arrives OR until a signal
-                // occurs
-                if (pollFds != null)
+
+                if (!PollFileDescriptor())
                 {
-                    // Timeout chosen to allow the capture thread to loop frequently enough
-                    // to enable it to properly exit when the user requests it to but
-                    // infrequently enough to cause any noticable performance overhead
-                    const int millisecondTimeout = 500;
-                    // block here
-                    var result = Posix.Poll(pollFds, (uint)pollFds.Length, millisecondTimeout);
-
-                    // if we have no poll results, just loop
-                    if (result <= 0)
-                    {
-                        continue;
-                    }
-
-                    // fall through here to the pcap_dispatch() call
+                    // We don't have data to read, don't call pcap_dispatch() yet
+                    continue;
                 }
 
                 int res = LibPcapSafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);

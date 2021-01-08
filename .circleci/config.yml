@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
       - run: sudo -E bash scripts/install-libpcap.sh
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      - run: sudo -E bash scripts/test.sh
       - store_test_results:
           path: Test/TestResults
 
