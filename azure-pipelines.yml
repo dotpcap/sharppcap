@@ -18,7 +18,7 @@ jobs:
     vmImage: 'ubuntu-18.04'
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
-  - script: sudo -E bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=SendPacket"
+  - script: sudo -E bash scripts/test.sh
 
 - job: macos
   pool:
@@ -26,7 +26,7 @@ jobs:
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
-  - script: sudo -E bash scripts/test.sh --filter TestCategory!=Performance
+  - script: sudo -E bash scripts/test.sh
 
 - job: windows
   pool:
