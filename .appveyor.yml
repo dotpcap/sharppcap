@@ -47,7 +47,7 @@ for:
   install:
     - sudo -E bash scripts/install-libpcap.sh
   test_script:
-    - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=SendPacket"
+    - sudo -E bash scripts/test.sh
 
 -
   matrix:

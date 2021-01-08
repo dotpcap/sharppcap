@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Test
 {
@@ -77,25 +79,51 @@ namespace Test
             var device = GetPcapDevice();
             Console.WriteLine($"Using device {device}");
             var received = new List<RawCapture>();
-            device.Open(DeviceMode.Normal, 1);
+            var mode = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
+                DeviceMode.Promiscuous :
+                DeviceMode.Normal;
+
+            device.Open(mode, 1);
             device.Filter = filter;
+            // We can't use the same device for capturing and sending in Linux
+            // The device simply does not receive its own sent traffic in Linux, not sure what the reason is.
+            // Tested using Linux on Windows WSL
+            var sender = device;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                sender = new LibPcapLiveDevice(device.Interface);
+                sender.Open(mode, 1);
+            }
             try
             {
-                routine(device);
+                routine(sender);
                 // waiting for any queued packets to be sent
                 Thread.Sleep(10);
+                var sw = Stopwatch.StartNew();
                 while (true)
                 {
-                    var packet = device.GetNextPacket();
-                    if (packet == null)
+                    var raw = device.GetNextPacket();
+                    if (raw != null)
                     {
-                        break;
+                        var packet = raw.GetPacket();
+                        Console.WriteLine($"Received: {packet} after {sw.Elapsed} (at {raw.Timeval})");
+                        received.Add(raw);
                     }
-                    received.Add(packet);
+                    else
+                    {
+                        Console.WriteLine($"Received: null packet after {sw.Elapsed})");
+                        if (sw.ElapsedMilliseconds > 1000)
+                        {
+                            // No more packets in queue, and 1 second has passed
+                            break;
+                        }
+                    }
+
                 }
             }
             finally
             {
+                sender.Close();
                 device.Close();
             }
             return received;

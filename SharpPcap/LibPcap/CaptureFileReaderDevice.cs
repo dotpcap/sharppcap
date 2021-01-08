@@ -120,8 +120,6 @@ namespace SharpPcap.LibPcap
                 throw new NotSupportedOnCaptureFileException("Statistics not supported on a capture file");
             }
         }
-
-        protected internal override bool UsePosixPoll => false;
     }
 }
 

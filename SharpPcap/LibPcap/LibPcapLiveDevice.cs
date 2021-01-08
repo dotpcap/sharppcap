@@ -270,6 +270,11 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
                 Active = true;
+                // retrieve the file descriptor of the adapter for use with poll()
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(PcapHandle);
+                }
             }
         }
 
