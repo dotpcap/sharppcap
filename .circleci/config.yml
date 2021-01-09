@@ -11,9 +11,20 @@ jobs:
       - checkout
       - run: dotnet build -c Release
 
-  test-ubuntu:
+  test-ubuntu-1604:
     machine:
       image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-libpcap.sh
+      - run: sudo -E bash scripts/test.sh
+      - store_test_results:
+          path: Test/TestResults
+
+  test-ubuntu-2004:
+    machine:
+      image: ubuntu-2004:202010-01
     steps:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
@@ -27,4 +38,5 @@ workflows:
   build:
     jobs:
       - build
-      - test-ubuntu
+      - test-ubuntu-1604
+      - test-ubuntu-2004
