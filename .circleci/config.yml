@@ -4,7 +4,7 @@ orbs:
   win: circleci/windows@2.4.0
 
 jobs:
-  build:
+  test-windows:
     executor:
       name: win/default
     steps:
@@ -37,6 +37,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - build
+      - test-windows
       - test-ubuntu-1604
       - test-ubuntu-2004
