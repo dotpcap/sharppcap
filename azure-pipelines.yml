@@ -28,9 +28,17 @@ jobs:
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
   - script: sudo -E bash scripts/test.sh
 
-- job: windows
+- job: windows 2016 + vs2017
   pool:
     vmImage: 'VS2017-Win2016'
+  steps:
+  - script: choco install -y winpcap
+  - script: dotnet restore -s https://api.nuget.org/v3/index.json
+  - script: bash scripts/test.sh --filter
+
+- job: windows 2019 + vs2019
+  pool:
+    vmImage: 'windows-2019'
   steps:
   - script: choco install -y winpcap
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
