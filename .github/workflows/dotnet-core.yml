@@ -24,7 +24,7 @@ jobs:
     - name: Build sharppcap assembly
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
-      run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      run: sudo -E bash scripts/test.sh
     - name: publish on version change
       id: publish_nuget
       uses: rohith/publish-nuget@v2
