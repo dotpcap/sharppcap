@@ -20,11 +20,13 @@ Note that packet dissection and creation was split from SharpPcap some years ago
 * On Windows, support for:
   * Npcap (formerly WinPcap) extensions, see [Npcap API guide](https://nmap.org/npcap/guide/npcap-devguide.html#npcap-api)
   * WinDivert (https://www.reqrypt.org/windivert.html)
-* Live device lists
-* Statistics
-* Reading packets from Live Devices (actual network devices) and Offline Devices (Capture files)
-* Support for Berkley Packet Filters
-* Dumping packets to Pcap files.
+
+* On all platforms:
+  * Live device lists
+  * Statistics
+  * Reading packets from Live Devices (actual network devices) and Offline Devices (Capture files)
+  * Support for Berkley Packet Filters
+  * Dumping packets to Pcap files.
 
 # Examples
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of examples using SharpPcap
