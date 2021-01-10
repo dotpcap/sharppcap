@@ -1,4 +1,11 @@
 
+environment:
+  # This key is encrypted using secdev's appveyor private key,
+  # dissected only on master builds (not PRs) and is used during
+  # npcap OEM installation
+  npcap_oem_key:
+    secure: DD54X4DVUeG/IpY41fFPYgl3EfQRTEt5BoibQDm0MeI=
+
 # Disable automatic AppVeyor build logic
 build: off
 skip_branch_with_pr: true
@@ -16,19 +23,18 @@ for:
       - image: Visual Studio 2017
   install:
     - choco install -y dotnetcore-sdk --version=3.1.301
-    - choco install -y winpcap
+    - ps: .\scripts\InstallNpcap.ps1
   build_script:
     - dotnet build -c Release
   test_script:
-    - bash scripts/test.sh --filter TestCategory!=Performance
+    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap"
 
 -
   matrix:
     only:
       - image: Visual Studio 2019
   install:
-    # an OEM installer is required for newer versions of npcap
-    - choco install -y npcap --version 0.86
+    - ps: .\scripts\InstallNpcap.ps1
   build_script:
     - dotnet build -c Release
   test_script:
