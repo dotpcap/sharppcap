@@ -44,7 +44,7 @@ if (Test-Path Env:npcap_oem_key){  # Key is here: on master
 echo ('Installing: ' + $file)
 
 # Run installer
-Start-Process $file -ArgumentList "/loopback_support=yes /S" -wait
+Start-Process $file -ArgumentList "/loopback_support=yes /winpcap_mode /S" -wait
 if($?) {
     echo "Npcap installation completed"
 }
