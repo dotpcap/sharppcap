@@ -192,6 +192,39 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
+        /// <param name="flags"></param>
+        /// <param name="readTimeoutMilliseconds"></param>
+        /// <param name="remoteAuthentication"></param>
+        public void Open(OpenFlags flags,
+                 int readTimeoutMilliseconds,
+                 RemoteAuthentication remoteAuthentication)
+        {
+            if (!Opened)
+            {
+                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+
+                var auth = RemotePcap.CreateAuth(Name, remoteAuthentication);
+
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
+                                                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
+                                                         (int)flags,
+                                                         readTimeoutMilliseconds,
+                                                         ref auth,
+                                                         errbuf);
+
+                if (PcapHandle == IntPtr.Zero)
+                {
+                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
+                    throw new PcapException(err);
+                }
+
+                Active = true;
+            }
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
         /// <param name="mode">
         /// A <see cref="DeviceMode"/>
         /// </param>

@@ -14,44 +14,43 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
- * Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+/*
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
 using System;
 
-namespace SharpPcap.LibPcap
+namespace SharpPcap.WinPcap
 {
     /// <summary>
     /// The mode used when opening a device
-    /// See https://github.com/the-tcpdump-group/libpcap/blob/aa818d3fe5add3f69b87671fc17f8eeb09f10139/pcap/pcap.h#L932
     /// </summary>
     [Flags]
     public enum OpenFlags : short
     {
         /// <summary>
-        /// Defines if the adapter has to go in promiscuous mode. 
+        /// Defines if the adapter has to go in promiscuous mode.
         /// </summary>
         Promiscuous = 1,
 
         /// <summary>
         /// Defines if the data trasfer (in case of a remote capture)
-        /// has to be done with UDP protocol. 
+        /// has to be done with UDP protocol.
         /// </summary>
         DataTransferUdp = 2,
 
         /// <summary>
-        /// Defines if the remote probe will capture its own generated traffic. 
+        /// Defines if the remote probe will capture its own generated traffic.
         /// </summary>
         NoCaptureRemote = 4,
 
         /// <summary>
-        /// Defines if the local adapter will capture its own generated traffic. 
+        /// Defines if the local adapter will capture its own generated traffic.
         /// </summary>
         NoCaptureLocal = 8,
 
         /// <summary>
-        /// This flag configures the adapter for maximum responsiveness. 
+        /// This flag configures the adapter for maximum responsiveness.
         /// </summary>
         MaxResponsiveness = 16
     }
