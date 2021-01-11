@@ -31,7 +31,7 @@ if (Test-Path Env:npcap_oem_key){  # Key is here: on master
     echo "Using backup 0.96"
     $file = $PSScriptRoot+"\npcap-0.96.exe"
     # Download the 0.96 file from nmap servers
-    wget "https://nmap.org/npcap/dist/npcap-0.96.exe" -UseBasicParsing -OutFile $file
+    Invoke-WebRequest -uri "https://nmap.org/npcap/dist/npcap-0.96.exe" -OutFile $file
     # Now let's check its checksum
     $_chksum = $(CertUtil -hashfile $file SHA256)[1] -replace " ",""
     if ($_chksum -ne "83667e1306fdcf7f9967c10277b36b87e50ee8812e1ee2bb9443bdd065dc04a1"){
