@@ -57,13 +57,20 @@ namespace ReadingCaptureFile
                 ("-- Capturing from '{0}', hit 'Ctrl-C' to exit...",
                 capFile);
 
+            var startTime = DateTime.Now;
+
             // Start capture 'INFINTE' number of packets
             // This method will return when EOF reached.
             device.Capture();
 
             // Close the pcap device
             device.Close();
+            var endTime = DateTime.Now;
             Console.WriteLine("-- End of file reached.");
+
+            var duration = endTime - startTime;
+            Console.WriteLine("Read {0} packets in {1}s", packetIndex, duration.TotalSeconds);
+
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }
@@ -75,6 +82,8 @@ namespace ReadingCaptureFile
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
+            packetIndex++;
+
             if (e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
                 var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
@@ -86,7 +95,6 @@ namespace ReadingCaptureFile
                                   e.Packet.Timeval.Date.Millisecond,
                                   ethernetPacket.SourceHardwareAddress,
                                   ethernetPacket.DestinationHardwareAddress);
-                packetIndex++;
             }
         }
     }
