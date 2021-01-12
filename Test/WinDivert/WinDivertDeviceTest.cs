@@ -14,6 +14,7 @@ using System.Threading;
 namespace Test.WinDivert
 {
     [TestFixture]
+    [Category("WinDivert")]
     [Platform("Win", Reason = "WinDivert driver is only available for Windows")]
     public class WinDivertDeviceTest
     {
