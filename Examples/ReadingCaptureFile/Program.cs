@@ -84,11 +84,11 @@ namespace ReadingCaptureFile
         {
             packetIndex++;
 
-            if (e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
-            {
-                var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-                var ethernetPacket = (EthernetPacket)packet;
+            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
+            var ethernetPacket = packet.Extract<EthernetPacket>();
+            if (ethernetPacket != null)
+            {
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,
                                   e.Packet.Timeval.Date.ToString(),
