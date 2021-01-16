@@ -20,17 +20,16 @@ namespace Test
 
         public static readonly IPEndPoint LoopbackSource = new IPEndPoint(IPAddress.Loopback, 2002);
 
-        public static readonly ICredentials[] NullAuthCredentials = new ICredentials[]
+        public static readonly RemoteAuthentication[] NullAuthCredentials = new RemoteAuthentication[]
         {
             null,
-            new PlainCredential(null, null, null),
-            new PlainCredential("foo", "bar", "null"),
-            new PlainCredential("foo", "bar", "0")
+            new PlainCredential(AuthenticationTypes.Null, null, null),
+            new PlainCredential(AuthenticationTypes.Null, "foo", "bar")
         };
 
         [Test]
         public void PcapInterfaceNullAuthTest(
-            [ValueSource(nameof(NullAuthCredentials))] ICredentials credentials
+            [ValueSource(nameof(NullAuthCredentials))] RemoteAuthentication credentials
         )
         {
             using (new RemotePcapServer(NullAuthArgs))
@@ -107,22 +106,23 @@ namespace Test
 
     }
 
-    class PlainCredential : NetworkCredential
+    /// <summary>
+    /// Used to provide more detailed information in the test runner gui by overriding ToString(), which
+    /// the test runner uses when displaying the values for a ValueSource
+    /// </summary>
+    class PlainCredential : RemoteAuthentication
     {
-        public PlainCredential(string username, string password, string domain)
-           : base(username, password, domain)
+        public PlainCredential(AuthenticationTypes Type,
+                                     string Username,
+                                     string Password)
+           : base(Type, Username, Password)
         {
 
         }
 
         public override string ToString()
         {
-            var str = UserName;
-            if (!string.IsNullOrEmpty(Domain))
-            {
-                str += "@" + Domain;
-            }
-            return str;
+            return String.Format("Username:{0} Password: {1} Type:{2}", Username, Password, Type.ToString());
         }
     }
 
