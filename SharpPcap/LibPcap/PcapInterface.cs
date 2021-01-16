@@ -189,7 +189,7 @@ namespace SharpPcap.LibPcap
         {
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
-            var auth = RemotePcap.CreateAuth(source, credentials);
+            var auth = RemoteAuthentication.CreateAuth(source, credentials);
 
             try
             {

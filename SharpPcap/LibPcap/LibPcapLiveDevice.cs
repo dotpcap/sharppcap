@@ -227,7 +227,7 @@ namespace SharpPcap.LibPcap
                 else
                 {
                     // We got authentication, so this is an rpcap device
-                    var auth = RemotePcap.CreateAuth(Name, Interface.Credentials);
+                    var auth = RemoteAuthentication.CreateAuth(Name, Interface.Credentials);
                     PcapHandle = LibPcapSafeNativeMethods.pcap_open
                         (Name,                   // name of the device
                             Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
