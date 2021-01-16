@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap.Npcap
+namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Remote authentication type and parameters
