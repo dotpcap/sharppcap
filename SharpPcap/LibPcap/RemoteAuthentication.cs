@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
 {
@@ -43,6 +44,23 @@ namespace SharpPcap.LibPcap
             this.Type = Type;
             this.Username = Username;
             this.Password = Password;
+        }
+
+        internal static pcap_rmtauth CreateAuth(string source, RemoteAuthentication credentials)
+        {
+            if (credentials == null)
+            {
+                return default;
+            }
+
+            var auth_type = (int)credentials.Type;
+
+            return new pcap_rmtauth
+            {
+                type = new IntPtr(auth_type),
+                username = credentials.Username,
+                password = credentials.Password,
+            };
         }
     }
 }

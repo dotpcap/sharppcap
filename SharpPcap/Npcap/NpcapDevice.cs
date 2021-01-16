@@ -99,7 +99,7 @@ namespace SharpPcap.Npcap
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
-                var auth = RemotePcap.CreateAuth(Name, remoteAuthentication);
+                var auth = RemoteAuthentication.CreateAuth(Name, remoteAuthentication);
 
                 PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
                                                          Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
@@ -152,7 +152,7 @@ namespace SharpPcap.Npcap
             if (!Opened)
             {
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
-                var auth = RemotePcap.CreateAuth(Name, Interface.Credentials);
+                var auth = RemoteAuthentication.CreateAuth(Name, Interface.Credentials);
 
                 PcapHandle = LibPcapSafeNativeMethods.pcap_open
                     (Name,                   // name of the device
