@@ -8,38 +8,32 @@ namespace SharpPcap.LibPcap
 {
     internal static class RemotePcap
     {
-        internal static pcap_rmtauth CreateAuth(string source, ICredentials credentials)
+        internal static pcap_rmtauth CreateAuth(string source, RemoteAuthentication credentials)
         {
-            Uri.TryCreate(source, UriKind.Absolute, out var uri);
-            var credential = credentials?.GetCredential(uri, null);
-            if (credential == null)
+            if (credentials == null)
             {
                 return default;
             }
+
             int auth_type;
-            switch (credential.Domain)
+
+            switch(credentials.Type)
             {
-                case "":
-                case null:
-                    // auto detect the type from presense of username
-                    auth_type = string.IsNullOrEmpty(credential.UserName) ? 0 : 1;
-                    break;
-                case "null":
+                case AuthenticationTypes.Null:
                     auth_type = 0;
                     break;
-                case "pwd":
+                case AuthenticationTypes.Password:
                     auth_type = 1;
                     break;
                 default:
-                    // if someone wants to force the auth type to something else, they can write the credential domain as an int
-                    int.TryParse(credential.Domain, out auth_type);
-                    break;
+                    throw new NotSupportedException("unknown credentials.Type");
             }
+
             return new pcap_rmtauth
             {
                 type = new IntPtr(auth_type),
-                username = credential.UserName,
-                password = credential.Password,
+                username = credentials.Username,
+                password = credentials.Password,
             };
         }
     }

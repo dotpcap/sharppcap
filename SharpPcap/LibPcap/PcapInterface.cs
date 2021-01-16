@@ -67,7 +67,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Credentials to use in case of remote pcap
         /// </summary>
-        internal ICredentials Credentials { get; }
+        internal RemoteAuthentication Credentials { get; }
 
         /// <value>
         /// Pcap interface flags
@@ -79,7 +79,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public PhysicalAddress MacAddress { get; }
 
-        internal PcapInterface(pcap_if pcapIf, NetworkInterface networkInterface, ICredentials credentials)
+        internal PcapInterface(pcap_if pcapIf, NetworkInterface networkInterface, RemoteAuthentication credentials)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
@@ -180,12 +180,12 @@ namespace SharpPcap.LibPcap
             return sb.ToString();
         }
 
-        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IPEndPoint source, ICredentials credentials)
+        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IPEndPoint source, RemoteAuthentication credentials)
         {
             return GetAllPcapInterfaces("rpcap://" + source, credentials);
         }
 
-        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(string source, ICredentials credentials)
+        static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(string source, RemoteAuthentication credentials)
         {
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
@@ -232,7 +232,7 @@ namespace SharpPcap.LibPcap
 
             return pcapInterfaces;
         }
-        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, ICredentials credentials)
+        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, RemoteAuthentication credentials)
         {
             var list = new List<PcapInterface>();
             var nics = NetworkInterface.GetAllNetworkInterfaces();

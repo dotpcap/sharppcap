@@ -7,7 +7,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Remote authentication type and parameters
     /// </summary>
-    public class RemoteAuthentication : ICredentials
+    public class RemoteAuthentication
     {
         /// <summary>
         /// Type of authentication
@@ -43,12 +43,6 @@ namespace SharpPcap.LibPcap
             this.Type = Type;
             this.Username = Username;
             this.Password = Password;
-        }
-
-        NetworkCredential ICredentials.GetCredential(Uri uri, string authType)
-        {
-            var domain = ((int)Type).ToString();
-            return new NetworkCredential(Username, Password, domain);
         }
     }
 }
