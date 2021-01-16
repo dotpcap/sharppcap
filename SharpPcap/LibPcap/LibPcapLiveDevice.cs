@@ -24,6 +24,7 @@ using System;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace SharpPcap.LibPcap
 {
@@ -187,6 +188,39 @@ namespace SharpPcap.LibPcap
         public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
         {
             Open(mode, read_timeout, monitor_mode, 0);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="flags"></param>
+        /// <param name="readTimeoutMilliseconds"></param>
+        /// <param name="remoteAuthentication"></param>
+        public void Open(OpenFlags flags,
+                 int readTimeoutMilliseconds,
+                 ICredentials remoteAuthentication = null)
+        {
+            if (!Opened)
+            {
+                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+                var credentials = remoteAuthentication ?? Interface.Credentials;
+                var auth = RemotePcap.CreateAuth(Name, credentials);
+
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
+                                                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
+                                                         (int)flags,
+                                                         readTimeoutMilliseconds,
+                                                         ref auth,
+                                                         errbuf);
+
+                if (PcapHandle == IntPtr.Zero)
+                {
+                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
+                    throw new PcapException(err);
+                }
+
+                Active = true;
+            }
         }
 
         /// <summary>

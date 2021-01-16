@@ -23,6 +23,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace SharpPcap.LibPcap
 {
@@ -32,6 +33,11 @@ namespace SharpPcap.LibPcap
     public class LibPcapLiveDeviceList : ReadOnlyCollection<LibPcapLiveDevice>
     {
         private static LibPcapLiveDeviceList instance;
+
+        /// <summary>
+        /// Port used by rpcapd by default
+        /// </summary>
+        public static int RpcapdDefaultPort = 2002;
 
         /// <summary>
         /// Method to retrieve this classes singleton instance
@@ -79,8 +85,35 @@ namespace SharpPcap.LibPcap
         /// </returns>
         private static List<LibPcapLiveDevice> GetDevices()
         {
+            return BuildDeviceList(PcapInterface.GetAllPcapInterfaces());
+        }
+
+        /// <summary>
+        /// Returns a list of devices
+        /// </summary>
+        /// <param name="address">
+        /// A <see cref="IPAddress"/>
+        /// </param>
+        /// <param name="port">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <param name="remoteAuthentication">
+        /// A <see cref="RemoteAuthentication"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="List<LibPcapLiveDevice>"/>
+        /// </returns>
+        public static List<LibPcapLiveDevice> GetDevices(IPAddress address,
+                                                  int port,
+                                                  ICredentials remoteAuthentication)
+        {
+            var source = new IPEndPoint(address, port);
+            return BuildDeviceList(PcapInterface.GetAllPcapInterfaces(source, remoteAuthentication));
+        }
+
+        private static List<LibPcapLiveDevice> BuildDeviceList(IReadOnlyList<PcapInterface> pcapInterfaces)
+        {
             var deviceList = new List<LibPcapLiveDevice>();
-            var pcapInterfaces = PcapInterface.GetAllPcapInterfaces();
             foreach (var pcap_if in pcapInterfaces)
             {
                 deviceList.Add(new LibPcapLiveDevice(pcap_if));

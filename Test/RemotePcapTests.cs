@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using SharpPcap.Npcap;
 using System.Threading;
 using System.Net;
 using SharpPcap.LibPcap;
@@ -46,9 +45,9 @@ namespace Test
         {
             using (new RemotePcapServer(NullAuthArgs))
             {
-                var auth = new RemoteAuthentication(AuthenticationTypes.Null, null, null);
-                CollectionAssert.IsNotEmpty(NpcapDeviceList.Devices(IPAddress.Loopback, 2002, auth));
-                CollectionAssert.IsNotEmpty(NpcapDeviceList.Devices(IPAddress.Loopback, 2002, null));
+                var auth = new NetworkCredential(null, (string)null);
+                CollectionAssert.IsNotEmpty(LibPcapLiveDeviceList.GetDevices(IPAddress.Loopback, 2002, auth));
+                CollectionAssert.IsNotEmpty(LibPcapLiveDeviceList.GetDevices(IPAddress.Loopback, 2002, null));
             }
         }
 
@@ -67,20 +66,14 @@ namespace Test
                 {
                     Assert.Inconclusive("Please rerun the test as administrator.");
                 }
-                var goodCred = new RemoteAuthentication(AuthenticationTypes.Password, TestUser.Username, TestUser.Password);
-                var badCred = new RemoteAuthentication(AuthenticationTypes.Password, "foo", "bar");
+                var goodCred = new NetworkCredential(TestUser.Username, TestUser.Password);
+                var badCred = new NetworkCredential("foo", "bar");
                 using (new RemotePcapServer(PwdAuthArgs))
                 {
                     var pcapIfs = PcapInterface.GetAllPcapInterfaces("rpcap://localhost/", goodCred);
-                    var npcapDevices = NpcapDeviceList.Devices(IPAddress.Loopback, NpcapDeviceList.RpcapdDefaultPort, goodCred);
-                    CollectionAssert.IsNotEmpty(npcapDevices);
+                    var devices = LibPcapLiveDeviceList.GetDevices(IPAddress.Loopback, LibPcapLiveDeviceList.RpcapdDefaultPort, goodCred);
+                    CollectionAssert.IsNotEmpty(devices);
 
-                    var devices = new PcapDevice[]{
-                        // using NpcapDevice
-                        npcapDevices[0],
-                        // using rpcap with LibPcapLiveDevice should be possible
-                        new LibPcapLiveDevice(pcapIfs[0])
-                    };
                     foreach (var device in devices)
                     {
                         // repassing the auth to Open() should be optional
@@ -90,7 +83,7 @@ namespace Test
                     }
 
                     Assert.Throws<PcapException>(
-                        () => npcapDevices[0].Open(OpenFlags.NoCaptureRemote, 1, badCred),
+                        () => devices[0].Open(OpenFlags.NoCaptureRemote, 1, badCred),
                         "Credentials provided to Open() method takes precedence"
                     );
 

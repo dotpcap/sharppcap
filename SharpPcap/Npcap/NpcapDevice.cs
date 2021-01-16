@@ -91,6 +91,8 @@ namespace SharpPcap.Npcap
         /// <param name="remoteAuthentication">
         /// A <see cref="RemoteAuthentication"/>
         /// </param>
+        ///
+        [Obsolete("Open() is obsolete. Use LibPcapLiveDevice.Open() instead.", false)]
         public void Open(OpenFlags flags,
                          int readTimeoutMilliseconds,
                          RemoteAuthentication remoteAuthentication)

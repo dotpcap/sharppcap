@@ -70,9 +70,8 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Extended pcap_open() method that is Npcap/Winpcap specific that
-        /// provides extra flags and functionality
-        /// See http://www.winpcap.org/docs/docs_40_2/html/group__wpcapfunc.html#g2b64c7b6490090d1d37088794f1f1791
+        /// Extended pcap_open() method that was originally is Npcap/Winpcap specific but that
+        /// has been added to LibPcap
         /// </summary>
         /// <param name="dev">
         /// A <see cref="string"/>
