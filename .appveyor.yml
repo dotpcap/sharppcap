@@ -38,7 +38,7 @@ for:
   build_script:
     - dotnet build -c Release
   test_script:
-    - bash scripts/test.sh --filter TestCategory!=RemotePcap
+    - bash scripts/test.sh --filter "TestCategory!=RemotePcap&TestCategory!=WinDivert"
 
 -
   matrix:
