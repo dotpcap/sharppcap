@@ -24,6 +24,8 @@ namespace SharpPcap
 {
     /// <summary>
     /// The mode used when opening a device
+    /// See pcap_open() documentation
+    /// https://github.com/the-tcpdump-group/libpcap/blob/aa818d3fe5add3f69b87671fc17f8eeb09f10139/pcap/pcap.h#L938
     /// </summary>
     [Flags]
     public enum OpenFlags : short
