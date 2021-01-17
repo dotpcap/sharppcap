@@ -8,7 +8,7 @@ namespace Test.Performance
     [TestFixture]
     public class PacketParsing
     {
-        private readonly int packetsToRead = 50000000;
+        private readonly int packetsToRead = 10000000;
 
         [Category("Performance")]
         [Test]
