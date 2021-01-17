@@ -206,6 +206,27 @@ namespace SharpPcap.LibPcap
         /// </param>
         public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
         {
+            var flags = (mode == DeviceMode.Promiscuous) ? OpenFlags.Promiscuous : OpenFlags.None;
+            Open(flags, read_timeout, monitor_mode, kernel_buffer_size);
+        }
+
+        /// <summary>
+        /// Open the device. To start capturing call the 'StartCapture' function
+        /// </summary>
+        /// <param name="flags">
+        /// A <see cref="OpenFlags"/>
+        /// </param>
+        /// <param name="read_timeout">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <param name="monitor_mode">
+        /// A <see cref="MonitorMode"/>
+        /// </param>
+        /// <param name="kernel_buffer_size">
+        /// A <see cref="uint"/>
+        /// </param>
+        public void Open(OpenFlags flags, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
+        {
             if (!Opened)
             {
                 StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
@@ -232,7 +253,7 @@ namespace SharpPcap.LibPcap
                         (Name,                   // name of the device
                             Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                     // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                            (short)0,               // No flags here
+                            (short)flags,           // flags
                             (short)read_timeout,    // read timeout
                             ref auth,              // authentication
                             errbuf);               // error buffer
@@ -257,7 +278,7 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)mode);
+                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(flags & OpenFlags.Promiscuous));
                 LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
 
                 if (kernel_buffer_size != 0)
