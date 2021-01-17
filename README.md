@@ -41,3 +41,5 @@ We have support for a number of CI systems for a few reasons:
 # Releases
 SharpPcap is released via nuget
 
+# Platform specific notes
+* OSX (at least as of 11.1) lacks libpcap with pcap_open
