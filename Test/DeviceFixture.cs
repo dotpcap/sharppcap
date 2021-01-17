@@ -28,7 +28,6 @@ using NUnit.Framework.Interfaces;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using SharpPcap.Npcap;
-using SharpPcap.WinPcap;
 
 namespace Test
 {
