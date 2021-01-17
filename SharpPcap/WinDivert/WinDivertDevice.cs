@@ -110,7 +110,7 @@ namespace SharpPcap.WinDivert
             throw new NotSupportedException();
         }
 
-        public void Open()
+        public void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
             if (handle == IntPtr.Zero || handle == new IntPtr(-1))
@@ -118,32 +118,8 @@ namespace SharpPcap.WinDivert
                 ThrowLastWin32Error("Failed to open");
             }
             Handle = handle;
-        }
 
-        public void Open(DeviceMode mode)
-        {
-            Open();
-        }
-
-        public void Open(DeviceMode mode, int read_timeout)
-        {
-            Open();
-        }
-
-        public void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size)
-        {
-            Open();
             SetParam(WinDivertParam.QueueSize, kernel_buffer_size);
-        }
-
-        public void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
-        {
-            Open(mode, read_timeout);
-        }
-
-        public void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
-        {
-            Open(mode, read_timeout, kernel_buffer_size);
         }
 
         protected void ThrowIfNotOpen()

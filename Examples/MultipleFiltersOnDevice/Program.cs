@@ -53,8 +53,8 @@ namespace MultipleFiltersOnDevice
                         new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the devices for capturing
-            device1.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
-            device2.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            device1.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+            device2.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
 
             // set the filters
             device1.Filter = "tcp port 80"; // http

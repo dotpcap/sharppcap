@@ -120,97 +120,6 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Open the device with default values of: promiscuous_mode = false, read_timeout = 1000
-        /// To start capturing call the 'StartCapture' function
-        /// </summary>
-        public override void Open()
-        {
-            this.Open(DeviceMode.Normal);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        public override void Open(DeviceMode mode)
-        {
-            const int readTimeoutMilliseconds = 1000;
-            this.Open(mode, readTimeoutMilliseconds);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        public override void Open(DeviceMode mode, int read_timeout)
-        {
-            Open(mode, read_timeout, (uint)0);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="kernel_buffer_size">
-        /// A <see cref="uint"/>
-        /// </param>
-        public override void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size)
-        {
-            const MonitorMode monitorMode = MonitorMode.Inactive;
-            this.Open(mode, read_timeout, monitorMode, kernel_buffer_size);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="monitor_mode">
-        /// A <see cref="MonitorMode"/>
-        /// </param>
-        public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
-        {
-            Open(mode, read_timeout, monitor_mode, 0);
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="monitor_mode">
-        /// A <see cref="MonitorMode"/>
-        /// </param>
-        /// <param name="kernel_buffer_size">
-        /// A <see cref="uint"/>
-        /// </param>
-        public override void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
-        {
-            var flags = (mode == DeviceMode.Promiscuous) ? OpenFlags.Promiscuous : OpenFlags.None;
-            Open(flags, read_timeout, monitor_mode, kernel_buffer_size);
-        }
-
-        /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
         /// <param name="flags">
@@ -225,7 +134,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public void Open(OpenFlags flags, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
+        public override void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             if (!Opened)
             {
@@ -239,7 +148,9 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
 
-                if (Interface.Credentials == null)
+                // flags other than OpenFlags.Promiscuous require pcap_open()
+                var otherFlags = flags & ~OpenFlags.Promiscuous;
+                if ((Interface.Credentials == null) || ((short)otherFlags != 0))
                 {
                     PcapHandle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device

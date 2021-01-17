@@ -204,74 +204,10 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Open the device with class specific options
-        /// </summary>
-        public abstract void Open();
-
-        /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        public virtual void Open(DeviceMode mode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="kernel_buffer_size">
-        /// A <see cref="uint"/>
-        /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout, uint kernel_buffer_size)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
-        /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// /// <param name="monitor_mode">
-        /// A <see cref="MonitorMode"/>
-        /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceMode"/>
+        /// <param name="flags">
+        /// A <see cref="OpenFlags"/>
         /// </param>
         /// <param name="read_timeout">
         /// A <see cref="int"/>
@@ -282,7 +218,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public virtual void Open(DeviceMode mode, int read_timeout, MonitorMode monitor_mode, uint kernel_buffer_size)
+        public virtual void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             throw new NotImplementedException();
         }

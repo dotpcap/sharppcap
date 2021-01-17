@@ -79,11 +79,11 @@ namespace Test
             var device = GetPcapDevice();
             Console.WriteLine($"Using device {device}");
             var received = new List<RawCapture>();
-            var mode = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
-                DeviceMode.Promiscuous :
-                DeviceMode.Normal;
+            var flags = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
+                OpenFlags.Promiscuous :
+                OpenFlags.None;
 
-            device.Open(mode, 1);
+            device.Open(flags, 1);
             device.Filter = filter;
             // We can't use the same device for capturing and sending in Linux
             // The device simply does not receive its own sent traffic in Linux, not sure what the reason is.
@@ -92,7 +92,7 @@ namespace Test
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 sender = new LibPcapLiveDevice(device.Interface);
-                sender.Open(mode, 1);
+                sender.Open(flags, 1);
             }
             try
             {

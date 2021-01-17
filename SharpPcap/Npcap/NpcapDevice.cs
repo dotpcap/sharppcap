@@ -72,14 +72,6 @@ namespace SharpPcap.Npcap
         }
 
         /// <summary>
-        /// Open the device
-        /// </summary>
-        public override void Open()
-        {
-            base.Open();
-        }
-
-        /// <summary>
         /// Open
         /// </summary>
         /// <param name="flags">

@@ -63,7 +63,7 @@ namespace CreatingCaptureFile
             else if (device is LibPcapLiveDevice)
             {
                 var livePcapDevice = device as LibPcapLiveDevice;
-                livePcapDevice.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+                livePcapDevice.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
             }
             else
             {
