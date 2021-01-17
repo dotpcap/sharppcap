@@ -14,5 +14,3 @@ rpcapd is broken in Npcap
 See https://github.com/nmap/nmap/issues/1329
 
 tests for Npcap have to run using `--filter TestCategory!=RemotePcap`
-
-## Configure coverage
