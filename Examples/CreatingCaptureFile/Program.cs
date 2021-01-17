@@ -58,7 +58,7 @@ namespace CreatingCaptureFile
             if (device is NpcapDevice)
             {
                 var npcap = device as NpcapDevice;
-                npcap.Open(SharpPcap.Npcap.OpenFlags.DataTransferUdp | SharpPcap.Npcap.OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                npcap.Open(OpenFlags.DataTransferUdp | OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {

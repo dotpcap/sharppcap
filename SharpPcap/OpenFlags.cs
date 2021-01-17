@@ -20,7 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace SharpPcap.Npcap
+namespace SharpPcap
 {
     /// <summary>
     /// The mode used when opening a device
@@ -28,6 +28,11 @@ namespace SharpPcap.Npcap
     [Flags]
     public enum OpenFlags : short
     {
+        /// <summary>
+        /// No flags set
+        /// </summary>
+        None = 0,
+
         /// <summary>
         /// Defines if the adapter has to go in promiscuous mode. 
         /// </summary>
