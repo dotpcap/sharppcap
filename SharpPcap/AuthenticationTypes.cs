@@ -18,7 +18,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010-2011 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace SharpPcap.LibPcap
+namespace SharpPcap
 {
     /// <summary>
     /// Types of authentication
