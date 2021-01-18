@@ -94,39 +94,6 @@ namespace SharpPcap.Npcap
         }
 
         /// <summary>
-        /// Open a device with specific device mode settings
-        /// Npcap extension - Use of this method will exclude your application
-        ///                   from working on Linux or Mac
-        /// </summary>
-        public virtual void Open(DeviceModes mode, int read_timeout)
-        {
-            ThrowIfNotNpcap();
-
-            if (!Opened)
-            {
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
-                var auth = RemoteAuthentication.CreateAuth(Name, Interface.Credentials);
-
-                PcapHandle = LibPcapSafeNativeMethods.pcap_open
-                    (Name,                   // name of the device
-                        Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
-                                                // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (short)mode,           // one or more flags
-                        (short)read_timeout,    // read timeout
-                        ref auth,              // no authentication right now
-                        errbuf);               // error buffer
-
-                if (PcapHandle == IntPtr.Zero)
-                {
-                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
-                    throw new PcapException(err);
-                }
-
-                Active = true;
-            }
-        }
-
-        /// <summary>
         /// Close the device
         /// </summary>
         public override void Close()
