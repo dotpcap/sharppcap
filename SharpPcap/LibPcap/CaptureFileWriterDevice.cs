@@ -208,7 +208,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device
         /// </summary>
-        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
+        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0, RemoteAuthentication certificate = null)
         {
             // Nothing to do here, device is already opened and active upon construction
             Active = true;
