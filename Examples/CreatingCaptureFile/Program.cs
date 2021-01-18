@@ -55,20 +55,7 @@ namespace CreatingCaptureFile
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            if (device is NpcapDevice)
-            {
-                var npcap = device as NpcapDevice;
-                npcap.Open(DeviceModes.DataTransferUdp | DeviceModes.NoCaptureLocal, readTimeoutMilliseconds);
-            }
-            else if (device is LibPcapLiveDevice)
-            {
-                var livePcapDevice = device as LibPcapLiveDevice;
-                livePcapDevice.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
-            }
-            else
-            {
-                throw new InvalidOperationException("unknown device type of " + device.GetType().ToString());
-            }
+            device.Open(mode: DeviceModes.Promiscuous | DeviceModes.DataTransferUdp | DeviceModes.NoCaptureLocal, read_timeout: readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0} {1}, writing to {2}, hit 'Enter' to stop...",
