@@ -42,7 +42,7 @@ namespace NpcapRemoteCapture
 
             device.OnPacketArrival += new SharpPcap.PacketArrivalEventHandler(dev_OnPacketArrival);
 
-            device.Open(0, 500, null);
+            device.Open(read_timeout: 500);
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",

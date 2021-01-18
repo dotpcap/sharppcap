@@ -71,45 +71,6 @@ namespace SharpPcap.Npcap
             }
         }
 
-        /// <summary>
-        /// Open
-        /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceModes"/>
-        /// </param>
-        /// <param name="readTimeoutMilliseconds">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="remoteAuthentication">
-        /// A <see cref="RemoteAuthentication"/>
-        /// </param>
-        public void Open(DeviceModes mode,
-                         int readTimeoutMilliseconds,
-                         RemoteAuthentication remoteAuthentication)
-        {
-            if (!Opened)
-            {
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
-                var auth = RemoteAuthentication.CreateAuth(Name, remoteAuthentication);
-
-                PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
-                                                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
-                                                         (int)mode,
-                                                         readTimeoutMilliseconds,
-                                                         ref auth,
-                                                         errbuf);
-
-                if (PcapHandle == IntPtr.Zero)
-                {
-                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
-                    throw new PcapException(err);
-                }
-
-                Active = true;
-            }
-        }
-
         /// <value>
         /// Npcap specific property
         /// </value>
