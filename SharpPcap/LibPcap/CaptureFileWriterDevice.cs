@@ -233,7 +233,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="p">P.</param>
         /// <param name="h">The height.</param>
-        public void Write(byte[] p, PcapHeader h)
+        public void Write(byte[] p, ref PcapHeader h)
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");
             if (!DumpOpened)
@@ -259,7 +259,8 @@ namespace SharpPcap.LibPcap
         /// <param name="p">The packet to write</param>
         public void Write(byte[] p)
         {
-            Write(p, new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length));
+            var header = new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length);
+            Write(p, ref header);
         }
 
         /// <summary>
@@ -272,7 +273,7 @@ namespace SharpPcap.LibPcap
             var timeval = p.Timeval;
             var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
                                         (uint)data.Length, (uint)data.Length);
-            Write(data, header);
+            Write(data, ref header);
         }
     }
 }
