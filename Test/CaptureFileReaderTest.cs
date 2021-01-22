@@ -36,15 +36,13 @@ namespace Test
         [Test]
         public void CaptureFinite()
         {
-            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
             device.OnPacketArrival += HandleDeviceOnPacketArrival;
             device.Open();
 
             var expectedPackets = 3;
             capturedPackets = 0;
             device.Capture(expectedPackets);
-
-            device.Close();
 
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
@@ -82,7 +80,7 @@ namespace Test
         [Test]
         public void SetFilter()
         {
-            var device = new CaptureFileReaderDevice(TestHelper.GetFile("test_stream.pcap"));
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("test_stream.pcap"));
 
             device.Open();
             device.Filter = "port 53";
@@ -104,8 +102,6 @@ namespace Test
             } while (rawPacket != null);
 
             Assert.AreEqual(1, count);
-
-            device.Close(); // close the device
         }
     }
 }

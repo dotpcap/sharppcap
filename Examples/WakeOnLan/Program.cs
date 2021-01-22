@@ -62,8 +62,8 @@ namespace WakeOnLan
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse(Console.ReadLine());
 
-            var device1 = devices[i];
-            var device2 = CaptureDeviceList.New()[i];
+            using var device1 = devices[i];
+            using var device2 = CaptureDeviceList.New()[i];
 
             // register our handler function to the 'packet arrival' event
             device1.OnPacketArrival +=
@@ -86,12 +86,6 @@ namespace WakeOnLan
             // start capture packets
             device1.Capture();
             device2.Capture();
-
-            // close the pcap device
-            // note: this line will never be called since
-            //  we're capturing infinite number of packets
-            device1.Close();
-            device2.Close();
         }
 
         /// <summary>

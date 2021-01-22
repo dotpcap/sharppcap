@@ -42,7 +42,7 @@ namespace Example4
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse(Console.ReadLine());
 
-            var device = devices[i];
+            using var device = devices[i];
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
@@ -67,8 +67,6 @@ namespace Example4
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
 
-            //Close the pcap device
-            device.Close();
             Console.WriteLine("-- Timeout elapsed, capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

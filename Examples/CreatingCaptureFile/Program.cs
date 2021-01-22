@@ -47,7 +47,7 @@ namespace CreatingCaptureFile
             Console.Write("-- Please enter the output file name: ");
             string capFile = Console.ReadLine();
 
-            var device = devices[i];
+            using var device = devices[i];
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
@@ -91,9 +91,6 @@ namespace CreatingCaptureFile
 
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
-
-            // Close the pcap device
-            device.Close();
         }
 
         private static int packetIndex = 0;

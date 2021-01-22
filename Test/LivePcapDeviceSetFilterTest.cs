@@ -21,15 +21,13 @@ namespace Test
                 LinkLayers.Raw,
                 LinkLayers.Null
             };
-            var device = fixture.GetDevice();
+            using var device = fixture.GetDevice();
             device.Open();
             if (!supportedLinks.Contains(device.LinkType))
             {
-                device.Close();
                 Assert.Inconclusive("NFLOG link-layer not supported");
             }
             device.Filter = "tcp port 80";
-            device.Close(); // close the device
         }
 
         /// <summary>

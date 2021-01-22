@@ -76,7 +76,7 @@ namespace Test
         /// <returns></returns>
         internal static List<RawCapture> RunCapture(string filter, Action<PcapDevice> routine)
         {
-            var device = GetPcapDevice();
+            using var device = GetPcapDevice();
             Console.WriteLine($"Using device {device}");
             var received = new List<RawCapture>();
             var mode = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ?
@@ -94,7 +94,7 @@ namespace Test
                 sender = new LibPcapLiveDevice(device.Interface);
                 sender.Open(mode, 1);
             }
-            try
+            using(sender)
             {
                 routine(sender);
                 // waiting for any queued packets to be sent
@@ -120,11 +120,6 @@ namespace Test
                     }
 
                 }
-            }
-            finally
-            {
-                sender.Close();
-                device.Close();
             }
             return received;
         }
