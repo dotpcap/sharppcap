@@ -225,6 +225,9 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual void Close()
         {
+            //Remove event handlers
+            OnPacketArrival = null;
+
             if (PcapHandle == IntPtr.Zero)
                 return;
 
@@ -238,9 +241,6 @@ namespace SharpPcap.LibPcap
             }
             LibPcapSafeNativeMethods.pcap_close(PcapHandle);
             PcapHandle = IntPtr.Zero;
-
-            //Remove event handlers
-            OnPacketArrival = null;
         }
 
         /// <summary>

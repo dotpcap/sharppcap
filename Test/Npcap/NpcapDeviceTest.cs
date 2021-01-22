@@ -41,24 +41,11 @@ namespace Test.Npcap
                                                            " on windows?");
             }
 
-            devices[0].Open();
-            devices[0].OnPcapStatistics += (sender, args) => { };
+            using var device = devices[0];
+            device.Open();
+            device.OnPcapStatistics += (sender, args) => { };
 
-            bool caughtException = false;
-
-            try
-            {
-                // start background capture
-                devices[0].StartCapture();
-            }
-            catch (DeviceNotReadyException)
-            {
-                caughtException = true;
-            }
-
-            Assert.IsFalse(caughtException);
-
-            devices[0].Close();
+            Assert.DoesNotThrow(() => device.StartCapture());
         }
 
         /// <summary>
@@ -76,23 +63,10 @@ namespace Test.Npcap
                                                            " on windows?");
             }
 
-            devices[0].Open();
+            using var device = devices[0];
+            device.Open();
 
-            bool caughtExpectedException = false;
-
-            try
-            {
-                // start background capture
-                devices[0].StartCapture();
-            }
-            catch (DeviceNotReadyException)
-            {
-                caughtExpectedException = true;
-            }
-
-            Assert.IsTrue(caughtExpectedException);
-
-            devices[0].Close();
+            Assert.Throws<DeviceNotReadyException>(() => device.StartCapture());
         }
     }
 }

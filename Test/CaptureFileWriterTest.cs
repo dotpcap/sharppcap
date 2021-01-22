@@ -17,9 +17,10 @@ namespace Test
         [Test]
         public void TestFileCreationAndDeletion()
         {
-            var wd = new CaptureFileWriterDevice(@"abc.pcap");
-            wd.Write(new byte[] { 1, 2, 3, 4 });
-            wd.Close();
+            using (var wd = new CaptureFileWriterDevice(@"abc.pcap"))
+            {
+                wd.Write(new byte[] { 1, 2, 3, 4 });
+            }
             System.IO.File.Delete(@"abc.pcap");
         }
     }

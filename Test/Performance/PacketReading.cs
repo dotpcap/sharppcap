@@ -1,6 +1,7 @@
 using System;
 using SharpPcap;
 using NUnit.Framework;
+using SharpPcap.LibPcap;
 
 namespace Test.Performance
 {
@@ -17,7 +18,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while (packetsRead < packetsToRead)
             {
-                var captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
+                using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;
@@ -28,7 +29,6 @@ namespace Test.Performance
                 }
                 while (rawCapture != null);
 
-                captureDevice.Close();
             }
 
             var endTime = DateTime.Now;
@@ -46,7 +46,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while (packetsRead < packetsToRead)
             {
-                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
+                using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;
@@ -56,8 +56,6 @@ namespace Test.Performance
                     packetsRead++;
                 }
                 while (rawCapture != null);
-
-                captureDevice.Close();
             }
 
             var endTime = DateTime.Now;
@@ -75,7 +73,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
             while (packetsRead < packetsToRead)
             {
-                ICaptureDevice captureDevice = new SharpPcap.LibPcap.CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
+                using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
                 RawCapture rawCapture = null;
@@ -85,8 +83,6 @@ namespace Test.Performance
                     packetsRead++;
                 }
                 while (rawCapture != null);
-
-                captureDevice.Close();
             }
 
             var endTime = DateTime.Now;

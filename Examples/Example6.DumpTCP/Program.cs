@@ -40,7 +40,7 @@ namespace Example6
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse(Console.ReadLine());
 
-            var device = devices[i];
+            using var device = devices[i];
 
             //Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
@@ -65,10 +65,6 @@ namespace Example6
             // Start capture 'INFINTE' number of packets
             device.Capture();
 
-            // Close the pcap device
-            // (Note: this line will never be called since
-            //  we're capturing infinite number of packets
-            device.Close();
         }
 
         /// <summary>

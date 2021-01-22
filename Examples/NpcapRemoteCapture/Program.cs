@@ -38,7 +38,7 @@ namespace NpcapRemoteCapture
             }
 
             // open the device for capture
-            var device = remoteDevices[0];
+            using var device = remoteDevices[0];
 
             device.OnPacketArrival += new SharpPcap.PacketArrivalEventHandler(dev_OnPacketArrival);
 
@@ -61,9 +61,6 @@ namespace NpcapRemoteCapture
 
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
-
-            // Close the pcap device
-            device.Close();
         }
 
         static void dev_OnPacketArrival(object sender, SharpPcap.CaptureEventArgs e)

@@ -43,8 +43,8 @@ namespace MultipleFiltersOnDevice
 
             int readTimeoutMilliseconds = 1000;
 
-            var device1 = CaptureDeviceList.Instance[i];
-            var device2 = CaptureDeviceList.New()[i]; // NOTE: the call to New()
+            using var device1 = CaptureDeviceList.Instance[i];
+            using var device2 = CaptureDeviceList.New()[i]; // NOTE: the call to New()
 
             // Register our handler function to the 'packet arrival' event
             device1.OnPacketArrival +=
@@ -83,10 +83,6 @@ namespace MultipleFiltersOnDevice
             // Print out the device statistics
             Console.WriteLine("device1 {0}", device1.Statistics.ToString());
             Console.WriteLine("device2 {0}", device2.Statistics.ToString());
-
-            // Close the pcap device
-            device1.Close();
-            device2.Close();
         }
 
         /// <summary>

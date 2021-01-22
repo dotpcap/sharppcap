@@ -19,6 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
  */
 
+using SharpPcap.LibPcap;
 using System;
 using System.Net.NetworkInformation;
 
@@ -29,15 +30,15 @@ namespace SharpPcap
     /// </summary>
     public class ARP
     {
-        private LibPcap.LibPcapLiveDevice _device;
+        private readonly PcapInterface pcapInterface;
 
         /// <summary>
         /// Constructs a new ARP Resolver
         /// </summary>
         /// <param name="device">The network device on which this resolver sends its ARP packets</param>
-        public ARP(LibPcap.LibPcapLiveDevice device)
+        public ARP(LibPcapLiveDevice device)
         {
-            _device = device;
+            pcapInterface = device.Interface;
         }
 
         /// <summary>
@@ -71,37 +72,34 @@ namespace SharpPcap
             // if no local ip address is specified attempt to find one from the adapter
             if (localIP == null)
             {
-                if (_device.Addresses.Count > 0)
+                // attempt to find an ipv4 address.
+                // ARP is ipv4, NDP is used for ipv6
+                foreach (var address in pcapInterface.Addresses)
                 {
-                    // attempt to find an ipv4 address.
-                    // ARP is ipv4, NDP is used for ipv6
-                    foreach (var address in _device.Addresses)
+                    if (address.Addr.type == Sockaddr.AddressTypes.AF_INET_AF_INET6)
                     {
-                        if (address.Addr.type == LibPcap.Sockaddr.AddressTypes.AF_INET_AF_INET6)
+                        // make sure the address is ipv4
+                        if (address.Addr.ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                         {
-                            // make sure the address is ipv4
-                            if (address.Addr.ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                            {
-                                localIP = address.Addr.ipAddress;
-                                break; // break out of the foreach
-                            }
+                            localIP = address.Addr.ipAddress;
+                            break; // break out of the foreach
                         }
                     }
+                }
 
-                    // if we can't find either an ipv6 or an ipv4 address use the localhost address
-                    if (localIP == null)
-                    {
-                        localIP = System.Net.IPAddress.Parse("127.0.0.1");
-                    }
+                // if we can't find either an ipv6 or an ipv4 address use the localhost address
+                if (localIP == null)
+                {
+                    localIP = System.Net.IPAddress.Parse("127.0.0.1");
                 }
             }
 
             // if no local mac address is specified attempt to find one from the device
             if (localMAC == null)
             {
-                foreach (var address in _device.Addresses)
+                foreach (var address in pcapInterface.Addresses)
                 {
-                    if (address.Addr.type == LibPcap.Sockaddr.AddressTypes.HARDWARE)
+                    if (address.Addr.type == Sockaddr.AddressTypes.HARDWARE)
                     {
                         localMAC = address.Addr.hardwareAddress;
                     }
@@ -124,67 +122,67 @@ namespace SharpPcap
             //create a "tcpdump" filter for allowing only arp replies to be read
             String arpFilter = "arp and ether dst " + localMAC.ToString();
 
-            //open the device with 20ms timeout
-            _device.Open(mode: DeviceModes.Promiscuous, read_timeout: 20);
-
-            //set the filter
-            _device.Filter = arpFilter;
-
-            // set a last request time that will trigger sending the
-            // arp request immediately
-            var lastRequestTime = DateTime.FromBinary(0);
-
-            var requestInterval = new TimeSpan(0, 0, 1);
-
-            PacketDotNet.ArpPacket arpPacket = null;
-
-            // attempt to resolve the address with the current timeout
-            var timeoutDateTime = DateTime.Now + Timeout;
-            while (DateTime.Now < timeoutDateTime)
+            using (var device = new LibPcapLiveDevice(pcapInterface))
             {
-                if (requestInterval < (DateTime.Now - lastRequestTime))
+                //open the device with 20ms timeout
+                device.Open(mode: DeviceModes.Promiscuous, read_timeout: 20);
+
+                //set the filter
+                device.Filter = arpFilter;
+
+                // set a last request time that will trigger sending the
+                // arp request immediately
+                var lastRequestTime = DateTime.FromBinary(0);
+
+                var requestInterval = new TimeSpan(0, 0, 1);
+
+                PacketDotNet.ArpPacket arpPacket = null;
+
+                // attempt to resolve the address with the current timeout
+                var timeoutDateTime = DateTime.Now + Timeout;
+                while (DateTime.Now < timeoutDateTime)
                 {
-                    // inject the packet to the wire
-                    _device.SendPacket(request);
-                    lastRequestTime = DateTime.Now;
+                    if (requestInterval < (DateTime.Now - lastRequestTime))
+                    {
+                        // inject the packet to the wire
+                        device.SendPacket(request);
+                        lastRequestTime = DateTime.Now;
+                    }
+
+                    //read the next packet from the network
+                    var reply = device.GetNextPacket();
+                    if (reply == null)
+                    {
+                        continue;
+                    }
+
+                    // parse the packet
+                    var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
+
+                    // is this an arp packet?
+                    arpPacket = packet.Extract<PacketDotNet.ArpPacket>();
+                    if (arpPacket == null)
+                    {
+                        continue;
+                    }
+
+                    //if this is the reply we're looking for, stop
+                    if (arpPacket.SenderProtocolAddress.Equals(destIP))
+                    {
+                        break;
+                    }
                 }
 
-                //read the next packet from the network
-                var reply = _device.GetNextPacket();
-                if (reply == null)
+                // the timeout happened
+                if (DateTime.Now >= timeoutDateTime)
                 {
-                    continue;
+                    return null;
                 }
-
-                // parse the packet
-                var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
-
-                // is this an arp packet?
-                arpPacket = packet.Extract<PacketDotNet.ArpPacket>();
-                if (arpPacket == null)
+                else
                 {
-                    continue;
+                    //return the resolved MAC address
+                    return arpPacket.SenderHardwareAddress;
                 }
-
-                //if this is the reply we're looking for, stop
-                if (arpPacket.SenderProtocolAddress.Equals(destIP))
-                {
-                    break;
-                }
-            }
-
-            // free the device
-            _device.Close();
-
-            // the timeout happened
-            if (DateTime.Now >= timeoutDateTime)
-            {
-                return null;
-            }
-            else
-            {
-                //return the resolved MAC address
-                return arpPacket.SenderHardwareAddress;
             }
         }
 

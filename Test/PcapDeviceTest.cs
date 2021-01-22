@@ -37,7 +37,7 @@ namespace Test
         [Test]
         public void DeviceProperties([PcapDevices] DeviceFixture fixture)
         {
-            var device = (PcapDevice)fixture.GetDevice();
+            using var device = (PcapDevice)fixture.GetDevice();
 
             device.Open();
             var pcapIf = device.Interface;
@@ -55,8 +55,6 @@ namespace Test
             {
                 Assert.That(pcapIf.MacAddress.GetAddressBytes(), Has.Length.EqualTo(6));
             }
-
-            device.Close();
         }
 
         /// <summary>
@@ -77,7 +75,7 @@ namespace Test
             [CaptureDevices] DeviceFixture fixture
         )
         {
-            var device = fixture.GetDevice();
+            using var device = fixture.GetDevice();
 
             Assert.IsFalse(device.Started, "Expected device not to be Started");
 
@@ -94,8 +92,6 @@ namespace Test
             Assert.Throws<InvalidOperationDuringBackgroundCaptureException>(
                 () => device.GetNextPacket()
             );
-
-            device.Close();
         }
 
         /// <summary>
@@ -107,14 +103,12 @@ namespace Test
            [CaptureDevices] DeviceFixture fixture
         )
         {
-            var device = fixture.GetDevice();
+            using var device = fixture.GetDevice();
             device.Open();
 
             Assert.Throws<DeviceNotReadyException>(
                 () => device.StartCapture()
             );
-
-            device.Close();
         }
 
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
@@ -138,37 +132,30 @@ namespace Test
             }
             // We can't use the same device for async capturing and sending
             var device = GetPcapDevice();
-            var receiver = new LibPcapLiveDevice(device.Interface);
-            var sender = new LibPcapLiveDevice(receiver.Interface);
-            try
-            {
-                // Configure sender
-                sender.Open();
+            using var receiver = new LibPcapLiveDevice(device.Interface);
+            using var sender = new LibPcapLiveDevice(receiver.Interface);
 
-                // Configure receiver
-                receiver.Open(DeviceModes.Promiscuous);
-                receiver.Filter = "ether proto 0x1234";
-                receiver.OnPacketArrival += Receiver_OnPacketArrival;
-                receiver.OnCaptureStopped += Receiver_OnCaptureStopped;
-                receiver.StartCapture();
+            // Configure sender
+            sender.Open();
 
-                // Send the packets
-                var packet = EthernetPacket.RandomPacket();
-                packet.Type = (EthernetType)0x1234;
-                for (var i = 0; i < PacketsCount; i++)
-                {
-                    sender.SendPacket(packet);
-                }
-                // Wait for packets to arrive
-                Thread.Sleep(2000);
-                receiver.StopCapture();
-            }
-            finally
+            // Configure receiver
+            receiver.Open(DeviceModes.Promiscuous);
+            receiver.Filter = "ether proto 0x1234";
+            receiver.OnPacketArrival += Receiver_OnPacketArrival;
+            receiver.OnCaptureStopped += Receiver_OnCaptureStopped;
+            receiver.StartCapture();
+
+            // Send the packets
+            var packet = EthernetPacket.RandomPacket();
+            packet.Type = (EthernetType)0x1234;
+            for (var i = 0; i < PacketsCount; i++)
             {
-                receiver.OnPacketArrival -= Receiver_OnPacketArrival;
-                sender.Close();
-                receiver.Close();
+                sender.SendPacket(packet);
             }
+            // Wait for packets to arrive
+            Thread.Sleep(2000);
+            receiver.StopCapture();
+
             // Checks
             Assert.That(packets, Has.Count.EqualTo(PacketsCount));
             Assert.That(statuses, Has.Count.EqualTo(1));

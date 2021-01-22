@@ -61,20 +61,19 @@ namespace Test.WinDivert
         [Test]
         public void TestGetNextPacket()
         {
-            var device = new WinDivertDevice
+            using var device = new WinDivertDevice
             {
                 Filter = "!loopback and tcp"
             };
             device.Open();
             var capture = device.GetNextPacket();
-            device.Close();
             AssertTcp(capture);
         }
 
         [Test]
         public void TestCapture()
         {
-            var device = new WinDivertDevice
+            using var device = new WinDivertDevice
             {
                 Filter = "!loopback and tcp"
             };
@@ -87,7 +86,6 @@ namespace Test.WinDivert
             device.StartCapture();
             Thread.Sleep(10000);
             device.StopCapture();
-            device.Close();
             Assert.That(received, Has.Count.AtLeast(2));
             foreach (var capture in received)
             {
@@ -116,24 +114,17 @@ namespace Test.WinDivert
             var ifIndex = nic.GetIPProperties().GetIPv4Properties().Index;
             Console.WriteLine($"Using NIC {nic.Name} [{ifIndex}]");
             Console.WriteLine($"Sending from {src} to {dst}");
-            var device = new WinDivertDevice();
+            using var device = new WinDivertDevice();
             device.Open();
-            try
-            {
-                var udp = new UdpPacket(5000, 5000);
-                udp.PayloadData = new byte[100];
-                var ip = IPv4Packet.RandomPacket();
-                ip.PayloadPacket = udp;
+            var udp = new UdpPacket(5000, 5000);
+            udp.PayloadData = new byte[100];
+            var ip = IPv4Packet.RandomPacket();
+            ip.PayloadPacket = udp;
 
-                ip.SourceAddress = src;
-                ip.DestinationAddress = dst;
+            ip.SourceAddress = src;
+            ip.DestinationAddress = dst;
 
-                device.SendPacket(ip);
-            }
-            finally
-            {
-                device.Close();
-            }
+            device.SendPacket(ip);
         }
 
     }

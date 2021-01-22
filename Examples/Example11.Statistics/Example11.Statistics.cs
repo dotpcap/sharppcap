@@ -53,7 +53,7 @@ namespace Example11
             Console.Write("-- Please choose a device to gather statistics on: ");
             i = int.Parse(Console.ReadLine());
 
-            var device = devices[i] as SharpPcap.Npcap.NpcapDevice;
+            using var device = devices[i] as SharpPcap.Npcap.NpcapDevice;
 
             // Register our handler function to the 'pcap statistics' event
             device.OnPcapStatistics +=
@@ -84,8 +84,6 @@ namespace Example11
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
 
-            // Close the pcap device
-            device.Close();
             Console.WriteLine("Capture stopped, device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();

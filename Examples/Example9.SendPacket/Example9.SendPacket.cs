@@ -38,7 +38,7 @@ namespace Example9
             Console.Write("-- Please choose a device to send a packet on: ");
             i = int.Parse(Console.ReadLine());
 
-            var device = devices[i];
+            using var device = devices[i];
 
             Console.Write("-- This will send a random packet out this interface, " +
                 "continue? [YES|no]");
@@ -68,9 +68,6 @@ namespace Example9
                 Console.WriteLine("-- " + e.Message);
             }
 
-            //Close the pcap device
-            device.Close();
-            Console.WriteLine("-- Device closed.");
             Console.Write("Hit 'Enter' to exit...");
             Console.ReadLine();
         }

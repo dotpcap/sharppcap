@@ -29,7 +29,8 @@ namespace Test
                     GetSendQueue().NativeTransmit(device, SendQueueTransmitModes.Normal);
                 });
                 AssertGoodTransmitNormal(received);
-            } else
+            }
+            else
             {
                 Assert.Ignore("Skipping test as no hardware acceleration is present");
             }
@@ -45,7 +46,8 @@ namespace Test
                     GetSendQueue().NativeTransmit(device, SendQueueTransmitModes.Synchronized);
                 });
                 AssertGoodTransmitSync(received);
-            } else
+            }
+            else
             {
                 Assert.Ignore("Skipping test as no hardware acceleration is present");
             }
@@ -88,20 +90,14 @@ namespace Test
         {
             if (SendQueue.IsHardwareAccelerated)
             {
-                var device = GetPcapDevice();
+                using var device = GetPcapDevice();
                 device.Open();
-                try
-                {
-                    var queue = GetSendQueue();
-                    var managed = queue.ManagedTransmit(device, SendQueueTransmitModes.Normal);
-                    var native = queue.NativeTransmit(device, SendQueueTransmitModes.Normal);
-                    Assert.AreEqual(managed, native);
-                }
-                finally
-                {
-                    device.Close();
-                }
-            } else
+                var queue = GetSendQueue();
+                var managed = queue.ManagedTransmit(device, SendQueueTransmitModes.Normal);
+                var native = queue.NativeTransmit(device, SendQueueTransmitModes.Normal);
+                Assert.AreEqual(managed, native);
+            }
+            else
             {
                 Assert.Ignore("Skipping test as no hardware acceleration is present");
             }

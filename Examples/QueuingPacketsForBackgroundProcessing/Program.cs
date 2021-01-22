@@ -87,7 +87,7 @@ namespace QueuingPacketsForBackgroundProcessing
             var backgroundThread = new System.Threading.Thread(BackgroundThread);
             backgroundThread.Start();
 
-            var device = CaptureDeviceList.Instance[i];
+            using var device = CaptureDeviceList.Instance[i];
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
@@ -120,9 +120,6 @@ namespace QueuingPacketsForBackgroundProcessing
 
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
-
-            // Close the pcap device
-            device.Close();
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ namespace Example3
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse(Console.ReadLine());
 
-            var device = devices[i];
+            using var device = devices[i];
 
             // Register our handler function to the 'packet arrival' event
             device.OnPacketArrival +=
@@ -85,9 +85,6 @@ namespace Example3
 
             // Print out the device statistics
             Console.WriteLine(device.Statistics.ToString());
-
-            // Close the pcap device
-            device.Close();
         }
 
         /// <summary>
