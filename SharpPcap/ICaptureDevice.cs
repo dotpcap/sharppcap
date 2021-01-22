@@ -24,7 +24,7 @@ namespace SharpPcap
     /// <summary>
     /// Interfaces for capture devices
     /// </summary>
-    public interface ICaptureDevice
+    public interface ICaptureDevice : IDisposable
     {
         /// <summary>
         /// Gets the name of the device

@@ -112,11 +112,6 @@ namespace SharpPcap.LibPcap
                     throw new InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
                 }
             }
-
-            get
-            {
-                throw new NotImplementedException();
-            }
         }
 
         /// <summary>
