@@ -218,10 +218,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public virtual void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0);
 
         /// <summary>
         /// Closes this adapter
@@ -243,13 +240,7 @@ namespace SharpPcap.LibPcap
             PcapHandle = IntPtr.Zero;
 
             //Remove event handlers
-            if (OnPacketArrival != null)
-            {
-                foreach (PacketArrivalEventHandler pa in OnPacketArrival.GetInvocationList())
-                {
-                    OnPacketArrival -= pa;
-                }
-            }
+            OnPacketArrival = null;
         }
 
         /// <summary>
@@ -267,14 +258,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                ThrowIfNotOpen("device not open");
-
                 return Interface.MacAddress;
-            }
-
-            set
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -616,10 +600,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="size">The number of bytes to send</param>
-        public virtual void SendPacket(ReadOnlySpan<byte> p)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void SendPacket(ReadOnlySpan<byte> p);
 
         /// <summary>
         /// Helper method for checking that the adapter is open, throws an
@@ -680,6 +661,16 @@ namespace SharpPcap.LibPcap
             {
                 dev.Close();
             }
+        }
+
+        ~PcapDevice()
+        {
+            Close();
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
     }
 }

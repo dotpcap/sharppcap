@@ -338,5 +338,15 @@ namespace SharpPcap.WinDivert
             var err = Marshal.GetLastWin32Error();
             ThrowWin32Error(message, err);
         }
+
+        ~WinDivertDevice()
+        {
+            Close();
+        }
+
+        public void Dispose()
+        {
+            Close();
+        }
     }
 }

@@ -170,14 +170,7 @@ namespace SharpPcap.Npcap
         /// </summary>
         public override void Close()
         {
-            if (OnPcapStatistics != null)
-            {
-                foreach (StatisticsModeEventHandler pse in OnPcapStatistics.GetInvocationList())
-                {
-                    OnPcapStatistics -= pse;
-                }
-            }
-
+            OnPcapStatistics = null;
             // call the base method
             base.Close();
         }
@@ -217,11 +210,6 @@ namespace SharpPcap.Npcap
                 {
                     throw new InvalidOperationException("pcap_setbuff() failed");
                 }
-            }
-
-            get
-            {
-                throw new NotImplementedException();
             }
         }
 

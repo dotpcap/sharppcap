@@ -208,7 +208,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device
         /// </summary>
-        public void Open()
+        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             // Nothing to do here, device is already opened and active upon construction
             Active = true;
@@ -273,6 +273,11 @@ namespace SharpPcap.LibPcap
             var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
                                         (uint)data.Length, (uint)data.Length);
             Write(data, header);
+        }
+
+        public override void SendPacket(ReadOnlySpan<byte> p)
+        {
+            throw new NotSupportedOnCaptureFileException("Sending not supported on a capture file");
         }
     }
 }

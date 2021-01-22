@@ -120,6 +120,11 @@ namespace SharpPcap.LibPcap
                 throw new NotSupportedOnCaptureFileException("Statistics not supported on a capture file");
             }
         }
+
+        public override void SendPacket(ReadOnlySpan<byte> p)
+        {
+            throw new NotSupportedOnCaptureFileException("Sending not supported on a capture file");
+        }
     }
 }
 
