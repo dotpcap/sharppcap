@@ -46,7 +46,7 @@ namespace Example5
 
             //Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            device.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+            device.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
 
             // tcpdump filter to capture only TCP/IP packets
             string filter = "ip and tcp";

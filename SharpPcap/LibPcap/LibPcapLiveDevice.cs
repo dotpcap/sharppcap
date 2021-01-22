@@ -122,8 +122,8 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="flags">
-        /// A <see cref="OpenFlags"/>
+        /// <param name="mode">
+        /// A <see cref="DeviceModes"/>
         /// </param>
         /// <param name="read_timeout">
         /// A <see cref="int"/>
@@ -134,7 +134,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public override void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
+        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             if (!Opened)
             {
@@ -148,9 +148,9 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
 
-                // flags other than OpenFlags.Promiscuous require pcap_open()
-                var otherFlags = flags & ~OpenFlags.Promiscuous;
-                if ((Interface.Credentials == null) || ((short)otherFlags != 0))
+                // modes other than OpenFlags.Promiscuous require pcap_open()
+                var otherModes = mode & ~DeviceModes.Promiscuous;
+                if ((Interface.Credentials == null) || ((short)otherModes != 0))
                 {
                     PcapHandle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
@@ -164,7 +164,7 @@ namespace SharpPcap.LibPcap
                         (Name,                   // name of the device
                             Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                     // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                            (short)flags,           // flags
+                            (short)mode,           // flags
                             (short)read_timeout,    // read timeout
                             ref auth,              // authentication
                             errbuf);               // error buffer
@@ -189,7 +189,7 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(flags & OpenFlags.Promiscuous));
+                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(mode & DeviceModes.Promiscuous));
                 LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
 
                 if (kernel_buffer_size != 0)

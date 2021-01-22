@@ -58,12 +58,12 @@ namespace CreatingCaptureFile
             if (device is NpcapDevice)
             {
                 var npcap = device as NpcapDevice;
-                npcap.Open(OpenFlags.DataTransferUdp | OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                npcap.Open(DeviceModes.DataTransferUdp | DeviceModes.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {
                 var livePcapDevice = device as LibPcapLiveDevice;
-                livePcapDevice.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+                livePcapDevice.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
             }
             else
             {

@@ -56,12 +56,12 @@ namespace Example3
             if (device is NpcapDevice)
             {
                 var nPcap = device as NpcapDevice;
-                nPcap.Open(OpenFlags.DataTransferUdp | OpenFlags.NoCaptureLocal, readTimeoutMilliseconds);
+                nPcap.Open(DeviceModes.DataTransferUdp | DeviceModes.NoCaptureLocal, readTimeoutMilliseconds);
             }
             else if (device is LibPcapLiveDevice)
             {
                 var livePcapDevice = device as LibPcapLiveDevice;
-                livePcapDevice.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+                livePcapDevice.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
             }
             else
             {

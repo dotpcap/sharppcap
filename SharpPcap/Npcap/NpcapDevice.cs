@@ -74,8 +74,8 @@ namespace SharpPcap.Npcap
         /// <summary>
         /// Open
         /// </summary>
-        /// <param name="flags">
-        /// A <see cref="OpenFlags"/>
+        /// <param name="mode">
+        /// A <see cref="DeviceModes"/>
         /// </param>
         /// <param name="readTimeoutMilliseconds">
         /// A <see cref="int"/>
@@ -83,7 +83,7 @@ namespace SharpPcap.Npcap
         /// <param name="remoteAuthentication">
         /// A <see cref="RemoteAuthentication"/>
         /// </param>
-        public void Open(OpenFlags flags,
+        public void Open(DeviceModes mode,
                          int readTimeoutMilliseconds,
                          RemoteAuthentication remoteAuthentication)
         {
@@ -95,7 +95,7 @@ namespace SharpPcap.Npcap
 
                 PcapHandle = LibPcapSafeNativeMethods.pcap_open(Name,
                                                          Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
-                                                         (int)flags,
+                                                         (int)mode,
                                                          readTimeoutMilliseconds,
                                                          ref auth,
                                                          errbuf);
@@ -133,11 +133,11 @@ namespace SharpPcap.Npcap
         }
 
         /// <summary>
-        /// Open a device with specific flags
+        /// Open a device with specific device mode settings
         /// Npcap extension - Use of this method will exclude your application
         ///                   from working on Linux or Mac
         /// </summary>
-        public virtual void Open(OpenFlags flags, int read_timeout)
+        public virtual void Open(DeviceModes mode, int read_timeout)
         {
             ThrowIfNotNpcap();
 
@@ -150,7 +150,7 @@ namespace SharpPcap.Npcap
                     (Name,                   // name of the device
                         Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
                                                 // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                        (short)flags,           // one or more flags
+                        (short)mode,           // one or more flags
                         (short)read_timeout,    // read timeout
                         ref auth,              // no authentication right now
                         errbuf);               // error buffer

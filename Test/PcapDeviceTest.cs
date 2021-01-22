@@ -146,7 +146,7 @@ namespace Test
                 sender.Open();
 
                 // Configure receiver
-                receiver.Open(OpenFlags.Promiscuous);
+                receiver.Open(DeviceModes.Promiscuous);
                 receiver.Filter = "ether proto 0x1234";
                 receiver.OnPacketArrival += Receiver_OnPacketArrival;
                 receiver.OnCaptureStopped += Receiver_OnCaptureStopped;

@@ -73,8 +73,8 @@ namespace WakeOnLan
 
             // open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            device1.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
-            device2.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+            device1.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
+            device2.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
 
             // tcpdump filter to capture only TCP/IP packets
             device1.Filter = "ether dst FF:FF:FF:FF:FF:FF and udp";
