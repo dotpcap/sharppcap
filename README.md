@@ -43,3 +43,13 @@ SharpPcap is released via nuget
 
 # Platform specific notes
 * OSX (at least as of 11.1) lacks libpcap with pcap_open
+
+# Thanks
+
+SharpPcap is where it is today because of a number of developers who have provided improvements and fixes
+and users that have provided helpful feedback through issues and feature requests.
+
+We are especially appreciative of a number of projects we build upon (as SharpPcap is a C# wrapper):
+
+* libpcap - thank you so much for releasing 1.10
+* npcap - for continuing packet capture support on Windows
