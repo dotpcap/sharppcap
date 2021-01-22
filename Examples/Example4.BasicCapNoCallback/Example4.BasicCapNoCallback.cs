@@ -46,7 +46,7 @@ namespace Example4
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
-            device.Open(OpenFlags.Promiscuous, readTimeoutMilliseconds);
+            device.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}...",

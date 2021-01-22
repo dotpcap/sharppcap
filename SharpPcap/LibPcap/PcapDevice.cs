@@ -206,8 +206,8 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="flags">
-        /// A <see cref="OpenFlags"/>
+        /// <param name="mode">
+        /// A <see cref="DeviceModes"/>
         /// </param>
         /// <param name="read_timeout">
         /// A <see cref="int"/>
@@ -218,7 +218,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public virtual void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
+        public virtual void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             throw new NotImplementedException();
         }

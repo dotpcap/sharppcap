@@ -61,7 +61,7 @@ namespace SharpPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="flags">
+        /// <param name="mode">
         /// A <see cref="DeviceMode"/>
         /// </param>
         /// <param name="read_timeout">
@@ -73,7 +73,7 @@ namespace SharpPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0);
+        void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0);
 
         /// <summary>
         /// Closes this adapter

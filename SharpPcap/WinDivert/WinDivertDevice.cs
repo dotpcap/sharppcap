@@ -110,7 +110,7 @@ namespace SharpPcap.WinDivert
             throw new NotSupportedException();
         }
 
-        public void Open(OpenFlags flags = OpenFlags.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
+        public void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0)
         {
             var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
             if (handle == IntPtr.Zero || handle == new IntPtr(-1))
