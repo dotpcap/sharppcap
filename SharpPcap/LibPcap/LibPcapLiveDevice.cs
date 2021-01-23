@@ -97,23 +97,6 @@ namespace SharpPcap.LibPcap
             get { return (Flags & Pcap.PCAP_IF_LOOPBACK) == 1; }
         }
 
-        /// <value>
-        /// Set the kernel value buffer size in bytes
-        /// Npcap extension
-        /// </value>
-        public virtual uint KernelBufferSize
-        {
-            set
-            {
-                int retval = LibPcapSafeNativeMethods.pcap_set_buffer_size(this.m_pcapAdapterHandle,
-                    (int)value);
-                if (retval != 0)
-                {
-                    throw new InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
-                }
-            }
-        }
-
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
@@ -129,7 +112,7 @@ namespace SharpPcap.LibPcap
         /// <param name="kernel_buffer_size">
         /// A <see cref="uint"/>
         /// </param>
-        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0, RemoteAuthentication credentials = null)
+        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint buffer_size = 0, uint kernel_buffer_size = 0, RemoteAuthentication credentials = null)
         {
             credentials = credentials ?? Interface.Credentials;
 
@@ -189,8 +172,17 @@ namespace SharpPcap.LibPcap
                 LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(mode & DeviceModes.Promiscuous));
                 LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
 
-                if (kernel_buffer_size != 0)
-                    KernelBufferSize = kernel_buffer_size;
+                if (buffer_size != 0)
+                {
+                    int retval = LibPcapSafeNativeMethods.pcap_set_buffer_size(
+                        m_pcapAdapterHandle,
+                        (int)buffer_size
+                    );
+                    if (retval != 0)
+                    {
+                        throw new InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
+                    }
+                }
 
                 var activationResult = LibPcapSafeNativeMethods.pcap_activate(PcapHandle);
                 if (activationResult < 0)
@@ -203,6 +195,18 @@ namespace SharpPcap.LibPcap
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
                     FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(PcapHandle);
+                }
+
+                if (kernel_buffer_size != 0)
+                {
+                    int retval = LibPcapSafeNativeMethods.pcap_setbuff(
+                        m_pcapAdapterHandle,
+                        (int)kernel_buffer_size
+                    );
+                    if (retval != 0)
+                    {
+                        throw new InvalidOperationException("pcap_setbuff() failed - return value " + retval);
+                    }
                 }
             }
         }
