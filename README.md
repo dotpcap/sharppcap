@@ -53,3 +53,28 @@ We are especially appreciative of a number of projects we build upon (as SharpPc
 
 * libpcap - thank you so much for releasing 1.10
 * npcap - for continuing packet capture support on Windows
+
+# Migration from 5.x to 6.0
+
+To aid with the migration from 5.x to 6.0 here is a list of some of the changes you'll have to make to your
+SharpPcap usage.
+
+The examples are also a great resource a they show working examples using the latest API.
+
+* Devices are IDisposable
+  * Remove calls to Close()
+  * Switch 'var device = xxx;'to 'using device = xxx;'
+* Rename OpenFlags -> DeviceModes
+* Open() methods have been collapsed into fewer methods with default variables.
+* DeviceMode has been replaced by DeviceModes as DeviceMode was not able to cover all of the combinations of ways you could open a device.
+* NpcapDevice -> LibPcapLiveDevice
+  * If you are using NpcapDevice you should consider using LibPcapLiveDevice. The latest versions of Npcap come with
+newer versions of libpcap that provide almost all of the functionality of Npcap native APIs.
+  * The current gap here is statistics mode, currently only supported by Npcap.
+  * There has been talk of a statistics mode wrapper that would provide similar functionality, albeit without
+the same level of efficiency as if it were done in the kernel or driver as on Windows, for libpcap systems.
+* WinPcap has been deprecated
+  * We recommend switching to LibPcapLiveDevice
+* Remote authentication
+  * If you are using RemoteAuthentication some functionality has been folded into this class and the api changed
+to remove usage of ICredentials and NetworkCredentials.
