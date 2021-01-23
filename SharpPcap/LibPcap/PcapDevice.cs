@@ -444,7 +444,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Kernel level filtering expression associated with this device.
         /// For more info on filter expression syntax, see:
-        /// https://www.winpcap.org/docs/docs_412/html/group__language.html
+        /// https://www.tcpdump.org/manpages/pcap-filter.7.html
         /// </summary>
         public virtual string Filter
         {
