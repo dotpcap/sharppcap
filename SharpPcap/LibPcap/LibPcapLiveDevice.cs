@@ -131,10 +131,7 @@ namespace SharpPcap.LibPcap
         /// </param>
         public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint kernel_buffer_size = 0, RemoteAuthentication credentials = null)
         {
-            if (credentials == null)
-            {
-                credentials = Interface.Credentials;
-            }
+            credentials = credentials ?? Interface.Credentials;
 
             if (!Opened)
             {
@@ -150,7 +147,7 @@ namespace SharpPcap.LibPcap
 
                 // modes other than OpenFlags.Promiscuous require pcap_open()
                 var otherModes = mode & ~DeviceModes.Promiscuous;
-                if ((Interface.Credentials == null) || ((short)otherModes != 0))
+                if ((credentials == null) || ((short)otherModes != 0))
                 {
                     PcapHandle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
@@ -159,7 +156,7 @@ namespace SharpPcap.LibPcap
                 else
                 {
                     // We got authentication, so this is an rpcap device
-                    var auth = RemoteAuthentication.CreateAuth(Name, Interface.Credentials);
+                    var auth = RemoteAuthentication.CreateAuth(Name, credentials);
                     PcapHandle = LibPcapSafeNativeMethods.pcap_open
                         (Name,                   // name of the device
                             Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
