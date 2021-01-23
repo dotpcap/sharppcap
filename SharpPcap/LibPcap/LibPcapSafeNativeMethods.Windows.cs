@@ -335,7 +335,8 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// changes the minimum amount of data in the kernel buffer that causes 
         /// a read from the application to return (unless the timeout expires)
-        /// See http://www.winpcap.org/docs/docs_412/html/group__wpcapfunc.html#gab14ceacbf1c2f63026416dd73f80dc0d
+        /// Setting this to zero will put the device in immediate mode in Windows
+        /// See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
         /// </summary>
         /// <param name="adapter">
         /// A <see cref="IntPtr"/>
