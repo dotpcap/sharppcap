@@ -76,13 +76,17 @@ namespace SharpPcap.LibPcap
         internal extern static IntPtr /* pcap_t* */ pcap_open_dead(int linktype, int snaplen);
 
         /// <summary>
-        /// This function is same as <see cref="Unix.pcap_set_buffer_size"/> but for Windows.
+        /// This function is different from <see cref="pcap_set_buffer_size"/>.
+        /// It's for kernel buffer size, and applicable only for Windows
         /// </summary>
         /// <param name="adapter"></param>
         /// <param name="bufferSizeInBytes"></param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
+
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_buffer_size(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
 
         /// <summary>Open a file to write packets. </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]

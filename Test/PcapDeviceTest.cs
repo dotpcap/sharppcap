@@ -57,6 +57,18 @@ namespace Test
             }
         }
 
+        [Test]
+        public void BufferSize()
+        {
+            using var device = GetPcapDevice();
+            var size_64mb = 64u * 1024 * 1024;
+
+            device.Open(
+                buffer_size: size_64mb,
+                kernel_buffer_size: size_64mb
+            );
+        }
+
         /// <summary>
         /// Calling PcapDevice.GetNextPacket() while a capture loop is running
         /// in another thread causes errors inside of libpcap where at some point the
