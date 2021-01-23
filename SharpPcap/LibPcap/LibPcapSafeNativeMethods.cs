@@ -40,7 +40,7 @@ namespace SharpPcap.LibPcap
                 Environment.OSVersion.Platform != PlatformID.Unix;
         }
 
-        private static bool UseWindows { get; }
+        private readonly static bool UseWindows;
 
         internal static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf)
         {
