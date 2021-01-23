@@ -75,8 +75,14 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_open_dead(int linktype, int snaplen);
 
+        /// <summary>
+        /// This function is same as <see cref="Unix.pcap_set_buffer_size"/> but for Windows.
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="bufferSizeInBytes"></param>
+        /// <returns></returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_buffer_size(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
+        internal extern static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
 
         /// <summary>Open a file to write packets. </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -307,6 +313,38 @@ namespace SharpPcap.LibPcap
         /// problem or by an inconsistent/bogus send queue.</returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_sendqueue_transmit(IntPtr/*pcap_t * */p, ref pcap_send_queue queue, int sync);
+        #endregion
+
+        #region Npcap specific
+
+
+        /// <summary>
+        /// Set the working mode of the interface p to mode. 
+        /// Valid values for mode are MODE_CAPT (default capture mode) 
+        /// and MODE_STAT (statistical mode). See the tutorial 
+        /// "\ref wpcap_tut9" for details about statistical mode.
+        /// Npcap specific method
+        /// </summary>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_setmode(IntPtr/* pcap_t * */ p, int mode);
+
+        /// <summary>
+        /// changes the minimum amount of data in the kernel buffer that causes 
+        /// a read from the application to return (unless the timeout expires)
+        /// See http://www.winpcap.org/docs/docs_412/html/group__wpcapfunc.html#gab14ceacbf1c2f63026416dd73f80dc0d
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="sizeInBytes">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="int"/>
+        /// </returns>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
+
         #endregion
     }
 }

@@ -124,7 +124,7 @@ namespace SharpPcap.LibPcap
 
         internal static int pcap_set_buffer_size(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes)
         {
-            return UseWindows ? Windows.pcap_set_buffer_size(adapter, bufferSizeInBytes) : Unix.pcap_set_buffer_size(adapter, bufferSizeInBytes);
+            return UseWindows ? Windows.pcap_setbuff(adapter, bufferSizeInBytes) : Unix.pcap_set_buffer_size(adapter, bufferSizeInBytes);
         }
 
         /// <summary>Open a file to write packets. </summary>
