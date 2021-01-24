@@ -29,7 +29,7 @@ namespace WakeOnLan
         /// <summary>
         /// A basic Wake-On-LAN capture example
         /// </summary>
-        public static void Main(string[] args)
+        public static void Main()
         {
             // print SharpPcap version
             string ver = SharpPcap.Version.VersionString;

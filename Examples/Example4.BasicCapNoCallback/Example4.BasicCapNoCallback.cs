@@ -8,7 +8,7 @@ namespace Example4
     /// </summary>
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;

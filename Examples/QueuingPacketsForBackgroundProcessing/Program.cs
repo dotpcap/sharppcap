@@ -52,7 +52,7 @@ namespace QueuingPacketsForBackgroundProcessing
         /// <summary>
         /// Basic capture example
         /// </summary>
-        public static void Main(string[] args)
+        public static void Main()
         {
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
