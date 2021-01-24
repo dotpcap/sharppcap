@@ -416,6 +416,19 @@ namespace SharpPcap.LibPcap
             return UseWindows ? Windows.pcap_breakloop(p) : Unix.pcap_breakloop(p);
         }
 
+        /// <summary>
+        /// See https://www.tcpdump.org/manpages/pcap_set_protocol_linux.3pcap.html for details
+        /// Note: This is implemented to document why we don't expose access to this method currently.
+        /// If you have a need for this method please open an issue documenting your need.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="protocol"></param>
+        /// <returns></returns>
+        internal static int pcap_set_protocol_linux(IntPtr /* pcap_t* */ p, int protocol)
+        {
+            throw new InvalidOperationException("It should not be used in portable code; instead, a filter should be specified with pcap_setfilter(3PCAP).");
+        }
+
         #region libpcap specific
         /// <summary>
         /// Returns the file descriptor number from which captured packets are read,
