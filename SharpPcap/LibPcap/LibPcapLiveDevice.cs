@@ -100,21 +100,13 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceModes"/>
+        /// <param name="configuration">
+        /// A <see cref="DeviceConfiguration"/>
         /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="monitor_mode">
-        /// A <see cref="MonitorMode"/>
-        /// </param>
-        /// <param name="kernel_buffer_size">
-        /// A <see cref="uint"/>
-        /// </param>
-        public override void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint buffer_size = 0, uint kernel_buffer_size = 0, RemoteAuthentication credentials = null)
+        public override void Open(DeviceConfiguration configuration)
         {
-            credentials = credentials ?? Interface.Credentials;
+            var credentials = configuration.Credentials ?? Interface.Credentials;
+            var mode = configuration.Mode;
 
             if (!Opened)
             {
@@ -126,7 +118,7 @@ namespace SharpPcap.LibPcap
                 //
                 // NOTE: Doesn't affect Mono if unix poll is available, doesn't affect Linux because
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
-                StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, read_timeout * 2);
+                StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, configuration.ReadTimeout * 2);
 
                 // modes other than OpenFlags.Promiscuous require pcap_open()
                 var otherModes = mode & ~DeviceModes.Promiscuous;
@@ -140,14 +132,14 @@ namespace SharpPcap.LibPcap
                 {
                     // We got authentication, so this is an rpcap device
                     var auth = RemoteAuthentication.CreateAuth(credentials);
-                    PcapHandle = LibPcapSafeNativeMethods.pcap_open
-                        (Name,                   // name of the device
-                            Pcap.MAX_PACKET_SIZE,   // portion of the packet to capture.
-                                                    // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
-                            (short)mode,           // flags
-                            (short)read_timeout,    // read timeout
-                            ref auth,              // authentication
-                            errbuf);               // error buffer
+                    PcapHandle = LibPcapSafeNativeMethods.pcap_open(
+                        Name,                               // name of the device
+                        Pcap.MAX_PACKET_SIZE,               // portion of the packet to capture.
+                                                            // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
+                        (short)mode,                        // flags
+                        (short)configuration.ReadTimeout,   // read timeout
+                        ref auth,                           // authentication
+                        errbuf);                            // error buffer
                 }
 
                 if (PcapHandle == IntPtr.Zero)
@@ -157,11 +149,11 @@ namespace SharpPcap.LibPcap
                 }
 
                 LibPcapSafeNativeMethods.pcap_set_snaplen(PcapHandle, Pcap.MAX_PACKET_SIZE);
-                if (monitor_mode == MonitorMode.Active)
+                if (configuration.Monitor != MonitorMode.Inactive)
                 {
                     try
                     {
-                        LibPcapSafeNativeMethods.pcap_set_rfmon(PcapHandle, (int)monitor_mode);
+                        LibPcapSafeNativeMethods.pcap_set_rfmon(PcapHandle, (int)configuration.Monitor);
                     }
                     catch (EntryPointNotFoundException)
                     {
@@ -170,13 +162,13 @@ namespace SharpPcap.LibPcap
                 }
 
                 LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(mode & DeviceModes.Promiscuous));
-                LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, read_timeout);
+                LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, configuration.ReadTimeout);
 
-                if (buffer_size != 0)
+                if (configuration.BufferSize != 0)
                 {
                     int retval = LibPcapSafeNativeMethods.pcap_set_buffer_size(
                         m_pcapAdapterHandle,
-                        (int)buffer_size
+                        configuration.BufferSize
                     );
                     if (retval != 0)
                     {
@@ -197,11 +189,11 @@ namespace SharpPcap.LibPcap
                     FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(PcapHandle);
                 }
 
-                if (kernel_buffer_size != 0)
+                if (configuration.KernelBufferSize != 0)
                 {
                     int retval = LibPcapSafeNativeMethods.pcap_setbuff(
                         m_pcapAdapterHandle,
-                        (int)kernel_buffer_size
+                        configuration.KernelBufferSize
                     );
                     if (retval != 0)
                     {

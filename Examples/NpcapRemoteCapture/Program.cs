@@ -1,4 +1,5 @@
 using System;
+using SharpPcap;
 using SharpPcap.Npcap;
 
 namespace NpcapRemoteCapture
@@ -40,9 +41,9 @@ namespace NpcapRemoteCapture
             // open the device for capture
             using var device = remoteDevices[0];
 
-            device.OnPacketArrival += new SharpPcap.PacketArrivalEventHandler(dev_OnPacketArrival);
+            device.OnPacketArrival += new PacketArrivalEventHandler(dev_OnPacketArrival);
 
-            device.Open(read_timeout: 500);
+            device.Open(new DeviceConfiguration { ReadTimeout = 500 });
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
