@@ -9,7 +9,7 @@ namespace MultipleFiltersOnDevice
     /// </summary>
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;

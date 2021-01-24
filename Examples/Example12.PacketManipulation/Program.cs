@@ -13,7 +13,7 @@ namespace Example12
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main(string[] args)
+        static void Main()
         {
             // Print SharpPcap version
             string ver = SharpPcap.Version.VersionString;
@@ -84,9 +84,8 @@ namespace Example12
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-            if (packet is PacketDotNet.EthernetPacket)
+            if (packet is PacketDotNet.EthernetPacket eth)
             {
-                var eth = ((PacketDotNet.EthernetPacket)packet);
                 Console.WriteLine("Original Eth packet: " + eth.ToString());
 
                 //Manipulate ethernet parameters

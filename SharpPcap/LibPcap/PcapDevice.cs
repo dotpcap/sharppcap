@@ -45,8 +45,6 @@ namespace SharpPcap.LibPcap
         /// </summary>
         protected int m_pcapPacketCount = Pcap.InfinitePacketCount;
 
-        private int m_mask = 0; //for filter expression
-
         /// <summary>
         /// Device name
         /// </summary>
@@ -312,7 +310,6 @@ namespace SharpPcap.LibPcap
 
             //Pointer to a packet struct
             IntPtr data = IntPtr.Zero;
-            int res = 0;
 
             // using an invalid PcapHandle can result in an unmanaged segfault
             // so check for that here
@@ -337,7 +334,7 @@ namespace SharpPcap.LibPcap
                 return 0;
             }
             //Get a packet from npcap
-            res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
+            var res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
 
             if (res > 0)
             {
@@ -418,7 +415,7 @@ namespace SharpPcap.LibPcap
             ThrowIfNotOpen("device is not open");
 
             // attempt to compile the program
-            if (!CompileFilter(PcapHandle, filterExpression, (uint)m_mask, out IntPtr bpfProgram, out string errorString))
+            if (!CompileFilter(PcapHandle, filterExpression, 0, out IntPtr bpfProgram, out string errorString))
             {
                 string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
                 throw new PcapException(err);
@@ -468,25 +465,21 @@ namespace SharpPcap.LibPcap
                                           out IntPtr bpfProgram,
                                           out string errorString)
         {
-            int result;
-            string err = String.Empty;
-
-            bpfProgram = IntPtr.Zero;
             errorString = null;
 
             //Alocate an unmanaged buffer
             bpfProgram = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
 
             //compile the expressions
-            result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
-                                                    bpfProgram,
-                                                    filterExpression,
-                                                    1,
-                                                    mask);
+            var result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
+                                                     bpfProgram,
+                                                     filterExpression,
+                                                     1,
+                                                     mask);
 
             if (result < 0)
             {
-                err = GetLastError(pcapHandle);
+                var err = GetLastError(pcapHandle);
 
                 // free up the program memory
                 Marshal.FreeHGlobal(bpfProgram);

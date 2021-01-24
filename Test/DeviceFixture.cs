@@ -49,9 +49,11 @@ namespace Test
 
         public static IEnumerable<ICaptureDevice> GetDevices()
         {
-            var lists = new Dictionary<string, IEnumerable<ICaptureDevice>>();
-            lists.Add(nameof(CaptureDeviceList), CaptureDeviceList.Instance);
-            lists.Add(nameof(LibPcapLiveDeviceList), LibPcapLiveDeviceList.Instance);
+            var lists = new Dictionary<string, IEnumerable<ICaptureDevice>>
+            {
+                { nameof(CaptureDeviceList), CaptureDeviceList.Instance },
+                { nameof(LibPcapLiveDeviceList), LibPcapLiveDeviceList.Instance }
+            };
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 lists.Add(nameof(NpcapDeviceList), NpcapDeviceList.Instance);

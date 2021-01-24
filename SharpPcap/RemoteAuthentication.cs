@@ -46,7 +46,7 @@ namespace SharpPcap
             this.Password = Password;
         }
 
-        internal static pcap_rmtauth CreateAuth(string source, RemoteAuthentication credentials)
+        internal static pcap_rmtauth CreateAuth(RemoteAuthentication credentials)
         {
             if (credentials == null)
             {
