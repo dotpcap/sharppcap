@@ -204,19 +204,10 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
         /// </summary>
-        /// <param name="mode">
-        /// A <see cref="DeviceModes"/>
+        /// <param name="configuration">
+        /// A <see cref="DeviceConfiguration"/>
         /// </param>
-        /// <param name="read_timeout">
-        /// A <see cref="int"/>
-        /// </param>
-        /// <param name="monitor_mode">
-        /// A <see cref="MonitorMode"/>
-        /// </param>
-        /// <param name="kernel_buffer_size">
-        /// A <see cref="uint"/>
-        /// </param>
-        public abstract void Open(DeviceModes mode = DeviceModes.None, int read_timeout = 1000, MonitorMode monitor_mode = MonitorMode.Inactive, uint buffer_size = 0, uint kernel_buffer_size = 0, RemoteAuthentication credentials = null);
+        public abstract void Open(DeviceConfiguration configuration);
 
         /// <summary>
         /// Closes this adapter

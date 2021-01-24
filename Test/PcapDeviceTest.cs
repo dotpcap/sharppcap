@@ -61,12 +61,12 @@ namespace Test
         public void BufferSize()
         {
             using var device = GetPcapDevice();
-            var size_64mb = 64u * 1024 * 1024;
+            var size_64mb = 64 * 1024 * 1024;
 
-            device.Open(
-                buffer_size: size_64mb,
-                kernel_buffer_size: size_64mb
-            );
+            device.Open(new DeviceConfiguration { 
+                BufferSize= size_64mb,
+                KernelBufferSize= size_64mb
+            });
         }
 
         /// <summary>
