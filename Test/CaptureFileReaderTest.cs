@@ -11,6 +11,33 @@ namespace Test
     {
         private static int capturedPackets;
 
+        [Test]
+        public void CaptureNonExistant()
+        {
+            Assert.Throws<PcapException>(() =>
+            {
+                using var device = new CaptureFileReaderDevice("a_fake_filename.pcap");
+            });
+        }
+
+        [Test]
+        public void CaptureSendPacket()
+        {
+            var filename = "ipv6_http.pcap";
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
+            var bytes = new byte[] { 0x10, 0x20, 0x30 };
+
+            Assert.Throws<NotSupportedOnCaptureFileException>(() => device.SendPacket(bytes));
+        }
+
+        [Test]
+        public void CaptureProperties()
+        {
+            var filename = "ipv6_http.pcap";
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
+            Assert.IsNotEmpty(device.Description);
+        }
+
         /// <summary>
         /// Test that we can retrieve packets from a pcap file just as we would from
         /// a live capture device and that all packets are captured
@@ -18,9 +45,15 @@ namespace Test
         [Test]
         public void CaptureInfinite()
         {
-            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
+            var filename = "ipv6_http.pcap";
+            var fileToOpen = TestHelper.GetFile(filename);
+            using var device = new CaptureFileReaderDevice(fileToOpen);
             device.OnPacketArrival += HandleDeviceOnPacketArrival;
             device.Open();
+            var ipv6FilesizeInBytes = 3451;
+            Assert.AreEqual(ipv6FilesizeInBytes, device.FileSize);
+            Assert.AreEqual(fileToOpen, device.Name);
+            Assert.AreEqual(filename, device.FileName);
 
             var expectedPackets = 10;
             capturedPackets = 0;
@@ -60,7 +93,7 @@ namespace Test
         [Test]
         public void TestStatisticsException()
         {
-            var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
 
             var caughtExpectedException = false;
             try
