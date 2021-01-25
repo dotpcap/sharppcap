@@ -7,7 +7,7 @@ namespace Example6
     {
         public static void Main()
         {
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, Example6.DumpTCP.cs", ver);
             Console.WriteLine();

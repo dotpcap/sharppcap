@@ -9,7 +9,7 @@ namespace ReadingCaptureFile
     {
         public static void Main(string[] args)
         {
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
 
             /* Print SharpPcap version */
             Console.WriteLine("SharpPcap {0}, ReadingCaptureFile", ver);

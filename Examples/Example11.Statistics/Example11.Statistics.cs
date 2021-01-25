@@ -15,7 +15,7 @@ namespace Example11
         public static void Main()
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, Example11.Statistics.cs", ver);
 
             var os = System.Environment.OSVersion;

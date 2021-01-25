@@ -42,7 +42,7 @@ namespace Example2
         public static void Main(string[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, Example2.ArpResolve.cs\n", ver);
 
             // Retrieve the device list

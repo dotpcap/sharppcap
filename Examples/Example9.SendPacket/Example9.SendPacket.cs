@@ -8,7 +8,7 @@ namespace Example9
         public static void Main()
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, Example9.SendPacket.cs\n", ver);
 
             // Retrieve the device list

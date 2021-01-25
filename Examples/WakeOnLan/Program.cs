@@ -32,7 +32,7 @@ namespace WakeOnLan
         public static void Main()
         {
             // print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}", ver);
 
             // retrieve the device list

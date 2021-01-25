@@ -14,7 +14,7 @@ namespace Example1
         public static void Main(string[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, Example1.IfList.cs", ver);
 
             // Retrieve the device list
