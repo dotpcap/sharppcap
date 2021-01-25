@@ -21,6 +21,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace SharpPcap
 {
@@ -58,7 +60,7 @@ namespace SharpPcap
             {
                 try
                 {
-                    return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(LibPcap.LibPcapSafeNativeMethods.pcap_lib_version());
+                    return Marshal.PtrToStringAnsi(LibPcap.LibPcapSafeNativeMethods.pcap_lib_version());
                 }
                 catch
                 {
@@ -66,6 +68,35 @@ namespace SharpPcap
                         "but you could be using a very old version.";
                 }
             }
+        }
+
+        private static Version _libpcapVersion;
+        public static Version LibpcapVersion
+        {
+            get
+            {
+                _libpcapVersion = _libpcapVersion ?? GetLibpcapVersion(Version);
+                return _libpcapVersion;
+            }
+        }
+
+        public static Version SharpPcapVersion
+        {
+            get
+            {
+                return typeof(Pcap).Assembly.GetName().Version;
+            }
+        }
+
+        internal static Version GetLibpcapVersion(string version)
+        {
+            var regex = new Regex(@"libpcap version (\d+\.\d+(\.\d+)?)");
+            var match = regex.Match(version);
+            if (match.Success)
+            {
+                return new Version(match.Groups[1].Value);
+            }
+            return new Version();
         }
 
         private static bool isUnix()

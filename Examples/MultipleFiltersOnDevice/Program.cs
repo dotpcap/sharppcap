@@ -12,7 +12,7 @@ namespace MultipleFiltersOnDevice
         public static void Main()
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, MultipleFiltersOnDevice", ver);
 
             // If no devices were found print an error

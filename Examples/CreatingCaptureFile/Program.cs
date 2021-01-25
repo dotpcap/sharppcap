@@ -13,7 +13,7 @@ namespace CreatingCaptureFile
         public static void Main()
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, CreatingCaptureFile", ver);
 
             // Retrieve the device list

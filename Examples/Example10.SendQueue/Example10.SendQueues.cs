@@ -15,7 +15,7 @@ namespace Example10
         public static void Main(string[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}, Example10.SendQueues.cs\n", ver);
 
             Console.Write("-- Please enter an input capture file name: ");

@@ -55,7 +55,7 @@ namespace QueuingPacketsForBackgroundProcessing
         public static void Main()
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            var ver = Pcap.SharpPcapVersion;
             Console.WriteLine("SharpPcap {0}", ver);
 
             // If no device exists, print error
