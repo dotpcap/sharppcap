@@ -56,6 +56,10 @@ We are especially appreciative of a number of projects we build upon (as SharpPc
 
 # Migration from 5.x to 6.0
 
+We hope that you'll find the 6.x api to be cleaner and easier to use.
+
+6.0 brings a number of cleanups that have resulted in API breakage for 5.x users.
+
 To aid with the migration from 5.x to 6.0 here is a list of some of the changes you'll have to make to your
 SharpPcap usage.
 
