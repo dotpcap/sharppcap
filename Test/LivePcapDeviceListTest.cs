@@ -24,5 +24,20 @@ namespace Test
                 Console.WriteLine(d.ToString());
             }
         }
+
+        /// <summary>
+        /// Test LibPcapDeviceList.New() and the index operator
+        /// </summary>
+        [Test]
+        public void ListTest()
+        {
+            var dl = LibPcapLiveDeviceList.New();
+
+            // test that we can look up devices by name
+            foreach (var d in dl)
+            {
+                Assert.IsNotNull(dl[d.Name]);
+            }
+        }
     }
 }
