@@ -27,6 +27,9 @@ namespace SharpPcap.WinDivert
 
         public PhysicalAddress MacAddress => null;
 
+        /// <summary>
+        /// Not currently supported for this device
+        /// </summary>
         public ICaptureStatistics Statistics => null;
 
         public string LastError { get; private set; }

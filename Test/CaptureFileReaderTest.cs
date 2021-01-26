@@ -87,27 +87,16 @@ namespace Test
         }
 
         /// <summary>
-        /// Test that we get the expected exception thrown when we call the Statistics()
-        /// method on OfflinePcapDevice
+        /// Test that we get expected unsupport indication when attempting to retrieve
+        /// Statistics from this device
         /// </summary>
         [Test]
-        public void TestStatisticsException()
+        public void StatisticsUnsupported()
         {
-            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap"));
-
-            var caughtExpectedException = false;
-            try
+            using (var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap")))
             {
-#pragma warning disable 0168
-                var stats = device.Statistics;
-#pragma warning restore 0168
+                Assert.IsNull(device.Statistics);
             }
-            catch (NotSupportedOnCaptureFileException)
-            {
-                caughtExpectedException = true;
-            }
-
-            Assert.IsTrue(caughtExpectedException);
         }
 
         [Test]

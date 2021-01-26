@@ -216,17 +216,13 @@ namespace SharpPcap.LibPcap
 
         /// <summary>
         /// Retrieves pcap statistics
+        ///
+        /// Not currently supported for this device
         /// </summary>
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public override ICaptureStatistics Statistics
-        {
-            get
-            {
-                throw new NotSupportedOnCaptureFileException("Statistics not supported on a capture file");
-            }
-        }
+        public override ICaptureStatistics Statistics => null;
 
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
