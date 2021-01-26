@@ -73,6 +73,9 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_set_buffer_size(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
 
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_immediate_mode(IntPtr /* pcap_t */ adapter, int immediate_mode);
+
         /// <summary>Open a file to write packets. </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /*pcap_dumper_t * */ pcap_dump_open(IntPtr /*pcap_t * */adaptHandle, string /*const char * */fname);

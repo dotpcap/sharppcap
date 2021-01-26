@@ -8,6 +8,7 @@ using System.Threading;
 using System.Net;
 using SharpPcap.LibPcap;
 using SharpPcap;
+using static Test.TestHelper;
 
 namespace Test
 {
@@ -89,12 +90,12 @@ namespace Test
                     }
 
                     Assert.Throws<PcapException>(
-                        () => npcapDevices[0].Open(new DeviceConfiguration
+                        () => npcapDevices[0].Open(StrictConfig(new DeviceConfiguration
                         {
                             Mode = DeviceModes.NoCaptureRemote,
                             ReadTimeout = 1,
                             Credentials = badCred
-                        }),
+                        })),
                         "Credentials provided to Open() method takes precedence"
                     );
 

@@ -142,5 +142,16 @@ namespace Test
                 }
             }
         }
+
+        public static DeviceConfiguration StrictConfig(DeviceConfiguration configuration)
+        {
+            configuration.ConfigurationFailed += Configuration_ConfigurationFailed;
+            return configuration;
+        }
+
+        private static void Configuration_ConfigurationFailed(object sender, ConfigurationFailedEventArgs e)
+        {
+            Assert.Fail(e.Message);
+        }
     }
 }
