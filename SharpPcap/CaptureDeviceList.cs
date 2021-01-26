@@ -102,38 +102,6 @@ namespace SharpPcap
         }
 
         /// <summary>
-        /// Retrieve a list of the current devices
-        /// </summary>
-        /// <returns>
-        /// A <see cref="List&lt;ICaptureDevice&gt;"/>
-        /// </returns>
-        private List<ICaptureDevice> GetDevices()
-        {
-            List<ICaptureDevice> deviceList = new List<ICaptureDevice>();
-
-            // windows
-            if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
-               (Environment.OSVersion.Platform == PlatformID.Win32Windows))
-            {
-                var dl = nPcapDeviceList;
-                foreach (var c in dl)
-                {
-                    deviceList.Add(c);
-                }
-            }
-            else // not windows
-            {
-                var dl = libPcapDeviceList;
-                foreach (var c in dl)
-                {
-                    deviceList.Add(c);
-                }
-            }
-
-            return deviceList;
-        }
-
-        /// <summary>
         /// Refresh the device list
         /// </summary>
         public void Refresh()
@@ -166,7 +134,7 @@ namespace SharpPcap
             }
         }
 
-        #region Device Indexers
+#region Device Indexers
         /// <param name="Name">The name or description of the pcap interface to get.</param>
         public ICaptureDevice this[string Name]
         {
@@ -190,6 +158,6 @@ namespace SharpPcap
             }
         }
 
-        #endregion
+#endregion
     }
 }
