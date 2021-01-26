@@ -50,6 +50,8 @@ namespace SharpPcap
 
         /// <summary>
         /// Retrieves pcap statistics
+        ///
+        /// Devices that lack statistics support return null
         /// </summary>
         ICaptureStatistics Statistics { get; }
 

@@ -65,11 +65,11 @@ namespace Test
         }
 
         [Test]
-        public void Statistics()
+        public void StatisticsUnsupported()
         {
             using (var wd = new CaptureFileWriterDevice(filename))
             {
-                Assert.Throws<NotSupportedOnCaptureFileException>(() => { var s = wd.Statistics; });
+                Assert.IsNull(wd.Statistics);
             }
         }
     }
