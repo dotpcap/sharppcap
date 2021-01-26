@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 using PacketDotNet;
@@ -63,10 +64,56 @@ namespace Test
             using var device = GetPcapDevice();
             var size_64mb = 64 * 1024 * 1024;
 
-            device.Open(new DeviceConfiguration { 
-                BufferSize= size_64mb,
-                KernelBufferSize= size_64mb
-            });
+            device.Open(StrictConfig(new DeviceConfiguration
+            {
+                BufferSize = size_64mb,
+            }));
+        }
+
+        [Test]
+        [Platform("Win")]
+        public void KernelBufferSize_Windows()
+        {
+            using var device = GetPcapDevice();
+            var size_64mb = 64 * 1024 * 1024;
+
+            device.Open(StrictConfig(new DeviceConfiguration
+            {
+                KernelBufferSize = size_64mb,
+            }));
+        }
+
+        [Test]
+        [Platform(Exclude = "Win")]
+        public void KernelBufferSize_Unix()
+        {
+            using var device = GetPcapDevice();
+            var size_64mb = 64 * 1024 * 1024;
+            var config = new DeviceConfiguration
+            {
+                KernelBufferSize = size_64mb
+            };
+            var failures = new List<ConfigurationFailedEventArgs>();
+            config.ConfigurationFailed += (s, e) =>
+            {
+                failures.Add(e);
+            };
+            device.Open(config);
+            Assert.That(failures, Has.Count.EqualTo(1));
+            var fail = failures[0];
+            Assert.AreEqual("KernelBufferSize", fail.Property);
+            Assert.AreEqual(PcapError.Generic, fail.Error);
+            StringAssert.Contains(new PlatformNotSupportedException().Message, fail.Message);
+        }
+
+        [Test]
+        public void Immediate([Values] bool? immediate)
+        {
+            using var device = GetPcapDevice();
+            device.Open(StrictConfig(new DeviceConfiguration
+            {
+                Immediate = immediate,
+            }));
         }
 
         /// <summary>
@@ -185,6 +232,7 @@ namespace Test
         {
             ConfirmIdleState();
         }
+
     }
 }
 

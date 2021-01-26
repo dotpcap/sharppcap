@@ -127,6 +127,11 @@ namespace SharpPcap.LibPcap
             return UseWindows ? Windows.pcap_set_buffer_size(adapter, bufferSizeInBytes) : Unix.pcap_set_buffer_size(adapter, bufferSizeInBytes);
         }
 
+        internal static int pcap_set_immediate_mode(IntPtr /* pcap_t */ adapter, int immediate_mode)
+        {
+            return UseWindows ? Windows.pcap_set_immediate_mode(adapter, immediate_mode) : Unix.pcap_set_immediate_mode(adapter, immediate_mode);
+        }
+
         internal static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes)
         {
             return UseWindows ? Windows.pcap_setbuff(adapter, bufferSizeInBytes) : 0;
@@ -359,7 +364,14 @@ namespace SharpPcap.LibPcap
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         internal static int pcap_set_rfmon(IntPtr /* pcap_t* */ p, int rfmon)
         {
-            return UseWindows ? Windows.pcap_set_rfmon(p, rfmon) : Unix.pcap_set_rfmon(p, rfmon);
+            try
+            {
+                return UseWindows ? Windows.pcap_set_rfmon(p, rfmon) : Unix.pcap_set_rfmon(p, rfmon);
+            }
+            catch (EntryPointNotFoundException)
+            {
+                return (int)PcapError.RfmonNotSupported;
+            }
         }
 
         /// <summary>

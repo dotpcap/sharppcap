@@ -127,6 +127,19 @@ namespace SharpPcap.LibPcap
                     PcapHandle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
                         errbuf); // error buffer
+
+                    Configure(
+                        configuration, nameof(configuration.Snaplen),
+                        LibPcapSafeNativeMethods.pcap_set_snaplen, configuration.Snaplen
+                    );
+                    Configure(
+                        configuration, "Promiscuous",
+                        LibPcapSafeNativeMethods.pcap_set_promisc, (int)(mode & DeviceModes.Promiscuous)
+                    );
+                    Configure(
+                        configuration, nameof(configuration.ReadTimeout),
+                        LibPcapSafeNativeMethods.pcap_set_timeout, configuration.ReadTimeout
+                    );
                 }
                 else
                 {
@@ -134,8 +147,7 @@ namespace SharpPcap.LibPcap
                     var auth = RemoteAuthentication.CreateAuth(credentials);
                     PcapHandle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
-                        Pcap.MAX_PACKET_SIZE,               // portion of the packet to capture.
-                                                            // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
+                        configuration.Snaplen,              // portion of the packet to capture.
                         (short)mode,                        // flags
                         (short)configuration.ReadTimeout,   // read timeout
                         ref auth,                           // authentication
@@ -148,31 +160,44 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
 
-                LibPcapSafeNativeMethods.pcap_set_snaplen(PcapHandle, Pcap.MAX_PACKET_SIZE);
                 if (configuration.Monitor != MonitorMode.Inactive)
                 {
-                    try
-                    {
-                        LibPcapSafeNativeMethods.pcap_set_rfmon(PcapHandle, (int)configuration.Monitor);
-                    }
-                    catch (EntryPointNotFoundException)
-                    {
-                        throw new PcapException("This implementation of libpcap does not support monitor mode.");
-                    }
+                    Configure(
+                        configuration, nameof(configuration.Monitor),
+                        LibPcapSafeNativeMethods.pcap_set_rfmon, (int)configuration.Monitor
+                    );
                 }
-
-                LibPcapSafeNativeMethods.pcap_set_promisc(PcapHandle, (int)(mode & DeviceModes.Promiscuous));
-                LibPcapSafeNativeMethods.pcap_set_timeout(PcapHandle, configuration.ReadTimeout);
 
                 if (configuration.BufferSize != 0)
                 {
-                    int retval = LibPcapSafeNativeMethods.pcap_set_buffer_size(
-                        m_pcapAdapterHandle,
-                        configuration.BufferSize
+                    Configure(
+                        configuration, nameof(configuration.BufferSize),
+                        LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
                     );
-                    if (retval != 0)
+                }
+
+                // Check if immediate is supported
+                var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
+                // Check if we can do immediate by setting mintocopy to 0
+                // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
+                var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+                if (configuration.Immediate.HasValue)
+                {
+                    if (!immediate_supported && !mintocopy_supported)
                     {
-                        throw new InvalidOperationException("pcap_set_buffer_size() failed - return value " + retval);
+                        configuration.RaiseConfigurationFailed(
+                            nameof(configuration.Immediate),
+                            new PlatformNotSupportedException()
+                        );
+                    }
+                    else if (immediate_supported)
+                    {
+                        var immediate = configuration.Immediate.Value ? 1 : 0;
+                        Configure(
+                            configuration, nameof(configuration.Immediate),
+                            LibPcapSafeNativeMethods.pcap_set_immediate_mode, immediate
+                        );
                     }
                 }
 
@@ -189,17 +214,53 @@ namespace SharpPcap.LibPcap
                     FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(PcapHandle);
                 }
 
+                // Below configurations must be done after the device gets activated
                 if (configuration.KernelBufferSize != 0)
                 {
-                    int retval = LibPcapSafeNativeMethods.pcap_setbuff(
-                        m_pcapAdapterHandle,
-                        configuration.KernelBufferSize
-                    );
-                    if (retval != 0)
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        throw new InvalidOperationException("pcap_setbuff() failed - return value " + retval);
+                        Configure(
+                            configuration, nameof(configuration.KernelBufferSize),
+                            Windows.pcap_setbuff, configuration.KernelBufferSize
+                        );
+                    }
+                    else
+                    {
+                        configuration.RaiseConfigurationFailed(
+                            nameof(configuration.KernelBufferSize),
+                            new PlatformNotSupportedException()
+                        );
                     }
                 }
+                if (configuration.Immediate == true && mintocopy_supported && !immediate_supported)
+                {
+                    Configure(
+                        configuration, nameof(configuration.Immediate),
+                        Windows.pcap_setmintocopy, 0
+                    );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
+        /// This is a helper method to use them and detect/report errors
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="setter"></param>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        private void Configure(
+            DeviceConfiguration configuration,
+            string property,
+            Func<IntPtr, int, int> setter,
+            int value
+        )
+        {
+            var retval = setter(PcapHandle, value);
+            if (retval != 0)
+            {
+                configuration.RaiseConfigurationFailed(property, retval);
             }
         }
 
