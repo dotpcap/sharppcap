@@ -213,6 +213,8 @@ namespace SharpPcap.LibPcap
         {
             get
             {
+                ThrowIfNotOpen("Can't get blocking mode, the device is closed");
+
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
                 int ret = LibPcapSafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
 
@@ -229,6 +231,8 @@ namespace SharpPcap.LibPcap
             }
             set
             {
+                ThrowIfNotOpen("Can't set blocking mode, the device is closed");
+
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
                 int block = disableBlocking;
