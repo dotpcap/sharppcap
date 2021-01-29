@@ -119,26 +119,6 @@ namespace SharpPcap.Npcap
             }
         }
 
-        /// <value>
-        /// Set the minumum amount of data (in bytes) received by the kernel in a single call. 
-        /// Npcap extension
-        /// </value>
-        public int MinToCopy
-        {
-            set
-            {
-                ThrowIfNotNpcap();
-                ThrowIfNotOpen("Can't set MinToCopy size, the device is not opened");
-
-                int retval = Windows.pcap_setmintocopy(this.m_pcapAdapterHandle,
-                                                                 value);
-                if (retval != 0)
-                {
-                    throw new InvalidOperationException("pcap_setmintocopy() failed");
-                }
-            }
-        }
-
         /// <summary>
         /// Helper method for ensuring we are running in npcap. Throws
         /// a NpcapRequiredException() if not on a windows platform

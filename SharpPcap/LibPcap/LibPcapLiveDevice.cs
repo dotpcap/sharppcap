@@ -239,6 +239,23 @@ namespace SharpPcap.LibPcap
                         Windows.pcap_setmintocopy, 0
                     );
                 }
+                if (configuration.MinToCopy.HasValue)
+                {
+                    if (mintocopy_supported)
+                    {
+                        Configure(
+                            configuration, nameof(configuration.MinToCopy),
+                            Windows.pcap_setmintocopy, configuration.MinToCopy.Value
+                        );
+                    }
+                    else
+                    {
+                        configuration.RaiseConfigurationFailed(
+                            nameof(configuration.MinToCopy),
+                            new PlatformNotSupportedException()
+                        );
+                    }
+                }
             }
         }
 
