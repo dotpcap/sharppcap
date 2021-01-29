@@ -17,6 +17,7 @@ namespace Test
             Assert.Throws<PcapException>(() =>
             {
                 using var device = new CaptureFileReaderDevice("a_fake_filename.pcap");
+                device.Open();
             });
         }
 
@@ -25,6 +26,7 @@ namespace Test
         {
             var filename = "ipv6_http.pcap";
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
+            device.Open();
             var bytes = new byte[] { 0x10, 0x20, 0x30 };
 
             Assert.Throws<NotSupportedOnCaptureFileException>(() => device.SendPacket(bytes));
@@ -35,6 +37,7 @@ namespace Test
         {
             var filename = "ipv6_http.pcap";
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
+            device.Open();
             Assert.IsNotEmpty(device.Description);
         }
 
@@ -95,6 +98,7 @@ namespace Test
         {
             using (var device = new CaptureFileReaderDevice(TestHelper.GetFile("ipv6_http.pcap")))
             {
+                device.Open();
                 Assert.IsNull(device.Statistics);
             }
         }
