@@ -77,41 +77,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="captureFilename">
-        /// A <see cref="string"/>
-        /// </param>
-        /// <param name="device">
-        /// A <see cref="LibPcapLiveDevice"/>
-        /// </param>
-        /// <param name="mode">
-        /// A <see cref="FileMode"/>
-        /// </param>
-        public CaptureFileWriterDevice(string captureFilename, LibPcapLiveDevice device, FileMode mode = FileMode.OpenOrCreate) :
-            this(captureFilename,
-                (PacketDotNet.LinkLayers)LibPcapSafeNativeMethods.pcap_datalink(device.PcapHandle),
-                 LibPcapSafeNativeMethods.pcap_snapshot(device.PcapHandle),
-                 mode)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="captureFilename">
-        /// A <see cref="string"/>
-        /// </param>
-        /// <param name="linkLayerType">
-        /// A <see cref="PacketDotNet.LinkLayers"/>
-        /// </param>
-        /// <param name="snapshotLength">
-        /// </param>
-        /// <param name="mode">
-        /// A <see cref="FileMode"/>
-        /// </param>
-        public CaptureFileWriterDevice(string captureFilename,
-                                       PacketDotNet.LinkLayers linkLayerType = PacketDotNet.LinkLayers.Ethernet,
-                                       int snapshotLength = Pcap.MAX_PACKET_SIZE,
-                                       FileMode mode = FileMode.OpenOrCreate)
+        public CaptureFileWriterDevice(string captureFilename, System.IO.FileMode mode = FileMode.OpenOrCreate)
         {
             m_pcapFile = captureFilename;
 
@@ -120,18 +86,6 @@ namespace SharpPcap.LibPcap
             {
                 throw new InvalidOperationException("FileMode.Append is not supported, please contact the developers if you are interested in helping to implementing it");
             }
-
-            if (snapshotLength > Pcap.MAX_PACKET_SIZE)
-            {
-                throw new InvalidOperationException("snapshotLength > Pcap.MAX_PACKET_SIZE");
-            }
-
-            // set the device handle
-            PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)linkLayerType, snapshotLength);
-
-            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, captureFilename);
-            if (m_pcapDumpHandle == IntPtr.Zero)
-                throw new PcapException("Error opening dump file '" + LastError + "'");
         }
 
         /// <summary>
@@ -157,7 +111,21 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override void Open(DeviceConfiguration configuration)
         {
-            // Nothing to do here, device is already opened and active upon construction
+            if (configuration.Snaplen > Pcap.MAX_PACKET_SIZE)
+            {
+                var ex = new InvalidOperationException("Snaplen > Pcap.MAX_PACKET_SIZE");
+                configuration.RaiseConfigurationFailed("snaplen", ex);
+
+                throw ex;
+            }
+
+            // set the device handle
+            PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
+
+            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, m_pcapFile);
+            if (m_pcapDumpHandle == IntPtr.Zero)
+                throw new PcapException("Error opening dump file '" + LastError + "'");
+
             Active = true;
         }
 

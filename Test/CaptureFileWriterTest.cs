@@ -23,6 +23,7 @@ namespace Test
         {
             using (var wd = new CaptureFileWriterDevice(filename))
             {
+                wd.Open();
                 Assert.AreEqual(filename, wd.Name);
                 Assert.IsNotEmpty(wd.Description);
                 var bytes = new byte[] { 1, 2, 3, 4 };
@@ -38,18 +39,26 @@ namespace Test
         public void TestCreationOptions()
         {
             // valid arguments results in the object being created
-            using var valid = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, mode: System.IO.FileMode.Open);
+            using var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
+            valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
 
             // invalid snapshot length should throw
             Assert.Throws<InvalidOperationException>(() =>
             {
-                using var wd = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, snapshotLength: 500000, mode: System.IO.FileMode.Open);
+                using var wd = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
+                var configuration = new DeviceConfiguration
+                {
+                    LinkLayerType = PacketDotNet.LinkLayers.Ethernet,
+                    Snaplen = 500000
+                };
+                wd.Open(configuration);
             });
 
             // file mode of append should throw
             Assert.Throws<InvalidOperationException>(() =>
             {
-                using var wd = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, mode: System.IO.FileMode.Append);
+                using var wd = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Append);
+                wd.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
             });
         }
 
@@ -60,6 +69,7 @@ namespace Test
 
             using (var wd = new CaptureFileWriterDevice(filename))
             {
+                wd.Open();
                 Assert.Throws<NotSupportedOnCaptureFileException>(() => wd.SendPacket(bytes));
             }
         }
@@ -69,6 +79,7 @@ namespace Test
         {
             using (var wd = new CaptureFileWriterDevice(filename))
             {
+                wd.Open();
                 Assert.IsNull(wd.Statistics);
             }
         }
