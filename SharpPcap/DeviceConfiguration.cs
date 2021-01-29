@@ -44,6 +44,8 @@ namespace SharpPcap
 
         public bool? Immediate { get; set; }
 
+        public int? MinToCopy { get; set; }
+
         public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
 
         internal void RaiseConfigurationFailed(string property, int retval)

@@ -72,27 +72,27 @@ namespace Test
 
         [Test]
         [Platform("Win")]
-        public void KernelBufferSize_Windows()
+        [TestCase("KernelBufferSize", 64 * 1000 * 1000)]
+        [TestCase("MinToCopy", 10000)]
+        public void Configuration_Windows(string property, int value)
         {
             using var device = GetPcapDevice();
-            var size_64mb = 64 * 1024 * 1024;
 
-            device.Open(StrictConfig(new DeviceConfiguration
-            {
-                KernelBufferSize = size_64mb,
-            }));
+            var config = new DeviceConfiguration();
+            config.GetType().GetProperty(property).SetValue(config, value);
+
+            device.Open(StrictConfig(config));
         }
 
         [Test]
         [Platform(Exclude = "Win")]
-        public void KernelBufferSize_Unix()
+        [TestCase("KernelBufferSize", 64 * 1000 * 1000)]
+        [TestCase("MinToCopy", 10000)]
+        public void Configuration_NotWindows(string property, int value)
         {
             using var device = GetPcapDevice();
-            var size_64mb = 64 * 1024 * 1024;
-            var config = new DeviceConfiguration
-            {
-                KernelBufferSize = size_64mb
-            };
+            var config = new DeviceConfiguration();
+            config.GetType().GetProperty(property).SetValue(config, value);
             var failures = new List<ConfigurationFailedEventArgs>();
             config.ConfigurationFailed += (s, e) =>
             {
@@ -101,7 +101,7 @@ namespace Test
             device.Open(config);
             Assert.That(failures, Has.Count.EqualTo(1));
             var fail = failures[0];
-            Assert.AreEqual("KernelBufferSize", fail.Property);
+            Assert.AreEqual(property, fail.Property);
             Assert.AreEqual(PcapError.Generic, fail.Error);
             StringAssert.Contains(new PlatformNotSupportedException().Message, fail.Message);
         }
