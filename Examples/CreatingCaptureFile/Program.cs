@@ -63,7 +63,8 @@ namespace CreatingCaptureFile
                               capFile);
 
             // open the output file
-            captureFileWriter = new CaptureFileWriterDevice(capFile, device);
+            captureFileWriter = new CaptureFileWriterDevice(capFile);
+            captureFileWriter.Open(device);
 
             // Start the capturing process
             device.StartCapture();

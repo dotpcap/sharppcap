@@ -19,5 +19,23 @@ namespace SharpPcap
             };
             device.Open(configuration);
         }
+
+        public static void Open(this LibPcap.CaptureFileWriterDevice device, LibPcap.LibPcapLiveDevice captureDevice)
+        {
+            var configuration = new DeviceConfiguration()
+            {
+                LinkLayerType = captureDevice.LinkType,
+            };
+            device.Open(configuration);
+        }
+
+        public static void Open(this LibPcap.CaptureFileWriterDevice device, PacketDotNet.LinkLayers linkLayerType = PacketDotNet.LinkLayers.Ethernet)
+        {
+            var configuration = new DeviceConfiguration()
+            {
+                LinkLayerType = linkLayerType,
+            };
+            device.Open(configuration);
+        }
     }
 }

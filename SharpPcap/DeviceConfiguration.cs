@@ -46,6 +46,13 @@ namespace SharpPcap
 
         public int? MinToCopy { get; set; }
 
+        #region File IO
+        /// <summary>
+        /// Writing capture files
+        /// </summary>
+        public PacketDotNet.LinkLayers LinkLayerType { get; set; }
+        #endregion
+
         public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
 
         internal void RaiseConfigurationFailed(string property, int retval)
