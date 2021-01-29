@@ -38,18 +38,18 @@ namespace Test
         public void TestCreationOptions()
         {
             // valid arguments results in the object being created
-            using var valid = new CaptureFileWriterDevice(PacketDotNet.LinkLayers.Ethernet, null, "somefilename.pcap", System.IO.FileMode.Open);
+            using var valid = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, mode: System.IO.FileMode.Open);
 
             // invalid snapshot length should throw
             Assert.Throws<InvalidOperationException>(() =>
             {
-                using var wd = new CaptureFileWriterDevice(PacketDotNet.LinkLayers.Ethernet, 500000, "somefilename.pcap", System.IO.FileMode.Open);
+                using var wd = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, snapshotLength: 500000, mode: System.IO.FileMode.Open);
             });
 
             // file mode of append should throw
             Assert.Throws<InvalidOperationException>(() =>
             {
-                using var wd = new CaptureFileWriterDevice(PacketDotNet.LinkLayers.Ethernet, null, "somefilename.pcap", System.IO.FileMode.Append);
+                using var wd = new CaptureFileWriterDevice("somefilename.pcap", linkLayerType: PacketDotNet.LinkLayers.Ethernet, mode: System.IO.FileMode.Append);
             });
         }
 
