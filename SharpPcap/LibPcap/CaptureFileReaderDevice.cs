@@ -81,11 +81,17 @@ namespace SharpPcap.LibPcap
         public CaptureFileReaderDevice(string captureFilename)
         {
             m_pcapFile = captureFilename;
+        }
 
+        /// <summary>
+        /// Open the device
+        /// </summary>
+        public override void Open(DeviceConfiguration configuration)
+        {
             // holds errors
             StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
             // opens offline pcap file
-            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(captureFilename, errbuf);
+            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, errbuf);
 
             // handle error
             if (adapterHandle == IntPtr.Zero)
@@ -96,14 +102,7 @@ namespace SharpPcap.LibPcap
 
             // set the device handle
             PcapHandle = adapterHandle;
-        }
 
-        /// <summary>
-        /// Open the device
-        /// </summary>
-        public override void Open(DeviceConfiguration configuration)
-        {
-            // Nothing to do here, device is already opened and active upon construction
             Active = true;
         }
 
