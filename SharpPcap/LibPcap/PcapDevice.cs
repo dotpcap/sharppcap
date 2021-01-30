@@ -587,6 +587,28 @@ namespace SharpPcap.LibPcap
         public abstract void SendPacket(ReadOnlySpan<byte> p);
 
         /// <summary>
+        /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
+        /// This is a helper method to use them and detect/report errors
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="setter"></param>
+        /// <param name="property"></param>
+        /// <param name="value"></param>
+        protected void Configure(
+            DeviceConfiguration configuration,
+            string property,
+            Func<IntPtr, int, int> setter,
+            int value
+        )
+        {
+            var retval = setter(PcapHandle, value);
+            if (retval != 0)
+            {
+                configuration.RaiseConfigurationFailed(property, retval);
+            }
+        }
+
+        /// <summary>
         /// Helper method for checking that the adapter is open, throws an
         /// exception with a string of ExceptionString if the device isn't open
         /// </summary>

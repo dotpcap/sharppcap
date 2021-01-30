@@ -259,28 +259,6 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        /// <summary>
-        /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
-        /// This is a helper method to use them and detect/report errors
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="setter"></param>
-        /// <param name="property"></param>
-        /// <param name="value"></param>
-        private void Configure(
-            DeviceConfiguration configuration,
-            string property,
-            Func<IntPtr, int, int> setter,
-            int value
-        )
-        {
-            var retval = setter(PcapHandle, value);
-            if (retval != 0)
-            {
-                configuration.RaiseConfigurationFailed(property, retval);
-            }
-        }
-
         private const int disableBlocking = 0;
         private const int enableBlocking = 1;
 
