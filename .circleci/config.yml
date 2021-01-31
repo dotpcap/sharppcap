@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout
       - run: dotnet build -c Release
+      - run: bash scripts/test.sh --filter "TestCategory=WinDivert"
 
   test-ubuntu-1604:
     machine:
