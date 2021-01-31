@@ -27,7 +27,7 @@ namespace SharpPcap
     /// <summary>
     /// List of available capture devices
     /// </summary>
-    public class CaptureDeviceList : ReadOnlyCollection<ICaptureDevice>
+    public class CaptureDeviceList : ReadOnlyCollection<ILiveDevice>
     {
         private static CaptureDeviceList instance;
 
@@ -85,7 +85,7 @@ namespace SharpPcap
         /// Represents a strongly typed, read-only list of PcapDevices.
         /// </summary>
         private CaptureDeviceList()
-            : base(new List<ICaptureDevice>())
+            : base(new List<ILiveDevice>())
         {
             // windows
             if ((Environment.OSVersion.Platform == PlatformID.Win32NT) ||
@@ -136,7 +136,7 @@ namespace SharpPcap
 
 #region Device Indexers
         /// <param name="Name">The name or description of the pcap interface to get.</param>
-        public ICaptureDevice this[string Name]
+        public ILiveDevice this[string Name]
         {
             get
             {

@@ -28,7 +28,7 @@ namespace Test
         /// Find the first Ethernet adapter that is actually connected to something
         /// </summary>
         /// <returns></returns>
-        internal static PcapDevice GetPcapDevice()
+        internal static LibPcapLiveDevice GetPcapDevice()
         {
             var nics = NetworkInterface.GetAllNetworkInterfaces();
             foreach (var device in LibPcapLiveDeviceList.Instance)
@@ -74,7 +74,7 @@ namespace Test
         /// <param name="filter">to avoid noise from OS affecting test result, a filter is needed</param>
         /// <param name="routine">the routine to run</param>
         /// <returns></returns>
-        internal static List<RawCapture> RunCapture(string filter, Action<PcapDevice> routine)
+        internal static List<RawCapture> RunCapture(string filter, Action<LibPcapLiveDevice> routine)
         {
             using var device = GetPcapDevice();
             Console.WriteLine($"Using device {device}");

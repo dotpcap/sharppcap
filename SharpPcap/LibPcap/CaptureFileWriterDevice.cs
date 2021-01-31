@@ -29,7 +29,7 @@ namespace SharpPcap.LibPcap
     ///
     /// NOTE: Appending to a capture file is not currently supported
     /// </summary>
-    public class CaptureFileWriterDevice : PcapDevice
+    public class CaptureFileWriterDevice : PcapDevice , IInjectionDevice
     {
         private readonly string m_pcapFile;
 
@@ -141,23 +141,23 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="p">P.</param>
         /// <param name="h">The height.</param>
-        public void Write(byte[] p, ref PcapHeader h)
+        public void Write(ReadOnlySpan<byte> p, ref PcapHeader h)
         {
             ThrowIfNotOpen("Cannot dump packet, device is not opened");
             if (!DumpOpened)
                 throw new DeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
-            //Marshal packet
-            IntPtr pktPtr;
-            pktPtr = Marshal.AllocHGlobal(p.Length);
-            Marshal.Copy(p, 0, pktPtr, p.Length);
-
             //Marshal header
             IntPtr hdrPtr = h.MarshalToIntPtr();
 
-            LibPcapSafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, pktPtr);
-
-            Marshal.FreeHGlobal(pktPtr);
+            unsafe
+            {
+                fixed (byte* p_packet = p)
+                {
+                    LibPcapSafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, new IntPtr(p_packet));
+                }
+            }
+            
             Marshal.FreeHGlobal(hdrPtr);
         }
 
@@ -165,7 +165,7 @@ namespace SharpPcap.LibPcap
         /// Writes a packet to the pcap dump file associated with this device.
         /// </summary>
         /// <param name="p">The packet to write</param>
-        public void Write(byte[] p)
+        public void Write(ReadOnlySpan<byte> p)
         {
             var header = new PcapHeader(0, 0, (uint)p.Length, (uint)p.Length);
             Write(p, ref header);
@@ -184,9 +184,14 @@ namespace SharpPcap.LibPcap
             Write(data, ref header);
         }
 
-        public override void SendPacket(ReadOnlySpan<byte> p)
+        void IInjectionDevice.SendPacket(RawCapture p)
         {
-            throw new NotSupportedOnCaptureFileException("Sending not supported on a capture file");
+            Write(p);
+        }
+
+        void IInjectionDevice.SendPacket(ReadOnlySpan<byte> p)
+        {
+            Write(p);
         }
     }
 }

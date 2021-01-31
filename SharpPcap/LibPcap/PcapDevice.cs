@@ -537,56 +537,6 @@ namespace SharpPcap.LibPcap
         #endregion
 
         /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        public virtual void SendPacket(PacketDotNet.Packet p)
-        {
-            SendPacket(p.Bytes);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public virtual void SendPacket(PacketDotNet.Packet p, int size)
-        {
-            SendPacket(p.Bytes, size);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        public virtual void SendPacket(byte[] p)
-        {
-            SendPacket(p, p.Length);
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public virtual void SendPacket(byte[] p, int size)
-        {
-            if (size > p.Length)
-            {
-                throw new ArgumentException("Invalid packetSize value: " + size +
-                "\nArgument size is larger than the total size of the packet.");
-            }
-            SendPacket(new ReadOnlySpan<byte>(p, 0, size));
-        }
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public abstract void SendPacket(ReadOnlySpan<byte> p);
-
-        /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
         /// This is a helper method to use them and detect/report errors
         /// </summary>

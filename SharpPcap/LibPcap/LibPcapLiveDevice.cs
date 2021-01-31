@@ -30,7 +30,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class LibPcapLiveDevice : PcapDevice
+    public class LibPcapLiveDevice : PcapDevice, ILiveDevice
     {
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
@@ -307,11 +307,19 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Sends a raw packet throgh this device
+        /// Sends a raw packet through this device
+        /// </summary>
+        /// <param name="p">The packet to send</param>
+        public void SendPacket(RawCapture p)
+        {
+            SendPacket(p.Data);
+        }
+
+        /// <summary>
+        /// Sends a raw packet through this device
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        public override void SendPacket(ReadOnlySpan<byte> p)
+        public void SendPacket(ReadOnlySpan<byte> p)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
 
