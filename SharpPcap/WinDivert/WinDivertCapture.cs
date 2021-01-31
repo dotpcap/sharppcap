@@ -18,19 +18,5 @@ namespace SharpPcap.WinDivert
             : base(LinkLayers.Raw, timeval, data)
         {
         }
-
-        /// <summary>
-        /// Creates a WinDivertPacket from current capture information
-        /// </summary>
-        /// <returns></returns>
-        public override Packet GetPacket()
-        {
-            return new WinDivertPacket(new ByteArraySegment(Data))
-            {
-                InterfaceIndex = InterfaceIndex,
-                SubInterfaceIndex = SubInterfaceIndex,
-                Flags = Flags,
-            };
-        }
     }
 }

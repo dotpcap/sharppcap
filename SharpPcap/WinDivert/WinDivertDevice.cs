@@ -9,7 +9,7 @@ using PacketDotNet;
 
 namespace SharpPcap.WinDivert
 {
-    public class WinDivertDevice : ICaptureDevice
+    public class WinDivertDevice : ILiveDevice
     {
 
         static readonly DateTime BootTime = DateTime.Now - TimeSpan.FromTicks(Stopwatch.GetTimestamp());
@@ -108,11 +108,6 @@ namespace SharpPcap.WinDivert
             }
         }
 
-        public int GetNextPacketPointers(ref IntPtr header, ref IntPtr data)
-        {
-            throw new NotSupportedException();
-        }
-
         public void Open(DeviceConfiguration configuration)
         {
             var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
@@ -157,42 +152,18 @@ namespace SharpPcap.WinDivert
             return value;
         }
 
-        public void SendPacket(Packet p)
+        public void SendPacket(RawCapture p)
         {
-            if (p is WinDivertPacket packet)
+            if (p is WinDivertCapture packet)
             {
                 WinDivertAddress address = default;
                 address.IfIdx = packet.InterfaceIndex;
                 address.SubIfIdx = packet.SubInterfaceIndex;
                 address.Flags = packet.Flags;
-                SendPacket(new ReadOnlySpan<byte>(p.Bytes), address);
+                SendPacket(new ReadOnlySpan<byte>(p.Data), address);
                 return;
             }
-            SendPacket(new ReadOnlySpan<byte>(p.Bytes));
-        }
-
-        public void SendPacket(Packet p, int size)
-        {
-            if (p is WinDivertPacket packet)
-            {
-                WinDivertAddress address = default;
-                address.IfIdx = packet.InterfaceIndex;
-                address.SubIfIdx = packet.SubInterfaceIndex;
-                address.Flags = packet.Flags;
-                SendPacket(new ReadOnlySpan<byte>(p.Bytes, 0, size), address);
-                return;
-            }
-            SendPacket(new ReadOnlySpan<byte>(p.Bytes, 0, size));
-        }
-
-        public void SendPacket(byte[] p)
-        {
-            SendPacket(new ReadOnlySpan<byte>(p));
-        }
-
-        public void SendPacket(byte[] p, int size)
-        {
-            SendPacket(new ReadOnlySpan<byte>(p, 0, size));
+            SendPacket(new ReadOnlySpan<byte>(p.Data));
         }
 
         public void SendPacket(ReadOnlySpan<byte> p)

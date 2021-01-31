@@ -116,10 +116,6 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public override ICaptureStatistics Statistics => null;
 
-        public override void SendPacket(ReadOnlySpan<byte> p)
-        {
-            throw new NotSupportedOnCaptureFileException("Sending not supported on a capture file");
-        }
     }
 }
 

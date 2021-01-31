@@ -63,18 +63,6 @@ namespace Test
         }
 
         [Test]
-        public void SendPacket()
-        {
-            var bytes = new byte[] { 0x10, 0x20, 0x30 };
-
-            using (var wd = new CaptureFileWriterDevice(filename))
-            {
-                wd.Open();
-                Assert.Throws<NotSupportedOnCaptureFileException>(() => wd.SendPacket(bytes));
-            }
-        }
-
-        [Test]
         public void StatisticsUnsupported()
         {
             using (var wd = new CaptureFileWriterDevice(filename))

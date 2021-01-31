@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of SharpPcap.
 
 SharpPcap is free software: you can redistribute it and/or modify
@@ -21,18 +21,11 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 namespace SharpPcap
 {
     /// <summary>
-    /// Thrown when a method not supported on a capture file
+    /// Live device, capable of both capture and injection
     /// </summary>
-    public class NotSupportedOnCaptureFileException : PcapException
+    public interface ILiveDevice : ICaptureDevice , IInjectionDevice
     {
-        /// <summary>
-        /// string constructor
-        /// </summary>
-        /// <param name="msg">
-        /// A <see cref="string"/>
-        /// </param>
-        public NotSupportedOnCaptureFileException(string msg) : base(msg)
-        {
-        }
+
     }
 }
+

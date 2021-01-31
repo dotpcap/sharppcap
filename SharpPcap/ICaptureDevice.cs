@@ -24,54 +24,8 @@ namespace SharpPcap
     /// <summary>
     /// Interfaces for capture devices
     /// </summary>
-    public interface ICaptureDevice : IDisposable
+    public interface ICaptureDevice : IPcapDevice
     {
-        /// <summary>
-        /// Gets the name of the device
-        /// </summary>
-        string Name { get; }
-
-        /// <value>
-        /// Description of the device
-        /// </value>
-        string Description { get; }
-
-        /// <summary>
-        /// The last pcap error associated with this pcap device
-        /// </summary>
-        string LastError { get; }
-
-        /// <summary>
-        /// Kernel level filtering expression associated with this device.
-        /// For more info on filter expression syntax, see:
-        /// https://www.winpcap.org/docs/docs_412/html/group__language.html
-        /// </summary>
-        string Filter { get; set; }
-
-        /// <summary>
-        /// Retrieves pcap statistics
-        ///
-        /// Devices that lack statistics support return null
-        /// </summary>
-        ICaptureStatistics Statistics { get; }
-
-        /// <summary>
-        /// Mac address of the physical device
-        /// </summary>
-        System.Net.NetworkInformation.PhysicalAddress MacAddress { get; }
-
-        /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
-        /// </summary>
-        /// <param name="configuration">
-        /// A <see cref="DeviceConfiguration"/>
-        /// </param>
-        void Open(DeviceConfiguration configuration);
-
-        /// <summary>
-        /// Closes this adapter
-        /// </summary>
-        void Close();
 
         #region Capture methods and properties
         /// <summary>
@@ -121,51 +75,11 @@ namespace SharpPcap
         RawCapture GetNextPacket();
 
         /// <summary>
-        /// Gets pointers to the next PCAP header and packet data.
-        /// Data is only valid until next call to GetNextPacketNative.
+        /// Retrieves pcap statistics
         ///
-        /// Advanced use only. Intended to allow unmanaged code to avoid the overhead of
-        /// marshalling PcapHeader and packet contents to allocated memory.
+        /// Devices that lack statistics support return null
         /// </summary>
-        int GetNextPacketPointers(ref IntPtr header, ref IntPtr data);
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        void SendPacket(PacketDotNet.Packet p);
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        void SendPacket(PacketDotNet.Packet p, int size);
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        void SendPacket(byte[] p);
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        void SendPacket(byte[] p, int size);
-
-        /// <summary>
-        /// Sends a raw packet throgh this device
-        /// </summary>
-        /// <param name="p">The packet bytes to send</param>
-        /// <param name="size">The number of bytes to send</param>
-        void SendPacket(ReadOnlySpan<byte> p);
-
-        /// <summary>
-        /// Return the pcap link layer value of an adapter. 
-        /// </summary>
-        PacketDotNet.LinkLayers LinkType { get; }
+        ICaptureStatistics Statistics { get; }
     }
 }
 

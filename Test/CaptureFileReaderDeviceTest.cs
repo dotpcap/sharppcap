@@ -22,17 +22,6 @@ namespace Test
         }
 
         [Test]
-        public void CaptureSendPacket()
-        {
-            var filename = "ipv6_http.pcap";
-            using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
-            device.Open();
-            var bytes = new byte[] { 0x10, 0x20, 0x30 };
-
-            Assert.Throws<NotSupportedOnCaptureFileException>(() => device.SendPacket(bytes));
-        }
-
-        [Test]
         public void CaptureProperties()
         {
             var filename = "ipv6_http.pcap";
