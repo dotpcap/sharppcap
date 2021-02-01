@@ -113,10 +113,7 @@ namespace SharpPcap.LibPcap
         {
             if (configuration.Snaplen > Pcap.MAX_PACKET_SIZE)
             {
-                var ex = new InvalidOperationException("Snaplen > Pcap.MAX_PACKET_SIZE");
-                configuration.RaiseConfigurationFailed("snaplen", ex);
-
-                throw ex;
+                configuration.RaiseConfigurationFailed("snaplen", new InvalidOperationException("Snaplen > Pcap.MAX_PACKET_SIZE"));
             }
 
             // set the device handle
