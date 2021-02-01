@@ -382,6 +382,26 @@ namespace SharpPcap.LibPcap
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* const char* */ pcap_tstamp_type_val_to_description(int tstamp_val);
+
+        /// <summary>
+        /// Since libpcap 1.5.1
+        /// </summary>
+        /// <param name="fname"></param>
+        /// <param name="precision"></param>
+        /// <param name="errbuf"></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_t* */ pcap_open_offline_with_tstamp_precision(string /* const char* */ fname, uint precision, StringBuilder /* char* */ errbuf);
+
+        /// <summary>
+        /// Since libpcap 1.5.1
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="snaplen"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_t* */ pcap_open_dead_with_tstamp_precision(int type, int snaplen, uint precision);
         #endregion
 
         #region Npcap specific

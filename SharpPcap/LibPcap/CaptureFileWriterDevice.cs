@@ -117,7 +117,25 @@ namespace SharpPcap.LibPcap
             }
 
             // set the device handle
-            PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
+            var has_open_dead_with_tstamp_precision_support = Pcap.LibpcapVersion >= new Version(1, 5, 1);
+            var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
+            if (has_open_dead_with_tstamp_precision_support)
+            {
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead_with_tstamp_precision((int)configuration.LinkLayerType,
+                    configuration.Snaplen,
+                    (uint)resolution);
+            } else
+            {
+                if (resolution != TimestampResolution.Microsecond)
+                {
+                    configuration.RaiseConfigurationFailed(
+                        nameof(configuration.TimestampResolution),
+                        new NotSupportedException("pcap version is < 1.5.1, needs pcap_open_dead_with_tstamp_precision()")
+                    );
+                }
+
+                PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
+            }
 
             m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, m_pcapFile);
             if (m_pcapDumpHandle == IntPtr.Zero)
