@@ -64,8 +64,10 @@ namespace SharpPcap
                 Property = property,
                 Error = error,
                 Message = message,
+                Exception = new PcapException(message),
             };
-            ConfigurationFailed?.Invoke(this, args);
+
+            RaiseFailedEvent(args);
         }
 
         internal void RaiseConfigurationFailed(string property, Exception exception)
@@ -76,10 +78,23 @@ namespace SharpPcap
                 Property = property,
                 Error = PcapError.Generic,
                 Message = message,
+                Exception = exception,
             };
-            ConfigurationFailed?.Invoke(this, args);
+
+            RaiseFailedEvent(args);
         }
 
+        private void RaiseFailedEvent(ConfigurationFailedEventArgs args)
+        {
+            if (ConfigurationFailed is null)
+            {
+                throw args.Exception;
+            }
+            else
+            {
+                ConfigurationFailed.Invoke(this, args);
+            }
+        }
     }
 
     public class ConfigurationFailedEventArgs : EventArgs
@@ -87,5 +102,6 @@ namespace SharpPcap
         public PcapError Error { get; internal set; }
         public string Property { get; internal set; }
         public string Message { get; internal set; }
+        public Exception Exception { get; internal set; }
     }
 }
