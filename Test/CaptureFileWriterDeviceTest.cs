@@ -62,6 +62,19 @@ namespace Test
             });
         }
 
+        [Category("Timestamp")]
+        [Test]
+        public void TestTimestampCreation()
+        {
+            // setting timestamp resolution
+            using var wd = new CaptureFileWriterDevice("simefilename.pcap", System.IO.FileMode.Open);
+            var configuration = new DeviceConfiguration
+            {
+                TimestampResolution = TimestampResolution.Nanosecond
+            };
+            wd.Open(configuration);
+        }
+
         [Test]
         public void StatisticsUnsupported()
         {

@@ -589,6 +589,32 @@ namespace SharpPcap.LibPcap
                 Unix.pcap_tstamp_type_val_to_description(tstamp_val);
         }
 
+        /// <summary>
+        /// Since libpcap 1.5.1
+        /// </summary>
+        /// <param name="fname"></param>
+        /// <param name="precision"></param>
+        /// <param name="errbuf"></param>
+        /// <returns></returns>
+        internal static IntPtr /* pcap_t* */ pcap_open_offline_with_tstamp_precision(string /* const char* */ fname, uint precision, StringBuilder /* char* */ errbuf)
+        {
+            return UseWindows ? Windows.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf) :
+                Unix.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf);
+        }
+
+        /// <summary>
+        /// Since libpcap 1.5.1
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="snaplen"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        internal static IntPtr /* pcap_t* */ pcap_open_dead_with_tstamp_precision(int type, int snaplen, uint precision)
+        {
+            return UseWindows ? Windows.pcap_open_dead_with_tstamp_precision(type, snaplen, precision) :
+                Unix.pcap_open_dead_with_tstamp_precision(type, snaplen, precision);
+        }
+
         #endregion
     }
 }
