@@ -21,6 +21,29 @@ namespace Test
             });
         }
 
+        [Category("Timestamp")]
+        [Test]
+        public void CaptureTimestampResolution()
+        {
+            var filename = "ipv6_http.pcap";
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
+
+            // nanosecond configuration
+            var configuration = new DeviceConfiguration
+            {
+                TimestampResolution = TimestampResolution.Nanosecond
+            };
+            device.Open(configuration);
+            Assert.AreEqual(configuration.TimestampResolution, device.TimestampResolution);
+            device.Close();
+
+            // microsecond configuration
+            configuration.TimestampResolution = TimestampResolution.Microsecond;
+            device.Open(configuration);
+            Assert.AreEqual(configuration.TimestampResolution, device.TimestampResolution);
+            device.Close();
+        }
+
         [Test]
         public void CaptureProperties()
         {

@@ -90,8 +90,29 @@ namespace SharpPcap.LibPcap
         {
             // holds errors
             StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-            // opens offline pcap file
-            IntPtr adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, errbuf);
+
+            IntPtr adapterHandle;
+
+            // Check if we need to open with a defined precision
+            var has_offline_with_tstamp_precision_support = Pcap.LibpcapVersion >= new Version(1, 5, 1);
+            var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
+            if (has_offline_with_tstamp_precision_support)
+            {
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, errbuf);
+            } else
+            {
+                // notify the user that they asked for a non-standard resolution but their libpcap
+                // version lacks the necessary function
+                if(resolution != TimestampResolution.Microsecond)
+                {
+                    configuration.RaiseConfigurationFailed(
+                        nameof(configuration.TimestampResolution),
+                        new NotSupportedException("pcap version is < 1.5.1, needs pcap_open_offline_with_tstamp_precision()")
+                    );
+                }
+
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, errbuf);
+            }
 
             // handle error
             if (adapterHandle == IntPtr.Zero)
