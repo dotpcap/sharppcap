@@ -6,11 +6,11 @@ using SharpPcap.LibPcap;
 namespace Test
 {
     [TestFixture]
-    public class CaptureFileWriterTest
+    public class CaptureFileWriterDeviceTest
     {
         static string filename = @"abc.pcap";
 
-        public CaptureFileWriterTest()
+        public CaptureFileWriterDeviceTest()
         {
         }
 
