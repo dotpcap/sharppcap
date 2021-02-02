@@ -64,7 +64,7 @@ namespace SharpPcap
                 Property = property,
                 Error = error,
                 Message = message,
-                Exception = new PcapException(message),
+                Exception = new PcapException(message, error),
             };
 
             RaiseFailedEvent(args);
