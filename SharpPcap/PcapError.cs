@@ -74,5 +74,12 @@ namespace SharpPcap
         /// the requested time stamp precision is not supported
         /// </summary>
         TimestampPrecisionNotSupported = -12,
+
+        /// <summary>
+        /// Defined by SharpPcap
+        /// Corresponds to HRESULT of <see cref="System.PlatformNotSupportedException"/>
+        /// This means either the OS or the Libpcap version does not support requested configuration
+        /// </summary>
+        PlatformNotSupported = unchecked((int)0x80131539),
     }
 }

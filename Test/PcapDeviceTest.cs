@@ -154,8 +154,7 @@ namespace Test
             Assert.That(failures, Has.Count.EqualTo(1));
             var fail = failures[0];
             Assert.AreEqual(property, fail.Property);
-            Assert.AreEqual(PcapError.Generic, fail.Error);
-            StringAssert.Contains(new PlatformNotSupportedException().Message, fail.Message);
+            Assert.AreEqual(PcapError.PlatformNotSupported, fail.Error);
         }
 
         [Test]

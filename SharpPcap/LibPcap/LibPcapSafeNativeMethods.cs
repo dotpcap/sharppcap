@@ -134,7 +134,12 @@ namespace SharpPcap.LibPcap
 
         internal static int pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes)
         {
-            return UseWindows ? Windows.pcap_setbuff(adapter, bufferSizeInBytes) : 0;
+            return UseWindows ? Windows.pcap_setbuff(adapter, bufferSizeInBytes) : (int)PcapError.PlatformNotSupported;
+        }
+
+        internal static int pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes)
+        {
+            return UseWindows ? Windows.pcap_setmintocopy(adapter, sizeInBytes) : (int)PcapError.PlatformNotSupported;
         }
 
         /// <summary>Open a file to write packets. </summary>

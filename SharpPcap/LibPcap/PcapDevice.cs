@@ -552,13 +552,16 @@ namespace SharpPcap.LibPcap
             DeviceConfiguration configuration,
             string property,
             Func<IntPtr, int, int> setter,
-            int value
+            int? value
         )
         {
-            var retval = setter(PcapHandle, value);
-            if (retval != 0)
+            if (value.HasValue)
             {
-                configuration.RaiseConfigurationFailed(property, retval);
+                var retval = setter(PcapHandle, value.Value);
+                if (retval != 0)
+                {
+                    configuration.RaiseConfigurationFailed(property, retval);
+                }
             }
         }
 

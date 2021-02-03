@@ -29,7 +29,7 @@ namespace SharpPcap.LibPcap
     ///
     /// NOTE: Appending to a capture file is not currently supported
     /// </summary>
-    public class CaptureFileWriterDevice : PcapDevice , IInjectionDevice
+    public class CaptureFileWriterDevice : PcapDevice, IInjectionDevice
     {
         private readonly string m_pcapFile;
 
@@ -111,11 +111,6 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override void Open(DeviceConfiguration configuration)
         {
-            if (configuration.Snaplen > Pcap.MAX_PACKET_SIZE)
-            {
-                configuration.RaiseConfigurationFailed("snaplen", new InvalidOperationException("Snaplen > Pcap.MAX_PACKET_SIZE"));
-            }
-
             // set the device handle
             var has_open_dead_with_tstamp_precision_support = Pcap.LibpcapVersion >= new Version(1, 5, 1);
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
@@ -124,13 +119,15 @@ namespace SharpPcap.LibPcap
                 PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead_with_tstamp_precision((int)configuration.LinkLayerType,
                     configuration.Snaplen,
                     (uint)resolution);
-            } else
+            }
+            else
             {
                 if (resolution != TimestampResolution.Microsecond)
                 {
                     configuration.RaiseConfigurationFailed(
                         nameof(configuration.TimestampResolution),
-                        new NotSupportedException("pcap version is < 1.5.1, needs pcap_open_dead_with_tstamp_precision()")
+                        (int)PcapError.PlatformNotSupported,
+                        "pcap version is < 1.5.1, needs pcap_open_dead_with_tstamp_precision()"
                     );
                 }
 
@@ -175,7 +172,7 @@ namespace SharpPcap.LibPcap
                     LibPcapSafeNativeMethods.pcap_dump(m_pcapDumpHandle, hdrPtr, new IntPtr(p_packet));
                 }
             }
-            
+
             Marshal.FreeHGlobal(hdrPtr);
         }
 
