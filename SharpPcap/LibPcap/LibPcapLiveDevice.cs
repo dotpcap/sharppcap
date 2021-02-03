@@ -307,11 +307,6 @@ namespace SharpPcap.LibPcap
         public void SendPacket(ReadOnlySpan<byte> p)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
-
-            if (p.Length > Pcap.MAX_PACKET_SIZE)
-            {
-                throw new ArgumentException("Packet length can't be larger than " + Pcap.MAX_PACKET_SIZE);
-            }
             int res;
             unsafe
             {
