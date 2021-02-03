@@ -176,21 +176,15 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
 
-                if (configuration.Monitor != MonitorMode.Inactive)
-                {
-                    Configure(
-                        configuration, nameof(configuration.Monitor),
-                        LibPcapSafeNativeMethods.pcap_set_rfmon, (int)configuration.Monitor
-                    );
-                }
+                Configure(
+                    configuration, nameof(configuration.Monitor),
+                    LibPcapSafeNativeMethods.pcap_set_rfmon, (int?)configuration.Monitor
+                );
 
-                if (configuration.BufferSize != 0)
-                {
-                    Configure(
-                        configuration, nameof(configuration.BufferSize),
-                        LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
-                    );
-                }
+                Configure(
+                    configuration, nameof(configuration.BufferSize),
+                    LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
+                );
 
                 // Check if immediate is supported
                 var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
@@ -203,8 +197,8 @@ namespace SharpPcap.LibPcap
                     if (!immediate_supported && !mintocopy_supported)
                     {
                         configuration.RaiseConfigurationFailed(
-                            nameof(configuration.Immediate),
-                            new PlatformNotSupportedException()
+                            nameof(configuration.Immediate), 
+                            (int)PcapError.PlatformNotSupported
                         );
                     }
                     else if (immediate_supported)
@@ -231,47 +225,22 @@ namespace SharpPcap.LibPcap
                 }
 
                 // Below configurations must be done after the device gets activated
-                if (configuration.KernelBufferSize != 0)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        Configure(
-                            configuration, nameof(configuration.KernelBufferSize),
-                            Windows.pcap_setbuff, configuration.KernelBufferSize
-                        );
-                    }
-                    else
-                    {
-                        configuration.RaiseConfigurationFailed(
-                            nameof(configuration.KernelBufferSize),
-                            new PlatformNotSupportedException()
-                        );
-                    }
-                }
+                Configure(
+                    configuration, nameof(configuration.KernelBufferSize),
+                    LibPcapSafeNativeMethods.pcap_setbuff, configuration.KernelBufferSize
+                );
+
                 if (configuration.Immediate == true && mintocopy_supported && !immediate_supported)
                 {
                     Configure(
                         configuration, nameof(configuration.Immediate),
-                        Windows.pcap_setmintocopy, 0
+                        LibPcapSafeNativeMethods.pcap_setmintocopy, 0
                     );
                 }
-                if (configuration.MinToCopy.HasValue)
-                {
-                    if (mintocopy_supported)
-                    {
-                        Configure(
-                            configuration, nameof(configuration.MinToCopy),
-                            Windows.pcap_setmintocopy, configuration.MinToCopy.Value
-                        );
-                    }
-                    else
-                    {
-                        configuration.RaiseConfigurationFailed(
-                            nameof(configuration.MinToCopy),
-                            new PlatformNotSupportedException()
-                        );
-                    }
-                }
+                Configure(
+                    configuration, nameof(configuration.MinToCopy),
+                    LibPcapSafeNativeMethods.pcap_setmintocopy, configuration.MinToCopy
+                );
             }
         }
 

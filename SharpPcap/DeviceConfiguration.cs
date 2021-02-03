@@ -34,11 +34,11 @@ namespace SharpPcap
         // MAX_PACKET_SIZE (65536) grants that the whole packet will be captured on all the MACs.
         public int Snaplen { get; set; } = Pcap.MAX_PACKET_SIZE;
 
-        public MonitorMode Monitor { get; set; }
+        public MonitorMode? Monitor { get; set; }
 
-        public int BufferSize { get; set; }
+        public int? BufferSize { get; set; }
 
-        public int KernelBufferSize { get; set; }
+        public int? KernelBufferSize { get; set; }
 
         public RemoteAuthentication Credentials { get; set; }
 
@@ -59,43 +59,26 @@ namespace SharpPcap
 
         public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
 
-        internal void RaiseConfigurationFailed(string property, int retval)
+        internal void RaiseConfigurationFailed(string property, int retval, string message = null)
         {
             var error = (PcapError)retval;
-            var message = $"Failed to set {property}. Error: {error}";
-            var args = new ConfigurationFailedEventArgs
-            {
-                Property = property,
-                Error = error,
-                Message = message,
-                Exception = new PcapException(message, error),
-            };
+            message = message ?? $"Failed to set {property}. Error: {error}";
 
-            RaiseFailedEvent(args);
-        }
-
-        internal void RaiseConfigurationFailed(string property, Exception exception)
-        {
-            var message = $"Failed to set {property}. {exception.Message}";
-            var args = new ConfigurationFailedEventArgs
-            {
-                Property = property,
-                Error = PcapError.Generic,
-                Message = message,
-                Exception = exception,
-            };
-
-            RaiseFailedEvent(args);
-        }
-
-        private void RaiseFailedEvent(ConfigurationFailedEventArgs args)
-        {
             if (ConfigurationFailed is null)
             {
-                throw args.Exception;
+                var exception = error == PcapError.PlatformNotSupported ?
+                    (Exception)new PlatformNotSupportedException() :
+                    new PcapException(message, error);
+                throw exception;
             }
             else
             {
+                var args = new ConfigurationFailedEventArgs
+                {
+                    Property = property,
+                    Error = error,
+                    Message = message,
+                };
                 ConfigurationFailed.Invoke(this, args);
             }
         }
@@ -106,6 +89,5 @@ namespace SharpPcap
         public PcapError Error { get; internal set; }
         public string Property { get; internal set; }
         public string Message { get; internal set; }
-        public Exception Exception { get; internal set; }
     }
 }

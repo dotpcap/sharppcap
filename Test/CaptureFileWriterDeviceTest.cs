@@ -42,18 +42,6 @@ namespace Test
             using var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
             valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
 
-            // invalid snapshot length should throw
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                using var wd = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
-                var configuration = new DeviceConfiguration
-                {
-                    LinkLayerType = PacketDotNet.LinkLayers.Ethernet,
-                    Snaplen = 500000
-                };
-                wd.Open(configuration);
-            });
-
             // file mode of append should throw
             Assert.Throws<InvalidOperationException>(() =>
             {

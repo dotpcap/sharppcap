@@ -99,15 +99,17 @@ namespace SharpPcap.LibPcap
             if (has_offline_with_tstamp_precision_support)
             {
                 adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, errbuf);
-            } else
+            }
+            else
             {
                 // notify the user that they asked for a non-standard resolution but their libpcap
                 // version lacks the necessary function
-                if(resolution != TimestampResolution.Microsecond)
+                if (resolution != TimestampResolution.Microsecond)
                 {
                     configuration.RaiseConfigurationFailed(
                         nameof(configuration.TimestampResolution),
-                        new NotSupportedException("pcap version is < 1.5.1, needs pcap_open_offline_with_tstamp_precision()")
+                        (int)PcapError.PlatformNotSupported,
+                        "pcap version is < 1.5.1, needs pcap_open_offline_with_tstamp_precision()"
                     );
                 }
 
