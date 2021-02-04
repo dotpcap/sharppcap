@@ -486,6 +486,34 @@ namespace SharpPcap.LibPcap
         #region Timestamp related functions
 
         /// <summary>
+        /// Available since libpcap 1.2
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="types_pointer_pointer"></param>
+        /// <returns></returns>
+        internal static int pcap_list_tstamp_types(IntPtr /* pcap_t* p */ adapter, ref IntPtr /* int ** */ types_pointer_pointer)
+        {
+            return UseWindows ?
+                Windows.pcap_list_tstamp_types(adapter, ref types_pointer_pointer) :
+                Unix.pcap_list_tstamp_types(adapter, ref types_pointer_pointer);
+        }
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
+        /// <param name="types_pointer"></param>
+        internal static void pcap_free_tstamp_types(IntPtr types_pointer)
+        {
+            if(UseWindows)
+            {
+                Windows.pcap_free_tstamp_types(types_pointer);
+            } else
+            {
+                Unix.pcap_free_tstamp_types(types_pointer);
+            }
+        }
+
+        /// <summary>
         /// Since libpcap 1.2
         /// </summary>
         /// <returns>Pointer to string that is the name of a timestamp given a value</returns>

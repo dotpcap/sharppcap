@@ -316,6 +316,22 @@ namespace SharpPcap.LibPcap
 
         #region Timestamp related functions
         /// <summary>
+        /// Available since libpcap 1.2
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_list_tstamp_types(IntPtr /* pcap_t* p */ adapter, ref IntPtr types_pointer_pointer);
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
+        /// <param name="types_pointer"></param>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static void pcap_free_tstamp_types(IntPtr types_pointer);
+
+        /// <summary>
         /// Since libpcap 1.2
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
