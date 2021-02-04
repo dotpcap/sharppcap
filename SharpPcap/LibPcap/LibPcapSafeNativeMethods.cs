@@ -516,6 +516,17 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Since libpcap 1.2
         /// </summary>
+        /// <returns>Numeric value of the timestamp based on its name</returns>
+        internal static int pcap_tstamp_type_name_to_val(string tstamp_name)
+        {
+            return UseWindows ?
+                Windows.pcap_tstamp_type_name_to_val(tstamp_name) :
+                Unix.pcap_tstamp_type_name_to_val(tstamp_name);
+        }
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
         /// <returns>Pointer to string that is the name of a timestamp given a value</returns>
         internal static IntPtr /* const char* */ pcap_tstamp_type_val_to_name(int tstamp_val)
         {
