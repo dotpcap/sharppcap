@@ -80,6 +80,17 @@ namespace SharpPcap
         /// Devices that lack statistics support return null
         /// </summary>
         ICaptureStatistics Statistics { get; }
+
+        #region Timestamp
+        /// <summary>
+        /// Note: libpcap docs and code use the term 'precision' and 'resolution'. We use the term
+        /// 'resolution' as it more closely reflects this setting
+        ///
+        /// Note: It isn't possible to set the resolution on a device that has already
+        /// been activated. Please Open() the device with the desired resolution.
+        /// </summary>
+        TimestampResolution TimestampResolution { get; }
+        #endregion
     }
 }
 

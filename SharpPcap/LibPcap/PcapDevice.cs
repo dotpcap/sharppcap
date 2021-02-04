@@ -536,6 +536,26 @@ namespace SharpPcap.LibPcap
         }
         #endregion
 
+        #region Timestamp
+        /// <summary>
+        /// To set a device's timestamp resolution pass the desired setting in when opening the device
+        /// </summary>
+        /// <remarks>
+        /// The name mismatch between resolution and precision is intentional. To the end user
+        /// we use the more correct term of 'resolution' but we have to match the libpcap term of 'precision'
+        /// used in functions for proper pinvoke mapping.
+        /// </remarks>
+        public virtual TimestampResolution TimestampResolution
+        {
+            get
+            {
+                ThrowIfNotOpen("device is not open");
+                return (TimestampResolution)LibPcapSafeNativeMethods.pcap_get_tstamp_precision(PcapHandle);
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
         /// This is a helper method to use them and detect/report errors

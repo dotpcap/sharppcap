@@ -324,6 +324,31 @@ namespace SharpPcap.LibPcap
 
         #region Timestamp related functions
         /// <summary>
+        /// Available since libpcap 1.5
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_tstamp_precision(IntPtr /* pcap_t* p */ adapter, int precision);
+
+        /// <summary>
+        /// Available since libpcap 1.5
+        /// </summary>
+        /// <param name="adapter"></param>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_get_tstamp_precision(IntPtr /* pcap_t* p */ adapter);
+
+        /// <summary>
+        /// Available since libpcap 1.2
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="tstamp_type"></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_set_tstamp_type(IntPtr /* pcap_t* p */ adapter, int tstamp_type);
+
+        /// <summary>
         /// Available since libpcap 1.2
         /// </summary>
         /// <param name="adapter"></param>

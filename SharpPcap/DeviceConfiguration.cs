@@ -53,6 +53,10 @@ namespace SharpPcap
         public PacketDotNet.LinkLayers LinkLayerType { get; set; }
         #endregion
 
+        public TimestampResolution? TimestampResolution { get; set; }
+
+        public TimestampType? TimestampType { get; set; }
+
         public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
 
         internal void RaiseConfigurationFailed(string property, int retval)

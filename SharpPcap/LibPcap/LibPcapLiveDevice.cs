@@ -16,8 +16,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 /* 
  * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
  * Copyright 2008-2010 Phillip Lemon <lucidcomms@gmail.com>
+ * Copyright 2008-2021 Chris Morgan <chmorgan@gmail.com>
  */
 
 using System;
@@ -122,7 +122,7 @@ namespace SharpPcap.LibPcap
 
                 // modes other than OpenFlags.Promiscuous require pcap_open()
                 var otherModes = mode & ~DeviceModes.Promiscuous;
-                if ((credentials == null) || ((short)otherModes != 0))
+                if ((credentials == null) || ((short)otherModes != 0) || (configuration.TimestampResolution != null))
                 {
                     PcapHandle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
@@ -140,6 +140,22 @@ namespace SharpPcap.LibPcap
                         configuration, nameof(configuration.ReadTimeout),
                         LibPcapSafeNativeMethods.pcap_set_timeout, configuration.ReadTimeout
                     );
+
+                    if (configuration.TimestampResolution.HasValue)
+                    {
+                        Configure(
+                            configuration, nameof(configuration.TimestampResolution),
+                            LibPcapSafeNativeMethods.pcap_set_tstamp_precision, (int)configuration.TimestampResolution
+                        );
+                    }
+
+                    if (configuration.TimestampType.HasValue)
+                    {
+                        Configure(
+                            configuration, nameof(configuration.TimestampType),
+                            LibPcapSafeNativeMethods.pcap_set_tstamp_type, (int)configuration.TimestampType
+                        );
+                    }
                 }
                 else
                 {
