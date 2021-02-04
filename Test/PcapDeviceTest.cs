@@ -35,6 +35,22 @@ namespace Test
     [NonParallelizable]
     public class PcapDeviceTest
     {
+        /// <summary>
+        /// Test that we can convert each TimestampType
+        /// </summary>
+        [Category("Timestamp")]
+        [Test]
+        public void TimestampConversions()
+        {
+            foreach (TimestampType timestampType in Enum.GetValues(typeof(TimestampType)))
+            {
+                var pcapClock = new PcapClock(timestampType);
+                Assert.IsNotNull(pcapClock);
+                Assert.IsNotEmpty(pcapClock.Name);
+                Assert.IsNotEmpty(pcapClock.Description);
+            }
+        }
+
         [Test]
         public void DeviceProperties([PcapDevices] DeviceFixture fixture)
         {

@@ -482,5 +482,31 @@ namespace SharpPcap.LibPcap
                 : Unix.pcap_sendqueue_transmit(p, ref queue, sync);
         }
         #endregion
+
+        #region Timestamp related functions
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
+        /// <returns>Pointer to string that is the name of a timestamp given a value</returns>
+        internal static IntPtr /* const char* */ pcap_tstamp_type_val_to_name(int tstamp_val)
+        {
+            return UseWindows ?
+                Windows.pcap_tstamp_type_val_to_name(tstamp_val) :
+                Unix.pcap_tstamp_type_val_to_name(tstamp_val);
+        }
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
+        /// <returns>Pointer to string that is the description of a given timestamp given a value</returns>
+        internal static IntPtr /* const char* */ pcap_tstamp_type_val_to_description(int tstamp_val)
+        {
+            return UseWindows ?
+                Windows.pcap_tstamp_type_val_to_description(tstamp_val) :
+                Unix.pcap_tstamp_type_val_to_description(tstamp_val);
+        }
+
+        #endregion
     }
 }
