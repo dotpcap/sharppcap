@@ -304,6 +304,18 @@ namespace SharpPcap.WinDivert
             }
         }
 
+        #region Timestamp
+        /// <summary>
+        /// Per https://reqrypt.org/windivert-doc.html
+        /// The Timestamp indicates when a packet was received and uses the same clock as QueryPerformancetimer()
+        /// which itself has <1us resolution. This maps best to microsecond resolution.
+        /// </summary>
+        public virtual TimestampResolution TimestampResolution
+        {
+            get => TimestampResolution.Microsecond;
+        }
+        #endregion
+
         private static void ThrowWin32Error(string message, int err)
         {
             var win32Message = new Win32Exception(err).Message;

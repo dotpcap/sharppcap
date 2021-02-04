@@ -19,6 +19,37 @@ namespace Test
             Console.WriteLine("Loopback: {0}", d.Loopback);
         }
 
+        /// <summary>
+        /// Test specifying the timestamp type when opening devices
+        /// </summary>
+        /// <param name="fixture"></param>
+        [Category("Timestamp")]
+        [Test]
+        public void DeviceOpenWithTimestampType([PcapDevices] DeviceFixture fixture)
+        {
+            using var device = (PcapDevice)fixture.GetDevice();
+            if (!(device is LibPcapLiveDevice))
+                return;
+
+            var liveDevice = device as LibPcapLiveDevice;
+
+            var timestampTypes = liveDevice.Interface.TimestampsSupported;
+
+            Assert.IsNotEmpty(timestampTypes);
+
+            // open the device with each of its supported timestamp types
+            foreach (var pcapClock in timestampTypes)
+            {
+                var configuration = new DeviceConfiguration();
+                configuration.TimestampType = pcapClock.TimestampType;
+                liveDevice.Open(configuration);
+
+                Assert.IsNotNull(liveDevice.Interface.TimestampsSupported);
+
+                liveDevice.Close();
+            }
+        }
+
         [Test]
         public void NonBlockingMode()
         {
