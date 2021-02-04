@@ -342,6 +342,13 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Since libpcap 1.2
         /// </summary>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_tstamp_type_name_to_val(string tstamp_name);
+
+        /// <summary>
+        /// Since libpcap 1.2
+        /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* const char* */ pcap_tstamp_type_val_to_name(int tstamp_val);
 
