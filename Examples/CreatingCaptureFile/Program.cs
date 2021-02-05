@@ -1,7 +1,7 @@
 using System;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using SharpPcap.Npcap;
+using SharpPcap.Statistics;
 using PacketDotNet;
 
 namespace CreatingCaptureFile

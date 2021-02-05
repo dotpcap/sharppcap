@@ -19,12 +19,12 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-namespace SharpPcap.Npcap
+namespace SharpPcap.Statistics
 {
     /// <summary>
     /// The working mode of a Pcap device
     /// </summary>
-    public enum CaptureMode : int
+    internal enum CaptureMode : int
     {
         /// <summary>
         /// Set a Pcap device to capture packets, Capture mode

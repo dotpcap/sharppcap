@@ -27,7 +27,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using SharpPcap.Npcap;
+using SharpPcap.Statistics;
 
 namespace Test
 {
@@ -54,10 +54,6 @@ namespace Test
                 { nameof(CaptureDeviceList), CaptureDeviceList.Instance },
                 { nameof(LibPcapLiveDeviceList), LibPcapLiveDeviceList.Instance }
             };
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                lists.Add(nameof(NpcapDeviceList), NpcapDeviceList.Instance);
-            }
             foreach (var list in lists)
             {
                 Assert.IsNotEmpty(list.Value, "{0} should not be empty", list.Key);
