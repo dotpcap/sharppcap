@@ -11,7 +11,6 @@ namespace Test
         {
             var deviceNotReadyException = new DeviceNotReadyException();
             var statistics = new StatisticsException("test description");
-            var npcapRequiredException = new NpcapRequiredException("test message");
         }
     }
 }

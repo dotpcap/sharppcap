@@ -53,6 +53,11 @@ namespace SharpPcap
         public byte[] Data;
 
         /// <summary>
+        /// The length of the packet on the line
+        /// </summary>
+        public int PacketLength { get; set; }
+
+        /// <summary>
         /// Creates a Packet object from the LinkLayerType and Data
         /// </summary>
         /// <returns></returns>
@@ -75,11 +80,13 @@ namespace SharpPcap
         /// </param>
         public RawCapture(LinkLayers LinkLayerType,
                           PosixTimeval Timeval,
-                          byte[] Data)
+                          byte[] Data,
+                          int? packetLength = null)
         {
             this.LinkLayerType = LinkLayerType;
             this.Timeval = Timeval;
             this.Data = Data;
+            this.PacketLength = packetLength ?? Data?.Length ?? 0;
         }
 
         /// <summary>Output this packet as a readable string</summary>

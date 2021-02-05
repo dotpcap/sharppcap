@@ -1,6 +1,7 @@
 using System;
+using System.Net;
 using SharpPcap;
-using SharpPcap.Npcap;
+using SharpPcap.LibPcap;
 
 namespace NpcapRemoteCapture
 {
@@ -32,14 +33,14 @@ namespace NpcapRemoteCapture
             if (args.Length == 2)
                 port = Int32.Parse(args[1]);
 
-            var remoteDevices = NpcapDeviceList.Devices(ipAddress, port, null);
-            foreach (var dev in remoteDevices)
+            var remoteInterfaces = PcapInterface.GetAllPcapInterfaces(new IPEndPoint(ipAddress, port), null);
+            foreach (var dev in remoteInterfaces)
             {
                 Console.WriteLine("device: {0}", dev.ToString());
             }
 
             // open the device for capture
-            using var device = remoteDevices[0];
+            using var device = new LibPcapLiveDevice(remoteInterfaces[0]);
 
             device.OnPacketArrival += new PacketArrivalEventHandler(dev_OnPacketArrival);
 

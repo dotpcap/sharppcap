@@ -384,7 +384,7 @@ namespace SharpPcap.LibPcap
             p = new RawCapture(LinkType,
                                new PosixTimeval(pcapHeader.Seconds,
                                                 pcapHeader.MicroSeconds),
-                               pkt_data);
+                               pkt_data, (int)pcapHeader.PacketLength);
 
             return p;
         }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using SharpPcap.Npcap;
+using SharpPcap.Statistics;
 using System.Threading;
 using System.Net;
 using SharpPcap.LibPcap;
@@ -47,8 +47,9 @@ namespace Test
             using (new RemotePcapServer(NullAuthArgs))
             {
                 var auth = new RemoteAuthentication(AuthenticationTypes.Null, null, null);
-                CollectionAssert.IsNotEmpty(NpcapDeviceList.Devices(IPAddress.Loopback, 2002, auth));
-                CollectionAssert.IsNotEmpty(NpcapDeviceList.Devices(IPAddress.Loopback, 2002, null));
+                var loopback = new IPEndPoint(IPAddress.Loopback, 2002);
+                CollectionAssert.IsNotEmpty(PcapInterface.GetAllPcapInterfaces(loopback, auth));
+                CollectionAssert.IsNotEmpty(PcapInterface.GetAllPcapInterfaces(loopback, null));
             }
         }
 
@@ -72,25 +73,18 @@ namespace Test
                 using (new RemotePcapServer(PwdAuthArgs))
                 {
                     var pcapIfs = PcapInterface.GetAllPcapInterfaces("rpcap://localhost/", goodCred);
-                    var npcapDevices = NpcapDeviceList.Devices(IPAddress.Loopback, NpcapDeviceList.RpcapdDefaultPort, goodCred);
-                    CollectionAssert.IsNotEmpty(npcapDevices);
+                    var loopback = new IPEndPoint(IPAddress.Loopback, 2002);
 
-                    var devices = new PcapDevice[]{
-                        // using NpcapDevice
-                        npcapDevices[0],
-                        // using rpcap with LibPcapLiveDevice should be possible
-                        new LibPcapLiveDevice(pcapIfs[0])
-                    };
-                    foreach (var device in devices)
-                    {
-                        // repassing the auth to Open() should be optional
-                        device.Open();
-                        Assert.IsTrue(device.Opened);
-                        device.Close();
-                    }
+                    // using rpcap with LibPcapLiveDevice should be possible
+                    using var device = new LibPcapLiveDevice(pcapIfs[0]);
+
+                    // repassing the auth to Open() should be optional
+                    device.Open();
+                    Assert.IsTrue(device.Opened);
+                    device.Close();
 
                     Assert.Throws<PcapException>(
-                        () => npcapDevices[0].Open(StrictConfig(new DeviceConfiguration
+                        () => device.Open(StrictConfig(new DeviceConfiguration
                         {
                             Mode = DeviceModes.NoCaptureRemote,
                             ReadTimeout = 1,

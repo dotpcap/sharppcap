@@ -14,61 +14,53 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
+/* 
  * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
+ * Copyright 2009-2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using SharpPcap.LibPcap;
 using System;
 
-namespace SharpPcap.Npcap
+namespace SharpPcap.Statistics
 {
     /// <summary>
-    /// Holds network statistics entry from npcap when in statistics mode
-    /// See http://www.winpcap.org/docs/docs_41b5/html/group__wpcap__tut9.html
+    /// Event that contains statistics mode data
+    /// NOTE: Npcap only
     /// </summary>
-    public class StatisticsModePacket
+    public class StatisticsEventArgs : EventArgs
     {
+        /// <summary>
+        /// Constructor for a statistics mode event
+        /// </summary>
+        internal StatisticsEventArgs(StatisticsDevice device, PosixTimeval timeval, long packets, long bytes)
+        {
+            Device = device;
+            Timeval = timeval;
+            ReceivedPackets = packets;
+            ReceivedBytes = bytes;
+        }
+
+        /// <summary>
+        /// Device this EventArgs was generated for
+        /// </summary>
+        public StatisticsDevice Device { get; }
+
         /// <summary>
         /// This holds time value
         /// </summary>
-        public PosixTimeval Timeval
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// This holds byte received and packets received
-        /// </summary>
-        private readonly byte[] m_pktData;
-
-        internal StatisticsModePacket(RawCapture p)
-        {
-            this.Timeval = p.Timeval;
-            this.m_pktData = p.Data;
-        }
+        public PosixTimeval Timeval { get; }
 
         /// <summary>
         /// Number of packets received since last sample
         /// </summary>
-        public Int64 RecievedPackets
-        {
-            get
-            {
-                return BitConverter.ToInt64(m_pktData, 0);
-            }
-        }
+        public long ReceivedPackets { get; }
+
 
         /// <summary>
         /// Number of bytes received since last sample
         /// </summary>
-        public Int64 RecievedBytes
-        {
-            get
-            {
-                return BitConverter.ToInt64(m_pktData, 8);
-            }
-        }
+        public long ReceivedBytes { get; }
+
     }
 }

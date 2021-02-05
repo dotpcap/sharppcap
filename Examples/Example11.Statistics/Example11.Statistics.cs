@@ -1,5 +1,7 @@
 using System;
 using SharpPcap;
+using SharpPcap.LibPcap;
+using SharpPcap.Statistics;
 
 namespace Example11
 {
@@ -26,7 +28,7 @@ namespace Example11
             }
 
             // Retrieve the device list
-            var devices = CaptureDeviceList.Instance;
+            var devices = LibPcapLiveDeviceList.Instance;
 
             // If no devices were found print an error
             if (devices.Count < 1)
@@ -53,20 +55,16 @@ namespace Example11
             Console.Write("-- Please choose a device to gather statistics on: ");
             i = int.Parse(Console.ReadLine());
 
-            using var device = devices[i] as SharpPcap.Npcap.NpcapDevice;
+            using var device = new StatisticsDevice(devices[i].Interface);
 
             // Register our handler function to the 'pcap statistics' event
-            device.OnPcapStatistics +=
-                new SharpPcap.Npcap.StatisticsModeEventHandler(device_OnPcapStatistics);
+            device.OnPcapStatistics += device_OnPcapStatistics;
 
             // Open the device for capturing
             device.Open();
 
             // Handle TCP packets only
             device.Filter = "tcp";
-
-            // Set device to statistics mode
-            device.Mode = SharpPcap.Npcap.CaptureMode.Statistics;
 
             Console.WriteLine();
             Console.WriteLine("-- Gathering statistics on \"{0}\", hit 'Enter' to stop...",
@@ -94,14 +92,14 @@ namespace Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_OnPcapStatistics(object sender, SharpPcap.Npcap.StatisticsModeEventArgs e)
+        private static void device_OnPcapStatistics(object sender, SharpPcap.Statistics.StatisticsEventArgs e)
         {
             // Calculate the delay in microseconds from the last sample.
             // This value is obtained from the timestamp that's associated with the sample.
-            ulong delay = (e.Statistics.Timeval.Seconds - oldSec) * 1000000 - oldUsec + e.Statistics.Timeval.MicroSeconds;
+            ulong delay = (e.Timeval.Seconds - oldSec) * 1000000 - oldUsec + e.Timeval.MicroSeconds;
 
             // Get the number of Bits per second
-            ulong bps = ((ulong)e.Statistics.RecievedBytes * 8 * 1000000) / delay;
+            ulong bps = ((ulong)e.ReceivedBytes * 8 * 1000000) / delay;
             /*                                       ^       ^
                                                      |       |
                                                      |       | 
@@ -112,17 +110,17 @@ namespace Example11
             */
 
             // Get the number of Packets per second
-            ulong pps = ((ulong)e.Statistics.RecievedPackets * 1000000) / delay;
+            ulong pps = ((ulong)e.ReceivedPackets * 1000000) / delay;
 
             // Convert the timestamp to readable format
-            var ts = e.Statistics.Timeval.Date.ToLongTimeString();
+            var ts = e.Timeval.Date.ToLongTimeString();
 
             // Print Statistics
             Console.WriteLine("{0}: bps={1}, pps={2}", ts, bps, pps);
 
             //store current timestamp
-            oldSec = e.Statistics.Timeval.Seconds;
-            oldUsec = e.Statistics.Timeval.MicroSeconds;
+            oldSec = e.Timeval.Seconds;
+            oldUsec = e.Timeval.MicroSeconds;
         }
     }
 }
