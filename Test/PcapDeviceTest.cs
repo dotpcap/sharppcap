@@ -64,27 +64,12 @@ namespace Test
             Assert.IsNotNull(pcapIf.GatewayAddresses);
             Assert.IsNotNull(pcapIf.Addresses);
 
-            try
-            {
-                var resolution = device.TimestampResolution;
-                if (targetResolution != null)
-                {
-                    // confirm the resolution was set
-                    if (targetResolution != resolution)
-                    {
-                        Console.WriteLine("Error: {0} expected {1} but was {2}", device.Name, targetResolution, resolution);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Pass: {0} expected {1} and was {2}", device.Name, targetResolution, resolution);
-                    }
+            var resolution = device.TimestampResolution;
 
-                    Assert.AreEqual(targetResolution, resolution);
-                }
-            } catch (System.NotSupportedException)
-            {
-                // ignore unsupported exceptions, this occurs when this section runs on Windows
-            }
+            var expectedResolution = targetResolution ?? TimestampResolution.Microsecond;
+
+            // confirm the resolution was set
+            Assert.AreEqual(expectedResolution, resolution);
         }
 
         /// <summary>
@@ -100,27 +85,28 @@ namespace Test
             DeviceTest(device, null);
         }
 
-        [Category("Timestamp")]
         [Test]
-        public void DeviceOpenWithTimestampPrecision([PcapDevices] DeviceFixture fixture)
+        [Category("Timestamp")]
+        [LibpcapVersion(">=1.5.0")]
+        public void DeviceOpenWithTimestampPrecision(
+            [PcapDevices] DeviceFixture fixture,
+            [Values] TimestampResolution resolution
+        )
         {
             using var device = (PcapDevice)fixture.GetDevice();
-
-            foreach (TimestampResolution resolution in Enum.GetValues(typeof(TimestampResolution)))
+            try
             {
-                try
-                {
-                    var configuration = new DeviceConfiguration();
-                    configuration.TimestampResolution = resolution;
-                    device.Open(configuration);
-                    DeviceTest(device, resolution);
-                    device.Close();
-                } catch (PcapException ex)
-                {
-                    // its ok if the device does not support setting the precision, all other PcapError
-                    // types are considered test failures
-                    Assert.AreEqual(PcapError.TimestampPrecisionNotSupported, ex.Error);
-                }
+                var configuration = new DeviceConfiguration();
+                configuration.TimestampResolution = resolution;
+                device.Open(configuration);
+                DeviceTest(device, resolution);
+            }
+            catch (PcapException ex)
+            {
+                // its ok if the device does not support setting the precision, all other PcapError
+                // types are considered test failures
+                Assert.AreEqual(PcapError.TimestampPrecisionNotSupported, ex.Error);
+                Assert.Ignore("Device does not support this timestamp precision");
             }
         }
 
