@@ -485,6 +485,7 @@ namespace SharpPcap.LibPcap
 
         #region Timestamp related functions
 
+        private static readonly Version Libpcap_1_5 = new Version(1, 5, 0);
         /// <summary>
         /// Available since libpcap 1.5
         /// </summary>
@@ -493,6 +494,10 @@ namespace SharpPcap.LibPcap
         /// <returns></returns>
         internal static int pcap_set_tstamp_precision(IntPtr /* pcap_t* p */ adapter, int precision)
         {
+            if (Pcap.LibpcapVersion < Libpcap_1_5)
+            {
+                return (int)PcapError.TimestampPrecisionNotSupported;
+            }
             return UseWindows ?
                 Windows.pcap_set_tstamp_precision(adapter, precision) :
                 Unix.pcap_set_tstamp_precision(adapter, precision);
@@ -504,15 +509,13 @@ namespace SharpPcap.LibPcap
         /// <param name="adapter"></param>
         internal static int pcap_get_tstamp_precision(IntPtr /* pcap_t* p */ adapter)
         {
-            try
+            if (Pcap.LibpcapVersion < Libpcap_1_5)
             {
-                return UseWindows ?
-                    Windows.pcap_get_tstamp_precision(adapter) :
-                    Unix.pcap_get_tstamp_precision(adapter);
-            } catch(EntryPointNotFoundException)
-            {
-                throw new NotSupportedException("pcap_get_tstamp_precision()");
+                return (int)TimestampResolution.Microsecond;
             }
+            return UseWindows ?
+                Windows.pcap_get_tstamp_precision(adapter) :
+                Unix.pcap_get_tstamp_precision(adapter);
         }
 
         /// <summary>
@@ -547,10 +550,11 @@ namespace SharpPcap.LibPcap
         /// <param name="types_pointer"></param>
         internal static void pcap_free_tstamp_types(IntPtr types_pointer)
         {
-            if(UseWindows)
+            if (UseWindows)
             {
                 Windows.pcap_free_tstamp_types(types_pointer);
-            } else
+            }
+            else
             {
                 Unix.pcap_free_tstamp_types(types_pointer);
             }
