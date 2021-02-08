@@ -21,6 +21,8 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -39,7 +41,80 @@ namespace SharpPcap.LibPcap
         //       This file is called $assembly_name.dll.config and is placed in the
         //       same directory as the assembly
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
-        private const string PCAP_DLL = "libpcap";
+        private const string PCAP_DLL = "wpcap";
+
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetDllDirectory(string lpPathName);
+
+        static Unix()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
+            }
+            else
+            {
+                RegisterResolver();
+            }
+        }
+
+        /// <summary>
+        /// The class NativeLibrary is only available since .NET Core 3.0
+        /// It's not available in .NET Framework, 
+        /// but that does not affect us since we would use the Windows dll name wpcap
+        /// </summary>
+        private static void RegisterResolver()
+        {
+            var nativeLibraryType = typeof(DllImportSearchPath).Assembly
+                .GetType("System.Runtime.InteropServices.NativeLibrary");
+
+            if (nativeLibraryType == null)
+            {
+                return;
+            }
+
+            var dllImportResolverType = typeof(DllImportSearchPath).Assembly
+                .GetType("System.Runtime.InteropServices.DllImportResolver");
+
+            var setDllImportResolverMethod = nativeLibraryType
+                .GetMethod(
+                    "SetDllImportResolver",
+                    BindingFlags.Public | BindingFlags.Static,
+                    null,
+                    new[] { typeof(Assembly), dllImportResolverType },
+                    null
+                );
+
+
+            var dllImportResolver = Delegate.CreateDelegate(dllImportResolverType, typeof(Unix).GetMethod(nameof(Resolver)));
+
+            setDllImportResolverMethod.Invoke(null, new object[] { typeof(Unix).Assembly, dllImportResolver });
+        }
+
+        [DllImport("libdl")]
+        private static extern IntPtr dlopen(string filename, int flags);
+
+        public static IntPtr Resolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        {
+            if (libraryName != PCAP_DLL)
+            {
+                // Use default resolver
+                return IntPtr.Zero;
+            }
+
+            const int RTLD_NOW = 2;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return dlopen("libpcap.so", RTLD_NOW);
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return dlopen("libpcap.dylib", RTLD_NOW);
+            }
+            return IntPtr.Zero;
+        }
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
