@@ -36,8 +36,7 @@ namespace SharpPcap.LibPcap
     {
         static LibPcapSafeNativeMethods()
         {
-            UseWindows = Environment.OSVersion.Platform != PlatformID.MacOSX &&
-                Environment.OSVersion.Platform != PlatformID.Unix;
+            UseWindows = false;
         }
 
         private readonly static bool UseWindows;
