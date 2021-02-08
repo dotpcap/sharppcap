@@ -24,9 +24,12 @@ namespace Test
             packet.Type = (EthernetType)0x1234;
             var received = RunCapture(Filter, (device) =>
             {
+                // test all forms of SendPacket()
                 device.SendPacket(packet);
+                device.SendPacket(packet, packet.TotalPacketLength);
+                device.SendPacket(packet.Bytes, packet.Bytes.Length);
             });
-            Assert.That(received, Has.Count.EqualTo(1));
+            Assert.That(received, Has.Count.EqualTo(3));
             CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);
         }
 
