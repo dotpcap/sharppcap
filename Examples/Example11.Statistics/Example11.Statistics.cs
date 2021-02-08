@@ -92,7 +92,7 @@ namespace Example11
         /// <summary>
         /// Gets a pcap stat object and calculate bps and pps
         /// </summary>
-        private static void device_OnPcapStatistics(object sender, SharpPcap.Statistics.StatisticsEventArgs e)
+        private static void device_OnPcapStatistics(object sender, StatisticsEventArgs e)
         {
             // Calculate the delay in microseconds from the last sample.
             // This value is obtained from the timestamp that's associated with the sample.

@@ -98,8 +98,8 @@ namespace SharpPcap.Statistics
         {
             if (IsWindows)
             {
-                ReceivedPackets = BitConverter.ToInt64(e.Packet.Data, 0);
-                ReceivedBytes = BitConverter.ToInt64(e.Packet.Data, 8);
+                ReceivedPackets += BitConverter.ToInt64(e.Packet.Data, 0);
+                ReceivedBytes += BitConverter.ToInt64(e.Packet.Data, 8);
             }
             else
             {
@@ -168,6 +168,7 @@ namespace SharpPcap.Statistics
         public void Close()
         {
             OnPcapStatistics = null;
+            StopCapture();
             LiveDevice.Close();
         }
 

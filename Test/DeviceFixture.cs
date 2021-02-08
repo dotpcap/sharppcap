@@ -22,34 +22,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using SharpPcap.Statistics;
 
 namespace Test
 {
 
     public class DeviceFixture
     {
-        private readonly ICaptureDevice Device;
-        public DeviceFixture(ICaptureDevice device)
+        private readonly LibPcapLiveDevice Device;
+        public DeviceFixture(LibPcapLiveDevice device)
         {
             Device = device;
         }
 
-        public ICaptureDevice GetDevice() => Device;
+        public LibPcapLiveDevice GetDevice() => Device;
 
         public override string ToString()
         {
             return Device.Name;
         }
 
-        public static IEnumerable<ICaptureDevice> GetDevices()
+        public static IEnumerable<ILiveDevice> GetDevices()
         {
-            var lists = new Dictionary<string, IEnumerable<ICaptureDevice>>
+            var lists = new Dictionary<string, IEnumerable<ILiveDevice>>
             {
                 { nameof(CaptureDeviceList), CaptureDeviceList.Instance },
                 { nameof(LibPcapLiveDeviceList), LibPcapLiveDeviceList.Instance }
@@ -66,17 +64,7 @@ namespace Test
         public IEnumerable GetData(IParameterInfo parameter)
         {
             return DeviceFixture.GetDevices()
-                .Select(d => new DeviceFixture(d))
-                .ToArray();
-        }
-    }
-
-    class PcapDevicesAttribute : NUnitAttribute, IParameterDataSource
-    {
-        public IEnumerable GetData(IParameterInfo parameter)
-        {
-            return DeviceFixture.GetDevices()
-                .OfType<PcapDevice>()
+                .Cast<LibPcapLiveDevice>()
                 .Select(d => new DeviceFixture(d))
                 .ToArray();
         }
