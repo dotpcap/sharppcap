@@ -25,7 +25,7 @@ namespace Test
         /// <param name="fixture"></param>
         [Category("Timestamp")]
         [Test]
-        public void DeviceOpenWithTimestampType([PcapDevices] DeviceFixture fixture)
+        public void DeviceOpenWithTimestampType([CaptureDevices] DeviceFixture fixture)
         {
             using var device = (PcapDevice)fixture.GetDevice();
             if (!(device is LibPcapLiveDevice))

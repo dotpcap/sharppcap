@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using SharpPcap.Statistics;
 using System.Threading;
 using System.Net;
 using SharpPcap.LibPcap;

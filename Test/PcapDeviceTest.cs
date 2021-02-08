@@ -77,7 +77,7 @@ namespace Test
         /// </summary>
         /// <param name="fixture"></param>
         [Test]
-        public void DeviceOpen([PcapDevices] DeviceFixture fixture)
+        public void DeviceOpen([CaptureDevices] DeviceFixture fixture)
         {
             using var device = (PcapDevice)fixture.GetDevice();
 
@@ -89,7 +89,7 @@ namespace Test
         [Category("Timestamp")]
         [LibpcapVersion(">=1.5.0")]
         public void DeviceOpenWithTimestampPrecision(
-            [PcapDevices] DeviceFixture fixture,
+            [CaptureDevices] DeviceFixture fixture,
             [Values] TimestampResolution resolution
         )
         {
