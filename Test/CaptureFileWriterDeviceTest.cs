@@ -62,6 +62,20 @@ namespace Test
             });
         }
 
+        /// <summary>
+        /// Test opening the writer device using another interface's linklayer type
+        /// </summary>
+        [Test]
+        public void TestOpenFromInterface()
+        {
+            using var device = TestHelper.GetPcapDevice();
+            device.Open();
+
+            // valid arguments results in the object being created
+            using var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
+            valid.Open(device);
+        }
+
         [Category("Timestamp")]
         [Test]
         public void TestTimestampCreation()
