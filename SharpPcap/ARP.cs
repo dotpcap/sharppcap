@@ -51,7 +51,8 @@ namespace SharpPcap
         /// prior to using this method.
         /// </summary>
         /// <param name="destIP">The IP address to resolve</param>
-        /// <returns>The MAC address that matches to the given IP address</returns>
+        /// <returns>The MAC address that matches to the given IP address or
+        /// null if there was a timeout</returns>
         public PhysicalAddress Resolve(System.Net.IPAddress destIP)
         {
             return Resolve(destIP, null, null);
