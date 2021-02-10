@@ -220,18 +220,6 @@ namespace SharpPcap.LibPcap
         #endregion
 
         /// <summary>
-        /// Packet data bytes
-        /// NOTE: This struct doesn't exist in header files, it is a construct to map to an
-        ///        unmanaged byte array
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct PCAP_PKTDATA
-        {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = SharpPcap.Pcap.MAX_PACKET_SIZE)]
-            public byte[] bytes;
-        };
-
-        /// <summary>
         /// A BPF pseudo-assembly program for packet filtering
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
