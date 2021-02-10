@@ -112,9 +112,9 @@ namespace Test
                     else
                     {
                         Console.WriteLine($"Received: null packet after {sw.Elapsed})");
-                        if (sw.ElapsedMilliseconds > 1000)
+                        if (sw.ElapsedMilliseconds > 2000)
                         {
-                            // No more packets in queue, and 1 second has passed
+                            // No more packets in queue, and 2 second has passed
                             break;
                         }
                     }
