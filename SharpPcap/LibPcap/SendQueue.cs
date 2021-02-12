@@ -55,6 +55,10 @@ namespace SharpPcap.LibPcap
         }
 
         private byte[] buffer;
+
+        /// <summary>
+        /// Number of bytes in the queue that are pending transmission
+        /// </summary>
         public int CurrentLength { get; private set; }
 
         public SendQueue(int memSize)
