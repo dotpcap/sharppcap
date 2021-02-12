@@ -19,6 +19,86 @@ namespace Test
         private const int PacketCount = 8;
         private static readonly int DeltaMs = 10;
 
+        /// <summary>
+        /// Transmit with normal works correctly
+        /// </summary>
+        [Test]
+        public void TestTransmitNormalSyncFalse()
+        {
+            if (SendQueue.IsHardwareAccelerated)
+            {
+                var received = RunCapture(Filter, (device) =>
+                {
+                    GetSendQueue().Transmit(device, false);
+                });
+                AssertGoodTransmitNormal(received);
+            }
+            else
+            {
+                Assert.Ignore("Skipping test as no hardware acceleration is present");
+            }
+        }
+
+        /// <summary>
+        /// Transmit with Normal works as expected
+        /// </summary>
+        [Test]
+        public void TestTransmitNormal()
+        {
+            if (SendQueue.IsHardwareAccelerated)
+            {
+                var received = RunCapture(Filter, (device) =>
+                {
+                    GetSendQueue().Transmit(device, SendQueueTransmitModes.Normal);
+                });
+                AssertGoodTransmitNormal(received);
+            }
+            else
+            {
+                Assert.Ignore("Skipping test as no hardware acceleration is present");
+            }
+        }
+
+        /// <summary>
+        /// Transmit with an empty queue returns zero
+        /// </summary>
+        [Test]
+        public void TestTransmitEmpty()
+        {
+            using var device = GetPcapDevice();
+            device.Open();
+            var queue = new SendQueueWrapper(1024);
+            Assert.AreEqual(0, queue.Transmit(device, SendQueueTransmitModes.Normal));
+        }
+
+        [Test]
+        public void TestAddByteArray()
+        {
+            var queue = new SendQueueWrapper(1024);
+            var bytes = new Byte[] { 0x1, 0x2, 0x3 };
+            queue.Add(bytes);
+            Assert.AreEqual(PcapHeader.MemorySize + bytes.Length, queue.CurrentLength);
+        }
+
+        [Test]
+        public void TestAddPacket()
+        {
+            var queue = new SendQueueWrapper(1024);
+            var packet = EthernetPacket.RandomPacket();
+            queue.Add(packet);
+            Assert.AreEqual(PcapHeader.MemorySize + packet.TotalPacketLength, queue.CurrentLength);
+        }
+
+        [Test]
+        public void TestAddRawCapture()
+        {
+            var queue = new SendQueueWrapper(1024);
+            var bytes = new Byte[] { 0x1, 0x2, 0x3 };
+            var rawCapture = new RawCapture(LinkLayers.Ethernet, new PosixTimeval(10, 20), bytes);
+            queue.Add(rawCapture);
+            Assert.AreEqual(PcapHeader.MemorySize + rawCapture.PacketLength, queue.CurrentLength);
+        }
+
         [Test]
         public void TestNativeTransmitNormal()
         {
