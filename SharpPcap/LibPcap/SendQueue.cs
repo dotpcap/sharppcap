@@ -204,6 +204,12 @@ namespace SharpPcap.LibPcap
 
         protected unsafe int NativeTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
         {
+            if (CurrentLength == 0)
+            {
+                // Npcap does not properly check for 0 packets queue
+                // See https://github.com/nmap/npcap/issues/287
+                return 0;
+            }
             int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
             fixed (byte* buf = buffer)
             {
