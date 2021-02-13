@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * Copyright 2020 Ayoub Kaanich <kayoub5@live.com>
+ * Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
  */
 
 using System;
