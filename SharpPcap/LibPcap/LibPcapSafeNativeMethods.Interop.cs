@@ -34,7 +34,7 @@ namespace SharpPcap.LibPcap
     /// Per http://msdn.microsoft.com/en-us/ms182161.aspx 
     /// </summary>
     [SuppressUnmanagedCodeSecurity]
-    internal static class Unix
+    internal static partial class LibPcapSafeNativeMethods
     {
         // NOTE: For mono users on non-windows platforms a .config file is used to map
         //       the windows dll name to the unix/mac library name
@@ -43,78 +43,6 @@ namespace SharpPcap.LibPcap
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
         private const string PCAP_DLL = "wpcap";
 
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetDllDirectory(string lpPathName);
-
-        static Unix()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
-            }
-            else
-            {
-                RegisterResolver();
-            }
-        }
-
-        /// <summary>
-        /// The class NativeLibrary is only available since .NET Core 3.0
-        /// It's not available in .NET Framework, 
-        /// but that does not affect us since we would use the Windows dll name wpcap
-        /// </summary>
-        private static void RegisterResolver()
-        {
-            var nativeLibraryType = typeof(DllImportSearchPath).Assembly
-                .GetType("System.Runtime.InteropServices.NativeLibrary");
-
-            if (nativeLibraryType == null)
-            {
-                return;
-            }
-
-            var dllImportResolverType = typeof(DllImportSearchPath).Assembly
-                .GetType("System.Runtime.InteropServices.DllImportResolver");
-
-            var setDllImportResolverMethod = nativeLibraryType
-                .GetMethod(
-                    "SetDllImportResolver",
-                    BindingFlags.Public | BindingFlags.Static,
-                    null,
-                    new[] { typeof(Assembly), dllImportResolverType },
-                    null
-                );
-
-
-            var dllImportResolver = Delegate.CreateDelegate(dllImportResolverType, typeof(Unix).GetMethod(nameof(Resolver)));
-
-            setDllImportResolverMethod.Invoke(null, new object[] { typeof(Unix).Assembly, dllImportResolver });
-        }
-
-        [DllImport("libdl")]
-        private static extern IntPtr dlopen(string filename, int flags);
-
-        public static IntPtr Resolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
-        {
-            if (libraryName != PCAP_DLL)
-            {
-                // Use default resolver
-                return IntPtr.Zero;
-            }
-
-            const int RTLD_NOW = 2;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                return dlopen("libpcap.so", RTLD_NOW);
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return dlopen("libpcap.dylib", RTLD_NOW);
-            }
-            return IntPtr.Zero;
-        }
 
         [DllImport(PCAP_DLL, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs(ref IntPtr /* pcap_if_t** */ alldevs, StringBuilder /* char* */ errbuf);
@@ -250,7 +178,7 @@ namespace SharpPcap.LibPcap
         /// Read packets until cnt packets are processed or an error occurs.
         /// </summary>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_dispatch(IntPtr /* pcap_t* */ adaptHandle, int count, LibPcapSafeNativeMethods.pcap_handler callback, IntPtr ptr);
+        internal extern static int pcap_dispatch(IntPtr /* pcap_t* */ adaptHandle, int count, pcap_handler callback, IntPtr ptr);
 
         /// <summary>
         /// The delegate declaration for PcapHandler requires an UnmanagedFunctionPointer attribute.
@@ -306,8 +234,8 @@ namespace SharpPcap.LibPcap
         /// <param name="p">A <see cref="IntPtr"/></param>
         /// <param name="rfmon">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
-        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_rfmon(IntPtr /* pcap_t* */ p, int rfmon);
+        [DllImport(PCAP_DLL, EntryPoint = "_pcap_set_rfmon", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int _pcap_set_rfmon(IntPtr /* pcap_t* */ p, int rfmon);
 
         /// <summary>
         /// pcap_set_snaplen() sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.  
@@ -396,15 +324,15 @@ namespace SharpPcap.LibPcap
         /// <param name="adapter"></param>
         /// <param name="precision"></param>
         /// <returns></returns>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_tstamp_precision(IntPtr /* pcap_t* p */ adapter, int precision);
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_set_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int _pcap_set_tstamp_precision(IntPtr /* pcap_t* p */ adapter, int precision);
 
         /// <summary>
         /// Available since libpcap 1.5
         /// </summary>
         /// <param name="adapter"></param>
-        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_get_tstamp_precision(IntPtr /* pcap_t* p */ adapter);
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_get_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int _pcap_get_tstamp_precision(IntPtr /* pcap_t* p */ adapter);
 
         /// <summary>
         /// Available since libpcap 1.2
@@ -470,5 +398,45 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static IntPtr /* pcap_t* */ pcap_open_dead_with_tstamp_precision(int type, int snaplen, uint precision);
         #endregion
+
+        /// <summary>
+        /// This function is different from <see cref="pcap_set_buffer_size"/>.
+        /// It's for kernel buffer size, and applicable only for Windows
+        /// </summary>
+        /// <param name="adapter"></param>
+        /// <param name="bufferSizeInBytes"></param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_setbuff", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        private extern static int _pcap_setbuff(IntPtr /* pcap_t */ adapter, int bufferSizeInBytes);
+
+        /// <summary>
+        /// Windows Only
+        /// changes the minimum amount of data in the kernel buffer that causes 
+        /// a read from the application to return (unless the timeout expires)
+        /// Setting this to zero will put the device in immediate mode in Windows
+        /// See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
+        /// </summary>
+        /// <param name="adapter">
+        /// A <see cref="IntPtr"/>
+        /// </param>
+        /// <param name="sizeInBytes">
+        /// A <see cref="int"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="int"/>
+        /// </returns>
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_setmintocopy", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int _pcap_setmintocopy(IntPtr /* pcap_t */ adapter, int sizeInBytes);
+
+        /// <summary>
+        /// Windows Only
+        /// Set the working mode of the interface p to mode. 
+        /// Valid values for mode are MODE_CAPT (default capture mode) 
+        /// and MODE_STAT (statistical mode). See the tutorial 
+        /// "\ref wpcap_tut9" for details about statistical mode.
+        /// Npcap specific method
+        /// </summary>
+        [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_setmode(IntPtr/* pcap_t * */ p, int mode);
     }
 }

@@ -145,7 +145,7 @@ namespace SharpPcap.Statistics
             if (IsWindows)
             {
                 LiveDevice.Open(configuration);
-                Windows.pcap_setmode(LiveDevice.PcapHandle, (int)CaptureMode.Statistics);
+                LibPcapSafeNativeMethods.pcap_setmode(LiveDevice.PcapHandle, (int)CaptureMode.Statistics);
             }
             else
             {
