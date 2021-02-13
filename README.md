@@ -29,6 +29,12 @@ Note that packet dissection and creation was split from SharpPcap some years ago
   * Dumping packets to Pcap files.
   * Pcap and pcap-ng format (when using libpcap >=1.1.0 or npcap)
 
+* NativeLibrary support
+  * Capture library resolution works cleanly across Linux, OSX, and Windows
+  * Cleanly loads libpcap on Linux whether the distro has a symlink to libpcap.so or not.
+
+* .NET Core 3 and .NET Framework support
+
 # Examples
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of examples using SharpPcap
 
@@ -65,6 +71,9 @@ SharpPcap usage.
 
 The examples are also a great resource a they show working examples using the latest API.
 
+* NativeLibrary is used for improved capture library resolution
+  * Improves library reosolution situation on Linux distros where there is a libpcap.so.X.Y symlink but no libpcap.so symlink
+  * Support for Mono DllMap has been removed as Mono supports NativeLibrary. See https://www.mono-project.com/news/2020/08/24/native-loader-net5/
 * Devices are IDisposable
   * Remove calls to Close()
   * Switch 'var device = xxx;'to 'using device = xxx;'
