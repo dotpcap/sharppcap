@@ -209,11 +209,9 @@ namespace Test
         /// there hasn't been any delegates assigned to PcapDevice.OnPacketArrival
         /// </summary>
         [Test]
-        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival(
-           [CaptureDevices] DeviceFixture fixture
-        )
+        public void DeviceNotReadyExceptionWhenStartingACaptureWithoutAddingDelegateToOnPacketArrival()
         {
-            using var device = fixture.GetDevice();
+            using var device = TestHelper.GetPcapDevice();
             device.Open();
 
             Assert.Throws<DeviceNotReadyException>(
