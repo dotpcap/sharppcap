@@ -86,6 +86,29 @@ namespace Test
                 Assert.IsNull(wd.Statistics);
             }
         }
+
+        [Test]
+        public void TestInjectable()
+        {
+            using (var wd = new CaptureFileWriterDevice(filename))
+            {
+                wd.Open();
+                Assert.AreEqual(filename, wd.Name);
+                Assert.IsNotEmpty(wd.Description);
+
+                var bytes = new byte[] { 1, 2, 3, 4 };
+
+                var injectionDevice = wd as IInjectionDevice;
+
+                var p = new RawCapture(PacketDotNet.LinkLayers.Ethernet, new PosixTimeval(), bytes);
+                injectionDevice.SendPacket(p);
+
+                var span = new ReadOnlySpan<byte>(bytes, 0, bytes.Length);
+                injectionDevice.SendPacket(span);
+            }
+            System.IO.File.Delete(@"abc.pcap");
+        }
+
     }
 }
 
