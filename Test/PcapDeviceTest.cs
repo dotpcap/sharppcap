@@ -221,6 +221,18 @@ namespace Test
             );
         }
 
+        /// <summary>
+        /// Test that we get the appropriate exception when starting a capture on a closed device
+        /// </summary>
+        [Test]
+        public void DeviceNotReadyExceptionWhenStartingACaptureOnAClosedDevice()
+        {
+            using var device = TestHelper.GetPcapDevice();
+            Assert.Throws<DeviceNotReadyException>(
+                () => device.StartCapture()
+            );
+        }
+
         void HandleOnPacketArrival(object sender, CaptureEventArgs e)
         {
 
