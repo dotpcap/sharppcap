@@ -29,6 +29,8 @@ namespace Test.Statistics
             sender.Open();
             device.Open(config);
 
+            Assert.AreEqual(sender.LinkType, device.LinkType);
+
             Assert.IsNotEmpty(device.Name);
             Assert.AreEqual(device.Name, sender.Name);
             Assert.AreEqual(device.Description, sender.Description);
