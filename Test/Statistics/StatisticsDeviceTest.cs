@@ -36,6 +36,7 @@ namespace Test.Statistics
             Assert.AreEqual(device.Description, sender.Description);
             Assert.AreEqual(device.MacAddress, sender.MacAddress);
 
+            Assert.IsEmpty(device.LastError);
 
             var stats = new List<StatisticsEventArgs>();
             device.OnPcapStatistics += (s, e) =>
