@@ -131,7 +131,6 @@ namespace SharpPcap.LibPcap
 
         protected bool Active
         {
-            get { return isActive; }
             set
             {
                 isActive = value;
