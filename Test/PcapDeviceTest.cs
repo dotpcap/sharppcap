@@ -61,6 +61,8 @@ namespace Test
             Assert.AreEqual(device.Name, pcapIf.Name);
             Assert.AreEqual(device.Description, pcapIf.Description);
 
+            Assert.IsEmpty(device.LastError);
+
             Assert.IsNotNull(pcapIf.GatewayAddresses);
             Assert.IsNotNull(pcapIf.Addresses);
 
