@@ -19,6 +19,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -76,11 +77,11 @@ namespace SharpPcap.LibPcap
 
 
             var dllImportResolver = Delegate.CreateDelegate(
-                dllImportResolverType, 
+                dllImportResolverType,
                 typeof(LibPcapSafeNativeMethods).GetMethod(nameof(Resolver))
             );
 
-            setDllImportResolverMethod.Invoke(null, new object[] { 
+            setDllImportResolverMethod.Invoke(null, new object[] {
                 typeof(LibPcapSafeNativeMethods).Assembly,
                 dllImportResolver
             });
@@ -97,15 +98,30 @@ namespace SharpPcap.LibPcap
                 return IntPtr.Zero;
             }
 
-            const int RTLD_NOW = 2;
+            var names = new List<string>();
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return dlopen("libpcap.so", RTLD_NOW);
+                names.Add("libpcap.so");
+                names.Add("libpcap.so.0");
+                names.Add("libpcap.so.0.8");
+                names.Add("libpcap.so.1");
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return dlopen("libpcap.dylib", RTLD_NOW);
+                names.Add("libpcap.dylib");
             }
+
+            const int RTLD_NOW = 2;
+            foreach (var name in names)
+            {
+                var ptr = dlopen(name, RTLD_NOW);
+                if (ptr != IntPtr.Zero)
+                {
+                    return ptr;
+                }
+            }
+
             return IntPtr.Zero;
         }
     }
