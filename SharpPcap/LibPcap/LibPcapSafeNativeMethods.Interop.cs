@@ -359,12 +359,16 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void pcap_free_tstamp_types(IntPtr types_pointer);
 
+        // pcap_tstamp_type_name_to_val is unused, compile it out to remove it from
+        // being considered in code coverage analysis
+#if false
         /// <summary>
         /// Since libpcap 1.2
         /// </summary>
         /// <returns></returns>
         [DllImport(PCAP_DLL, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_tstamp_type_name_to_val(string tstamp_name);
+#endif
 
         /// <summary>
         /// Since libpcap 1.2
