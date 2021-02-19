@@ -77,6 +77,12 @@ namespace Test.Statistics
             Assert.That(receivedPackets, Is.Ordered);
             Assert.That(receivedBytes, Is.Ordered);
 
+            foreach(var s in stats)
+            {
+                Assert.AreEqual(device, s.Device);
+                Assert.GreaterOrEqual(DateTime.UtcNow, s.Timeval.Date);
+            }
+
             Assert.That(receivedPackets.Last(), Is.EqualTo(count));
             Assert.That(receivedBytes.Last(), Is.EqualTo(count * packetLength));
         }
