@@ -107,11 +107,6 @@ namespace SharpPcap
                 }
             }
 
-            if (localIP == null)
-            {
-                throw new InvalidOperationException("Unable to find local ip address");
-            }
-
             if (localMAC == null)
             {
                 throw new InvalidOperationException("Unable to find local mac address");
