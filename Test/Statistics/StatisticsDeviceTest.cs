@@ -42,6 +42,7 @@ namespace Test.Statistics
             };
 
             device.Filter = Filter;
+            Assert.AreEqual(Filter, device.Filter);
             device.StartCapture();
 
             var packet = EthernetPacket.RandomPacket();
