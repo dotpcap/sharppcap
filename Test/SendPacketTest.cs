@@ -26,10 +26,12 @@ namespace Test
             {
                 // test all forms of SendPacket()
                 device.SendPacket(packet);
+                var rawCapture = new RawCapture(PacketDotNet.LinkLayers.Ethernet, new PosixTimeval(), packet.Bytes);
+                device.SendPacket(rawCapture);
                 device.SendPacket(packet, packet.TotalPacketLength);
                 device.SendPacket(packet.Bytes, packet.Bytes.Length);
             });
-            Assert.That(received, Has.Count.EqualTo(3));
+            Assert.That(received, Has.Count.EqualTo(4));
             CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);
         }
 
