@@ -27,7 +27,9 @@ namespace Test
             {
                 Assert.Inconclusive("NFLOG link-layer not supported");
             }
-            device.Filter = "tcp port 80";
+            var filter = "tcp port 80";
+            device.Filter = filter;
+            Assert.AreEqual(filter, device.Filter);
         }
 
         /// <summary>
