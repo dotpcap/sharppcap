@@ -328,6 +328,9 @@ namespace SharpPcap.LibPcap
         /// Advanced use only. Intended to allow unmanaged code to avoid the overhead of
         /// marshalling PcapHeader and packet contents to allocated memory.
         /// </summary>
+        /// <returns>
+        /// See https://www.tcpdump.org/manpages/pcap_next_ex.3pcap.html
+        /// </returns>
         public int GetNextPacketPointers(ref IntPtr header, ref IntPtr data)
         {
             return LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
