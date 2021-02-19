@@ -56,7 +56,11 @@ namespace Test
             {
                 Assert.IsNotEmpty(list.Value, "{0} should not be empty", list.Key);
             }
-            return lists.SelectMany(l => l.Value).Distinct();
+            return lists.SelectMany(l => l.Value)
+                // The bluetooth-monitor break the tests on circleci
+                // With "Return code: -1" during Open
+                .Where(d => d.Name != "bluetooth-monitor")
+                .Distinct();
         }
     }
     class CaptureDevicesAttribute : NUnitAttribute, IParameterDataSource
