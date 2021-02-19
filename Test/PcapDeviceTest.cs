@@ -170,6 +170,22 @@ namespace Test
         }
 
         /// <summary>
+        /// Test that we can retrieve packet information via GetNextPacketPointers
+        /// </summary>
+        [Test]
+        public void GetNextPacketPointers()
+        {
+            using var device = TestHelper.GetPcapDevice();
+            device.Open();
+
+            // confirm that we can retrieve the next packet pointers
+            var header = IntPtr.Zero;
+            var data = IntPtr.Zero;
+            device.GetNextPacketPointers(ref header, ref data);
+            Assert.AreNotEqual(IntPtr.Zero, header);
+        }
+
+        /// <summary>
         /// Calling PcapDevice.GetNextPacket() while a capture loop is running
         /// in another thread causes errors inside of libpcap where at some point the
         /// capture will simply stop even though the capture thread appears to be running
