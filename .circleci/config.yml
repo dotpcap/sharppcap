@@ -12,24 +12,29 @@ jobs:
       - run: dotnet build -c Release
       - run: bash scripts/test.sh --filter "TestCategory=WinDivert"
 
-  test-ubuntu-1604:
+  test-ubuntu:
+    parameters:
+      ubuntu:
+        description: Ubuntu version
+        type: string
+      libpcap:
+        description: How to install libpcap
+        type: string
     machine:
-      image: ubuntu-1604:201903-01
+      image: << parameters.ubuntu >>:202010-01
     steps:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
-      - run: sudo -E bash scripts/install-libpcap.sh
-      - run: sudo -E bash scripts/test.sh
-      - store_test_results:
-          path: Test/TestResults
-
-  test-ubuntu-2004:
-    machine:
-      image: ubuntu-2004:202010-01
-    steps:
-      - checkout
-      - run: sudo -E bash scripts/install-dotnet.sh
-      - run: sudo -E bash scripts/install-libpcap.sh
+      # Download and compile latest libpcap
+      - when:
+          condition: { equal: [ libpcap-script, << parameters.libpcap >> ] }
+          steps:
+            - run: sudo -E bash scripts/install-libpcap.sh
+      # Install libpcap from apt-get
+      - when:
+          condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
+          steps:
+            - run: sudo apt-get install << parameters.libpcap >>
       - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
       - store_test_results:
           path: Test/TestResults
@@ -39,5 +44,9 @@ workflows:
   build:
     jobs:
       - test-windows
-      - test-ubuntu-1604
-      - test-ubuntu-2004
+      - test-ubuntu:
+          name: << matrix.ubuntu >>-<< matrix.libpcap >>
+          matrix:
+            parameters:
+              ubuntu: [ "ubuntu-1604", "ubuntu-2004" ]
+              libpcap: [ "libpcap-script", "libpcap-dev", "libpcap0.8" ]
