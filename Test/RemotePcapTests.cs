@@ -8,6 +8,8 @@ using System.Net;
 using SharpPcap.LibPcap;
 using SharpPcap;
 using static Test.TestHelper;
+using System.ComponentModel;
+using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 
 namespace Test
 {
@@ -137,13 +139,21 @@ namespace Test
                 @"C:\Program Files\WinPcap\rpcapd.exe",
                 "/usr/local/sbin/rpcapd"
             }.FirstOrDefault(File.Exists) ?? "rpcapd";
-            process = Process.Start(new ProcessStartInfo
+            var psi = new ProcessStartInfo
             {
                 FileName = binFile,
                 Arguments = args,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-            });
+            };
+            try
+            {
+                process = Process.Start(psi);
+            }
+            catch (Win32Exception)
+            {
+                Assert.Inconclusive("rpcapd not found");
+            }
             // wait until the process has started up
             Thread.Sleep(500);
         }
