@@ -482,7 +482,8 @@ namespace SharpPcap.LibPcap
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static bool RunBpfProgram(IntPtr bpfProgram, IntPtr header, IntPtr data)
         {
-            return LibPcapSafeNativeMethods.pcap_offline_filter(bpfProgram, header, data);
+            var result = LibPcapSafeNativeMethods.pcap_offline_filter(bpfProgram, header, data);
+            return result != 0;
         }
 
         /// <summary>
