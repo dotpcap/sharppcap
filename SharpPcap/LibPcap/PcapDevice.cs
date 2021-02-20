@@ -433,8 +433,10 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        // If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
+        /// <summary>
+        /// If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
         /// or unmanaged memory will be leaked
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static bool CompileFilter(IntPtr pcapHandle,
                                           string filterExpression,
