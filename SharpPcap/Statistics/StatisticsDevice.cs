@@ -112,7 +112,7 @@ namespace SharpPcap.Statistics
                 ReceivedPackets,
                 ReceivedBytes
             );
-            
+
             OnPcapStatistics?.Invoke(this, args);
         }
 
@@ -142,23 +142,10 @@ namespace SharpPcap.Statistics
 
         public void Open(DeviceConfiguration configuration)
         {
+            LiveDevice.Open(configuration);
             if (IsWindows)
             {
-                LiveDevice.Open(configuration);
                 LibPcapSafeNativeMethods.pcap_setmode(LiveDevice.PcapHandle, (int)CaptureMode.Statistics);
-            }
-            else
-            {
-                var snaplen = configuration.Snaplen;
-                try
-                {
-                    configuration.Snaplen = 0;
-                    LiveDevice.Open(configuration);
-                }
-                finally
-                {
-                    configuration.Snaplen = snaplen;
-                }
             }
         }
 
