@@ -70,6 +70,17 @@ namespace Test.WinDivert
             AssertTcp(capture);
         }
 
+        private void WebFetch()
+        {
+            // cloudflair has a website at this address, should be accessible from any
+            // computer with a connection to the Internet
+            var uriString = "http://1.1.1.1";
+
+            using var webClient = new WebClient();
+            var stream = webClient.OpenRead(uriString);
+            stream.Close();
+        }
+
         [Test]
         public void TestCapture()
         {
@@ -84,7 +95,8 @@ namespace Test.WinDivert
                 received.Add(e.Packet);
             };
             device.StartCapture();
-            Thread.Sleep(10000);
+            WebFetch();
+            Thread.Sleep(250);
             device.StopCapture();
             Assert.That(received, Has.Count.AtLeast(2));
             foreach (var capture in received)
