@@ -42,9 +42,10 @@ namespace SharpPcap.WinDivert
         /// <returns></returns>
         public static int GetBestInterfaceIndex(IPAddress destinationAddress)
         {
+            const uint NO_ERROR = 0;
             var addr = GetSocketAddressBytes(destinationAddress);
             int error = (int)GetBestInterfaceEx(addr, out int index);
-            if (error != 0)
+            if (error != NO_ERROR)
             {
                 throw new NetworkInformationException(error);
             }
