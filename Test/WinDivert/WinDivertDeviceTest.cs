@@ -105,6 +105,31 @@ namespace Test.WinDivert
             }
         }
 
+        [Test]
+        public void SetGetParam()
+        {
+            using var device = new WinDivertDevice();
+            device.Open();
+
+            var originalValue = device.GetParam(WinDivertParam.QueueLen);
+            var targetValue = originalValue + 1000;
+            device.SetParam(WinDivertParam.QueueLen, targetValue);
+            var actualValue = device.GetParam(WinDivertParam.QueueLen);
+            Assert.AreEqual(targetValue, actualValue);
+        }
+
+        [Test]
+        public void Properties()
+        {
+            using var device = new WinDivertDevice();
+            Assert.AreEqual("WinDivert", device.Name);
+            Assert.AreEqual("WinDivert Packet Driver", device.Description);
+            Assert.AreEqual(LinkLayers.Raw, device.LinkType);
+            Assert.AreEqual(null, device.MacAddress);
+            Assert.AreEqual(SharpPcap.TimestampResolution.Microsecond, device.TimestampResolution);
+            Assert.IsNull(device.Statistics);
+        }
+
         private void AssertTcp(RawCapture capture)
         {
             Assert.NotNull(capture);
