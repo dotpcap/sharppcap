@@ -110,7 +110,8 @@ namespace SharpPcap.WinDivert
         {
             var src = GetSocketAddressBytes(srcAddr);
             var dst = GetSocketAddressBytes(dstAddr);
-            var best = new byte[src.Length];
+            const int bestSize = 28; // sizeof(SOCKADDR_INET)
+            var best = new byte[bestSize];
             const int routeSize = 103; // sizeof(MIB_IPFORWARD_ROW2)
             var route = new byte[routeSize];
             var ret = GetBestRoute2(default, interfaceIndex, src, dst, 0, route, best);
