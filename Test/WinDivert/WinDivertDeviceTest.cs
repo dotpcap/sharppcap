@@ -140,7 +140,6 @@ namespace Test.WinDivert
         }
 
         [Test]
-        [Ignore("Do not run this test, something wrong")]
         public void TestSend()
         {
             var dst = IPAddress.Parse("8.8.8.8");
