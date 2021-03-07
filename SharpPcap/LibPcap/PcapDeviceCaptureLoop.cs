@@ -168,7 +168,8 @@ namespace SharpPcap.LibPcap
 
             while (!cancellationToken.IsCancellationRequested)
             {
-
+                // TODO: This check can be removed once libpcap versions >= 1.10 has become in widespread use.
+                // libpcap 1.10 improves pcap_dispatch() to break out when pcap_breakloop() across threads
                 if (!PollFileDescriptor())
                 {
                     // We don't have data to read, don't call pcap_dispatch() yet
