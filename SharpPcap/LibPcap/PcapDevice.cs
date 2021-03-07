@@ -302,11 +302,14 @@ namespace SharpPcap.LibPcap
 
             p = null;
 
+#if false
             if (!PollFileDescriptor())
             {
                 // We checked, there is no data using poll()
                 return 0;
             }
+#endif
+
             //Get a packet from npcap
             var res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
 
@@ -375,7 +378,7 @@ namespace SharpPcap.LibPcap
             return p;
         }
 
-        #region Filtering
+#region Filtering
         /// <summary>
         /// Assign a filter to this device given a filterExpression
         /// </summary>
@@ -523,9 +526,9 @@ namespace SharpPcap.LibPcap
             LibPcapSafeNativeMethods.pcap_close(fakePcap);
             return true;
         }
-        #endregion
+#endregion
 
-        #region Timestamp
+#region Timestamp
         /// <summary>
         /// To set a device's timestamp resolution pass the desired setting in when opening the device
         /// </summary>
@@ -543,7 +546,7 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)

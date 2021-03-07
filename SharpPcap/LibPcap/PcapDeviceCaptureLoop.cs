@@ -123,6 +123,7 @@ namespace SharpPcap.LibPcap
             m_pcapPacketCount = Pcap.InfinitePacketCount;
         }
 
+#if false
         /// <summary>
         /// unix specific code, we want to poll for packets
         /// otherwise if we call pcap_dispatch() the read() will block
@@ -155,6 +156,7 @@ namespace SharpPcap.LibPcap
             // non-negative means we got something
             return result != 0;
         }
+#endif
 
         /// <summary>
         /// The capture thread
@@ -168,12 +170,13 @@ namespace SharpPcap.LibPcap
 
             while (!cancellationToken.IsCancellationRequested)
             {
-
+#if false
                 if (!PollFileDescriptor())
                 {
                     // We don't have data to read, don't call pcap_dispatch() yet
                     continue;
                 }
+#endif
 
                 int res = LibPcapSafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
 
