@@ -25,7 +25,7 @@ For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/
   * Live device lists
   * Statistics
   * Reading packets from Live Devices (actual network devices) and Offline Devices (Capture files)
-  * Support for Berkley Packet Filters
+  * Support for [Berkley Packet Filters](https://www.tcpdump.org/manpages/pcap-filter.7.html)
   * Dumping packets to Pcap files.
   * Pcap and pcap-ng format (when using libpcap >=1.1.0 or npcap)
 
