@@ -13,7 +13,7 @@ Fully managed, cross platform (Windows, Mac, Linux) .NET library for capturing p
 The official SharpPcap repository.
 
 # Features
-Note that packet dissection and creation was split from SharpPcap some years ago into a separate project, [Packet.Net](https://github.com/chmorgan/packetnet). See the Packet.Net page for a full list of supported packet formats.
+For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/packetnet).
 
 * On Linux, support for [libpcap](http://www.tcpdump.org/manpages/pcap.3pcap.html)
 
