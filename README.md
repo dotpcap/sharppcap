@@ -35,8 +35,50 @@ Note that packet dissection and creation was split from SharpPcap some years ago
 
 * .NET Core 3 and .NET Framework support
 
+
 # Examples
-See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of examples using SharpPcap
+
+See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of full example projects using SharpPcap
+
+## Listing devices
+   ```cs
+   var devices = CaptureDeviceList.Instance;
+   foreach (var dev in devices)
+       Console.WriteLine("{0}\n", dev.ToString());
+   ```
+
+## Capturing packets
+   ```cs
+   void Device_OnPacketArrival(object s, CaptureEventArgs e)
+   {
+       Console.WriteLine(e.Packet);
+   }
+
+   using var device = LibPcapLiveDeviceList.Instance[0];
+   device.Open();
+   device.OnPacketArrival += Device_OnPacketArrival;
+   device.StartCapture();
+   ```
+
+## Reading from a capture file
+   ```cs
+   void Device_OnPacketArrival(object s, CaptureEventArgs e)
+   {
+       Console.WriteLine(e.Packet);
+   }
+
+   using var device = new CaptureFileReaderDevice("filename.pcap");
+   device.Open();
+   device.OnPacketArrival += Device_OnPacketArrival;
+   device.StartCapture();
+   ```
+
+## Writing to a capture file
+   ```cs
+   using var device = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
+   var bytes = new byte[] { 1, 2, 3, 4 };
+   device.Write(bytes);
+   ```
 
 # CI support
 We have support for a number of CI systems for a few reasons:
