@@ -35,6 +35,10 @@ namespace SharpPcap.WinDivert
         public string LastError { get; private set; }
 
         private string filter;
+
+        /// <summary>
+        /// See https://www.reqrypt.org/windivert-doc.html#filter_language for filter language details
+        /// </summary>
         public string Filter
         {
             get
