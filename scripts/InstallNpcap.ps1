@@ -2,7 +2,7 @@
 # Copied from https://github.com/secdev/scapy/blob/master/.config/appveyor/InstallNpcap.ps1
 
 # Config:
-$npcap_oem_file = "npcap-1.10-oem.exe"
+$npcap_oem_file = "npcap-1.20-oem.exe"
 
 # Note: because we need the /S option (silent), this script has two cases:
 #  - The script is runned from a master build, then use the secure variable 'npcap_oem_key' which will be available
