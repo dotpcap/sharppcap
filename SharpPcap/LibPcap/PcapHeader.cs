@@ -28,7 +28,7 @@ namespace SharpPcap.LibPcap
     ///  A wrapper for libpcap's pcap_pkthdr structure
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 1)] // Force it to match a 32-bit native header exactly
-    public struct PcapHeader
+    public struct PcapHeader : ICaptureHeader
     {
         private static readonly bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         private static readonly bool isMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
@@ -131,6 +131,14 @@ namespace SharpPcap.LibPcap
         /// is small CaptureLength might be less than PacketLength
         /// </summary>
         public uint CaptureLength;
+
+        public PosixTimeval Timeval
+        {
+            get
+            {
+                return new PosixTimeval(Seconds, MicroSeconds);
+            }
+        }
 
         /// <summary>
         /// DateTime(1970, 1, 1).Ticks, saves cpu cycles in the Date property

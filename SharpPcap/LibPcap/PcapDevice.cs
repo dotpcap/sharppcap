@@ -237,12 +237,11 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Notify the OnPacketArrival delegates about a newly captured packet
         /// </summary>
-        /// <param name="p">
-        /// A <see cref="RawCapture"/>
-        /// </param>
-        protected virtual void SendPacketArrivalEvent(RawCapture p)
+        /// <param name="header"></param>
+        /// <param name="data"></param>
+        protected virtual void SendPacketArrivalEvent(PcapHeader header, Span<byte> data)
         {
-            OnPacketArrival?.Invoke(this, new CaptureEventArgs(p, this));
+            OnPacketArrival?.Invoke(this, new CaptureEventArgs(this, header, data));
         }
 
         /// <summary>
@@ -322,6 +321,60 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
+        /// Higher performance version of RawCapture GetNextPacket() through the use of Span<byte>
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns>
+        /// A <see cref="int"/> that contains the result code. 1 upon success, 0 upon error.
+        /// </returns>
+        public virtual int GetNextPacket(out CaptureEventArgs e)
+        {
+            //Pointer to a packet info struct
+            IntPtr header = IntPtr.Zero;
+
+            //Pointer to a packet struct
+            IntPtr data = IntPtr.Zero;
+
+            // using an invalid PcapHandle can result in an unmanaged segfault
+            // so check for that here
+            ThrowIfNotOpen("Device must be opened via Open() prior to use");
+
+            // If a user is calling GetNextPacket() when the background capture loop
+            // is also calling into libpcap then bad things can happen
+            //
+            // The bad behavior I (Chris M.) saw was that the background capture would keep running
+            // but no more packets were captured. Took two days to debug and regular users
+            // may hit the issue more often so check and report the issue here
+            if (Started)
+            {
+                throw new InvalidOperationDuringBackgroundCaptureException("GetNextPacket() invalid during background capture");
+            }
+
+            if (!PollFileDescriptor())
+            {
+                e = default;
+
+                // We checked, there is no data using poll()
+                return 0;
+            }
+
+            int res;
+
+            unsafe
+            {
+                //Get a packet from npcap
+                res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
+
+                var pcapHeader = PcapHeader.FromPointer(header);
+                var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
+
+                e = new CaptureEventArgs(this, pcapHeader, dataSpan);
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Gets pointers to the next PCAP header and packet data.
         /// Data is only valid until next call to GetNextPacketNative.
         ///
@@ -341,8 +394,13 @@ namespace SharpPcap.LibPcap
         /// </summary>
         protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
-            var p = MarshalRawPacket(header, data);
-            SendPacketArrivalEvent(p);
+            unsafe
+            {
+                var pcapHeader = PcapHeader.FromPointer(header);
+                var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
+
+                SendPacketArrivalEvent(pcapHeader, dataSpan);
+            }
         }
 
         /// <summary>
@@ -375,7 +433,7 @@ namespace SharpPcap.LibPcap
             return p;
         }
 
-        #region Filtering
+#region Filtering
         /// <summary>
         /// Assign a filter to this device given a filterExpression
         /// </summary>
@@ -523,9 +581,9 @@ namespace SharpPcap.LibPcap
             LibPcapSafeNativeMethods.pcap_close(fakePcap);
             return true;
         }
-        #endregion
+#endregion
 
-        #region Timestamp
+#region Timestamp
         /// <summary>
         /// To set a device's timestamp resolution pass the desired setting in when opening the device
         /// </summary>
@@ -543,7 +601,7 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)

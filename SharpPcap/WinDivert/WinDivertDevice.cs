@@ -112,6 +112,56 @@ namespace SharpPcap.WinDivert
             }
         }
 
+        /// <summary>
+        /// Return 0 upon success, non-zero upon error
+        /// </summary>
+        /// <returns></returns>
+        private int SendPacketArrivalEvent()
+        {
+            ThrowIfNotOpen();
+            Span<byte> buffer = stackalloc byte[4096];
+            while (true)
+            {
+                bool ret;
+                WinDivertAddress addr;
+                uint readLen;
+                unsafe
+                {
+                    fixed (byte* p = buffer)
+                    {
+                        ret = WinDivertNative.WinDivertRecv(Handle, new IntPtr(p), (uint)buffer.Length, out readLen, out addr);
+                    }
+                }
+                if (!ret)
+                {
+                    var err = Marshal.GetLastWin32Error();
+                    if (err == ERROR_INSUFFICIENT_BUFFER)
+                    {
+                        // Increase buffer size
+                        buffer = stackalloc byte[buffer.Length * 2];
+                        continue;
+                    }
+                    if (err == ERROR_NO_DATA)
+                    {
+                        return err;
+                    }
+                    ThrowWin32Error("Recv failed", err);
+                }
+                var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
+                var data = buffer.Slice(0, (int)readLen);
+                var header = new WinDivertHeader(timestamp)
+                {
+                    InterfaceIndex = addr.IfIdx,
+                    SubInterfaceIndex = addr.SubIfIdx,
+                    Flags = addr.Flags
+                };
+
+                OnPacketArrival?.Invoke(this, new CaptureEventArgs(this, header, data));
+
+                return 0;
+            }
+        }
+
         public void Open(DeviceConfiguration configuration)
         {
             var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
@@ -259,12 +309,7 @@ namespace SharpPcap.WinDivert
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var packet = GetNextPacket();
-                    if (packet == null)
-                    {
-                        break;
-                    }
-                    OnPacketArrival?.Invoke(this, new CaptureEventArgs(packet, this));
+                    SendPacketArrivalEvent();
                 }
                 OnCaptureStopped?.Invoke(this, CaptureStoppedEventStatus.CompletedWithoutError);
             }
