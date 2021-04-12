@@ -89,6 +89,14 @@ namespace SharpPcap
             this.PacketLength = packetLength ?? Data?.Length ?? 0;
         }
 
+        public RawCapture(ICaptureDevice device, ICaptureHeader header, System.ReadOnlySpan<byte> data)
+        {
+            this.LinkLayerType = device.LinkType;
+            this.Timeval = header.Timeval;
+            this.Data = data.ToArray();
+            this.PacketLength = Data?.Length ?? 0;
+        }
+
         /// <summary>Output this packet as a readable string</summary>
         public override System.String ToString()
         {

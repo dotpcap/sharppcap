@@ -44,6 +44,9 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            int res;
+
+            CaptureEventArgs e;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
@@ -52,8 +55,8 @@ namespace Test.Performance
                 RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
-                    packetsRead++;
+                    res = captureDevice.GetNextPacket(out e);
+                    if (res == 1) packetsRead++;
                 }
                 while (rawCapture != null);
             }
