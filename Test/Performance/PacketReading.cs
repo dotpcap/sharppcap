@@ -40,36 +40,6 @@ namespace Test.Performance
 
         [Category("Performance")]
         [Test]
-        public void BenchmarkICaptureDevice()
-        {
-            int packetsRead = 0;
-            var startTime = DateTime.Now;
-            int res;
-
-            CaptureEventArgs e;
-            while (packetsRead < packetsToRead)
-            {
-                using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
-                captureDevice.Open();
-
-                RawCapture rawCapture = null;
-                do
-                {
-                    res = captureDevice.GetNextPacket(out e);
-                    if (res == 1) packetsRead++;
-                }
-                while (rawCapture != null);
-            }
-
-            var endTime = DateTime.Now;
-
-            var rate = new Rate(startTime, endTime, packetsRead, "packets captured");
-
-            Console.WriteLine("{0}", rate.ToString());
-        }
-
-        [Category("Performance")]
-        [Test]
         public unsafe void BenchmarkICaptureDeviceUnsafe()
         {
             int packetsRead = 0;
