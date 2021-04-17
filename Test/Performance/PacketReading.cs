@@ -35,7 +35,7 @@ namespace Test.Performance
 
             var rate = new Rate(startTime, endTime, packetsRead, "packets captured");
 
-            Console.WriteLine("{0}", rate.ToString());
+            Console.WriteLine("Benchmark {0}", rate.ToString());
         }
 
         [Category("Performance")]
@@ -62,7 +62,7 @@ namespace Test.Performance
 
             var rate = new Rate(startTime, endTime, packetsRead, "packets captured");
 
-            Console.WriteLine("{0}", rate.ToString());
+            Console.WriteLine("BenchmarkICaptureDeviceUnsafe {0}", rate.ToString());
         }
     }
 }
