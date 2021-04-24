@@ -125,11 +125,14 @@ namespace Test
 
             RawCapture rawPacket;
             int count = 0;
+            CaptureEventArgs e;
+            int retval;
             do
             {
-                rawPacket = device.GetNextPacket();
-                if (rawPacket != null)
+                retval = device.GetNextPacket(out e);
+                if (retval == 1)
                 {
+                    rawPacket = e.Packet;
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                     var udpPacket = p.Extract<UdpPacket>();
                     Assert.IsNotNull(udpPacket);
@@ -137,7 +140,7 @@ namespace Test
                     Assert.AreEqual(dnsPort, udpPacket.DestinationPort);
                     count++;
                 }
-            } while (rawPacket != null);
+            } while (retval == 1);
 
             Assert.AreEqual(1, count);
         }

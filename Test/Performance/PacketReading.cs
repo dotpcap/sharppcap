@@ -16,18 +16,19 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            CaptureEventArgs e;
+            int retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
-                RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
-                    packetsRead++;
+                    retval = captureDevice.GetNextPacket(out e);
+                    if (retval == 1) packetsRead++;
                 }
-                while (rawCapture != null);
+                while (retval == 1);
 
             }
 
@@ -57,7 +58,7 @@ namespace Test.Performance
                     res = captureDevice.GetNextPacket(out e);
                     if (res == 1) packetsRead++;
                 }
-                while (res == 1) ;
+                while (res == 1);
             }
 
             var endTime = DateTime.Now;
@@ -73,18 +74,19 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            CaptureEventArgs e;
+            int retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
-                RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
-                    packetsRead++;
+                    retval = captureDevice.GetNextPacket(out e);
+                    if (retval == 1) packetsRead++;
                 }
-                while (rawCapture != null);
+                while (retval == 1);
             }
 
             var endTime = DateTime.Now;

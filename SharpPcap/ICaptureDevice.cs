@@ -71,8 +71,8 @@ namespace SharpPcap
         /// <summary>
         /// Retrieves the next packet from a device
         /// </summary>
-        /// <returns></returns>
-        RawCapture GetNextPacket();
+        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
+        int GetNextPacket(out CaptureEventArgs e);
 
         /// <summary>
         /// Retrieves pcap statistics

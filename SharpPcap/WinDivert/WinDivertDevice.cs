@@ -69,7 +69,11 @@ namespace SharpPcap.WinDivert
             }
         }
 
-        public RawCapture GetNextPacket()
+        /// <summary>
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
+        public int GetNextPacket(out CaptureEventArgs e)
         {
             ThrowIfNotOpen();
             Span<byte> buffer = stackalloc byte[4096];
@@ -96,59 +100,13 @@ namespace SharpPcap.WinDivert
                     }
                     if (err == ERROR_NO_DATA)
                     {
-                        return null;
+                        e = default;
+                        return -err;
                     }
                     ThrowWin32Error("Recv failed", err);
                 }
                 var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
                 var data = buffer.Slice(0, (int)readLen).ToArray();
-                var raw = new WinDivertCapture(timestamp, data)
-                {
-                    InterfaceIndex = addr.IfIdx,
-                    SubInterfaceIndex = addr.SubIfIdx,
-                    Flags = addr.Flags,
-                };
-                return raw;
-            }
-        }
-
-        /// <summary>
-        /// Return 0 upon success, non-zero upon error
-        /// </summary>
-        /// <returns></returns>
-        private int SendPacketArrivalEvent()
-        {
-            ThrowIfNotOpen();
-            Span<byte> buffer = stackalloc byte[4096];
-            while (true)
-            {
-                bool ret;
-                WinDivertAddress addr;
-                uint readLen;
-                unsafe
-                {
-                    fixed (byte* p = buffer)
-                    {
-                        ret = WinDivertNative.WinDivertRecv(Handle, new IntPtr(p), (uint)buffer.Length, out readLen, out addr);
-                    }
-                }
-                if (!ret)
-                {
-                    var err = Marshal.GetLastWin32Error();
-                    if (err == ERROR_INSUFFICIENT_BUFFER)
-                    {
-                        // Increase buffer size
-                        buffer = stackalloc byte[buffer.Length * 2];
-                        continue;
-                    }
-                    if (err == ERROR_NO_DATA)
-                    {
-                        return err;
-                    }
-                    ThrowWin32Error("Recv failed", err);
-                }
-                var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
-                var data = buffer.Slice(0, (int)readLen);
                 var header = new WinDivertHeader(timestamp)
                 {
                     InterfaceIndex = addr.IfIdx,
@@ -156,10 +114,25 @@ namespace SharpPcap.WinDivert
                     Flags = addr.Flags
                 };
 
-                OnPacketArrival?.Invoke(this, new CaptureEventArgs(this, header, data));
+                e = new CaptureEventArgs(this, header, data);
 
-                return 0;
+                return 1;
             }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
+        private int SendPacketArrivalEvent()
+        {
+            CaptureEventArgs e;
+            var retval = GetNextPacket(out e);
+            if (retval == 1)
+            {
+                OnPacketArrival?.Invoke(this, e);
+            }
+
+            return retval;
         }
 
         public void Open(DeviceConfiguration configuration)

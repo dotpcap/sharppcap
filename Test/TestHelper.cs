@@ -94,6 +94,7 @@ namespace Test
                 sender = new LibPcapLiveDevice(device.Interface);
                 sender.Open(mode, 1);
             }
+            CaptureEventArgs e;
             using(sender)
             {
                 routine(sender);
@@ -102,12 +103,12 @@ namespace Test
                 var sw = Stopwatch.StartNew();
                 while (true)
                 {
-                    var raw = device.GetNextPacket();
-                    if (raw != null)
+                    var retval = device.GetNextPacket(out e);
+                    if (retval == 1)
                     {
-                        var packet = raw.GetPacket();
-                        Console.WriteLine($"Received: {packet} after {sw.Elapsed} (at {raw.Timeval})");
-                        received.Add(raw);
+                        var packet = e.Packet;
+                        Console.WriteLine($"Received: {packet} after {sw.Elapsed} (at {packet.Timeval})");
+                        received.Add(packet);
                     }
                     else
                     {

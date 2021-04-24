@@ -55,8 +55,12 @@ namespace Example4
             RawCapture packet;
 
             // Capture packets using GetNextPacket()
-            while ((packet = device.GetNextPacket()) != null)
+            CaptureEventArgs e;
+            int retval;
+            while ((retval = device.GetNextPacket(out e)) == 1)
             {
+                packet = e.Packet;
+
                 // Prints the time and length of each received packet
                 var time = packet.Timeval.Date;
                 var len = packet.Data.Length;

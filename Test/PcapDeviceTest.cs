@@ -218,7 +218,7 @@ namespace Test
             // attempt to get the next packet via GetNextPacket()
             // to ensure that we get the exception we expect
             Assert.Throws<InvalidOperationDuringBackgroundCaptureException>(
-                () => device.GetNextPacket()
+                () => device.GetNextPacket(out var _)
             );
         }
 

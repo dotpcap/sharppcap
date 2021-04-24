@@ -256,77 +256,10 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Gets the next packet captured on this device
+        /// Retrieve the next packet data
         /// </summary>
-        /// <returns>The next packet captured on this device</returns>
-        public virtual RawCapture GetNextPacket()
-        {
-            int res = GetNextPacket(out RawCapture p);
-            if (res == -1)
-                throw new PcapException("Error receiving packet.");
-            return p;
-        }
-
-        /// <summary>
-        /// Gets the next packet captured on this device
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="RawCapture"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="int"/> that contains the result code
-        /// </returns>
-        public virtual int GetNextPacket(out RawCapture p)
-        {
-            //Pointer to a packet info struct
-            IntPtr header = IntPtr.Zero;
-
-            //Pointer to a packet struct
-            IntPtr data = IntPtr.Zero;
-
-            // using an invalid PcapHandle can result in an unmanaged segfault
-            // so check for that here
-            ThrowIfNotOpen("Device must be opened via Open() prior to use");
-
-            // If a user is calling GetNextPacket() when the background capture loop
-            // is also calling into libpcap then bad things can happen
-            //
-            // The bad behavior I (Chris M.) saw was that the background capture would keep running
-            // but no more packets were captured. Took two days to debug and regular users
-            // may hit the issue more often so check and report the issue here
-            if (Started)
-            {
-                throw new InvalidOperationDuringBackgroundCaptureException("GetNextPacket() invalid during background capture");
-            }
-
-            p = null;
-
-            if (!PollFileDescriptor())
-            {
-                // We checked, there is no data using poll()
-                return 0;
-            }
-            //Get a packet from npcap
-            var res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
-
-            if (res > 0)
-            {
-                //Marshal the packet
-                if ((header != IntPtr.Zero) && (data != IntPtr.Zero))
-                {
-                    p = MarshalRawPacket(header, data);
-                }
-            }
-            return res;
-        }
-
-        /// <summary>
-        /// Higher performance version of RawCapture GetNextPacket() through the use of Span<byte>
-        /// </summary>
-        /// <param name="handler"></param>
-        /// <returns>
-        /// A <see cref="int"/> that contains the result code. 1 upon success, 0 upon error.
-        /// </returns>
+        /// <param name="e">Structure to hold the packet data info</param>
+        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
         public virtual int GetNextPacket(out CaptureEventArgs e)
         {
             //Pointer to a packet info struct
@@ -663,14 +596,17 @@ namespace SharpPcap.LibPcap
         {
             try
             {
+                CaptureEventArgs e;
                 dev.Open();
-
                 while (true)
                 {
                     RawCapture packet = null;
                     try
                     {
-                        packet = dev.GetNextPacket();
+                        var retval = dev.GetNextPacket(out e);
+                        if (retval != 1)
+                            break;
+                        packet = e.Packet;
                     }
                     catch (PcapException pe)
                     {
