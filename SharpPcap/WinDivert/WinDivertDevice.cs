@@ -181,15 +181,6 @@ namespace SharpPcap.WinDivert
 
         public void SendPacket(RawCapture p)
         {
-            if (p is WinDivertCapture packet)
-            {
-                WinDivertAddress address = default;
-                address.IfIdx = packet.InterfaceIndex;
-                address.SubIfIdx = packet.SubInterfaceIndex;
-                address.Flags = packet.Flags;
-                SendPacket(new ReadOnlySpan<byte>(p.Data), address);
-                return;
-            }
             SendPacket(new ReadOnlySpan<byte>(p.Data));
         }
 
