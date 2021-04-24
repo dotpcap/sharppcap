@@ -65,9 +65,10 @@ namespace Test.WinDivert
             {
                 Filter = "!loopback and tcp"
             };
+            CaptureEventArgs e;
             device.Open();
-            var capture = device.GetNextPacket();
-            AssertTcp(capture);
+            device.GetNextPacket(out e);
+            AssertTcp(e.Packet);
         }
 
         private void WebFetch()

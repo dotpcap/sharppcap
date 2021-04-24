@@ -136,6 +136,7 @@ namespace SharpPcap
 
                 // attempt to resolve the address with the current timeout
                 var timeoutDateTime = DateTime.Now + Timeout;
+                CaptureEventArgs e;
                 while (DateTime.Now < timeoutDateTime)
                 {
                     if (requestInterval < (DateTime.Now - lastRequestTime))
@@ -146,11 +147,12 @@ namespace SharpPcap
                     }
 
                     //read the next packet from the network
-                    var reply = device.GetNextPacket();
-                    if (reply == null)
+                    var retval = device.GetNextPacket(out e);
+                    if (retval != 1)
                     {
                         continue;
                     }
+                    var reply = e.Packet;
 
                     // parse the packet
                     var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);

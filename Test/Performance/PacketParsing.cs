@@ -17,23 +17,26 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            CaptureEventArgs e;
+            int retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
-                RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
+                    retval = captureDevice.GetNextPacket(out e);
 
                     // Parse the packet using PacketDotNet
-                    if (rawCapture != null)
+                    if (retval == 1)
+                    {
+                        var rawCapture = e.Packet;
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                    packetsRead++;
+                        packetsRead++;
+                    }
                 }
-                while (rawCapture != null);
+                while (retval == 1);
 
             }
 
@@ -53,23 +56,27 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            CaptureEventArgs e;
+            int retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
-                RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
+                    retval = captureDevice.GetNextPacket(out e);
 
                     // Parse the packet using PacketDotNet
-                    if (rawCapture != null)
+                    if (retval == 1)
+                    {
+                        var rawCapture = e.Packet;
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                    }
 
                     packetsRead++;
                 }
-                while (rawCapture != null);
+                while (retval == 1);
 
             }
 
@@ -89,23 +96,27 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
+            CaptureEventArgs e;
+            int retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
                 captureDevice.Open();
 
-                RawCapture rawCapture = null;
                 do
                 {
-                    rawCapture = captureDevice.GetNextPacket();
+                    retval = captureDevice.GetNextPacket(out e);
 
                     // Parse the packet using PacketDotNet
-                    if (rawCapture != null)
+                    if (retval == 1)
+                    {
+                        var rawCapture = e.Packet;
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                    }
 
                     packetsRead++;
                 }
-                while (rawCapture != null);
+                while (retval == 1);
 
             }
 

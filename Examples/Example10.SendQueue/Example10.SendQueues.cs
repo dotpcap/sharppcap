@@ -31,9 +31,9 @@ namespace Example10
                 // Open the device for capturing
                 device.Open();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
                 return;
             }
 
@@ -43,12 +43,15 @@ namespace Example10
             var squeue = new SharpPcap.LibPcap.SendQueue
                 ((int)((CaptureFileReaderDevice)device).FileSize);
             RawCapture packet;
+            CaptureEventArgs e;
+            int retval;
 
             try
             {
                 //Go through all packets in the file and add to the queue
-                while ((packet = device.GetNextPacket()) != null)
+                while ((retval = device.GetNextPacket(out e)) == 1)
                 {
+                    packet = e.Packet;
                     if (!squeue.Add(packet))
                     {
                         Console.WriteLine("Warning: packet buffer too small, " +
@@ -57,9 +60,9 @@ namespace Example10
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
                 return;
             }
 
@@ -130,9 +133,9 @@ namespace Example10
                         "Only {1} bytes were sent\n", device.LastError, sent);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: " + e.Message);
+                Console.WriteLine("Error: " + ex.Message);
             }
 
             //Free the queue
