@@ -184,15 +184,43 @@ namespace SharpPcap.WinDivert
             SendPacket(new ReadOnlySpan<byte>(p.Data));
         }
 
+        /// <summary>
+        /// Note: Assumes this span was received from a WinDivertDevice
+        /// </summary>
+        /// <param name="p"></param>
         public void SendPacket(ReadOnlySpan<byte> p)
         {
-            SendPacket(p, GetAddress(p));
+            var addr = GetAddress(p);
+            var header = new WinDivertHeader(new PosixTimeval());
+            header.InterfaceIndex = addr.IfIdx;
+            header.SubInterfaceIndex = addr.SubIfIdx;
+            header.Flags = addr.Flags;
+
+            SendPacket(p, header);
         }
 
-        private void SendPacket(ReadOnlySpan<byte> p, WinDivertAddress addr)
+        /// <summary>
+        /// Send a packet using header.Flags, header.InterfaceIndex, and header.SubInterfaceIndex
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="header"></param>
+        public void SendPacket(ReadOnlySpan<byte> p, WinDivertHeader captureHeader)
         {
             ThrowIfNotOpen();
             bool res;
+            WinDivertAddress addr = default;
+
+            if (!(captureHeader is WinDivertHeader))
+            {
+                addr = GetAddress(p);
+            }
+            else
+            {
+                addr.IfIdx = captureHeader.InterfaceIndex;
+                addr.SubIfIdx = captureHeader.SubInterfaceIndex;
+                addr.Flags = captureHeader.Flags;
+            }
+
             unsafe
             {
                 fixed (byte* p_packet = p)
