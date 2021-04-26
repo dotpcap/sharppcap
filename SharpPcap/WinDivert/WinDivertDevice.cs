@@ -179,32 +179,16 @@ namespace SharpPcap.WinDivert
             return value;
         }
 
-        public void SendPacket(RawCapture p)
+        public void SendPacket(RawCapture p, ICaptureHeader captureHeader)
         {
-            SendPacket(new ReadOnlySpan<byte>(p.Data));
+            SendPacket(new ReadOnlySpan<byte>(p.Data), captureHeader);
         }
 
         /// <summary>
-        /// Note: Assumes this span was received from a WinDivertDevice
-        /// </summary>
-        /// <param name="p"></param>
-        public void SendPacket(ReadOnlySpan<byte> p)
-        {
-            var addr = GetAddress(p);
-            var header = new WinDivertHeader(new PosixTimeval());
-            header.InterfaceIndex = addr.IfIdx;
-            header.SubInterfaceIndex = addr.SubIfIdx;
-            header.Flags = addr.Flags;
-
-            SendPacket(p, header);
-        }
-
-        /// <summary>
-        /// Send a packet using header.Flags, header.InterfaceIndex, and header.SubInterfaceIndex
         /// </summary>
         /// <param name="p"></param>
         /// <param name="header"></param>
-        public void SendPacket(ReadOnlySpan<byte> p, WinDivertHeader captureHeader)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader captureHeader)
         {
             ThrowIfNotOpen();
             bool res;
@@ -216,9 +200,10 @@ namespace SharpPcap.WinDivert
             }
             else
             {
-                addr.IfIdx = captureHeader.InterfaceIndex;
-                addr.SubIfIdx = captureHeader.SubInterfaceIndex;
-                addr.Flags = captureHeader.Flags;
+                var header = captureHeader as WinDivertHeader;
+                addr.IfIdx = header.InterfaceIndex;
+                addr.SubIfIdx = header.SubInterfaceIndex;
+                addr.Flags = header.Flags;
             }
 
             unsafe
