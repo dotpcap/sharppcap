@@ -69,14 +69,16 @@ namespace SharpPcap.WinDivert
             }
         }
 
+        private byte[] buffer = new byte[4096];
+
         /// <summary>
+        /// Packet data is only valid until the next call
         /// </summary>
         /// <param name="e"></param>
         /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
         public int GetNextPacket(out CaptureEventArgs e)
         {
             ThrowIfNotOpen();
-            Span<byte> buffer = stackalloc byte[4096];
             while (true)
             {
                 bool ret;
@@ -95,7 +97,7 @@ namespace SharpPcap.WinDivert
                     if (err == ERROR_INSUFFICIENT_BUFFER)
                     {
                         // Increase buffer size
-                        buffer = stackalloc byte[buffer.Length * 2];
+                        buffer = new byte[buffer.Length * 2];
                         continue;
                     }
                     if (err == ERROR_NO_DATA)
@@ -106,7 +108,7 @@ namespace SharpPcap.WinDivert
                     ThrowWin32Error("Recv failed", err);
                 }
                 var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
-                var data = buffer.Slice(0, (int)readLen).ToArray();
+                var data = new ReadOnlySpan<byte>(buffer, 0, (int)readLen);
                 var header = new WinDivertHeader(timestamp)
                 {
                     InterfaceIndex = addr.IfIdx,
