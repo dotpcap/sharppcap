@@ -90,18 +90,19 @@ namespace CreatingCaptureFile
             //var device = (ICaptureDevice)sender;
 
             // write the packet to the file
-            captureFileWriter.Write(e.Packet);
+            var rawPacket = e.GetPacket();
+            captureFileWriter.Write(rawPacket);
             Console.WriteLine("Packet dumped to file.");
 
-            if (e.Packet.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
+            if (rawPacket.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
-                var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+                var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                 var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,
-                                  e.Packet.Timeval.Date.ToString(),
-                                  e.Packet.Timeval.Date.Millisecond,
+                                  rawPacket.Timeval.Date.ToString(),
+                                  rawPacket.Timeval.Date.Millisecond,
                                   ethernetPacket.SourceHardwareAddress,
                                   ethernetPacket.DestinationHardwareAddress);
                 packetIndex++;

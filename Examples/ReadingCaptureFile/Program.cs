@@ -84,15 +84,16 @@ namespace ReadingCaptureFile
         {
             packetIndex++;
 
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var rawPacket = e.GetPacket();
+            var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
 
             var ethernetPacket = packet.Extract<EthernetPacket>();
             if (ethernetPacket != null)
             {
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,
-                                  e.Packet.Timeval.Date.ToString(),
-                                  e.Packet.Timeval.Date.Millisecond,
+                                  rawPacket.Timeval.Date.ToString(),
+                                  rawPacket.Timeval.Date.Millisecond,
                                   ethernetPacket.SourceHardwareAddress,
                                   ethernetPacket.DestinationHardwareAddress);
             }

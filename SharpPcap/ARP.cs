@@ -152,7 +152,7 @@ namespace SharpPcap
                     {
                         continue;
                     }
-                    var reply = e.Packet;
+                    var reply = e.GetPacket();
 
                     // parse the packet
                     var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);

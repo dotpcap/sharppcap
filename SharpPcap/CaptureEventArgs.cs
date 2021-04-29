@@ -26,18 +26,13 @@ namespace SharpPcap
     /// <summary>
     /// Capture event arguments
     /// </summary>
-    public ref struct CaptureEventArgs
+    public readonly ref struct CaptureEventArgs
     {
-        private RawCapture rawCapture;
-
         /// <summary>
         /// Packet that was captured
         /// </summary>
-        public RawCapture Packet {
-            get
-            {
-                return rawCapture ?? (rawCapture = new RawCapture(Device, Header, Data));
-            }
+        public RawCapture GetPacket() {
+            return new RawCapture(Device, Header, Data);
         }
 
         /// <summary>
@@ -60,7 +55,6 @@ namespace SharpPcap
         /// </param>
         public CaptureEventArgs(ICaptureDevice device, ICaptureHeader header, ReadOnlySpan<byte> data)
         {
-            this.rawCapture = null;
             this.Header = header;
             this.Device = device;
             this.Data = data;

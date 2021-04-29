@@ -31,7 +31,7 @@ namespace Test.Performance
                     // Parse the packet using PacketDotNet
                     if (retval == 1)
                     {
-                        var rawCapture = e.Packet;
+                        var rawCapture = e.GetPacket();
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                         packetsRead++;
                     }
@@ -70,7 +70,7 @@ namespace Test.Performance
                     // Parse the packet using PacketDotNet
                     if (retval == 1)
                     {
-                        var rawCapture = e.Packet;
+                        var rawCapture = e.GetPacket();
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                     }
 
@@ -110,7 +110,7 @@ namespace Test.Performance
                     // Parse the packet using PacketDotNet
                     if (retval == 1)
                     {
-                        var rawCapture = e.Packet;
+                        var rawCapture = e.GetPacket();
                         Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                     }
 

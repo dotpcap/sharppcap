@@ -51,7 +51,7 @@ namespace Example10
                 //Go through all packets in the file and add to the queue
                 while ((retval = device.GetNextPacket(out e)) == 1)
                 {
-                    packet = e.Packet;
+                    packet = e.GetPacket();
                     if (!squeue.Add(packet))
                     {
                         Console.WriteLine("Warning: packet buffer too small, " +

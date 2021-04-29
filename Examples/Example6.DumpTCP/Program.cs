@@ -73,10 +73,11 @@ namespace Example6
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var time = e.Packet.Timeval.Date;
-            var len = e.Packet.Data.Length;
+            var rawPacket = e.GetPacket();
+            var time = rawPacket.Timeval.Date;
+            var len = rawPacket.Data.Length;
 
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
 
             var tcpPacket = packet.Extract<PacketDotNet.TcpPacket>();
             if (tcpPacket != null)

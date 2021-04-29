@@ -262,7 +262,7 @@ namespace Test
             var statuses = new List<CaptureStoppedEventStatus>();
             void Receiver_OnPacketArrival(object s, CaptureEventArgs e)
             {
-                packets.Add(e.Packet);
+                packets.Add(e.GetPacket());
             }
             void Receiver_OnCaptureStopped(object s, CaptureStoppedEventStatus status)
             {

@@ -93,13 +93,14 @@ namespace WakeOnLan
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var time = e.Packet.Timeval.Date;
-            var len = e.Packet.Data.Length;
+            var rawPacket = e.GetPacket();
+            var time = rawPacket.Timeval.Date;
+            var len = rawPacket.Data.Length;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
 
             // parse the incoming packet
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
             if (packet == null)
                 return;
 

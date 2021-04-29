@@ -606,7 +606,7 @@ namespace SharpPcap.LibPcap
                         var retval = dev.GetNextPacket(out e);
                         if (retval != 1)
                             break;
-                        packet = e.Packet;
+                        packet = e.GetPacket();
                     }
                     catch (PcapException pe)
                     {
