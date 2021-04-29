@@ -36,7 +36,6 @@ jobs:
     env:
       npcap_oem_key: $(npcap_oem_key)
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
-  # Disable WinDivert to avoid an internal CLR error due to secure boot having been enabled
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
 
 # NOTE: Remove when npcap has rpcapd support
@@ -46,7 +45,6 @@ jobs:
   steps:
   - script: choco install -y winpcap
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
-  # Disable WinDivert to avoid an internal CLR error due to secure boot having been enabled
   - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
 
 - job: windows_2019_vs2019_npcap
@@ -57,5 +55,4 @@ jobs:
     env:
       npcap_oem_key: $(npcap_oem_key)
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
-  # Disable WinDivert to avoid an internal CLR error due to secure boot having been enabled
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
