@@ -199,11 +199,6 @@ namespace SharpPcap.LibPcap
             Write(data, ref header);
         }
 
-        void IInjectionDevice.SendPacket(RawCapture p, ICaptureHeader header)
-        {
-            Write(p);
-        }
-
         void IInjectionDevice.SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header)
         {
             Write(p);
