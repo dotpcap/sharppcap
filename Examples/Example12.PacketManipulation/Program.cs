@@ -83,7 +83,8 @@ namespace Example12
 
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var rawPacket = e.GetPacket();
+            var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
             if (packet is PacketDotNet.EthernetPacket eth)
             {
                 Console.WriteLine("Original Eth packet: " + eth.ToString());

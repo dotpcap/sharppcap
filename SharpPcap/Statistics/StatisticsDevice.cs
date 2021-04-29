@@ -96,19 +96,20 @@ namespace SharpPcap.Statistics
         long ReceivedBytes;
         private void LiveDevice_OnPacketArrival(object sender, CaptureEventArgs e)
         {
+            var packet = e.GetPacket();
             if (IsWindows)
             {
-                ReceivedPackets += BitConverter.ToInt64(e.Packet.Data, 0);
-                ReceivedBytes += BitConverter.ToInt64(e.Packet.Data, 8);
+                ReceivedPackets += BitConverter.ToInt64(packet.Data, 0);
+                ReceivedBytes += BitConverter.ToInt64(packet.Data, 8);
             }
             else
             {
                 ReceivedPackets++;
-                ReceivedBytes += e.Packet.PacketLength;
+                ReceivedBytes += packet.PacketLength;
             }
             var args = new StatisticsEventArgs(
                 this,
-                e.Packet.Timeval,
+                packet.Timeval,
                 ReceivedPackets,
                 ReceivedBytes
             );

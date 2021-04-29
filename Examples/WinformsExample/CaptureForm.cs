@@ -190,7 +190,7 @@ namespace WinformsExample
             // the same time
             lock (QueueLock)
             {
-                PacketQueue.Add(e.Packet);
+                PacketQueue.Add(e.GetPacket());
             }
         }
 

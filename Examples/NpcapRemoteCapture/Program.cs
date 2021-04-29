@@ -67,11 +67,12 @@ namespace NpcapRemoteCapture
 
         static void dev_OnPacketArrival(object sender, SharpPcap.CaptureEventArgs e)
         {
-            var time = e.Packet.Timeval.Date;
-            var len = e.Packet.Data.Length;
+            var packet = e.GetPacket();
+            var time = packet.Timeval.Date;
+            var len = packet.Data.Length;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
-            Console.WriteLine(e.Packet.ToString());
+            Console.WriteLine(packet.ToString());
         }
     }
 }

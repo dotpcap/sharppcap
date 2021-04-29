@@ -59,7 +59,7 @@ namespace Example4
             int retval;
             while ((retval = device.GetNextPacket(out e)) == 1)
             {
-                packet = e.Packet;
+                packet = e.GetPacket();
 
                 // Prints the time and length of each received packet
                 var time = packet.Timeval.Date;

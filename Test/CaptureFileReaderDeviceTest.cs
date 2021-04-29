@@ -97,7 +97,7 @@ namespace Test
 
         void HandleDeviceOnPacketArrival(object sender, CaptureEventArgs e)
         {
-            Console.WriteLine("got packet " + e.Packet.ToString());
+            Console.WriteLine("got packet " + e.GetPacket().ToString());
             capturedPackets++;
         }
 
@@ -132,7 +132,7 @@ namespace Test
                 retval = device.GetNextPacket(out e);
                 if (retval == 1)
                 {
-                    rawPacket = e.Packet;
+                    rawPacket = e.GetPacket();
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                     var udpPacket = p.Extract<UdpPacket>();
                     Assert.IsNotNull(udpPacket);

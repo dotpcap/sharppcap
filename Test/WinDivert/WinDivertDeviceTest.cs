@@ -68,7 +68,7 @@ namespace Test.WinDivert
             CaptureEventArgs e;
             device.Open();
             device.GetNextPacket(out e);
-            AssertTcp(e.Packet);
+            AssertTcp(e.GetPacket());
         }
 
         private void WebFetch()
@@ -93,7 +93,7 @@ namespace Test.WinDivert
             var received = new List<RawCapture>();
             device.OnPacketArrival += (s, e) =>
             {
-                received.Add(e.Packet);
+                received.Add(e.GetPacket());
             };
             device.StartCapture();
             WebFetch();
