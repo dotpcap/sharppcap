@@ -294,15 +294,6 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Sends a raw packet through this device
         /// </summary>
-        /// <param name="p">The packet to send</param>
-        public void SendPacket(RawCapture p, ICaptureHeader header = null)
-        {
-            SendPacket(p.Data);
-        }
-
-        /// <summary>
-        /// Sends a raw packet through this device
-        /// </summary>
         /// <param name="p">The packet bytes to send</param>
         public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
         {

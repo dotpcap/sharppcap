@@ -69,5 +69,15 @@ namespace SharpPcap
             device.SendPacket(p.Bytes, size);
         }
 
+        /// <summary>
+        /// Send a raw packet through this device
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="p"></param>
+        /// <param name="header"></param>
+        public static void SendPacket(this IInjectionDevice device, RawCapture p, ICaptureHeader header = null)
+        {
+            device.SendPacket(new ReadOnlySpan<byte>(p.Data), header);
+        }
     }
 }

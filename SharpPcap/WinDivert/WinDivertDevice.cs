@@ -181,11 +181,6 @@ namespace SharpPcap.WinDivert
             return value;
         }
 
-        public void SendPacket(RawCapture p, ICaptureHeader captureHeader)
-        {
-            SendPacket(new ReadOnlySpan<byte>(p.Data), captureHeader);
-        }
-
         /// <summary>
         /// </summary>
         /// <param name="p"></param>
