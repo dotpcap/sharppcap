@@ -104,7 +104,7 @@ namespace Test
                 while (true)
                 {
                     var retval = device.GetNextPacket(out e);
-                    if (retval == 1)
+                    if (retval == GetPacketStatus.PacketRead)
                     {
                         var packet = e.GetPacket();
                         Console.WriteLine($"Received: {packet} after {sw.Elapsed} (at {packet.Timeval})");

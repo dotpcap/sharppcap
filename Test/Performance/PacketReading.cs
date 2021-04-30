@@ -17,7 +17,7 @@ namespace Test.Performance
             int packetsRead = 0;
             var startTime = DateTime.Now;
             CaptureEventArgs e;
-            int retval;
+            GetPacketStatus retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
@@ -26,9 +26,9 @@ namespace Test.Performance
                 do
                 {
                     retval = captureDevice.GetNextPacket(out e);
-                    if (retval == 1) packetsRead++;
+                    if (retval == GetPacketStatus.PacketRead) packetsRead++;
                 }
-                while (retval == 1);
+                while (retval == GetPacketStatus.PacketRead);
 
             }
 
@@ -45,7 +45,7 @@ namespace Test.Performance
         {
             int packetsRead = 0;
             var startTime = DateTime.Now;
-            int res;
+            GetPacketStatus res;
 
             CaptureEventArgs e;
             while (packetsRead < packetsToRead)
@@ -56,9 +56,9 @@ namespace Test.Performance
                 do
                 {
                     res = captureDevice.GetNextPacket(out e);
-                    if (res == 1) packetsRead++;
+                    if (res == GetPacketStatus.PacketRead) packetsRead++;
                 }
-                while (res == 1);
+                while (res == GetPacketStatus.PacketRead);
             }
 
             var endTime = DateTime.Now;
@@ -75,7 +75,7 @@ namespace Test.Performance
             int packetsRead = 0;
             var startTime = DateTime.Now;
             CaptureEventArgs e;
-            int retval;
+            GetPacketStatus retval;
             while (packetsRead < packetsToRead)
             {
                 using var captureDevice = new CaptureFileReaderDevice(TestHelper.GetFile("10k_packets.pcap"));
@@ -84,9 +84,9 @@ namespace Test.Performance
                 do
                 {
                     retval = captureDevice.GetNextPacket(out e);
-                    if (retval == 1) packetsRead++;
+                    if (retval == GetPacketStatus.PacketRead) packetsRead++;
                 }
-                while (retval == 1);
+                while (retval == GetPacketStatus.PacketRead);
             }
 
             var endTime = DateTime.Now;
