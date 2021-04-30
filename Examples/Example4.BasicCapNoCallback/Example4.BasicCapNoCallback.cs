@@ -56,8 +56,8 @@ namespace Example4
 
             // Capture packets using GetNextPacket()
             CaptureEventArgs e;
-            int retval;
-            while ((retval = device.GetNextPacket(out e)) == 1)
+            GetPacketStatus retval;
+            while ((retval = device.GetNextPacket(out e)) == GetPacketStatus.PacketRead)
             {
                 packet = e.GetPacket();
 

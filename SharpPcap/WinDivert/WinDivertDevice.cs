@@ -75,8 +75,8 @@ namespace SharpPcap.WinDivert
         /// Packet data is only valid until the next call
         /// </summary>
         /// <param name="e"></param>
-        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
-        public int GetNextPacket(out CaptureEventArgs e)
+        /// <returns>Status of the operation</returns>
+        public GetPacketStatus GetNextPacket(out CaptureEventArgs e)
         {
             ThrowIfNotOpen();
             while (true)
@@ -103,7 +103,7 @@ namespace SharpPcap.WinDivert
                     if (err == ERROR_NO_DATA)
                     {
                         e = default;
-                        return -err;
+                        return (GetPacketStatus)(-err);
                     }
                     ThrowWin32Error("Recv failed", err);
                 }
@@ -118,18 +118,18 @@ namespace SharpPcap.WinDivert
 
                 e = new CaptureEventArgs(this, header, data);
 
-                return 1;
+                return GetPacketStatus.PacketRead;
             }
         }
 
         /// <summary>
         /// </summary>
         /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
-        private int SendPacketArrivalEvent()
+        private GetPacketStatus SendPacketArrivalEvent()
         {
             CaptureEventArgs e;
             var retval = GetNextPacket(out e);
-            if (retval == 1)
+            if (retval == GetPacketStatus.PacketRead)
             {
                 OnPacketArrival?.Invoke(this, e);
             }

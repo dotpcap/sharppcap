@@ -259,8 +259,8 @@ namespace SharpPcap.LibPcap
         /// Retrieve the next packet data
         /// </summary>
         /// <param name="e">Structure to hold the packet data info</param>
-        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
-        public virtual int GetNextPacket(out CaptureEventArgs e)
+        /// <returns>Status of the operation</returns>
+        public virtual GetPacketStatus GetNextPacket(out CaptureEventArgs e)
         {
             //Pointer to a packet info struct
             IntPtr header = IntPtr.Zero;
@@ -288,7 +288,7 @@ namespace SharpPcap.LibPcap
                 e = default;
 
                 // We checked, there is no data using poll()
-                return 0;
+                return GetPacketStatus.ReadTimeout;
             }
 
             int res;
@@ -304,7 +304,7 @@ namespace SharpPcap.LibPcap
                 e = new CaptureEventArgs(this, pcapHeader, dataSpan);
             }
 
-            return res;
+            return (GetPacketStatus)res;
         }
 
         /// <summary>
@@ -604,7 +604,7 @@ namespace SharpPcap.LibPcap
                     try
                     {
                         var retval = dev.GetNextPacket(out e);
-                        if (retval != 1)
+                        if (retval != GetPacketStatus.PacketRead)
                             break;
                         packet = e.GetPacket();
                     }

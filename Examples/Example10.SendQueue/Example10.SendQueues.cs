@@ -44,12 +44,12 @@ namespace Example10
                 ((int)((CaptureFileReaderDevice)device).FileSize);
             RawCapture packet;
             CaptureEventArgs e;
-            int retval;
+            GetPacketStatus retval;
 
             try
             {
                 //Go through all packets in the file and add to the queue
-                while ((retval = device.GetNextPacket(out e)) == 1)
+                while ((retval = device.GetNextPacket(out e)) == GetPacketStatus.PacketRead)
                 {
                     packet = e.GetPacket();
                     if (!squeue.Add(packet))

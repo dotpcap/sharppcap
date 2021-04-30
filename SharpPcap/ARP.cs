@@ -148,7 +148,7 @@ namespace SharpPcap
 
                     //read the next packet from the network
                     var retval = device.GetNextPacket(out e);
-                    if (retval != 1)
+                    if (retval != GetPacketStatus.PacketRead)
                     {
                         continue;
                     }
