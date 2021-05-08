@@ -49,7 +49,7 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
 
 ## Capturing packets
    ```cs
-   void Device_OnPacketArrival(object s, CaptureEventArgs e)
+   void Device_OnPacketArrival(object s, PacketCapture e)
    {
        Console.WriteLine(e.Packet);
    }
@@ -62,7 +62,7 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
 
 ## Reading from a capture file
    ```cs
-   void Device_OnPacketArrival(object s, CaptureEventArgs e)
+   void Device_OnPacketArrival(object s, PacketCapture e)
    {
        Console.WriteLine(e.Packet);
    }
@@ -113,6 +113,11 @@ SharpPcap usage.
 
 The examples are also a great resource a they show working examples using the latest API.
 
+* Packet data is returned via PacketCapture which makes use of ReadOnlySpan<>.
+  * Conversion from ReadOnlySpan<> to RawCapture is performed by PacketCapture.GetPacket().
+  * This avoids allocation of memory during packet capture.
+  * By avoiding memory allocation and memory copying, raw capture performance may be up to 30% faster.
+  * Span's are ideal for use cases where packets are being dumped to disk for later processing.
 * NativeLibrary is used for improved capture library resolution
   * Improves library reosolution situation on Linux distros where there is a libpcap.so.X.Y symlink but no libpcap.so symlink
   * Support for Mono DllMap has been removed as Mono supports NativeLibrary. See https://www.mono-project.com/news/2020/08/24/native-loader-net5/
