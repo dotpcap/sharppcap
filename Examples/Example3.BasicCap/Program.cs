@@ -78,9 +78,9 @@ namespace Example3
         /// </summary>
         private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
+            var time = e.Header.Timeval.Date;
+            var len = e.Data.Length;
             var rawPacket = e.GetPacket();
-            var time = rawPacket.Timeval.Date;
-            var len = rawPacket.Data.Length;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}",
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
             Console.WriteLine(rawPacket.ToString());
