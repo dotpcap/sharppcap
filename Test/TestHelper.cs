@@ -94,7 +94,7 @@ namespace Test
                 sender = new LibPcapLiveDevice(device.Interface);
                 sender.Open(mode, 1);
             }
-            CaptureEventArgs e;
+            PacketCapture e;
             using(sender)
             {
                 routine(sender);

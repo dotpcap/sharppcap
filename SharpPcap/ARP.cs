@@ -136,7 +136,7 @@ namespace SharpPcap
 
                 // attempt to resolve the address with the current timeout
                 var timeoutDateTime = DateTime.Now + Timeout;
-                CaptureEventArgs e;
+                PacketCapture e;
                 while (DateTime.Now < timeoutDateTime)
                 {
                     if (requestInterval < (DateTime.Now - lastRequestTime))

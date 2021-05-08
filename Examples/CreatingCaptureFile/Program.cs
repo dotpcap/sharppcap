@@ -85,7 +85,7 @@ namespace CreatingCaptureFile
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
             //var device = (ICaptureDevice)sender;
 

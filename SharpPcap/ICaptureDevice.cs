@@ -73,7 +73,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="e"></param>
         /// <returns>Status of the operation</returns>
-        GetPacketStatus GetNextPacket(out CaptureEventArgs e);
+        GetPacketStatus GetNextPacket(out PacketCapture e);
 
         /// <summary>
         /// Retrieves pcap statistics

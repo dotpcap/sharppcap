@@ -76,7 +76,7 @@ namespace SharpPcap.WinDivert
         /// </summary>
         /// <param name="e"></param>
         /// <returns>Status of the operation</returns>
-        public GetPacketStatus GetNextPacket(out CaptureEventArgs e)
+        public GetPacketStatus GetNextPacket(out PacketCapture e)
         {
             ThrowIfNotOpen();
             while (true)
@@ -116,7 +116,7 @@ namespace SharpPcap.WinDivert
                     Flags = addr.Flags
                 };
 
-                e = new CaptureEventArgs(this, header, data);
+                e = new PacketCapture(this, header, data);
 
                 return GetPacketStatus.PacketRead;
             }
@@ -127,7 +127,7 @@ namespace SharpPcap.WinDivert
         /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
         private GetPacketStatus SendPacketArrivalEvent()
         {
-            CaptureEventArgs e;
+            PacketCapture e;
             var retval = GetNextPacket(out e);
             if (retval == GetPacketStatus.PacketRead)
             {

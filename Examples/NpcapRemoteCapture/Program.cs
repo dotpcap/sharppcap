@@ -65,7 +65,7 @@ namespace NpcapRemoteCapture
             Console.WriteLine(device.Statistics.ToString());
         }
 
-        static void dev_OnPacketArrival(object sender, SharpPcap.CaptureEventArgs e)
+        static void dev_OnPacketArrival(object sender, SharpPcap.PacketCapture e)
         {
             var packet = e.GetPacket();
             var time = packet.Timeval.Date;

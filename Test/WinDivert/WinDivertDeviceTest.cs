@@ -65,7 +65,7 @@ namespace Test.WinDivert
             {
                 Filter = "!loopback and tcp"
             };
-            CaptureEventArgs e;
+            PacketCapture e;
             device.Open();
             device.GetNextPacket(out e);
             AssertTcp(e.GetPacket());

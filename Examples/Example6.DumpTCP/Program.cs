@@ -71,7 +71,7 @@ namespace Example6
         /// Prints the time, length, src ip, src port, dst ip and dst port
         /// for each TCP/IP packet received on the network
         /// </summary>
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
             var rawPacket = e.GetPacket();
             var time = rawPacket.Timeval.Date;

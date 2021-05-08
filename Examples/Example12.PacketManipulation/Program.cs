@@ -81,7 +81,7 @@ namespace Example12
             device.Close();
         }
 
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
             var rawPacket = e.GetPacket();
             var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);

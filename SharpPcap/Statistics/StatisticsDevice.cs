@@ -94,7 +94,7 @@ namespace SharpPcap.Statistics
 
         long ReceivedPackets;
         long ReceivedBytes;
-        private void LiveDevice_OnPacketArrival(object sender, CaptureEventArgs e)
+        private void LiveDevice_OnPacketArrival(object sender, PacketCapture e)
         {
             var packet = e.GetPacket();
             if (IsWindows)
