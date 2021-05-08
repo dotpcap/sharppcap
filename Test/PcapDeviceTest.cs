@@ -249,7 +249,7 @@ namespace Test
             );
         }
 
-        void HandleOnPacketArrival(object sender, CaptureEventArgs e)
+        void HandleOnPacketArrival(object sender, PacketCapture e)
         {
 
         }
@@ -260,7 +260,7 @@ namespace Test
             const int PacketsCount = 10;
             var packets = new List<RawCapture>();
             var statuses = new List<CaptureStoppedEventStatus>();
-            void Receiver_OnPacketArrival(object s, CaptureEventArgs e)
+            void Receiver_OnPacketArrival(object s, PacketCapture e)
             {
                 packets.Add(e.GetPacket());
             }

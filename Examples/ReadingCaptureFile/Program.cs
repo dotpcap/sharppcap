@@ -80,7 +80,7 @@ namespace ReadingCaptureFile
         /// <summary>
         /// Prints the source and dest MAC addresses of each received Ethernet frame
         /// </summary>
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
             packetIndex++;
 

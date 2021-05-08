@@ -55,7 +55,7 @@ namespace Example4
             RawCapture packet;
 
             // Capture packets using GetNextPacket()
-            CaptureEventArgs e;
+            PacketCapture e;
             GetPacketStatus retval;
             while ((retval = device.GetNextPacket(out e)) == GetPacketStatus.PacketRead)
             {

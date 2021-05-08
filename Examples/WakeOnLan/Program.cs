@@ -91,7 +91,7 @@ namespace WakeOnLan
         /// <summary>
         /// Handle incoming packets
         /// </summary>
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
             var rawPacket = e.GetPacket();
             var time = rawPacket.Timeval.Date;

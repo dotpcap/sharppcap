@@ -95,7 +95,7 @@ namespace Test
             Assert.AreEqual(expectedPackets, capturedPackets);
         }
 
-        void HandleDeviceOnPacketArrival(object sender, CaptureEventArgs e)
+        void HandleDeviceOnPacketArrival(object sender, PacketCapture e)
         {
             Console.WriteLine("got packet " + e.GetPacket().ToString());
             capturedPackets++;
@@ -125,7 +125,7 @@ namespace Test
 
             RawCapture rawPacket;
             int count = 0;
-            CaptureEventArgs e;
+            PacketCapture e;
             GetPacketStatus retval;
             do
             {

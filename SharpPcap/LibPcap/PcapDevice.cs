@@ -241,7 +241,7 @@ namespace SharpPcap.LibPcap
         /// <param name="data"></param>
         protected virtual void SendPacketArrivalEvent(PcapHeader header, Span<byte> data)
         {
-            OnPacketArrival?.Invoke(this, new CaptureEventArgs(this, header, data));
+            OnPacketArrival?.Invoke(this, new PacketCapture(this, header, data));
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="e">Structure to hold the packet data info</param>
         /// <returns>Status of the operation</returns>
-        public virtual GetPacketStatus GetNextPacket(out CaptureEventArgs e)
+        public virtual GetPacketStatus GetNextPacket(out PacketCapture e)
         {
             //Pointer to a packet info struct
             IntPtr header = IntPtr.Zero;
@@ -301,7 +301,7 @@ namespace SharpPcap.LibPcap
                 var pcapHeader = PcapHeader.FromPointer(header);
                 var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
 
-                e = new CaptureEventArgs(this, pcapHeader, dataSpan);
+                e = new PacketCapture(this, pcapHeader, dataSpan);
             }
 
             return (GetPacketStatus)res;
@@ -596,7 +596,7 @@ namespace SharpPcap.LibPcap
         {
             try
             {
-                CaptureEventArgs e;
+                PacketCapture e;
                 dev.Open();
                 while (true)
                 {

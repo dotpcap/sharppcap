@@ -43,7 +43,7 @@ namespace Example10
             var squeue = new SharpPcap.LibPcap.SendQueue
                 ((int)((CaptureFileReaderDevice)device).FileSize);
             RawCapture packet;
-            CaptureEventArgs e;
+            PacketCapture e;
             GetPacketStatus retval;
 
             try

@@ -24,9 +24,9 @@ using System;
 namespace SharpPcap
 {
     /// <summary>
-    /// Capture event arguments
+    /// Packet capture data
     /// </summary>
-    public readonly ref struct CaptureEventArgs
+    public readonly ref struct PacketCapture
     {
         /// <summary>
         /// Packet that was captured
@@ -53,7 +53,7 @@ namespace SharpPcap
         /// <param name="device">
         /// A <see cref="ICaptureDevice"/>
         /// </param>
-        public CaptureEventArgs(ICaptureDevice device, ICaptureHeader header, ReadOnlySpan<byte> data)
+        public PacketCapture(ICaptureDevice device, ICaptureHeader header, ReadOnlySpan<byte> data)
         {
             this.Header = header;
             this.Device = device;
