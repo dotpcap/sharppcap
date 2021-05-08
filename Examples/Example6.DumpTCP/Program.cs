@@ -73,9 +73,9 @@ namespace Example6
         /// </summary>
         private static void device_OnPacketArrival(object sender, PacketCapture e)
         {
+            var time = e.Header.Timeval.Date;
+            var len = e.Data.Length;
             var rawPacket = e.GetPacket();
-            var time = rawPacket.Timeval.Date;
-            var len = rawPacket.Data.Length;
 
             var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
 

@@ -92,8 +92,8 @@ namespace ReadingCaptureFile
             {
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",
                                   packetIndex,
-                                  rawPacket.Timeval.Date.ToString(),
-                                  rawPacket.Timeval.Date.Millisecond,
+                                  e.Header.Timeval.Date.ToString(),
+                                  e.Header.Timeval.Date.Millisecond,
                                   ethernetPacket.SourceHardwareAddress,
                                   ethernetPacket.DestinationHardwareAddress);
             }
