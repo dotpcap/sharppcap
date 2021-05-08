@@ -28,6 +28,8 @@ For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/
   * Support for [Berkley Packet Filters](https://www.tcpdump.org/manpages/pcap-filter.7.html)
   * Dumping packets to Pcap files.
   * Pcap and pcap-ng format (when using libpcap >=1.1.0 or npcap)
+  * ReadOnlySpan<> is used to avoid memory allocation and copying inside of SharpPcap and provide the best performance.
+    * Helper methods are provided to convert to object instances if it is desired to persist captured packets in memory.
 
 * NativeLibrary support
   * Capture library resolution works cleanly across Linux, OSX, and Windows
