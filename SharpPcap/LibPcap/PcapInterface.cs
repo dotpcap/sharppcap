@@ -284,7 +284,7 @@ namespace SharpPcap.LibPcap
 
                 for (var i = 0; i < typeCount; i++)
                 {
-                    var value = Marshal.ReadInt32(typePtr, i * 4);
+                    var value = Marshal.ReadInt32(typePtr, i * sizeof(int));
                     var tsValue = (TimestampType)value;
                     timestampTypes.Add(new PcapClock(tsValue));
                 }
