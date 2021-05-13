@@ -11,13 +11,12 @@ $npcap_oem_file = "npcap-1.20-oem.exe"
 #    provide support for the /S option
 
 if (Test-Path Env:npcap_oem_key){  # Key is here: on master
-    echo "Using Npcap OEM version"
     # Unpack the key
     # The format of the environment variable should be 'username,password'
     $user, $pass = (Get-ChildItem Env:npcap_oem_key).Value.replace("`"", "").split(",")
-    if(!$user -Or !$pass){
-        Throw (New-Object System.Exception)
-    }
+}
+if($user -And $pass){
+    echo "Using Npcap OEM version"
     $file = $PSScriptRoot+"\"+$npcap_oem_file
     # Download oem file using (super) secret credentials
     $pair = "${user}:${pass}"
