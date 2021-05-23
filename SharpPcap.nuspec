@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SharpPcap</id>
-        <version>5.4.0</version>
+        <version>6.0.0-rc1</version>
         <authors>Chris Morgan</authors>
 	<owners>chmorgan</owners>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html/</licenseUrl>
