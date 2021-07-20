@@ -66,7 +66,7 @@ namespace SharpPcap.LibPcap
                 return IntPtr.Zero;
             }
 
-            var names = new List<string>() { "libpcap" };
+            var names = new List<string>();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -76,12 +76,16 @@ namespace SharpPcap.LibPcap
                 names.Add("libpcap.so.1");
             }
 
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                names.Add("libpcap.dylib");
+            }
+
             foreach (var name in names)
             {
-                var ptr = NativeLibraryHelper.Load(name);
-                if (ptr != IntPtr.Zero)
+                if (NativeLibraryHelper.TryLoad(name, out var handle))
                 {
-                    return ptr;
+                    return handle;
                 }
             }
 

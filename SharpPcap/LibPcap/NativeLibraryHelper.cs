@@ -37,25 +37,29 @@ namespace SharpPcap.LibPcap
 
             setDllImportResolverMethod.Invoke(null, new object[] {
                 assembly,
-                resolver
+                Delegate.CreateDelegate(dllImportResolverType, resolver, "Invoke")
             });
         }
 
-        public static IntPtr Load(string libraryPath)
+        public static bool TryLoad(string libraryPath, out IntPtr handle)
         {
-            var loadMethod = NativeLibraryType
+            var tryLoadMethod = NativeLibraryType
                 ?.GetMethod(
-                    "Load",
+                    "TryLoad",
                     BindingFlags.Public | BindingFlags.Static,
                     null,
-                    new[] { typeof(string) },
+                    new[] { typeof(string), typeof(IntPtr).MakeByRefType() },
                     null
                 );
-            if (loadMethod == null)
+            if (tryLoadMethod == null)
             {
-                return IntPtr.Zero;
+                handle = IntPtr.Zero;
+                return false;
             }
-            return (IntPtr)loadMethod.Invoke(null, new object[] { libraryPath });
+            var args = new object[] { libraryPath, IntPtr.Zero };
+            var res = (bool)tryLoadMethod.Invoke(null, args);
+            handle = (IntPtr)args[1];
+            return res;
         }
     }
 }
