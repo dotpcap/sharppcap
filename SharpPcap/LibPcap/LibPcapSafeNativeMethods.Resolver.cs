@@ -55,40 +55,8 @@ namespace SharpPcap.LibPcap
         /// </summary>
         private static void RegisterResolver()
         {
-            var nativeLibraryType = typeof(DllImportSearchPath).Assembly
-                .GetType("System.Runtime.InteropServices.NativeLibrary");
-
-            if (nativeLibraryType == null)
-            {
-                return;
-            }
-
-            var dllImportResolverType = typeof(DllImportSearchPath).Assembly
-                .GetType("System.Runtime.InteropServices.DllImportResolver");
-
-            var setDllImportResolverMethod = nativeLibraryType
-                .GetMethod(
-                    "SetDllImportResolver",
-                    BindingFlags.Public | BindingFlags.Static,
-                    null,
-                    new[] { typeof(Assembly), dllImportResolverType },
-                    null
-                );
-
-
-            var dllImportResolver = Delegate.CreateDelegate(
-                dllImportResolverType,
-                typeof(LibPcapSafeNativeMethods).GetMethod(nameof(Resolver))
-            );
-
-            setDllImportResolverMethod.Invoke(null, new object[] {
-                typeof(LibPcapSafeNativeMethods).Assembly,
-                dllImportResolver
-            });
+            NativeLibraryHelper.SetDllImportResolver(typeof(LibPcapSafeNativeMethods).Assembly, Resolver);
         }
-
-        [DllImport("libdl")]
-        private static extern IntPtr dlopen(string filename, int flags);
 
         public static IntPtr Resolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
@@ -107,18 +75,17 @@ namespace SharpPcap.LibPcap
                 names.Add("libpcap.so.0.8");
                 names.Add("libpcap.so.1");
             }
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 names.Add("libpcap.dylib");
             }
 
-            const int RTLD_NOW = 2;
             foreach (var name in names)
             {
-                var ptr = dlopen(name, RTLD_NOW);
-                if (ptr != IntPtr.Zero)
+                if (NativeLibraryHelper.TryLoad(name, out var handle))
                 {
-                    return ptr;
+                    return handle;
                 }
             }
 
