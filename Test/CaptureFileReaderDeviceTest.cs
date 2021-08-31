@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -143,6 +145,28 @@ namespace Test
             } while (retval == GetPacketStatus.PacketRead);
 
             Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        [LibpcapVersion(">=1.10.0")]
+        public void StringMarshalling()
+        {
+            var original = TestHelper.GetFile("tcp.pcap");
+            var names = new List<string> {
+                "اختبار",
+                "Prüfung",
+                "测试",
+            };
+            var baseDir = Path.GetDirectoryName(GetType().Assembly.Location);
+            foreach (var name in names)
+            {
+                var file = Path.Combine(baseDir, name + ".pcap");
+                File.Copy(original, file, true);
+
+                using var device = new CaptureFileReaderDevice(file);
+                device.Open();
+                Assert.AreEqual(GetPacketStatus.PacketRead, device.GetNextPacket(out var _));
+            }
         }
     }
 }
