@@ -160,8 +160,7 @@ namespace SharpPcap.LibPcap
         /// </returns>
         internal static string GetLastError(IntPtr deviceHandle)
         {
-            IntPtr err_ptr = LibPcapSafeNativeMethods.pcap_geterr(deviceHandle);
-            return Marshal.PtrToStringAnsi(err_ptr);
+            return LibPcapSafeNativeMethods.pcap_geterr(deviceHandle);
         }
 
         /// <summary>

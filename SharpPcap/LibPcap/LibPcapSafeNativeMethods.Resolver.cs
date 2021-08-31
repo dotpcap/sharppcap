@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpPcap.LibPcap
 {
@@ -32,7 +33,7 @@ namespace SharpPcap.LibPcap
     internal static partial class LibPcapSafeNativeMethods
     {
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetDllDirectory(string lpPathName);
 
@@ -46,6 +47,7 @@ namespace SharpPcap.LibPcap
             {
                 RegisterResolver();
             }
+            StringEncoding = ConfigureStringEncoding();
         }
 
         /// <summary>

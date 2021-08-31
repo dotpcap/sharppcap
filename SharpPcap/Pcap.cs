@@ -21,7 +21,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace SharpPcap
@@ -60,7 +59,7 @@ namespace SharpPcap
             {
                 try
                 {
-                    return Marshal.PtrToStringAnsi(LibPcap.LibPcapSafeNativeMethods.pcap_lib_version());
+                    return LibPcap.LibPcapSafeNativeMethods.pcap_lib_version();
                 }
                 catch
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpPcap.LibPcap;
+using System;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap
@@ -41,14 +42,12 @@ namespace SharpPcap
 
         private static string TimestampName(TimestampType number)
         {
-            var ptr = LibPcap.LibPcapSafeNativeMethods.pcap_tstamp_type_val_to_name((int)number);
-            return Marshal.PtrToStringAnsi(ptr);
+            return LibPcapSafeNativeMethods.pcap_tstamp_type_val_to_name((int)number);
         }
 
         private static string TimestampDescription(TimestampType number)
         {
-            var ptr = LibPcap.LibPcapSafeNativeMethods.pcap_tstamp_type_val_to_description((int)number);
-            return Marshal.PtrToStringAnsi(ptr);
+            return LibPcapSafeNativeMethods.pcap_tstamp_type_val_to_description((int)number);
         }
 
         /// <summary>
