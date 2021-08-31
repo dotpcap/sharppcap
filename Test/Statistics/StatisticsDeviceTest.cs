@@ -61,6 +61,7 @@ namespace Test.Statistics
 
             var count = 7;
 
+            Thread.Sleep(100);
             for (int i = 0; i < count; i++)
             {
                 sender.SendPacket(packet);
