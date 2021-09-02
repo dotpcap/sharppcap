@@ -16,5 +16,8 @@ namespace SharpPcap.WinDivert
         public WinDivertPacketFlags Flags;
         public uint IfIdx;
         public uint SubIfIdx;
+        // Added bytes to match the struct size of WINDIVERT_ADDRESS, since we only map the first few fields
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 56)]
+        internal byte[] Padding;
     }
 }
