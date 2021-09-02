@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
@@ -69,7 +70,24 @@ namespace SharpPcap.WinDivert
             }
         }
 
-        private byte[] buffer = new byte[4096];
+        private byte[] buffer = new byte[1024 * 4];
+
+        private class PacketRecord
+        {
+            private readonly WinDivertHeader Header;
+            private readonly ReadOnlyMemory<byte> Data;
+
+            public PacketRecord(WinDivertHeader header, ReadOnlyMemory<byte> data)
+            {
+                Header = header;
+                Data = data;
+            }
+
+            public PacketCapture GetPacketCapture(ICaptureDevice device)
+            {
+                return new PacketCapture(device, Header, Data.Span);
+            }
+        }
 
         /// <summary>
         /// Packet data is only valid until the next call
@@ -78,19 +96,36 @@ namespace SharpPcap.WinDivert
         /// <returns>Status of the operation</returns>
         public GetPacketStatus GetNextPacket(out PacketCapture e)
         {
+            var packets = new List<PacketRecord>();
+            var res = GetNextPackets(packets, 1);
+            e = packets.Count > 0 ? packets[0].GetPacketCapture(this) : default;
+            return res;
+        }
+
+        /// <summary>
+        /// Packet data is only valid until the next call
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>Status of the operation</returns>
+        private GetPacketStatus GetNextPackets(List<PacketRecord> packets, int capacity)
+        {
             ThrowIfNotOpen();
             while (true)
             {
                 bool ret;
-                WinDivertAddress addr;
-                uint readLen;
-                unsafe
-                {
-                    fixed (byte* p = buffer)
-                    {
-                        ret = WinDivertNative.WinDivertRecv(Handle, new IntPtr(p), (uint)buffer.Length, out readLen, out addr);
-                    }
-                }
+                var addressSize = Marshal.SizeOf<WinDivertAddress>();
+                var addressesByteSize = capacity * addressSize;
+                var addresses = new WinDivertAddress[capacity];
+                ret = WinDivertNative.WinDivertRecvEx(
+                    Handle,
+                    buffer,
+                    buffer.Length,
+                    out int readLen,
+                    0,
+                    addresses,
+                    ref addressesByteSize,
+                    IntPtr.Zero
+                );
                 if (!ret)
                 {
                     var err = Marshal.GetLastWin32Error();
@@ -102,22 +137,25 @@ namespace SharpPcap.WinDivert
                     }
                     if (err == ERROR_NO_DATA)
                     {
-                        e = default;
                         return (GetPacketStatus)(-err);
                     }
                     ThrowWin32Error("Recv failed", err);
                 }
-                var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
-                var data = new ReadOnlySpan<byte>(buffer, 0, (int)readLen);
-                var header = new WinDivertHeader(timestamp)
+                var addressesCount = addressesByteSize / addressSize;
+                for (int i = 0; i < addressesCount; i++)
                 {
-                    InterfaceIndex = addr.IfIdx,
-                    SubInterfaceIndex = addr.SubIfIdx,
-                    Flags = addr.Flags
-                };
+                    var addr = addresses[i];
+                    var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
+                    var data = new ReadOnlyMemory<byte>(buffer, 0, (int)readLen);
+                    var header = new WinDivertHeader(timestamp)
+                    {
+                        InterfaceIndex = addr.IfIdx,
+                        SubInterfaceIndex = addr.SubIfIdx,
+                        Flags = addr.Flags
+                    };
 
-                e = new PacketCapture(this, header, data);
-
+                    packets.Add(new PacketRecord(header, data));
+                }
                 return GetPacketStatus.PacketRead;
             }
         }
