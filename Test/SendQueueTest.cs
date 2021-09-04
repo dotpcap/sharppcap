@@ -17,7 +17,7 @@ namespace Test
     {
         private const string Filter = "ether proto 0x1234";
         private const int PacketCount = 8;
-        private static readonly int DeltaMs = 10;
+        internal static readonly int DeltaMs = 10;
 
         /// <summary>
         /// Transmit with normal works correctly
@@ -196,11 +196,11 @@ namespace Test
         /// Helper method
         /// </summary>
         /// <returns></returns>
-        private static SendQueueWrapper GetSendQueue()
+        internal static SendQueueWrapper GetSendQueue(ushort ethertype = 0x1234)
         {
             var queue = new SendQueueWrapper(1024);
             var packet = EthernetPacket.RandomPacket();
-            packet.Type = (EthernetType)0x1234;
+            packet.Type = (EthernetType)ethertype;
             for (var i = 0; i < PacketCount; i++)
             {
                 Assert.IsTrue(queue.Add(packet.Bytes, 123456, i * DeltaMs * 1000));
@@ -208,7 +208,7 @@ namespace Test
             return queue;
         }
 
-        class SendQueueWrapper : SendQueue
+        internal class SendQueueWrapper : SendQueue
         {
             public SendQueueWrapper(int memSize) : base(memSize)
             {
