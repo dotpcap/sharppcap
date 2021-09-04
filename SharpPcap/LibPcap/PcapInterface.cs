@@ -277,36 +277,36 @@ namespace SharpPcap.LibPcap
             get
             {
                 StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                var handle = LibPcapSafeNativeMethods.pcap_create(Name, errbuf);
-
-                IntPtr typePtr = IntPtr.Zero;
-
-                // Note: typePtr must be freed with pcap_free_tstamp_types()
-                var typeCount = LibPcapSafeNativeMethods.pcap_list_tstamp_types(handle, ref typePtr);
-
-                var timestampTypes = new System.Collections.Generic.List<PcapClock>();
-
-                for (var i = 0; i < typeCount; i++)
+                using (var handle = LibPcapSafeNativeMethods.pcap_create(Name, errbuf))
                 {
-                    var value = Marshal.ReadInt32(typePtr, i * sizeof(int));
-                    var tsValue = (TimestampType)value;
-                    timestampTypes.Add(new PcapClock(tsValue));
+
+                    IntPtr typePtr = IntPtr.Zero;
+
+                    // Note: typePtr must be freed with pcap_free_tstamp_types()
+                    var typeCount = LibPcapSafeNativeMethods.pcap_list_tstamp_types(handle, ref typePtr);
+
+                    var timestampTypes = new System.Collections.Generic.List<PcapClock>();
+
+                    for (var i = 0; i < typeCount; i++)
+                    {
+                        var value = Marshal.ReadInt32(typePtr, i * sizeof(int));
+                        var tsValue = (TimestampType)value;
+                        timestampTypes.Add(new PcapClock(tsValue));
+                    }
+
+                    // Free unmanaged memory allocation
+                    LibPcapSafeNativeMethods.pcap_free_tstamp_types(typePtr);
+
+                    // per https://www.tcpdump.org/manpages/pcap_list_tstamp_types.3pcap.html
+                    // PCAP_TSTAMP_HOST is the only supported version
+                    if (typeCount == 0)
+                    {
+                        var tsValue = TimestampType.Host;
+                        timestampTypes.Add(new PcapClock(tsValue));
+                    }
+
+                    return timestampTypes;
                 }
-
-                // Free unmanaged memory allocation
-                LibPcapSafeNativeMethods.pcap_free_tstamp_types(typePtr);
-
-                // per https://www.tcpdump.org/manpages/pcap_list_tstamp_types.3pcap.html
-                // PCAP_TSTAMP_HOST is the only supported version
-                if (typeCount == 0)
-                {
-                    var tsValue = TimestampType.Host;
-                    timestampTypes.Add(new PcapClock(tsValue));
-                }
-
-                LibPcapSafeNativeMethods.pcap_close(handle);
-
-                return timestampTypes;
             }
         }
         #endregion

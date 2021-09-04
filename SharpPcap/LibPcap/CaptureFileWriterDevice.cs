@@ -116,7 +116,7 @@ namespace SharpPcap.LibPcap
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
             if (has_open_dead_with_tstamp_precision_support)
             {
-                PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead_with_tstamp_precision((int)configuration.LinkLayerType,
+                Handle = LibPcapSafeNativeMethods.pcap_open_dead_with_tstamp_precision((int)configuration.LinkLayerType,
                     configuration.Snaplen,
                     (uint)resolution);
             }
@@ -131,14 +131,14 @@ namespace SharpPcap.LibPcap
                     );
                 }
 
-                PcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
+                Handle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
             }
 
-            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(PcapHandle, m_pcapFile);
+            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(Handle, m_pcapFile);
             if (m_pcapDumpHandle == IntPtr.Zero)
                 throw new PcapException("Error opening dump file '" + LastError + "'");
 
-            Active = true;
+            base.Open(configuration);
         }
 
         /// <summary>

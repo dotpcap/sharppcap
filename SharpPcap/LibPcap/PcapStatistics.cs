@@ -51,7 +51,7 @@ namespace SharpPcap.LibPcap
         /// pcap_t* for the adapter
         /// A <see cref="IntPtr"/>
         /// </param>
-        internal PcapStatistics(IntPtr pcap_t)
+        internal PcapStatistics(PcapHandle pcap_t)
         {
             IntPtr stat;
 

@@ -91,7 +91,7 @@ namespace SharpPcap.LibPcap
             // holds errors
             StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
-            IntPtr adapterHandle;
+            PcapHandle adapterHandle;
 
             // Check if we need to open with a defined precision
             var has_offline_with_tstamp_precision_support = Pcap.LibpcapVersion >= new Version(1, 5, 1);
@@ -117,16 +117,16 @@ namespace SharpPcap.LibPcap
             }
 
             // handle error
-            if (adapterHandle == IntPtr.Zero)
+            if (adapterHandle.IsInvalid)
             {
                 string err = "Unable to open offline adapter: " + errbuf.ToString();
                 throw new PcapException(err);
             }
 
             // set the device handle
-            PcapHandle = adapterHandle;
+            Handle = adapterHandle;
 
-            Active = true;
+            base.Open(configuration);
         }
 
         /// <summary>

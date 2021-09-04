@@ -83,7 +83,7 @@ namespace SharpPcap.LibPcap
             {
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
-                LibPcapSafeNativeMethods.pcap_breakloop(PcapHandle);
+                LibPcapSafeNativeMethods.pcap_breakloop(Handle);
                 if (!captureThread.Join(StopCaptureTimeout))
                 {
                     try
@@ -176,7 +176,7 @@ namespace SharpPcap.LibPcap
                     continue;
                 }
 
-                int res = LibPcapSafeNativeMethods.pcap_dispatch(PcapHandle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, IntPtr.Zero);
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative

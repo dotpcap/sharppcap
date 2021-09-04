@@ -124,7 +124,7 @@ namespace SharpPcap.LibPcap
                 var otherModes = mode & ~DeviceModes.Promiscuous;
                 if ((credentials == null) || ((short)otherModes != 0) || (configuration.TimestampResolution != null))
                 {
-                    PcapHandle = LibPcapSafeNativeMethods.pcap_create(
+                    Handle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
                         errbuf); // error buffer
 
@@ -161,7 +161,7 @@ namespace SharpPcap.LibPcap
                 {
                     // We got authentication, so this is an rpcap device
                     var auth = RemoteAuthentication.CreateAuth(credentials);
-                    PcapHandle = LibPcapSafeNativeMethods.pcap_open(
+                    Handle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
                         configuration.Snaplen,              // portion of the packet to capture.
                         (short)mode,                        // flags
@@ -170,7 +170,7 @@ namespace SharpPcap.LibPcap
                         errbuf);                            // error buffer
                 }
 
-                if (PcapHandle == IntPtr.Zero)
+                if (Handle.IsInvalid)
                 {
                     string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
                     throw new PcapException(err);
@@ -211,17 +211,17 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                var activationResult = LibPcapSafeNativeMethods.pcap_activate(PcapHandle);
+                var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
                 if (activationResult < 0)
                 {
                     string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
                     throw new PcapException(err);
                 }
-                Active = true;
+                base.Open(configuration);
                 // retrieve the file descriptor of the adapter for use with poll()
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(PcapHandle);
+                    FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(Handle);
                 }
 
                 // Below configurations must be done after the device gets activated
@@ -257,7 +257,7 @@ namespace SharpPcap.LibPcap
                 ThrowIfNotOpen("Can't get blocking mode, the device is closed");
 
                 var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(PcapHandle, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(Handle, errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
@@ -280,7 +280,7 @@ namespace SharpPcap.LibPcap
                 if (value)
                     block = enableBlocking;
 
-                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(PcapHandle, block, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(Handle, block, errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
@@ -303,7 +303,7 @@ namespace SharpPcap.LibPcap
             {
                 fixed (byte* p_packet = p)
                 {
-                    res = LibPcapSafeNativeMethods.pcap_sendpacket(PcapHandle, new IntPtr(p_packet), p.Length);
+                    res = LibPcapSafeNativeMethods.pcap_sendpacket(Handle, new IntPtr(p_packet), p.Length);
                 }
             }
             if (res < 0)
@@ -325,7 +325,7 @@ namespace SharpPcap.LibPcap
                 // can only call PcapStatistics on an open device
                 ThrowIfNotOpen("device not open");
 
-                return new PcapStatistics(this.m_pcapAdapterHandle);
+                return new PcapStatistics(Handle);
             }
         }
     }
