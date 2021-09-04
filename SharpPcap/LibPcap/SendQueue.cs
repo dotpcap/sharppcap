@@ -35,22 +35,19 @@ namespace SharpPcap.LibPcap
 
         private static bool GetIsHardwareAccelerated()
         {
-            var handle = LibPcapSafeNativeMethods.pcap_open_dead(1, 60);
-            try
+            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead(1, 60))
             {
-
-                pcap_send_queue queue = default;
-                LibPcapSafeNativeMethods.pcap_sendqueue_transmit(handle, ref queue, 0);
-                return true;
-            }
-            catch (TypeLoadException)
-            {
-                // Function pcap_sendqueue_transmit not found
-                return false;
-            }
-            finally
-            {
-                LibPcapSafeNativeMethods.pcap_close(handle);
+                try
+                {
+                    pcap_send_queue queue = default;
+                    LibPcapSafeNativeMethods.pcap_sendqueue_transmit(handle, ref queue, 0);
+                    return true;
+                }
+                catch (TypeLoadException)
+                {
+                    // Function pcap_sendqueue_transmit not found
+                    return false;
+                }
             }
         }
 
@@ -187,7 +184,7 @@ namespace SharpPcap.LibPcap
                     {
                         fixed (byte* p_packet = p)
                         {
-                            res = LibPcapSafeNativeMethods.pcap_sendpacket(device.PcapHandle, new IntPtr(p_packet), p.Length);
+                            res = LibPcapSafeNativeMethods.pcap_sendpacket(device.Handle, new IntPtr(p_packet), p.Length);
                         }
                     }
                     // Start Stopwatch after sending first packet
@@ -219,7 +216,7 @@ namespace SharpPcap.LibPcap
                     len = (uint)CurrentLength,
                     ptrBuff = new IntPtr(buf)
                 };
-                return LibPcapSafeNativeMethods.pcap_sendqueue_transmit(device.PcapHandle, ref pcap_queue, sync);
+                return LibPcapSafeNativeMethods.pcap_sendqueue_transmit(device.Handle, ref pcap_queue, sync);
             }
         }
 

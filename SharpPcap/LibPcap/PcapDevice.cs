@@ -36,11 +36,6 @@ namespace SharpPcap.LibPcap
         protected PcapInterface m_pcapIf;
 
         /// <summary>
-        /// Handle to a pcap adapter, not equal to IntPtr.Zero if an adapter is open
-        /// </summary>
-        protected IntPtr m_pcapAdapterHandle = IntPtr.Zero;
-
-        /// <summary>
         /// Number of packets that this adapter should capture
         /// </summary>
         protected int m_pcapPacketCount = Pcap.InfinitePacketCount;
@@ -75,16 +70,6 @@ namespace SharpPcap.LibPcap
             get { return m_pcapIf; }
         }
 
-        /// <summary>
-        /// Cached open and linkType variables, avoids a unsafe pointer comparison
-        /// and a pinvoke call for each packet retrieved as MarshalRawPacket
-        /// retrieves the LinkType. Open refers to the device being "created",
-        /// while Active refers to the device being activated. To observers,
-        /// these two properties are the same - but they are controlled
-        /// separately during the Open() process.
-        /// </summary>
-        private bool isOpen = false;
-        private bool isActive = false;
         private PacketDotNet.LinkLayers linkType;
 
         /// <summary>
@@ -92,7 +77,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual bool Opened
         {
-            get { return isOpen; }
+            get { return !(Handle.IsInvalid || Handle.IsClosed); }
         }
 
         /// <summary>
@@ -105,49 +90,7 @@ namespace SharpPcap.LibPcap
         /// The underlying pcap device handle
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public IntPtr PcapHandle
-        {
-            get { return m_pcapAdapterHandle; }
-            set
-            {
-                if (m_pcapAdapterHandle != value)
-                {
-                    Active = false;
-                }
-
-                m_pcapAdapterHandle = value;
-
-                // update the cached values
-                if (PcapHandle == IntPtr.Zero)
-                {
-                    isOpen = false;
-                }
-                else
-                {
-                    isOpen = true;
-                }
-            }
-        }
-
-        protected bool Active
-        {
-            set
-            {
-                isActive = value;
-
-                int dataLink = 0;
-
-                if (isActive && Opened)
-                {
-                    dataLink = LibPcapSafeNativeMethods.pcap_datalink(PcapHandle);
-                }
-
-                if (dataLink >= 0)
-                {
-                    linkType = (PacketDotNet.LinkLayers)dataLink;
-                }
-            }
-        }
+        public PcapHandle Handle { get; protected set; } = PcapHandle.Invalid;
 
         /// <summary>
         /// Retrieve the last error string for a given pcap_t* device
@@ -158,7 +101,7 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// A <see cref="string"/>
         /// </returns>
-        internal static string GetLastError(IntPtr deviceHandle)
+        internal static string GetLastError(PcapHandle deviceHandle)
         {
             return LibPcapSafeNativeMethods.pcap_geterr(deviceHandle);
         }
@@ -168,7 +111,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual string LastError
         {
-            get { return GetLastError(PcapHandle); }
+            get { return GetLastError(Handle); }
         }
 
         /// <summary>
@@ -189,7 +132,21 @@ namespace SharpPcap.LibPcap
         /// <param name="configuration">
         /// A <see cref="DeviceConfiguration"/>
         /// </param>
-        public abstract void Open(DeviceConfiguration configuration);
+        public virtual void Open(DeviceConfiguration configuration)
+        {
+            // Caches linkType value.
+            // Open refers to the device being "created"
+            // This method is called by sub-classes in the override method
+            int dataLink = 0;
+            if (Opened)
+            {
+                dataLink = LibPcapSafeNativeMethods.pcap_datalink(Handle);
+            }
+            if (dataLink >= 0)
+            {
+                linkType = (PacketDotNet.LinkLayers)dataLink;
+            }
+        }
 
         /// <summary>
         /// Closes this adapter
@@ -198,10 +155,6 @@ namespace SharpPcap.LibPcap
         {
             //Remove event handlers
             OnPacketArrival = null;
-
-            if (PcapHandle == IntPtr.Zero)
-                return;
-
             if (Started)
             {
                 try
@@ -210,8 +163,8 @@ namespace SharpPcap.LibPcap
                 }
                 catch (Exception) { }
             }
-            LibPcapSafeNativeMethods.pcap_close(PcapHandle);
-            PcapHandle = IntPtr.Zero;
+            Handle.Close();
+            Handle = PcapHandle.Invalid;
         }
 
         /// <summary>
@@ -295,7 +248,7 @@ namespace SharpPcap.LibPcap
             unsafe
             {
                 //Get a packet from npcap
-                res = LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
+                res = LibPcapSafeNativeMethods.pcap_next_ex(Handle, ref header, ref data);
 
                 var pcapHeader = PcapHeader.FromPointer(header);
                 var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
@@ -318,7 +271,7 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int GetNextPacketPointers(ref IntPtr header, ref IntPtr data)
         {
-            return LibPcapSafeNativeMethods.pcap_next_ex(PcapHandle, ref header, ref data);
+            return LibPcapSafeNativeMethods.pcap_next_ex(Handle, ref header, ref data);
         }
 
         /// <summary>
@@ -365,7 +318,7 @@ namespace SharpPcap.LibPcap
             return p;
         }
 
-#region Filtering
+        #region Filtering
         /// <summary>
         /// Assign a filter to this device given a filterExpression
         /// </summary>
@@ -382,14 +335,14 @@ namespace SharpPcap.LibPcap
             ThrowIfNotOpen("device is not open");
 
             // attempt to compile the program
-            if (!CompileFilter(PcapHandle, filterExpression, 0, out IntPtr bpfProgram, out string errorString))
+            if (!CompileFilter(Handle, filterExpression, 0, out IntPtr bpfProgram, out string errorString))
             {
                 string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
                 throw new PcapException(err);
             }
 
             //associate the filter with this device
-            res = LibPcapSafeNativeMethods.pcap_setfilter(PcapHandle, bpfProgram);
+            res = LibPcapSafeNativeMethods.pcap_setfilter(Handle, bpfProgram);
 
             // Free the program whether or not we were successful in setting the filter
             // we don't want to leak unmanaged memory if we throw an exception.
@@ -428,7 +381,7 @@ namespace SharpPcap.LibPcap
         /// or unmanaged memory will be leaked
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool CompileFilter(IntPtr pcapHandle,
+        public static bool CompileFilter(PcapHandle pcapHandle,
                                           string filterExpression,
                                           uint mask,
                                           out IntPtr bpfProgram,
@@ -499,23 +452,23 @@ namespace SharpPcap.LibPcap
         public static bool CheckFilter(string filterExpression,
                                        out string errorString)
         {
-            IntPtr fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
-
-            uint mask = 0;
-            if (!CompileFilter(fakePcap, filterExpression, mask, out IntPtr bpfProgram, out errorString))
+            using (var fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE))
             {
-                LibPcapSafeNativeMethods.pcap_close(fakePcap);
-                return false;
+
+                uint mask = 0;
+                if (!CompileFilter(fakePcap, filterExpression, mask, out IntPtr bpfProgram, out errorString))
+                {
+                    return false;
+                }
+
+                FreeBpfProgram(bpfProgram);
+
+                return true;
             }
-
-            FreeBpfProgram(bpfProgram);
-
-            LibPcapSafeNativeMethods.pcap_close(fakePcap);
-            return true;
         }
-#endregion
+        #endregion
 
-#region Timestamp
+        #region Timestamp
         /// <summary>
         /// To set a device's timestamp resolution pass the desired setting in when opening the device
         /// </summary>
@@ -529,11 +482,11 @@ namespace SharpPcap.LibPcap
             get
             {
                 ThrowIfNotOpen("device is not open");
-                return (TimestampResolution)LibPcapSafeNativeMethods.pcap_get_tstamp_precision(PcapHandle);
+                return (TimestampResolution)LibPcapSafeNativeMethods.pcap_get_tstamp_precision(Handle);
             }
         }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
@@ -546,13 +499,13 @@ namespace SharpPcap.LibPcap
         protected void Configure(
             DeviceConfiguration configuration,
             string property,
-            Func<IntPtr, int, int> setter,
+            Func<PcapHandle, int, int> setter,
             int? value
         )
         {
             if (value.HasValue)
             {
-                var retval = setter(PcapHandle, value.Value);
+                var retval = setter(Handle, value.Value);
                 if (retval != 0)
                 {
                     configuration.RaiseConfigurationFailed(property, retval);

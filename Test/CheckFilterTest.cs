@@ -32,7 +32,7 @@ namespace Test
 
             var filterExpression = "arp";
             var mask = (uint)0;
-            var result = PcapDevice.CompileFilter(device.PcapHandle, filterExpression, mask, out IntPtr bpfProgram, out string errorString);
+            var result = PcapDevice.CompileFilter(device.Handle, filterExpression, mask, out IntPtr bpfProgram, out string errorString);
             Assert.IsTrue(result);
 
             var arp = new ARP(device);
