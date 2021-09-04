@@ -15,8 +15,10 @@ namespace SharpPcap.WinDivert
 
         static readonly DateTime BootTime = DateTime.Now - TimeSpan.FromTicks(Stopwatch.GetTimestamp());
 
-        const int ERROR_INSUFFICIENT_BUFFER = 122;
-        const int ERROR_NO_DATA = 232;
+        private const int ERROR_INSUFFICIENT_BUFFER = 122;
+        private const int ERROR_NO_DATA = 232;
+        private const int WINDIVERT_BATCH_MAX = 0xff;
+        private const int MTU = 1500;
 
         protected IntPtr Handle;
 
@@ -70,16 +72,21 @@ namespace SharpPcap.WinDivert
             }
         }
 
-        private byte[] buffer = new byte[1024 * 4];
-
         private class PacketRecord
         {
             private readonly WinDivertHeader Header;
             private readonly ReadOnlyMemory<byte> Data;
 
-            public PacketRecord(WinDivertHeader header, ReadOnlyMemory<byte> data)
+            public PacketRecord(WinDivertAddress addr, ReadOnlyMemory<byte> data)
             {
-                Header = header;
+                var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
+                Header = new WinDivertHeader(timestamp)
+                {
+                    InterfaceIndex = addr.IfIdx,
+                    SubInterfaceIndex = addr.SubIfIdx,
+                    Flags = addr.Flags
+                };
+                ;
                 Data = data;
             }
 
@@ -102,24 +109,27 @@ namespace SharpPcap.WinDivert
             return res;
         }
 
+        private byte[] Buffer = new byte[MTU * WINDIVERT_BATCH_MAX];
+
         /// <summary>
         /// Packet data is only valid until the next call
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="packets"></param>
         /// <returns>Status of the operation</returns>
-        private GetPacketStatus GetNextPackets(List<PacketRecord> packets, int capacity)
+        private GetPacketStatus GetNextPackets(List<PacketRecord> packets, int maxBatchSize)
         {
             ThrowIfNotOpen();
             while (true)
             {
                 bool ret;
                 var addressSize = Marshal.SizeOf<WinDivertAddress>();
-                var addressesByteSize = capacity * addressSize;
-                var addresses = new WinDivertAddress[capacity];
+                var addressesByteSize = maxBatchSize * addressSize;
+                var addresses = new WinDivertAddress[maxBatchSize];
+                var packetsData = new Memory<byte>(Buffer);
                 ret = WinDivertNative.WinDivertRecvEx(
                     Handle,
-                    buffer,
-                    buffer.Length,
+                    ref MemoryMarshal.GetReference(packetsData.Span),
+                    packetsData.Length,
                     out int readLen,
                     0,
                     addresses,
@@ -132,7 +142,7 @@ namespace SharpPcap.WinDivert
                     if (err == ERROR_INSUFFICIENT_BUFFER)
                     {
                         // Increase buffer size
-                        buffer = new byte[buffer.Length * 2];
+                        Buffer = new byte[Buffer.Length * 2];
                         continue;
                     }
                     if (err == ERROR_NO_DATA)
@@ -141,38 +151,46 @@ namespace SharpPcap.WinDivert
                     }
                     ThrowWin32Error("Recv failed", err);
                 }
-                var addressesCount = addressesByteSize / addressSize;
-                for (int i = 0; i < addressesCount; i++)
-                {
-                    var addr = addresses[i];
-                    var timestamp = new PosixTimeval(BootTime + TimeSpan.FromTicks(addr.Timestamp));
-                    var data = new ReadOnlyMemory<byte>(buffer, 0, (int)readLen);
-                    var header = new WinDivertHeader(timestamp)
-                    {
-                        InterfaceIndex = addr.IfIdx,
-                        SubInterfaceIndex = addr.SubIfIdx,
-                        Flags = addr.Flags
-                    };
 
-                    packets.Add(new PacketRecord(header, data));
+                // Take only as many bytes as were written by the driver
+                packetsData = packetsData.Slice(0, readLen);
+
+                var addressesCount = addressesByteSize / addressSize;
+
+
+                for (int i = 0; i < addressesCount - 1; i++)
+                {
+
+                    // We know how many packets we have, but not where they start/end in the buffer
+                    // Helper function that's originally used for parsing, 
+                    // but we only need it to know the size of the current packet
+                    var retval = WinDivertNative.WinDivertHelperParsePacket(
+                        ref MemoryMarshal.GetReference(packetsData.Span),
+                        packetsData.Length,
+                        IntPtr.Zero, IntPtr.Zero,
+                        IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
+                        IntPtr.Zero, IntPtr.Zero,
+                        IntPtr.Zero, out var pNextLen
+                    );
+
+                    if (!retval)
+                    {
+                        return GetPacketStatus.Error;
+                    }
+
+                    var packetLength = packetsData.Length - pNextLen;
+
+                    packets.Add(new PacketRecord(addresses[i], packetsData.Slice(0, packetLength)));
+
+                    // Move packetsData to the next packet
+                    packetsData = packetsData.Slice(packetLength);
                 }
+
+                // Avoid parsing the packet if it's the last packet or the only packet
+                packets.Add(new PacketRecord(addresses[addressesCount - 1], packetsData));
+
                 return GetPacketStatus.PacketRead;
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns>0 for no data present, 1 if a packet was read, negative upon error</returns>
-        private GetPacketStatus SendPacketArrivalEvent()
-        {
-            PacketCapture e;
-            var retval = GetNextPacket(out e);
-            if (retval == GetPacketStatus.PacketRead)
-            {
-                OnPacketArrival?.Invoke(this, e);
-            }
-
-            return retval;
         }
 
         public void Open(DeviceConfiguration configuration)
@@ -321,7 +339,15 @@ namespace SharpPcap.WinDivert
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    SendPacketArrivalEvent();
+                    var packets = new List<PacketRecord>(WINDIVERT_BATCH_MAX);
+                    var retval = GetNextPackets(packets, WINDIVERT_BATCH_MAX);
+                    if (retval == GetPacketStatus.PacketRead)
+                    {
+                        foreach (var p in packets)
+                        {
+                            OnPacketArrival?.Invoke(this, p.GetPacketCapture(this));
+                        }
+                    }
                 }
                 OnCaptureStopped?.Invoke(this, CaptureStoppedEventStatus.CompletedWithoutError);
             }
