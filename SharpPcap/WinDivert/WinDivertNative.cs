@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace SharpPcap.WinDivert
 {
+    [SuppressUnmanagedCodeSecurity]
     internal static unsafe class WinDivertNative
     {
         const string WINDIVERT_DLL = "WinDivert.dll";
@@ -13,13 +15,30 @@ namespace SharpPcap.WinDivert
         [DllImport(WINDIVERT_DLL, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
         internal static extern bool WinDivertRecvEx(
             IntPtr handle,
-            [In, Out] byte[] pPacket,
+            ref byte pPacket,
             int packetLen,
             out int pRecvLen,
             ulong flags,
-            [In, Out] WinDivertAddress[] pAddr,
+            [Out] WinDivertAddress[] pAddr,
             ref int pAddrLen,
             IntPtr lpOverlapped
+        );
+
+        [DllImport(WINDIVERT_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern bool WinDivertHelperParsePacket(
+            ref byte pPacket,
+            int packetLen,
+            IntPtr /* PWINDIVERT_IPHDR * */ ppIpHdr,
+            IntPtr /* PWINDIVERT_IPV6HDR * */ ppIpv6Hdr,
+            IntPtr /* UINT8 * */ pProtocol,
+            IntPtr /* PWINDIVERT_ICMPHDR * */ ppIcmpHdr,
+            IntPtr /* PWINDIVERT_ICMPV6HDR * */ ppIcmpv6Hdr,
+            IntPtr /* PWINDIVERT_TCPHDR * */ ppTcpHdr,
+            IntPtr /* PWINDIVERT_UDPHDR * */ ppUdpHdr,
+            IntPtr /* PVOID * */ ppData,
+            IntPtr /* UINT * */ pDataLen,
+            IntPtr /* PVOID * */ ppNext,
+            out int /* UINT * */ pNextLen
         );
 
         [DllImport(WINDIVERT_DLL, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
