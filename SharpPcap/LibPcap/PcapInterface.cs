@@ -137,11 +137,15 @@ namespace SharpPcap.LibPcap
                     PcapAddress pcapAddress = new PcapAddress();
                     pcapAddress.Addr = new Sockaddr(mac);
                     Addresses.Add(pcapAddress);
-                    if(pcapAddress.Addr.hardwareAddress.GetAddressBytes().Length != 0)
+                    if (pcapAddress.Addr.hardwareAddress.GetAddressBytes().Length != 0)
                     {
                         MacAddress = pcapAddress.Addr.hardwareAddress;
                     }
                 }
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                FriendlyName = WindowsNativeMethods.GetInterfaceAlias(Name);
             }
         }
 
@@ -259,7 +263,7 @@ namespace SharpPcap.LibPcap
             return list;
         }
 
-#region Timestamp
+        #region Timestamp
         /// <summary>
         /// Timestamps supported by this device
         /// </summary>
@@ -305,6 +309,6 @@ namespace SharpPcap.LibPcap
                 return timestampTypes;
             }
         }
-#endregion
+        #endregion
     }
 }
