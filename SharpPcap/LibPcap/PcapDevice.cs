@@ -335,23 +335,19 @@ namespace SharpPcap.LibPcap
             ThrowIfNotOpen("device is not open");
 
             // attempt to compile the program
-            if (!CompileFilter(Handle, filterExpression, 0, out IntPtr bpfProgram, out string errorString))
-            {
-                string err = string.Format("Can't compile filter ({0}) : {1} ", filterExpression, errorString);
-                throw new PcapException(err);
-            }
+            var bpfProgram = BpfProgram.Create(Handle, filterExpression);
 
             //associate the filter with this device
             res = LibPcapSafeNativeMethods.pcap_setfilter(Handle, bpfProgram);
 
             // Free the program whether or not we were successful in setting the filter
             // we don't want to leak unmanaged memory if we throw an exception.
-            FreeBpfProgram(bpfProgram);
+            bpfProgram.Dispose();
 
             //watch for errors
             if (res < 0)
             {
-                errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
+                var errorString = string.Format("Can't set filter ({0}) : {1}", filterExpression, LastError);
                 throw new PcapException(errorString);
             }
         }
@@ -377,93 +373,26 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// If CompileFilter() returns true bpfProgram must be freed by passing it to FreeBpfProgram()
-        /// or unmanaged memory will be leaked
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool CompileFilter(PcapHandle pcapHandle,
-                                          string filterExpression,
-                                          uint mask,
-                                          out IntPtr bpfProgram,
-                                          out string errorString)
-        {
-            errorString = null;
-
-            //Alocate an unmanaged buffer
-            bpfProgram = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
-
-            //compile the expressions
-            var result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
-                                                     bpfProgram,
-                                                     filterExpression,
-                                                     1,
-                                                     mask);
-
-            if (result < 0)
-            {
-                var err = GetLastError(pcapHandle);
-
-                // free up the program memory
-                Marshal.FreeHGlobal(bpfProgram);
-                bpfProgram = IntPtr.Zero; // make sure not to pass out a valid pointer
-
-                // set the error string
-                errorString = err;
-
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Runs the program and returns if a given filter applies to an offline packet
-        /// </summary>
-        /// <param name="bpfProgram">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool RunBpfProgram(IntPtr bpfProgram, IntPtr header, IntPtr data)
-        {
-            var result = LibPcapSafeNativeMethods.pcap_offline_filter(bpfProgram, header, data);
-            return result != 0;
-        }
-
-        /// <summary>
-        /// Free memory allocated in CompileFilter()
-        /// </summary>
-        /// <param name="bpfProgram">
-        /// A <see cref="IntPtr"/>
-        /// </param>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static void FreeBpfProgram(IntPtr bpfProgram)
-        {
-            // free any pcap internally allocated memory from pcap_compile()
-            LibPcapSafeNativeMethods.pcap_freecode(bpfProgram);
-
-            // free allocated buffers
-            Marshal.FreeHGlobal(bpfProgram);
-        }
-
-        /// <summary>
         /// Returns true if the filter expression was able to be compiled into a
         /// program without errors
         /// </summary>
         public static bool CheckFilter(string filterExpression,
                                        out string errorString)
         {
-            using (var fakePcap = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE))
+            errorString = null;
+            using (var pcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE))
             {
-
-                uint mask = 0;
-                if (!CompileFilter(fakePcap, filterExpression, mask, out IntPtr bpfProgram, out errorString))
+                var bpfProgram = BpfProgram.TryCreate(pcapHandle, filterExpression);
+                if (bpfProgram == null)
                 {
+                    errorString = GetLastError(pcapHandle);
                     return false;
                 }
-
-                FreeBpfProgram(bpfProgram);
-
-                return true;
+                else
+                {
+                    bpfProgram.Dispose();
+                    return true;
+                }
             }
         }
         #endregion

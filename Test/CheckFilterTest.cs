@@ -31,9 +31,8 @@ namespace Test
             device.Open();
 
             var filterExpression = "arp";
-            var mask = (uint)0;
-            var result = PcapDevice.CompileFilter(device.Handle, filterExpression, mask, out IntPtr bpfProgram, out string errorString);
-            Assert.IsTrue(result);
+            using var bpfProgram = BpfProgram.Create(device.Handle, filterExpression);
+            Assert.IsFalse(bpfProgram.IsInvalid);
 
             var arp = new ARP(device);
             var destinationIP = new System.Net.IPAddress(new byte[] { 8, 8, 8, 8 });
@@ -67,7 +66,7 @@ namespace Test
                     Assert.DoesNotThrow(() =>
                         {
                             // we expect a match as we are sending an arp packet
-                            if (PcapDevice.RunBpfProgram(bpfProgram, header, data))
+                            if (bpfProgram.Run(header, data))
                             {
                                 foundBpfMatch = true;
                             }
@@ -77,8 +76,6 @@ namespace Test
             }
 
             Assert.IsTrue(foundBpfMatch);
-
-            PcapDevice.FreeBpfProgram(bpfProgram);
         }
     }
 }
