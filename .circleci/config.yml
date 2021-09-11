@@ -38,6 +38,8 @@ jobs:
       - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
       - store_test_results:
           path: Test/TestResults
+      - store_artifacts:
+          path: Test/TestResults
 
 workflows:
   version: 2
