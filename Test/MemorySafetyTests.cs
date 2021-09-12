@@ -25,10 +25,6 @@ namespace Test
 
         [Test]
         [Parallelizable(ParallelScope.Children)]
-        // pcap_compile() in 1.8.0 and later is newly thread-safe
-        // Disable this test in earlier versions of Libpcap to avoid crashes due to known lack of thread-safety
-        // See https://github.com/chmorgan/sharppcap/issues/311
-        [LibpcapVersion(">= 1.8.0")]
         public void DisposeDuringCapture([Range(0, 9)] int _)
         {
             using var waitHandle = new AutoResetEvent(false);
