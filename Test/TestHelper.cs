@@ -31,9 +31,9 @@ namespace Test
         internal static LibPcapLiveDevice GetPcapDevice()
         {
             var nics = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (var device in LibPcapLiveDeviceList.Instance)
+            foreach (var inf in PcapInterface.GetAllPcapInterfaces())
             {
-                var friendlyName = device.Interface.FriendlyName ?? string.Empty;
+                var friendlyName = inf.FriendlyName ?? string.Empty;
                 if (friendlyName.ToLower().Contains("loopback") || friendlyName == "any")
                 {
                     continue;
@@ -43,6 +43,7 @@ namespace Test
                 {
                     continue;
                 }
+                using var device = new LibPcapLiveDevice(inf);
                 LinkLayers link;
                 try
                 {
@@ -53,10 +54,6 @@ namespace Test
                 {
                     Console.WriteLine(ex);
                     continue;
-                }
-                finally
-                {
-                    if (device.Opened) device.Close();
                 }
 
                 if (link == LinkLayers.Ethernet)
