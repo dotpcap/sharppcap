@@ -22,7 +22,23 @@ namespace Test
         }
 
         /// <summary>
-        /// Test RunBpfProgram() and other filter related methods
+        /// Test BpfProgram.Matches()
+        /// </summary>
+        [Test]
+        public void BpfProgramMatches()
+        {
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("tcp.pcap"));
+            device.Open();
+
+            using var bpfProgram = BpfProgram.Create(device.Handle, "tcp");
+            Assert.IsFalse(bpfProgram.IsInvalid);
+
+            device.GetNextPacket(out var packet);
+            Assert.IsTrue(bpfProgram.Matches(packet.Data));
+        }
+
+        /// <summary>
+        /// Test BpfProgram.Matches() and other filter related methods
         /// </summary>
         [Test]
         public void FilterMethods()
@@ -66,7 +82,7 @@ namespace Test
                     Assert.DoesNotThrow(() =>
                         {
                             // we expect a match as we are sending an arp packet
-                            if (bpfProgram.Run(header, data))
+                            if (bpfProgram.Matches(header, data))
                             {
                                 foundBpfMatch = true;
                             }

@@ -73,7 +73,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="IntPtr"/>
         /// </param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public bool Run(IntPtr header, IntPtr data)
+        public bool Matches(IntPtr header, IntPtr data)
         {
             var result = LibPcapSafeNativeMethods.pcap_offline_filter(this, header, data);
             return result != 0;
@@ -85,7 +85,7 @@ namespace SharpPcap.LibPcap
         /// <param name="bpfProgram">
         /// A <see cref="IntPtr"/>
         /// </param>
-        public bool Run(ReadOnlySpan<byte> data)
+        public bool Matches(ReadOnlySpan<byte> data)
         {
             var header = new PcapHeader()
             {
