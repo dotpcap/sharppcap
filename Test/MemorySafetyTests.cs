@@ -87,7 +87,8 @@ namespace Test
             {
                 queue.Transmit(device, SendQueueTransmitModes.Synchronized);
             }
-            catch (ObjectDisposedException)
+            catch (Exception ex)
+            when (ex is DeviceNotReadyException || ex is ObjectDisposedException)
             {
                 // We are good, we disposed mid sending and we deserve the exception
             }
