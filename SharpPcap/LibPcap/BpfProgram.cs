@@ -28,16 +28,39 @@ namespace SharpPcap.LibPcap
 {
     public class BpfProgram : SafeHandleZeroOrMinusOneIsInvalid
     {
+
+        // pcap_compile() in 1.8.0 and later is newly thread-safe
+        // Requires calls to pcap_compile to be non-concurrent to avoid crashes due to known lack of thread-safety
+        // See https://github.com/chmorgan/sharppcap/issues/311
+        // Problem of thread safety does not affect Windows
+        private static readonly bool ThreadSafeCompile = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            || Pcap.LibpcapVersion >= new Version(1, 8, 0);
+        private static readonly object SyncCompile = new object();
+
         public static BpfProgram TryCreate(PcapHandle pcapHandle, string filter, int optimize = 1, uint netmask = 0)
         {
             var bpfProgram = new BpfProgram();
-            //compile the expressions
-            var result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
-                                                     bpfProgram,
-                                                     filter,
-                                                     optimize,
-                                                     netmask);
-
+            int result;
+            // Compile the expressions
+            if (ThreadSafeCompile)
+            {
+                result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
+                                                         bpfProgram,
+                                                         filter,
+                                                         optimize,
+                                                         netmask);
+            }
+            else
+            {
+                lock (SyncCompile)
+                {
+                    result = LibPcapSafeNativeMethods.pcap_compile(pcapHandle,
+                                             bpfProgram,
+                                             filter,
+                                             optimize,
+                                             netmask);
+                }
+            }
             if (result < 0)
             {
                 // Don't use Dispose since we don't want pcap_freecode to be called here
