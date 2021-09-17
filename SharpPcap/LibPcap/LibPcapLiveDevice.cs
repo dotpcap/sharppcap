@@ -24,6 +24,7 @@ using System;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace SharpPcap.LibPcap
 {
@@ -98,7 +99,14 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Open the device. To start capturing call the 'StartCapture' function
+        /// Open the device. To start capturing call the 'StartCapture' function.
+        /// 
+        /// Calls pcap_open() if ceredentials are supplied or the Mode contains 
+        /// other flags than DeviceMode.Promiscuous and DeviceMode.MaxResponsiveness.
+        /// Configuration parameters that can only set on an inactive device  are ignored in this case.
+        /// This are TimestampResolution, TimestampType, Monitor and BufferSize.
+        /// 
+        /// Otherwise calls pcap_create(). 
         /// </summary>
         /// <param name="configuration">
         /// A <see cref="DeviceConfiguration"/>
@@ -120,14 +128,30 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, configuration.ReadTimeout * 2);
 
-                // modes other than OpenFlags.Promiscuous require pcap_open()
-                var otherModes = mode & ~DeviceModes.Promiscuous;
-                if ((credentials == null) || ((short)otherModes != 0) || (configuration.TimestampResolution != null))
+                // Check if immediate is supported
+                var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
+                // Check if we can do immediate by setting mintocopy to 0
+                // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
+                var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+                // modes other than DeviceModes.Promiscuous require pcap_open()
+                var otherModes = mode & ~( DeviceModes.Promiscuous | DeviceModes.MaxResponsiveness);
+
+                bool? configuredImmediate = mode.HasFlag(DeviceModes.MaxResponsiveness) ? true : configuration.Immediate;
+
+                if ((credentials == null) && ((short)otherModes == 0))
                 {
                     Handle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
                         errbuf); // error buffer
 
+                    if (Handle.IsInvalid)
+                    {
+                        string err = "Unable to create the adapter (" + Name + "). " + errbuf.ToString();
+                        throw new PcapException(err);
+                    }
+
+                    //The following configurations require a deactivated handle.
                     Configure(
                         configuration, nameof(configuration.Snaplen),
                         LibPcapSafeNativeMethods.pcap_set_snaplen, configuration.Snaplen
@@ -156,18 +180,75 @@ namespace SharpPcap.LibPcap
                             LibPcapSafeNativeMethods.pcap_set_tstamp_type, (int)configuration.TimestampType
                         );
                     }
+
+                    Configure(
+                        configuration, nameof(configuration.Monitor),
+                        LibPcapSafeNativeMethods.pcap_set_rfmon, (int?)configuration.Monitor
+                    );
+
+                    Configure(
+                        configuration, nameof(configuration.BufferSize),
+                        LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
+                    );
+
+
+                    if (configuredImmediate.HasValue)
+                    {
+                        if (!immediate_supported && !mintocopy_supported)
+                        {
+                            configuration.RaiseConfigurationFailed(
+                                nameof(configuredImmediate),
+                                (int)PcapError.PlatformNotSupported
+                            );
+                        }
+                        else if (immediate_supported)
+                        {
+                            var immediate = configuredImmediate.Value ? 1 : 0;
+                            Configure(
+                                configuration, nameof(configuredImmediate),
+                                LibPcapSafeNativeMethods.pcap_set_immediate_mode, immediate
+                            );
+                        }
+                    }
+
+                    var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
+                    if (activationResult < 0)
+                    {
+                        string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
+                        throw new PcapException(err);
+                    }
                 }
                 else
                 {
-                    // We got authentication, so this is an rpcap device
-                    var auth = RemoteAuthentication.CreateAuth(credentials);
-                    Handle = LibPcapSafeNativeMethods.pcap_open(
-                        Name,                               // name of the device
-                        configuration.Snaplen,              // portion of the packet to capture.
-                        (short)mode,                        // flags
-                        (short)configuration.ReadTimeout,   // read timeout
-                        ref auth,                           // authentication
-                        errbuf);                            // error buffer
+                    // Shall we silently ignore unsupported configuration parameters
+                    // TimestampResolution, TimestampType, Monitor and BufferSize
+                    // or check and throw exception?
+
+                    //open will activate
+                    if ( null != credentials)
+                    {
+                        // We got authentication, so this is an rpcap device
+                        var auth = RemoteAuthentication.CreateAuth(credentials);
+                        Handle = LibPcapSafeNativeMethods.pcap_open(
+                            Name,                               // name of the device
+                            configuration.Snaplen,              // portion of the packet to capture.
+                            (short)mode,                        // flags
+                            (short)configuration.ReadTimeout,   // read timeout
+                            ref auth,                           // authentication
+                            errbuf);                            // error buffer
+                    }
+                    else
+                    {
+                        //We got no authentication, but modes other than 
+                        // DeviceModes.Promiscuous and DeviceModes.MaxResponsiveness require pcap_open()
+                        Handle = LibPcapSafeNativeMethods.pcap_open(
+                            Name,                               // name of the device
+                            configuration.Snaplen,              // portion of the packet to capture.
+                            (short)mode,                        // flags
+                            (short)configuration.ReadTimeout,   // read timeout
+                            IntPtr.Zero,                        // authentication
+                            errbuf);                            // error buffer
+                    }
                 }
 
                 if (Handle.IsInvalid)
@@ -176,47 +257,12 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
 
-                Configure(
-                    configuration, nameof(configuration.Monitor),
-                    LibPcapSafeNativeMethods.pcap_set_rfmon, (int?)configuration.Monitor
-                );
+                // Is there a better check for an activated handle?
+                // This check breaks some unit test using pcap_geterror().
+                //var actStatus = LibPcapSafeNativeMethods.pcap_activate(Handle);
+                //Debug.Assert(LibPcapSafeNativeMethods.PCAP_ERROR_ACTIVATED == actStatus || actStatus >= 0);
 
-                Configure(
-                    configuration, nameof(configuration.BufferSize),
-                    LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
-                );
 
-                // Check if immediate is supported
-                var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
-                // Check if we can do immediate by setting mintocopy to 0
-                // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
-                var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-                if (configuration.Immediate.HasValue)
-                {
-                    if (!immediate_supported && !mintocopy_supported)
-                    {
-                        configuration.RaiseConfigurationFailed(
-                            nameof(configuration.Immediate), 
-                            (int)PcapError.PlatformNotSupported
-                        );
-                    }
-                    else if (immediate_supported)
-                    {
-                        var immediate = configuration.Immediate.Value ? 1 : 0;
-                        Configure(
-                            configuration, nameof(configuration.Immediate),
-                            LibPcapSafeNativeMethods.pcap_set_immediate_mode, immediate
-                        );
-                    }
-                }
-
-                var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
-                if (activationResult < 0)
-                {
-                    string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
-                    throw new PcapException(err);
-                }
                 base.Open(configuration);
                 // retrieve the file descriptor of the adapter for use with poll()
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -230,10 +276,10 @@ namespace SharpPcap.LibPcap
                     LibPcapSafeNativeMethods.pcap_setbuff, configuration.KernelBufferSize
                 );
 
-                if (configuration.Immediate == true && mintocopy_supported && !immediate_supported)
+                if (configuredImmediate == true && mintocopy_supported && !immediate_supported)
                 {
                     Configure(
-                        configuration, nameof(configuration.Immediate),
+                        configuration, nameof(configuredImmediate),
                         LibPcapSafeNativeMethods.pcap_setmintocopy, 0
                     );
                 }

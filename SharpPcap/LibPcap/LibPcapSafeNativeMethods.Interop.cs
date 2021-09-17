@@ -43,6 +43,8 @@ namespace SharpPcap.LibPcap
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
         private const string PCAP_DLL = "wpcap";
 
+        internal const int PCAP_ERROR_ACTIVATED = -4;
+
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
             uint opts,
@@ -73,6 +75,16 @@ namespace SharpPcap.LibPcap
             int flags,
             int read_timeout,
             ref pcap_rmtauth rmtauth,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
+        );
+
+            [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static PcapHandle /* pcap_t* */ pcap_open(
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
+            int packetLen,
+            int flags,
+            int read_timeout,
+            IntPtr rmtauth, //allows to pass a null pointer
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
         );
 
