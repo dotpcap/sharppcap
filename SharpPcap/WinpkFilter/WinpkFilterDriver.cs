@@ -47,25 +47,9 @@ namespace SharpPcap.WinpkFilter
         /// Gets the native version of the filter driver.
         /// </summary>
         /// <returns>System.UInt32.</returns>
-        public uint GetNativeVersion()
+        public uint Version
         {
-            return NativeMethods.GetDriverVersion(Handle);
-        }
-
-        /// <summary>
-        /// Gets the version of the filter driver.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns><see cref="Version" />.</returns>
-        public static Version GetDriverVersion()
-        {
-            var filePath = Path.Combine(Environment.SystemDirectory, @"drivers\NDISRD.sys");
-            if (!File.Exists(filePath))
-            {
-                return null;
-            }
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(filePath);
-            return new Version(fileVersionInfo.FileVersion);
+            get => NativeMethods.GetDriverVersion(Handle);
         }
 
         /// <summary>
@@ -89,21 +73,6 @@ namespace SharpPcap.WinpkFilter
                     address,
                     adapterList.MTUs[i]
                 );
-            }
-        }
-
-        /// <summary>
-        /// Gets the bound network adapters.
-        /// </summary>
-        /// <returns><see cref="WinpkFilterDevice" />s.</returns>
-        public IEnumerable<WinpkFilterDevice> GetBoundAdapters()
-        {
-            foreach (var networkAdapter in GetNetworkDevices())
-            {
-                if (networkAdapter.AdapterMode != 0)
-                {
-                    yield return networkAdapter;
-                }
             }
         }
 

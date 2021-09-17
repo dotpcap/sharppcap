@@ -11,16 +11,5 @@ namespace SharpPcap.WinpkFilter
     {
         internal IntPtr AdapterHandle;
         internal IntPtr Buffer;
-
-        public PacketSource Source
-        {
-            get
-            {
-                unsafe
-                {
-                    return ((IntermediateBufferHeader*)Buffer)->Source;
-                }
-            }
-        }
     }
 }

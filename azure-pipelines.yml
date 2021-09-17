@@ -35,6 +35,7 @@ jobs:
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
+  - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
 
@@ -44,6 +45,7 @@ jobs:
     vmImage: 'windows-2019'
   steps:
   - script: choco install -y winpcap
+  - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
 
@@ -54,5 +56,6 @@ jobs:
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
+  - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
