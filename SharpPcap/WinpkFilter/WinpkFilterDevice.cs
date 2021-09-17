@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharpPcap.WinpkFilter
 {
-    public class WinpkFilterDevice : ICaptureDevice
+    public class WinpkFilterDevice : ILiveDevice
     {
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace SharpPcap.WinpkFilter
                 ethRequest.Buffer = new IntPtr(&buffer);
             }
 
-            var ret = ethRequest.Source == PacketSource.System
+            var ret = buffer.Header.Source == PacketSource.System
                 ? NativeMethods.SendPacketToAdapter(DriverHandle, ref ethRequest)
                 : NativeMethods.SendPacketToMstcp(DriverHandle, ref ethRequest);
 
@@ -270,6 +270,11 @@ namespace SharpPcap.WinpkFilter
             if (configuration.Mode.HasFlag(DeviceModes.Promiscuous))
             {
                 HardwarePacketFilter |= HardwarePacketFilters.Promiscuous;
+            }
+            if (AdapterMode == AdapterModes.None)
+            {
+                // Most simular mode to Libpcap
+                AdapterMode = AdapterModes.RecvListen;
             }
         }
 
