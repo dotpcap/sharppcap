@@ -23,10 +23,14 @@ dotnet test "${TEST_ARGS[@]}"
 
 # coverage
 
-CODECOV_ARGS=( -f '**\*.opencover.xml' )
+CODECOV_ARGS=( -f '**/*.opencover.xml' )
 if [ -n "$SYSTEM_JOBDISPLAYNAME" ]
 then
-    CODECOV_ARGS+=( -F "$SYSTEM_JOBDISPLAYNAME" )
+    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
-bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
+# Depending on CI, dotnet tool or bash may or may not work
+# Try them both, it won't change coverage
+dotnet tool restore
+dotnet codecov ${CODECOV_ARGS[@]}
+bash <(curl -s https://codecov.io/bash) ${CODECOV_ARGS[@]}

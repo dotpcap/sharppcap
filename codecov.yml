@@ -1,4 +1,6 @@
 codecov:
+  # Allow collecting coverage even if some CIs fail
+  require_ci_to_pass: no
   notify:
     # 4 for appveyor
     # 3 for azure pipelines
