@@ -33,4 +33,4 @@ fi
 # Try them both, it won't change coverage
 dotnet tool restore
 dotnet codecov ${CODECOV_ARGS[@]}
-bash <(curl -s https://codecov.io/bash) ${CODECOV_ARGS[@]}
+bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
