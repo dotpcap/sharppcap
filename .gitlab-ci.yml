@@ -1,19 +1,26 @@
 
+default:
+  artifacts:
+    reports:
+      junit: Test/TestResults/TestResults.xml
+
 windows-winpcap:
   tags:
   - shared-windows
   script:
   - choco install -y winpcap
-  - '"C:\\Program Files\\Git\\bin\\bash" scripts/test.sh --filter "TestCategory!=Timestamp"'
+  # No bash support
+  - dotnet test --logger:junit --test-adapter-path:. --filter "TestCategory!=Timestamp"'
+  # No code coverage yet, it has to be done after the tokens are configured
 
 ubuntu-20.04:
-  image: mcr.microsoft.com/dotnet/sdk:3.1-focal
+  image: mcr.microsoft.com/dotnet/sdk:5.0-focal
   script:
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
 
 ubuntu-20.04-arm64:
-  image: mcr.microsoft.com/dotnet/sdk:3.1-focal-arm64v8
+  image: mcr.microsoft.com/dotnet/sdk:5.0-focal-arm64v8
   script:
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
