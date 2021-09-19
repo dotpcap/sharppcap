@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace SharpPcap
@@ -98,19 +99,6 @@ namespace SharpPcap
             return new Version();
         }
 
-        private static bool isUnix()
-        {
-            int p = (int)Environment.OSVersion.Platform;
-            if ((p == 4) || (p == 6) || (p == 128))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         static Pcap()
         {
             // happens to have the same value on Windows and Linux
@@ -120,7 +108,7 @@ namespace SharpPcap
             // FIXME: need to resolve the discrepency at some point
             AF_PACKET = 17;
 
-            if (isUnix())
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 AF_INET6 = 10; // value for linux from socket.h
             }
