@@ -1,9 +1,10 @@
 
 dotnet-winpcap:
-  image: microsoft/dotnet:latest
+  image: mcr.microsoft.com/dotnet/sdk:5.0
   script:
   - choco install -y winpcap
   - bash scripts/test.sh --filter "TestCategory!=Timestamp"
+
 framework-winpcap:
   image: mcr.microsoft.com/dotnet/framework/sdk
   script:
