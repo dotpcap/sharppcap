@@ -10,14 +10,14 @@ windows-winpcap:
   script:
   - choco install -y winpcap
   # No bash support
-  - dotnet test --logger:junit --test-adapter-path:. --filter "TestCategory!=Timestamp"'
+  - dotnet test --logger:junit --test-adapter-path:. --filter "TestCategory!=Timestamp"
   # No code coverage yet, it has to be done after the tokens are configured
 
 ubuntu-20.04:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal
   script:
   - apt-get update
-  - apt-get -y install build-essential
+  - apt-get install -y build-essential
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
 
@@ -25,6 +25,6 @@ ubuntu-20.04-arm64:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal-arm64v8
   script:
   - apt-get update
-  - apt-get -y install build-essential
-  - bash scripts/install-libpcap.sh
-  - bash scripts/test.sh
+  - apt-get install -y libpcap0.8
+  # ARM is slow, no performance tests
+  - bash scripts/test.sh --filter "TestCategory!=Performance"
