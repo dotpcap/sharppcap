@@ -17,7 +17,7 @@ ubuntu-20.04:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal
   script:
   - apt-get update
-  - apt-get install build-essential
+  - apt-get -y install build-essential
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
 
@@ -25,6 +25,6 @@ ubuntu-20.04-arm64:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal-arm64v8
   script:
   - apt-get update
-  - apt-get install build-essential
+  - apt-get -y install build-essential
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
