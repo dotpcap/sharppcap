@@ -179,7 +179,7 @@ namespace SharpPcap.LibPcap
                         }
                     }
                     // Send the packet
-                    int res;
+                    PcapError res;
                     unsafe
                     {
                         fixed (byte* p_packet = p)
