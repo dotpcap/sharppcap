@@ -1,11 +1,14 @@
-
 dotnet-winpcap:
+  tags:
+  - shared-windows
   image: mcr.microsoft.com/dotnet/sdk:5.0
   script:
   - choco install -y winpcap
   - bash scripts/test.sh --filter "TestCategory!=Timestamp"
 
 framework-winpcap:
+  tags:
+  - shared-windows
   image: mcr.microsoft.com/dotnet/framework/sdk
   script:
   - choco install -y winpcap
