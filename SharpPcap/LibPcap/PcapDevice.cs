@@ -437,7 +437,7 @@ namespace SharpPcap.LibPcap
                 var retval = setter(Handle, value.Value);
                 if (retval != 0)
                 {
-                    configuration.RaiseConfigurationFailed(property, retval);
+                    configuration.RaiseConfigurationFailed(property, retval, GetLastError(Handle));
                 }
             }
         }

@@ -305,7 +305,7 @@ namespace SharpPcap.LibPcap
         /// <param name="p">A <see cref="PcapHandle"/></param>
         /// <returns>Returns 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error. A non-zero return value indicates what warning or error condition occurred.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_activate(PcapHandle /* pcap_t* */ p);
+        internal extern static PcapError pcap_activate(PcapHandle /* pcap_t* */ p);
 
         /// <summary>
         /// Force a pcap_dispatch() or pcap_loop() call to return
