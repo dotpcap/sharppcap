@@ -10,6 +10,7 @@ using SharpPcap;
 using static Test.TestHelper;
 using System.ComponentModel;
 using CategoryAttribute = NUnit.Framework.CategoryAttribute;
+using System.Runtime.Versioning;
 
 namespace Test
 {
@@ -61,6 +62,9 @@ namespace Test
         /// </summary>
         [Test]
         [Platform("Win")]
+#if NET
+        [SupportedOSPlatform("windows")]
+#endif
         public void PwdAuthTest()
         {
             try
