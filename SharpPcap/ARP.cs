@@ -136,7 +136,6 @@ namespace SharpPcap
 
                 // attempt to resolve the address with the current timeout
                 var timeoutDateTime = DateTime.Now + Timeout;
-                PacketCapture e;
                 while (DateTime.Now < timeoutDateTime)
                 {
                     if (requestInterval < (DateTime.Now - lastRequestTime))
@@ -147,7 +146,7 @@ namespace SharpPcap
                     }
 
                     //read the next packet from the network
-                    var retval = device.GetNextPacket(out e);
+                    var retval = device.GetNextPacket(out PacketCapture e);
                     if (retval != GetPacketStatus.PacketRead)
                     {
                         continue;

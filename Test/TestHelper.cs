@@ -91,7 +91,6 @@ namespace Test
                 sender = new LibPcapLiveDevice(device.Interface);
                 sender.Open(mode, 1);
             }
-            PacketCapture e;
             using(sender)
             {
                 routine(sender);
@@ -100,7 +99,7 @@ namespace Test
                 var sw = Stopwatch.StartNew();
                 while (true)
                 {
-                    var retval = device.GetNextPacket(out e);
+                    var retval = device.GetNextPacket(out PacketCapture e);
                     if (retval == GetPacketStatus.PacketRead)
                     {
                         var packet = e.GetPacket();

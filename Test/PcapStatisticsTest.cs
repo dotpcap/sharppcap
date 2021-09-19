@@ -103,21 +103,11 @@ namespace Test
                 Console.WriteLine("Found {0} devices", devices.Count);
             }
 
-            var caughtException = false;
-            try
-            {
-#pragma warning disable 0168
-                // attempt to retrieve statistics from a closed device
-                var stats = devices[0].Statistics;
-#pragma warning restore 0168
-            }
-            catch (DeviceNotReadyException)
-            {
-                caughtException = true;
-            }
-
             // ensure that we caught an exception
-            Assert.IsTrue(caughtException, "Did not catch PcapDeviceNotReadyException");
+            Assert.Throws<DeviceNotReadyException>(
+                () => devices[0].Statistics.ToString(),
+                "Did not catch PcapDeviceNotReadyException"
+            );
         }
 
         [SetUp]
