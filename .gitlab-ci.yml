@@ -1,15 +1,19 @@
-dotnet-winpcap:
-  tags:
-  - shared-windows
-  image: mcr.microsoft.com/dotnet/sdk:5.0
-  script:
-  - choco install -y winpcap
-  - bash scripts/test.sh --filter "TestCategory!=Timestamp"
 
-framework-winpcap:
+windows-winpcap:
   tags:
   - shared-windows
-  image: mcr.microsoft.com/dotnet/framework/sdk
   script:
   - choco install -y winpcap
-  - bash scripts/test.sh --filter "TestCategory!=Timestamp"
+  - "C:\\Program Files\\Git\\bin\\bash" scripts/test.sh --filter "TestCategory!=Timestamp"
+
+ubuntu-20.04:
+  image: mcr.microsoft.com/dotnet/sdk:3.1-focal
+  script:
+  - sudo -E bash scripts/install-libpcap.sh
+  - sudo -E bash scripts/test.sh
+
+ubuntu-20.04-arm64:
+  image: mcr.microsoft.com/dotnet/sdk:3.1-focal-arm64v8
+  script:
+  - sudo -E bash scripts/install-libpcap.sh
+  - sudo -E bash scripts/test.sh
