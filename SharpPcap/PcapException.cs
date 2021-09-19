@@ -29,15 +29,24 @@ namespace SharpPcap
     /// </summary>
     public class PcapException : Exception
     {
-        internal readonly PcapError Error;
+        public PcapError Error { get; }
 
         internal PcapException() : base()
         {
+            Error = PcapError.Generic;
         }
 
-        internal PcapException(string msg, PcapError error = PcapError.Generic) : base(msg)
+        internal PcapException(string msg)
+            : base(msg)
+        {
+            Error = PcapError.Generic;
+        }
+
+        internal PcapException(string msg, PcapError error)
+            : base(msg + $" (Error Code: {error})")
         {
             Error = error;
         }
+
     }
 }
