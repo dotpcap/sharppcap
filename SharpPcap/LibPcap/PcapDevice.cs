@@ -419,6 +419,7 @@ namespace SharpPcap.LibPcap
 
         /// <summary>
         /// Most pcap configuration functions have the signature int pcap_set_foo(pcap_t, int)
+        /// those functions also set the error buffer, so we read it
         /// This is a helper method to use them and detect/report errors
         /// </summary>
         /// <param name="configuration"></param>
@@ -428,7 +429,7 @@ namespace SharpPcap.LibPcap
         protected void Configure(
             DeviceConfiguration configuration,
             string property,
-            Func<PcapHandle, int, int> setter,
+            Func<PcapHandle, int, PcapError> setter,
             int? value
         )
         {

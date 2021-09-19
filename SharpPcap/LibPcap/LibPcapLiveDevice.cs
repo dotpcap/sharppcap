@@ -198,7 +198,7 @@ namespace SharpPcap.LibPcap
                     {
                         configuration.RaiseConfigurationFailed(
                             nameof(configuration.Immediate), 
-                            (int)PcapError.PlatformNotSupported,
+                            PcapError.PlatformNotSupported,
                             "Immediate mode not available"
                         );
                     }
