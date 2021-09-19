@@ -16,11 +16,15 @@ windows-winpcap:
 ubuntu-20.04:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal
   script:
+  - sudo apt-get update
+  - apt-get install build-essential
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
 
 ubuntu-20.04-arm64:
   image: mcr.microsoft.com/dotnet/sdk:5.0-focal-arm64v8
   script:
+  - sudo apt-get update
+  - apt-get install build-essential
   - bash scripts/install-libpcap.sh
   - bash scripts/test.sh
