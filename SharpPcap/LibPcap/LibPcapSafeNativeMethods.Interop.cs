@@ -50,13 +50,13 @@ namespace SharpPcap.LibPcap
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_findalldevs(
+        internal extern static PcapError pcap_findalldevs(
             ref IntPtr /* pcap_if_t** */ alldevs,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_findalldevs_ex(
+        internal extern static PcapError pcap_findalldevs_ex(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*char **/source,
             ref pcap_rmtauth /*pcap_rmtauth **/auth,
             ref IntPtr /*pcap_if_t ** */alldevs,
@@ -131,7 +131,7 @@ namespace SharpPcap.LibPcap
         /// <param name="size">the dimension of the buffer pointed by data</param>
         /// <returns>0 if the packet is succesfully sent, -1 otherwise.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendpacket(PcapHandle /* pcap_t* */ adaptHandle, IntPtr data, int size);
+        internal extern static PcapError pcap_sendpacket(PcapHandle /* pcap_t* */ adaptHandle, IntPtr data, int size);
 
         /// <summary>
         /// Compile a packet filter, converting an high level filtering expression (see Filtering expression syntax) in a program that can be interpreted by the kernel-level filtering engine. 
@@ -305,7 +305,7 @@ namespace SharpPcap.LibPcap
         /// <param name="p">A <see cref="PcapHandle"/></param>
         /// <returns>Returns 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error. A non-zero return value indicates what warning or error condition occurred.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_activate(PcapHandle /* pcap_t* */ p);
+        internal extern static PcapError pcap_activate(PcapHandle /* pcap_t* */ p);
 
         /// <summary>
         /// Force a pcap_dispatch() or pcap_loop() call to return

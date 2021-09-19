@@ -24,7 +24,7 @@ namespace SharpPcap
     /// Error codes for the pcap API.
     /// See <code>#define PCAP_ERROR*</code> in https://github.com/the-tcpdump-group/libpcap/blob/master/pcap/pcap.h
     /// </summary>
-    public enum PcapError
+    public enum PcapError : int
     {
         /// <summary>
         /// generic error code

@@ -200,7 +200,7 @@ namespace SharpPcap.LibPcap
                 var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, errorBuffer);
                 if (result < 0)
                 {
-                    throw new PcapException(errorBuffer.ToString());
+                    throw new PcapException(errorBuffer.ToString(), result);
                 }
             }
             catch (TypeLoadException ex)
@@ -224,10 +224,10 @@ namespace SharpPcap.LibPcap
             var devicePtr = IntPtr.Zero;
             var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
-            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
+            var result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
             if (result < 0)
             {
-                throw new PcapException(errorBuffer.ToString());
+                throw new PcapException(errorBuffer.ToString(), result);
             }
             var pcapInterfaces = GetAllPcapInterfaces(devicePtr, null);
 

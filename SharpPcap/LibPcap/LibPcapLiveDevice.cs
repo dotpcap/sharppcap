@@ -214,8 +214,8 @@ namespace SharpPcap.LibPcap
                 var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
                 if (activationResult < 0)
                 {
-                    string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
-                    throw new PcapException(err);
+                    string err = "Unable to activate the adapter (" + Name + ").";
+                    throw new PcapException(err, activationResult);
                 }
                 base.Open(configuration);
                 // retrieve the file descriptor of the adapter for use with poll()
@@ -298,7 +298,7 @@ namespace SharpPcap.LibPcap
         public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
-            int res;
+            PcapError res;
             unsafe
             {
                 fixed (byte* p_packet = p)
@@ -308,7 +308,7 @@ namespace SharpPcap.LibPcap
             }
             if (res < 0)
             {
-                throw new PcapException("Can't send packet: " + LastError);
+                throw new PcapException("Can't send packet: " + LastError, res);
             }
         }
 
