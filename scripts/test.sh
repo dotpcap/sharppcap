@@ -29,9 +29,10 @@ then
     CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
-if [ -n "$BUILD_SOURCEVERSION" ] # Azure Pipelines
+if [ -n "$SYSTEM_PULLREQUEST_SOURCECOMMITID" ] # Azure Pipelines
 then
-    CODECOV_ARGS+=( --sha "$BUILD_SOURCEVERSION" )
+    CODECOV_ARGS+=( --sha "$SYSTEM_PULLREQUEST_SOURCECOMMITID" )
+    CODECOV_ARGS+=( --branch "$SYSTEM_PULLREQUEST_SOURCEBRANCH" )
 fi
 
 dotnet tool restore
