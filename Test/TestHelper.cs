@@ -38,6 +38,12 @@ namespace Test
                 {
                     continue;
                 }
+                if (friendlyName == "virbr0-nic")
+                {
+                    // Semaphore CI have this interface, and it's always down
+                    // OperationalStatus does not detect it correctly
+                    continue;
+                }
                 var nic = nics.FirstOrDefault(ni => ni.Name == friendlyName);
                 if (nic?.OperationalStatus != OperationalStatus.Up)
                 {
