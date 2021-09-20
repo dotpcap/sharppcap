@@ -23,10 +23,21 @@ dotnet test "${TEST_ARGS[@]}"
 
 # coverage
 
-CODECOV_ARGS=( -f '**\*.opencover.xml' )
+CODECOV_ARGS=( -f '**/*.opencover.xml' )
 if [ -n "$SYSTEM_JOBDISPLAYNAME" ]
 then
-    CODECOV_ARGS+=( -F "$SYSTEM_JOBDISPLAYNAME" )
+    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
-bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
+if [ -n "$BUILD_SOURCEVERSION" ] # Azure Pipelines
+then
+    CODECOV_ARGS+=( --sha "$BUILD_SOURCEVERSION" )
+fi
+
+echo "Debug Start"
+env
+echo ${CODECOV_ARGS[@]}
+echo "Debug End"
+
+dotnet tool restore
+dotnet codecov ${CODECOV_ARGS[@]}
