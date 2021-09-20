@@ -26,7 +26,7 @@ dotnet test "${TEST_ARGS[@]}"
 CODECOV_ARGS=( -f '**/*.opencover.xml' )
 if [ -n "$SYSTEM_JOBDISPLAYNAME" ]
 then
-    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
+    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" --sha "$BUILD_SOURCEVERSION" )
 fi
 
 dotnet tool restore
