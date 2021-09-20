@@ -110,6 +110,12 @@ namespace SharpPcap.LibPcap
 
             if (!Opened)
             {
+                // Check if immediate is supported
+                var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
+                // Check if we can do immediate by setting mintocopy to 0
+                // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
+                var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
                 StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
                 // set the StopCaptureTimeout value to twice the read timeout to ensure that
@@ -120,9 +126,20 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, configuration.ReadTimeout * 2);
 
+                var activated = false;
                 // modes other than OpenFlags.Promiscuous require pcap_open()
                 var otherModes = mode & ~DeviceModes.Promiscuous;
-                if ((credentials == null) || ((short)otherModes != 0) || (configuration.TimestampResolution != null))
+                if (immediate_supported || mintocopy_supported)
+                {
+                    // We can do MaxResponsiveness through Immediate mode
+                    otherModes = otherModes & ~DeviceModes.MaxResponsiveness;
+                }
+                var immediateMode = configuration.Immediate;
+                if (mode.HasFlag(DeviceModes.MaxResponsiveness))
+                {
+                    immediateMode = true;
+                }
+                if ((credentials == null && (short)otherModes == 0) || (configuration.TimestampResolution != null))
                 {
                     Handle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
@@ -161,6 +178,13 @@ namespace SharpPcap.LibPcap
                 {
                     // We got authentication, so this is an rpcap device
                     var auth = RemoteAuthentication.CreateAuth(credentials);
+                    // Immediate and MaxResponsiveness are the same thing
+                    if (immediateMode == true)
+                    {
+                        mode |= DeviceModes.MaxResponsiveness;
+                        // No need to worry about it anymore
+                        immediateMode = null;
+                    }
                     Handle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
                         configuration.Snaplen,              // portion of the packet to capture.
@@ -168,6 +192,9 @@ namespace SharpPcap.LibPcap
                         (short)configuration.ReadTimeout,   // read timeout
                         ref auth,                           // authentication
                         errbuf);                            // error buffer
+
+                    // pcap_open returns an already activated device
+                    activated = true;
                 }
 
                 if (Handle.IsInvalid)
@@ -186,13 +213,7 @@ namespace SharpPcap.LibPcap
                     LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
                 );
 
-                // Check if immediate is supported
-                var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
-                // Check if we can do immediate by setting mintocopy to 0
-                // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
-                var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-                if (configuration.Immediate.HasValue)
+                if (immediateMode.HasValue)
                 {
                     if (!immediate_supported && !mintocopy_supported)
                     {
@@ -204,7 +225,7 @@ namespace SharpPcap.LibPcap
                     }
                     else if (immediate_supported)
                     {
-                        var immediate = configuration.Immediate.Value ? 1 : 0;
+                        var immediate = immediateMode.Value ? 1 : 0;
                         Configure(
                             configuration, nameof(configuration.Immediate),
                             LibPcapSafeNativeMethods.pcap_set_immediate_mode, immediate
@@ -212,11 +233,14 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
-                if (activationResult < 0)
+                if (!activated)
                 {
-                    string err = "Unable to activate the adapter (" + Name + ").";
-                    throw new PcapException(err, activationResult);
+                    var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
+                    if (activationResult < 0)
+                    {
+                        string err = "Unable to activate the adapter (" + Name + ").";
+                        throw new PcapException(err, activationResult);
+                    }
                 }
                 base.Open(configuration);
                 // retrieve the file descriptor of the adapter for use with poll()
@@ -231,7 +255,7 @@ namespace SharpPcap.LibPcap
                     LibPcapSafeNativeMethods.pcap_setbuff, configuration.KernelBufferSize
                 );
 
-                if (configuration.Immediate == true && mintocopy_supported && !immediate_supported)
+                if (immediateMode == true && mintocopy_supported && !immediate_supported)
                 {
                     Configure(
                         configuration, nameof(configuration.Immediate),
