@@ -32,6 +32,7 @@ jobs:
   pool:
     vmImage: 'VS2017-Win2016'
   steps:
+  - checkout: self
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
@@ -43,6 +44,7 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  - checkout: self
   - script: choco install -y winpcap
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
@@ -51,6 +53,7 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  - checkout: self
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
