@@ -7,6 +7,11 @@ agent:
 auto_cancel:
   running:
     when: 'true'
+    
+global_job_config:
+  secrets:
+    - name: sharppcap_codecov
+
 blocks:
   - name: ubuntu-2004
     dependencies: []
