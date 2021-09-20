@@ -34,5 +34,10 @@ then
     CODECOV_ARGS+=( --sha "$BUILD_SOURCEVERSION" )
 fi
 
+echo "Debug Start"
+env
+echo ${CODECOV_ARGS[@]}
+echo "Debug End"
+
 dotnet tool restore
 dotnet codecov ${CODECOV_ARGS[@]}
