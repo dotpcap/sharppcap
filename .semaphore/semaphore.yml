@@ -1,0 +1,43 @@
+version: v1.0
+name: Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+auto_cancel:
+  running:
+    when: 'true'
+    
+global_job_config:
+  secrets:
+    - name: sharppcap_codecov
+
+blocks:
+  - name: ubuntu-2004
+    dependencies: []
+    task:
+      jobs:
+        - commands:
+            - checkout
+            - sudo -E bash scripts/install-libpcap.sh
+            - sudo -E bash scripts/install-dotnet.sh
+            - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance"
+          name: Test
+      agent:
+        machine:
+          type: e1-standard-2
+          os_image: ubuntu2004
+  - name: macos-xcode12
+    dependencies: []
+    task:
+      agent:
+        machine:
+          type: a1-standard-4
+          os_image: macos-xcode12
+      jobs:
+        - commands:
+            - checkout
+            - sudo -E bash scripts/install-libpcap.sh
+            - brew install --cask dotnet-sdk
+            - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance"
+          name: Test

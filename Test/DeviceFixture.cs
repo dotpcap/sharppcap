@@ -60,6 +60,8 @@ namespace Test
                 // The bluetooth-monitor break the tests on circleci
                 // With "Return code: -1" during Open
                 .Where(d => d.Name != "bluetooth-monitor")
+                // Semaphore CI have this interface, and it's always down
+                .Where(d => d.Name != "virbr0-nic")
                 .Distinct();
         }
     }
