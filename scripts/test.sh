@@ -29,5 +29,10 @@ then
     CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
+if [ -n "$BUILD_SOURCEVERSION" ] # Azure Pipelines
+then
+    CODECOV_ARGS+=( --sha "$BUILD_SOURCEVERSION" )
+fi
+
 dotnet tool restore
 dotnet codecov ${CODECOV_ARGS[@]}
