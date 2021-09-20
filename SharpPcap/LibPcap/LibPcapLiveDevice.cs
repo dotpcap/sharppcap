@@ -126,25 +126,28 @@ namespace SharpPcap.LibPcap
                 //       Linux devices have no timeout, they always block. Only affects Windows devices.
                 StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, configuration.ReadTimeout * 2);
 
-                var activated = false;
                 // modes other than OpenFlags.Promiscuous require pcap_open()
                 var otherModes = mode & ~DeviceModes.Promiscuous;
                 if (immediate_supported || mintocopy_supported)
                 {
                     // We can do MaxResponsiveness through Immediate mode
-                    otherModes = otherModes & ~DeviceModes.MaxResponsiveness;
+                    otherModes &= ~DeviceModes.MaxResponsiveness;
                 }
                 var immediateMode = configuration.Immediate;
                 if (mode.HasFlag(DeviceModes.MaxResponsiveness))
                 {
                     immediateMode = true;
                 }
-                if ((credentials == null && (short)otherModes == 0) || (configuration.TimestampResolution != null))
+
+                // Some configurations can only be used with pcap_create
+                var use_pcap_create = credentials == null && (short)otherModes == 0;
+                if (use_pcap_create)
                 {
                     Handle = LibPcapSafeNativeMethods.pcap_create(
                         Name, // name of the device
                         errbuf); // error buffer
 
+                    // Those are configurations that pcap_open can handle differently
                     Configure(
                         configuration, nameof(configuration.Snaplen),
                         LibPcapSafeNativeMethods.pcap_set_snaplen, configuration.Snaplen
@@ -157,22 +160,6 @@ namespace SharpPcap.LibPcap
                         configuration, nameof(configuration.ReadTimeout),
                         LibPcapSafeNativeMethods.pcap_set_timeout, configuration.ReadTimeout
                     );
-
-                    if (configuration.TimestampResolution.HasValue)
-                    {
-                        Configure(
-                            configuration, nameof(configuration.TimestampResolution),
-                            LibPcapSafeNativeMethods.pcap_set_tstamp_precision, (int)configuration.TimestampResolution
-                        );
-                    }
-
-                    if (configuration.TimestampType.HasValue)
-                    {
-                        Configure(
-                            configuration, nameof(configuration.TimestampType),
-                            LibPcapSafeNativeMethods.pcap_set_tstamp_type, (int)configuration.TimestampType
-                        );
-                    }
                 }
                 else
                 {
@@ -182,9 +169,9 @@ namespace SharpPcap.LibPcap
                     if (immediateMode == true)
                     {
                         mode |= DeviceModes.MaxResponsiveness;
-                        // No need to worry about it anymore
-                        immediateMode = null;
                     }
+                    // No need to worry about it anymore
+                    immediateMode = null;
                     Handle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
                         configuration.Snaplen,              // portion of the packet to capture.
@@ -193,8 +180,6 @@ namespace SharpPcap.LibPcap
                         ref auth,                           // authentication
                         errbuf);                            // error buffer
 
-                    // pcap_open returns an already activated device
-                    activated = true;
                 }
 
                 if (Handle.IsInvalid)
@@ -203,12 +188,22 @@ namespace SharpPcap.LibPcap
                     throw new PcapException(err);
                 }
 
-                Configure(
+                ConfigureIfCompatible(use_pcap_create,
+                    configuration, nameof(configuration.TimestampResolution),
+                    LibPcapSafeNativeMethods.pcap_set_tstamp_precision, (int?)configuration.TimestampResolution
+                );
+
+                ConfigureIfCompatible(use_pcap_create,
+                    configuration, nameof(configuration.TimestampType),
+                    LibPcapSafeNativeMethods.pcap_set_tstamp_type, (int?)configuration.TimestampType
+                );
+
+                ConfigureIfCompatible(use_pcap_create,
                     configuration, nameof(configuration.Monitor),
                     LibPcapSafeNativeMethods.pcap_set_rfmon, (int?)configuration.Monitor
                 );
 
-                Configure(
+                ConfigureIfCompatible(use_pcap_create,
                     configuration, nameof(configuration.BufferSize),
                     LibPcapSafeNativeMethods.pcap_set_buffer_size, configuration.BufferSize
                 );
@@ -218,7 +213,7 @@ namespace SharpPcap.LibPcap
                     if (!immediate_supported && !mintocopy_supported)
                     {
                         configuration.RaiseConfigurationFailed(
-                            nameof(configuration.Immediate), 
+                            nameof(configuration.Immediate),
                             PcapError.PlatformNotSupported,
                             "Immediate mode not available"
                         );
@@ -233,7 +228,8 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                if (!activated)
+                // pcap_open returns an already activated device
+                if (use_pcap_create)
                 {
                     var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
                     if (activationResult < 0)
