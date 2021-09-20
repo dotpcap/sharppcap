@@ -35,17 +35,17 @@ namespace SharpPcap.LibPcap
     internal static partial class LibPcapSafeNativeMethods
     {
 
-        internal static int pcap_setbuff(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes)
+        internal static PcapError pcap_setbuff(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes)
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? _pcap_setbuff(adapter, bufferSizeInBytes)
-                : (int)PcapError.PlatformNotSupported;
+                : PcapError.PlatformNotSupported;
         }
-        internal static int pcap_setmintocopy(PcapHandle /* pcap_t */ adapter, int sizeInBytes)
+        internal static PcapError pcap_setmintocopy(PcapHandle /* pcap_t */ adapter, int sizeInBytes)
         {
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? _pcap_setmintocopy(adapter, sizeInBytes)
-                : (int)PcapError.PlatformNotSupported;
+                : PcapError.PlatformNotSupported;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SharpPcap.LibPcap
         /// <param name="p">A <see cref="IntPtr"/></param>
         /// <param name="rfmon">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
-        internal static int pcap_set_rfmon(PcapHandle /* pcap_t* */ p, int rfmon)
+        internal static PcapError pcap_set_rfmon(PcapHandle /* pcap_t* */ p, int rfmon)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace SharpPcap.LibPcap
             }
             catch (EntryPointNotFoundException)
             {
-                return (int)PcapError.RfmonNotSupported;
+                return PcapError.RfmonNotSupported;
             }
         }
 
@@ -76,11 +76,11 @@ namespace SharpPcap.LibPcap
         /// <param name="adapter"></param>
         /// <param name="precision"></param>
         /// <returns></returns>
-        internal static int pcap_set_tstamp_precision(PcapHandle /* pcap_t* p */ adapter, int precision)
+        internal static PcapError pcap_set_tstamp_precision(PcapHandle /* pcap_t* p */ adapter, int precision)
         {
             if (Pcap.LibpcapVersion < Libpcap_1_5)
             {
-                return (int)PcapError.TimestampPrecisionNotSupported;
+                return PcapError.TimestampPrecisionNotSupported;
             }
             return _pcap_set_tstamp_precision(adapter, precision);
         }

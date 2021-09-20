@@ -126,7 +126,7 @@ namespace SharpPcap.LibPcap
                 {
                     configuration.RaiseConfigurationFailed(
                         nameof(configuration.TimestampResolution),
-                        (int)PcapError.PlatformNotSupported,
+                        PcapError.PlatformNotSupported,
                         "pcap version is < 1.5.1, needs pcap_open_dead_with_tstamp_precision()"
                     );
                 }

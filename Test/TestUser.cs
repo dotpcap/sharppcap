@@ -1,8 +1,12 @@
 ﻿using System;
 using System.DirectoryServices.AccountManagement;
+using System.Runtime.Versioning;
 
 namespace Test
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     public static class TestUser
     {
         public const string Username = "SharpPcap.Test.User";

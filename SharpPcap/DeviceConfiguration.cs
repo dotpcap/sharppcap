@@ -59,10 +59,9 @@ namespace SharpPcap
 
         public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
 
-        internal void RaiseConfigurationFailed(string property, int retval, string message = null)
+        internal void RaiseConfigurationFailed(string property, PcapError error, string message)
         {
-            var error = (PcapError)retval;
-            message = message ?? $"Failed to set {property}. Error: {error}";
+            message = message ?? $"Failed to set {property}.";
 
             if (ConfigurationFailed is null)
             {

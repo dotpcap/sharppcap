@@ -198,7 +198,8 @@ namespace SharpPcap.LibPcap
                     {
                         configuration.RaiseConfigurationFailed(
                             nameof(configuration.Immediate), 
-                            (int)PcapError.PlatformNotSupported
+                            PcapError.PlatformNotSupported,
+                            "Immediate mode not available"
                         );
                     }
                     else if (immediate_supported)
@@ -214,8 +215,8 @@ namespace SharpPcap.LibPcap
                 var activationResult = LibPcapSafeNativeMethods.pcap_activate(Handle);
                 if (activationResult < 0)
                 {
-                    string err = "Unable to activate the adapter (" + Name + "). Return code: " + activationResult.ToString();
-                    throw new PcapException(err);
+                    string err = "Unable to activate the adapter (" + Name + ").";
+                    throw new PcapException(err, activationResult);
                 }
                 base.Open(configuration);
                 // retrieve the file descriptor of the adapter for use with poll()

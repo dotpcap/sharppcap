@@ -92,10 +92,10 @@ namespace SharpPcap.LibPcap
         internal extern static PcapHandle /* pcap_t* */ pcap_open_dead(int linktype, int snaplen);
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_buffer_size(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes);
+        internal extern static PcapError pcap_set_buffer_size(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes);
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_immediate_mode(PcapHandle /* pcap_t */ adapter, int immediate_mode);
+        internal extern static PcapError pcap_set_immediate_mode(PcapHandle /* pcap_t */ adapter, int immediate_mode);
 
         /// <summary>Open a file to write packets. </summary>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -269,7 +269,7 @@ namespace SharpPcap.LibPcap
         /// <param name="rfmon">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_set_rfmon", CallingConvention = CallingConvention.Cdecl)]
-        private extern static int _pcap_set_rfmon(PcapHandle /* pcap_t* */ p, int rfmon);
+        private extern static PcapError _pcap_set_rfmon(PcapHandle /* pcap_t* */ p, int rfmon);
 
         /// <summary>
         /// pcap_set_snaplen() sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.  
@@ -278,7 +278,7 @@ namespace SharpPcap.LibPcap
         /// <param name="snaplen">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_snaplen(PcapHandle /* pcap_t* */ p, int snaplen);
+        internal extern static PcapError pcap_set_snaplen(PcapHandle /* pcap_t* */ p, int snaplen);
 
         /// <summary>
         /// pcap_set_promisc() sets whether promiscuous mode should be set on a capture handle when the handle is activated. 
@@ -288,7 +288,7 @@ namespace SharpPcap.LibPcap
         /// <param name="promisc">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_promisc(PcapHandle /* pcap_t* */ p, int promisc);
+        internal extern static PcapError pcap_set_promisc(PcapHandle /* pcap_t* */ p, int promisc);
 
         /// <summary>
         /// pcap_set_timeout() sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
@@ -297,7 +297,7 @@ namespace SharpPcap.LibPcap
         /// <param name="to_ms">A <see cref="int"/></param>
         /// <returns>Returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_timeout(PcapHandle /* pcap_t* */ p, int to_ms);
+        internal extern static PcapError pcap_set_timeout(PcapHandle /* pcap_t* */ p, int to_ms);
 
         /// <summary>
         /// pcap_activate() is used to activate a packet capture handle to look at packets on the network, with the options that were set on the handle being in effect.  
@@ -305,7 +305,7 @@ namespace SharpPcap.LibPcap
         /// <param name="p">A <see cref="PcapHandle"/></param>
         /// <returns>Returns 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error. A non-zero return value indicates what warning or error condition occurred.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_activate(PcapHandle /* pcap_t* */ p);
+        internal extern static PcapError pcap_activate(PcapHandle /* pcap_t* */ p);
 
         /// <summary>
         /// Force a pcap_dispatch() or pcap_loop() call to return
@@ -359,7 +359,7 @@ namespace SharpPcap.LibPcap
         /// <param name="precision"></param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_set_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
-        private extern static int _pcap_set_tstamp_precision(PcapHandle /* pcap_t* p */ adapter, int precision);
+        private extern static PcapError _pcap_set_tstamp_precision(PcapHandle /* pcap_t* p */ adapter, int precision);
 
         /// <summary>
         /// Available since libpcap 1.5
@@ -375,7 +375,7 @@ namespace SharpPcap.LibPcap
         /// <param name="tstamp_type"></param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_set_tstamp_type(PcapHandle /* pcap_t* p */ adapter, int tstamp_type);
+        internal extern static PcapError pcap_set_tstamp_type(PcapHandle /* pcap_t* p */ adapter, int tstamp_type);
 
         /// <summary>
         /// Available since libpcap 1.2
@@ -453,7 +453,7 @@ namespace SharpPcap.LibPcap
         /// <param name="bufferSizeInBytes"></param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_setbuff", CallingConvention = CallingConvention.Cdecl)]
-        private extern static int _pcap_setbuff(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes);
+        private extern static PcapError _pcap_setbuff(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes);
 
         /// <summary>
         /// Windows Only
@@ -472,7 +472,7 @@ namespace SharpPcap.LibPcap
         /// A <see cref="int"/>
         /// </returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_setmintocopy", CallingConvention = CallingConvention.Cdecl)]
-        private extern static int _pcap_setmintocopy(PcapHandle /* pcap_t */ adapter, int sizeInBytes);
+        private extern static PcapError _pcap_setmintocopy(PcapHandle /* pcap_t */ adapter, int sizeInBytes);
 
         /// <summary>
         /// Windows Only
