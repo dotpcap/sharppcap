@@ -24,10 +24,11 @@ for:
   install:
     - choco install -y dotnet-sdk --version=5.0.400
     - ps: .\scripts\InstallNpcap.ps1
+    - ps: .\scripts\install-winpkfilter.ps1
   build_script:
     - dotnet build -c Release
   test_script:
-    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap&TestCategory!=WinDivert"
+    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap&TestCategory!=WinDivert&TestCategory!=WinpkFilter"
 
 -
   matrix:
@@ -35,6 +36,7 @@ for:
       - image: Visual Studio 2019
   install:
     - ps: .\scripts\InstallNpcap.ps1
+    - ps: .\scripts\install-winpkfilter.ps1
   build_script:
     - dotnet build -c Release
   test_script:
