@@ -35,7 +35,5 @@ then
     CODECOV_ARGS+=( --branch "$SYSTEM_PULLREQUEST_SOURCEBRANCH" )
 fi
 
-env
-
 dotnet tool restore
 dotnet codecov ${CODECOV_ARGS[@]}
