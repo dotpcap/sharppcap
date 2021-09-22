@@ -38,4 +38,4 @@ fi
 env
 
 dotnet tool restore
-dotnet codecov ${CODECOV_ARGS[@]}
+dotnet codecov ${CODECOV_ARGS[@]} -t $CODECOV_TOKEN
