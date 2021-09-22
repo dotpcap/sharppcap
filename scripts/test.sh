@@ -35,5 +35,8 @@ then
     CODECOV_ARGS+=( --branch "$SYSTEM_PULLREQUEST_SOURCEBRANCH" )
 fi
 
+# Depending on CI, dotnet tool or bash may or may not work
+# Try them both, it won't change coverage
 dotnet tool restore
 dotnet codecov ${CODECOV_ARGS[@]}
+bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
