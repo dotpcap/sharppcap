@@ -23,10 +23,19 @@ dotnet test "${TEST_ARGS[@]}"
 
 # coverage
 
-CODECOV_ARGS=( -f '**\*.opencover.xml' )
+CODECOV_ARGS=( -f '**/*.opencover.xml' )
 if [ -n "$SYSTEM_JOBDISPLAYNAME" ]
 then
-    CODECOV_ARGS+=( -F "$SYSTEM_JOBDISPLAYNAME" )
+    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
-bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
+if [ -n "$SYSTEM_PULLREQUEST_SOURCECOMMITID" ] # Azure Pipelines
+then
+    CODECOV_ARGS+=( --sha "$SYSTEM_PULLREQUEST_SOURCECOMMITID" )
+    CODECOV_ARGS+=( --branch "$SYSTEM_PULLREQUEST_SOURCEBRANCH" )
+fi
+
+env
+
+dotnet tool restore
+dotnet codecov ${CODECOV_ARGS[@]} -t $CODECOV_TOKEN
