@@ -19,6 +19,8 @@ jobs:
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo -E bash scripts/test.sh
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 - job: macos
   pool:
@@ -27,6 +29,8 @@ jobs:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
   - script: sudo -E bash scripts/test.sh
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 - job: windows_2016_vs2017_npcap
   pool:
@@ -37,6 +41,8 @@ jobs:
       npcap_oem_key: $(npcap_oem_key)
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 # NOTE: Remove when npcap has rpcapd support
 - job: windows_2019_vs2019_winpcap
@@ -46,6 +52,8 @@ jobs:
   - script: choco install -y winpcap
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 - job: windows_2019_vs2019_npcap
   pool:
@@ -56,3 +64,5 @@ jobs:
       npcap_oem_key: $(npcap_oem_key)
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
