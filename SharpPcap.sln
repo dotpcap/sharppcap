@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharpPcap.nuspec = SharpPcap.nuspec
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinpkFilterExample", "Examples\WinpkFilterExample\WinpkFilterExample.csproj", "{D87672B4-974D-4464-A615-499978E5943E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{559FBD6B-E4D2-4152-BE31-935B7CF7C41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{559FBD6B-E4D2-4152-BE31-935B7CF7C41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{559FBD6B-E4D2-4152-BE31-935B7CF7C41A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D87672B4-974D-4464-A615-499978E5943E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D87672B4-974D-4464-A615-499978E5943E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D87672B4-974D-4464-A615-499978E5943E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D87672B4-974D-4464-A615-499978E5943E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
