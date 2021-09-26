@@ -124,6 +124,55 @@ namespace Test
             }));
         }
 
+        /// <summary>
+        /// Non compatible modes should raise ConfigurationFailed
+        /// </summary>
+        [Test]
+        [LibpcapVersion(">=1.9.0")]
+        public void NonCompatibleModes()
+        {
+            using var device = GetPcapDevice();
+
+            var config = new DeviceConfiguration
+            {
+                Mode = DeviceModes.NoCaptureLocal,
+                BufferSize = 128 * 1024,
+            };
+
+            var ex = Assert.Throws<PcapException>(() => device.Open(config));
+            StringAssert.Contains(nameof(DeviceConfiguration.BufferSize), ex.Message);
+        }
+
+        /// <summary>
+        /// It shall be possible to set Immediate through MaxReponsiveness when credetials are provided
+        /// </summary>
+        [Test]
+        [LibpcapVersion(">=1.9.0")]
+        public void ImmediateWithCredentials()
+        {
+            using var device = GetPcapDevice();
+
+            var config = new DeviceConfiguration
+            {
+                Credentials = new RemoteAuthentication(default, default, default),
+                Immediate = true,
+            };
+
+            device.Open(config);
+        }
+
+        /// <summary>
+        /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in old Libpcap that do not have pcap_open
+        /// by using pcap_set_immediate_mode
+        /// </summary>
+        [Test]
+        [LibpcapVersion(">=1.5.0")]
+        public void MaxResponsivenessIsSameAsImmediate()
+        {
+            using var device = GetPcapDevice();
+            device.Open(DeviceModes.Promiscuous | DeviceModes.MaxResponsiveness);
+        }
+
         [Test]
         [Platform("Win")]
         [TestCase("KernelBufferSize", 64 * 1000 * 1000)]
