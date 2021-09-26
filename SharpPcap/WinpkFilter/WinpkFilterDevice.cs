@@ -180,17 +180,6 @@ namespace SharpPcap.WinpkFilter
             }
         }
 
-        /// <summary>
-        /// Retrieves the next packet from a device
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns>Status of the operation</returns>
-        private bool GetNextPacket(ref EthRequest ethRequest)
-        {
-            ethRequest.AdapterHandle = AdapterHandle;
-            return NativeMethods.ReadPacket(DriverHandle, ref ethRequest);
-        }
-
         public event PacketArrivalEventHandler OnPacketArrival;
         public event CaptureStoppedEventHandler OnCaptureStopped;
 
