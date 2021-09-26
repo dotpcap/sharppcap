@@ -12,11 +12,13 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace Test
 {
     internal static class TestHelper
     {
+
         public static string GetFile(string name)
         {
             var assembly = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -97,7 +99,7 @@ namespace Test
                 sender = new LibPcapLiveDevice(device.Interface);
                 sender.Open(mode, 1);
             }
-            using(sender)
+            using (sender)
             {
                 routine(sender);
                 // waiting for any queued packets to be sent
