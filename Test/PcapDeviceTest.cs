@@ -128,7 +128,7 @@ namespace Test
         /// Non compatible modes should raise ConfigurationFailed
         /// </summary>
         [Test]
-        [LibpcapVersion(">=1.9")]
+        [LibpcapVersion(">=1.9.0")]
         public void NonCompatibleModes()
         {
             using var device = GetPcapDevice();
@@ -147,7 +147,7 @@ namespace Test
         /// It shall be possible to set Immediate through MaxReponsiveness when credetials are provided
         /// </summary>
         [Test]
-        [LibpcapVersion(">=1.9")]
+        [LibpcapVersion(">=1.9.0")]
         public void ImmediateWithCredentials()
         {
             using var device = GetPcapDevice();
