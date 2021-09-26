@@ -124,6 +124,40 @@ namespace Test
             }));
         }
 
+        /// <summary>
+        /// Non compatible modes should raise ConfigurationFailed
+        /// </summary>
+        [Test]
+        public void NonCompatibleModes()
+        {
+            using var device = GetPcapDevice();
+
+            var config = new DeviceConfiguration
+            {
+                Mode = DeviceModes.NoCaptureLocal,
+                BufferSize = 128 * 1024,
+            };
+
+            var ex = Assert.Throws<PcapException>(() => device.Open(config));
+            if (ex.Error != PcapError.PlatformNotSupported)
+            {
+                StringAssert.Contains(nameof(DeviceConfiguration.BufferSize), ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in Libpcap that do not have pcap_open
+        /// by using pcap_set_immediate_mode
+        /// </summary>
+        [Test]
+        [LibpcapVersion(">=1.5.0")]
+        public void MaxResponsivenessIsSameAsImmediate()
+        {
+            using var device = GetPcapDevice();
+            // We don't have much to assert on, but we shall see the path covered in codecov
+            device.Open(DeviceModes.Promiscuous | DeviceModes.MaxResponsiveness);
+        }
+
         [Test]
         [Platform("Win")]
         [TestCase("KernelBufferSize", 64 * 1000 * 1000)]

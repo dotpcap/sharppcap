@@ -92,6 +92,10 @@ namespace Test
                         () => device.Open(StrictConfig(new DeviceConfiguration
                         {
                             Mode = DeviceModes.NoCaptureRemote,
+                            // Setting Immediate increase code coverage
+                            // Does not affect overall function of the test
+                            // Immediate would be translated to DeviceModes.MaxResponsiveness
+                            Immediate = true,
                             ReadTimeout = 1,
                             Credentials = badCred
                         })),
