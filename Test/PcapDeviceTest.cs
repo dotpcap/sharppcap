@@ -162,9 +162,11 @@ namespace Test
         }
 
         /// <summary>
-        /// It shall be possible to set Immediate (aka MaxResponsiveness) Promiscuous even in old Libpcap that do not have pcap_open
+        /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in old Libpcap that do not have pcap_open
+        /// by using pcap_set_immediate_mode
         /// </summary>
         [Test]
+        [LibpcapVersion(">=1.5.0")]
         public void MaxResponsivenessIsSameAsImmediate()
         {
             using var device = GetPcapDevice();
