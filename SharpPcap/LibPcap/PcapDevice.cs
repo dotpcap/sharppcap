@@ -443,6 +443,31 @@ namespace SharpPcap.LibPcap
             }
         }
 
+        protected internal void ConfigureIfCompatible(
+            bool compatible,
+            DeviceConfiguration configuration,
+            string property,
+            Func<PcapHandle, int, PcapError> setter,
+            int? value
+        )
+        {
+            if (!value.HasValue)
+            {
+                return;
+            }
+            if (!compatible)
+            {
+                configuration.RaiseConfigurationFailed(
+                    property, PcapError.Generic,
+                    $"Can not configure {property} with current device and selected modes"
+                );
+            }
+            else
+            {
+                Configure(configuration, property, setter, value);
+            }
+        }
+
         /// <summary>
         /// Helper method for checking that the adapter is open, throws an
         /// exception with a string of ExceptionString if the device isn't open
