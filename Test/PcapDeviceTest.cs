@@ -128,7 +128,6 @@ namespace Test
         /// Non compatible modes should raise ConfigurationFailed
         /// </summary>
         [Test]
-        [LibpcapVersion(">=1.9.0")]
         public void NonCompatibleModes()
         {
             using var device = GetPcapDevice();
@@ -140,7 +139,10 @@ namespace Test
             };
 
             var ex = Assert.Throws<PcapException>(() => device.Open(config));
-            StringAssert.Contains(nameof(DeviceConfiguration.BufferSize), ex.Message);
+            if (ex.Error != PcapError.PlatformNotSupported)
+            {
+                StringAssert.Contains(nameof(DeviceConfiguration.BufferSize), ex.Message);
+            }
         }
 
         /// <summary>
@@ -148,6 +150,7 @@ namespace Test
         /// </summary>
         [Test]
         [LibpcapVersion(">=1.9.0")]
+        [Category("RemotePcap")]
         public void ImmediateWithCredentials()
         {
             using var device = GetPcapDevice();
@@ -157,12 +160,12 @@ namespace Test
                 Credentials = new RemoteAuthentication(default, default, default),
                 Immediate = true,
             };
-
+            // We don't have much to assert on, but we shall see the path covered in codecov
             device.Open(config);
         }
 
         /// <summary>
-        /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in old Libpcap that do not have pcap_open
+        /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in Libpcap that do not have pcap_open
         /// by using pcap_set_immediate_mode
         /// </summary>
         [Test]
@@ -170,6 +173,7 @@ namespace Test
         public void MaxResponsivenessIsSameAsImmediate()
         {
             using var device = GetPcapDevice();
+            // We don't have much to assert on, but we shall see the path covered in codecov
             device.Open(DeviceModes.Promiscuous | DeviceModes.MaxResponsiveness);
         }
 

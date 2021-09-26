@@ -172,19 +172,27 @@ namespace SharpPcap.LibPcap
                     }
                     // No need to worry about it anymore
                     immediateMode = null;
-                    Handle = LibPcapSafeNativeMethods.pcap_open(
-                        Name,                               // name of the device
-                        configuration.Snaplen,              // portion of the packet to capture.
-                        (short)mode,                        // flags
-                        (short)configuration.ReadTimeout,   // read timeout
-                        ref auth,                           // authentication
-                        errbuf);                            // error buffer
-
+                    try
+                    {
+                        Handle = LibPcapSafeNativeMethods.pcap_open(
+                            Name,                               // name of the device
+                            configuration.Snaplen,              // portion of the packet to capture.
+                            (short)mode,                        // flags
+                            (short)configuration.ReadTimeout,   // read timeout
+                            ref auth,                           // authentication
+                            errbuf);                            // error buffer
+                    }
+                    catch (TypeLoadException)
+                    {
+                        var reason = credentials != null ? "Remote PCAP" : "Requested DeviceModes";
+                        var err = $"Unable to open the adapter '{Name}'. {reason} not supported";
+                        throw new PcapException(err, PcapError.PlatformNotSupported);
+                    }
                 }
 
                 if (Handle.IsInvalid)
                 {
-                    string err = "Unable to open the adapter (" + Name + "). " + errbuf.ToString();
+                    var err = $"Unable to open the adapter '{Name}'. {errbuf}";
                     throw new PcapException(err);
                 }
 
