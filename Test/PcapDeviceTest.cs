@@ -124,6 +124,41 @@ namespace Test
             }));
         }
 
+        /// <summary>
+        /// Non compatible modes should raise ConfigurationFailed
+        /// </summary>
+        [Test]
+        public void NonCompatibleModes()
+        {
+            using var device = GetPcapDevice();
+
+            var config = new DeviceConfiguration
+            {
+                Mode = DeviceModes.NoCaptureLocal,
+                BufferSize = 128 * 1024,
+            };
+
+            var ex = Assert.Throws<PcapException>(() => device.Open(config));
+            StringAssert.Contains(nameof(DeviceConfiguration.BufferSize), ex.Message);
+        }
+
+        /// <summary>
+        /// It shall be possible to set Immediate through MaxReponsiveness when credetials are provided
+        /// </summary>
+        [Test]
+        public void ImmediateWithCredentials()
+        {
+            using var device = GetPcapDevice();
+
+            var config = new DeviceConfiguration
+            {
+                Credentials = new RemoteAuthentication(default, default, default),
+                Immediate = true,
+            };
+
+            device.Open(config);
+        }
+
         [Test]
         [Platform("Win")]
         [TestCase("KernelBufferSize", 64 * 1000 * 1000)]
