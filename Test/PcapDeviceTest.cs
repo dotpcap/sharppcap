@@ -146,25 +146,6 @@ namespace Test
         }
 
         /// <summary>
-        /// It shall be possible to set Immediate through MaxReponsiveness when credetials are provided
-        /// </summary>
-        [Test]
-        [LibpcapVersion(">=1.9.0")]
-        [Category("RemotePcap")]
-        public void ImmediateWithCredentials()
-        {
-            using var device = GetPcapDevice();
-
-            var config = new DeviceConfiguration
-            {
-                Credentials = new RemoteAuthentication(default, default, default),
-                Immediate = true,
-            };
-            // We don't have much to assert on, but we shall see the path covered in codecov
-            device.Open(config);
-        }
-
-        /// <summary>
         /// It shall be possible to set Immediate mode (aka Max Responsiveness) even in Libpcap that do not have pcap_open
         /// by using pcap_set_immediate_mode
         /// </summary>
