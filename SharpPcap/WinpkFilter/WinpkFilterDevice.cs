@@ -48,8 +48,6 @@ namespace SharpPcap.WinpkFilter
 
         public LinkLayers LinkType => LinkLayers.Ethernet;
 
-        public bool Started => throw new NotImplementedException();
-
         public TimeSpan StopCaptureTimeout { get; set; } = TimeSpan.FromSeconds(1);
 
         public ICaptureStatistics Statistics => null;
@@ -289,9 +287,20 @@ namespace SharpPcap.WinpkFilter
         }
 
         private CancellationTokenSource TokenSource;
+        private Task CaptureTask;
+        public bool Started => CaptureTask?.IsCompleted == false;
+
         public void StartCapture()
         {
-            Task.Run(() =>
+            if (OnPacketArrival == null)
+            {
+                throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
+            }
+            if (Started)
+            {
+                return;
+            }
+            CaptureTask = Task.Run(() =>
             {
                 TokenSource?.Dispose();
                 TokenSource = new CancellationTokenSource();

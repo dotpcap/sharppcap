@@ -62,13 +62,24 @@ namespace Test.WinpkFilter
 
             Assert.NotZero(driver.Version);
 
-            using var device = driver.GetNetworkDevices().First();
-            Assert.IsNotNull(device.Name);
-            Assert.IsNotNull(device.FriendlyName);
-            Assert.AreEqual(LinkLayers.Ethernet, device.LinkType);
-            Assert.IsNotNull(device.MacAddress);
-            Assert.AreEqual(TimestampResolution.Microsecond, device.TimestampResolution);
-            Assert.IsNull(device.Statistics);
+            foreach (var device in driver.GetNetworkDevices())
+            {
+                Assert.IsNotNull(device.Name);
+                Assert.IsNotNull(device.FriendlyName);
+                Assert.IsNull(device.Description);
+                Assert.IsNull(device.LastError);
+                Assert.IsNull(device.Filter);
+                Assert.AreEqual(LinkLayers.Ethernet, device.LinkType);
+                Assert.IsNotNull(device.MacAddress);
+                Assert.AreEqual(TimestampResolution.Microsecond, device.TimestampResolution);
+                Assert.IsNull(device.Statistics);
+                if (device.IsValid)
+                {
+                    // unless explicitly changed by user, this is the default for Ethernet adapters
+                    Assert.AreEqual(1500, device.Mtu);
+
+                }
+            }
         }
 
         private static void AllowPacket(ILiveDevice device, WinpkFilterHeader header, Packet packet)
@@ -76,7 +87,7 @@ namespace Test.WinpkFilter
             device.SendPacket(packet.Bytes, header);
         }
 
-        
+
         private static void BlockPacket(ILiveDevice device, WinpkFilterHeader header, Packet packet)
         {
             var ip = packet.Extract<IPv4Packet>();
@@ -124,14 +135,15 @@ namespace Test.WinpkFilter
                 .Name;
             using var driver = WinpkFilterDriver.Open();
             using var device = driver.GetNetworkDevices().First(d => d.FriendlyName == name);
+            Assert.IsFalse(device.Started);
             device.OnPacketArrival += check.OnPacketArrival;
 
-            device.Open();
+            device.Open(DeviceModes.Promiscuous);
             device.AdapterMode = AdapterModes.Tunnel;
             device.StartCapture();
             // Wait for the capture thread to start
             Thread.Sleep(1000);
-
+            Assert.IsTrue(device.Started);
             var status = WebHelper.WebFetch();
             Assert.AreEqual(check.ExpectedStatus, status);
         }
