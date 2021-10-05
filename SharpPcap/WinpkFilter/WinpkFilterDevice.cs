@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharpPcap.WinpkFilter
 {
-    public class WinpkFilterDevice : ILiveDevice
+    public class WinpkFilterDevice : BaseLiveDevice, ILiveDevice
     {
 
         /// <summary>
@@ -39,21 +39,6 @@ namespace SharpPcap.WinpkFilter
         public string Description => null;
 
         public string LastError => null;
-
-        public string Filter
-        {
-            get => null;
-            set => throw new NotSupportedException();
-        }
-
-        public LinkLayers LinkType => LinkLayers.Ethernet;
-
-        public TimeSpan StopCaptureTimeout { get; set; } = TimeSpan.FromSeconds(1);
-
-        public ICaptureStatistics Statistics => null;
-
-        public TimestampResolution TimestampResolution => TimestampResolution.Microsecond;
-
 
         private readonly DriverHandle DriverHandle;
 
@@ -180,16 +165,9 @@ namespace SharpPcap.WinpkFilter
             }
         }
 
-        public event PacketArrivalEventHandler OnPacketArrival;
-        public event CaptureStoppedEventHandler OnCaptureStopped;
-
         private readonly byte[] ReadBuffer = new byte[NativeMethods.IntermediateBufferSize];
-        /// <summary>
-        /// Retrieves the next packet from a device
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns>Status of the operation</returns>
-        public GetPacketStatus GetNextPacket(out PacketCapture e)
+
+        protected override GetPacketStatus GetUnfilteredPacket(out PacketCapture e, TimeSpan timeout)
         {
             unsafe
             {
@@ -265,51 +243,7 @@ namespace SharpPcap.WinpkFilter
             }
         }
 
-        public void Close()
-        {
-            StopCapture();
-        }
-
-        public void Dispose()
-        {
-            Close();
-        }
-
-        private CancellationTokenSource TokenSource;
-        private Task CaptureTask;
-        public bool Started => CaptureTask?.IsCompleted == false;
-
-        public void StartCapture()
-        {
-            if (OnPacketArrival == null)
-            {
-                throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
-            }
-            if (Started)
-            {
-                return;
-            }
-            CaptureTask = Task.Run(() =>
-            {
-                TokenSource?.Dispose();
-                TokenSource = new CancellationTokenSource();
-                CaptureLoop(TokenSource.Token);
-                OnCaptureStopped?.Invoke(this, CaptureStoppedEventStatus.CompletedWithoutError);
-            });
-        }
-
-        public void StopCapture()
-        {
-            TokenSource?.Cancel();
-            TokenSource = null;
-        }
-
-        public void Capture()
-        {
-            CaptureLoop(default);
-        }
-
-        private void CaptureLoop(CancellationToken token)
+        protected override void CaptureLoop(CancellationToken token)
         {
             using (var manualResetEvent = new ManualResetEvent(false))
             {
@@ -328,12 +262,13 @@ namespace SharpPcap.WinpkFilter
                     }
                     while (GetNextPacket(out var capture) == GetPacketStatus.PacketRead)
                     {
-                        OnPacketArrival?.Invoke(this, capture);
+                        RaiseOnPacketArrival(capture);
                     }
                     manualResetEvent.Reset();
                 }
             }
         }
+
     }
 }
 
