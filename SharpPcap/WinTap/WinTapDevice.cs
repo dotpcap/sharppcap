@@ -52,7 +52,7 @@ namespace SharpPcap.WinTap
                 0,
                 IntPtr.Zero,
                 WinFileCreation.OpenExisting,
-                WinFileAttributes.System,
+                WinFileAttributes.System | WinFileAttributes.Overlapped,
                 IntPtr.Zero
             );
             if (Handle.IsInvalid)
@@ -60,7 +60,7 @@ namespace SharpPcap.WinTap
                 throw new PcapException("Failed to open device");
             }
             NativeMethods.SetMediaStatus(Handle, true);
-            this.Stream = new FileStream(Handle, FileAccess.ReadWrite, ReadBuffer.Length, false);
+            this.Stream = new FileStream(Handle, FileAccess.ReadWrite, 0x1000, true);
         }
 
         public override void Close()

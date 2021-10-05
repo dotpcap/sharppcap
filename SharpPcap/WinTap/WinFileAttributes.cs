@@ -19,6 +19,8 @@ namespace SharpPcap.WinTap
         Offline = 0x00001000,
         NotContentIndexed = 0x00002000,
         Encrypted = 0x00004000,
+
+        Overlapped = 0x40000000,
     }
 
 }
