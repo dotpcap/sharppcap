@@ -60,7 +60,7 @@ namespace SharpPcap.WinTap
                 throw new PcapException("Failed to open device");
             }
             NativeMethods.SetMediaStatus(Handle, true);
-            this.Stream = new FileStream(Handle, FileAccess.ReadWrite);
+            this.Stream = new FileStream(Handle, FileAccess.ReadWrite, ReadBuffer.Length, false);
         }
 
         public override void Close()
