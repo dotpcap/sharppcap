@@ -36,11 +36,11 @@ jobs:
   pool:
     vmImage: 'VS2017-Win2016'
   steps:
+  - script: choco install -y tapwindows
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: choco install -y tapwindows
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
     env:
@@ -51,9 +51,11 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  # tap windows have to be installed before winpcap,
+  # otherwise winpcap will only pick it up after reboot
+  - script: choco install -y tapwindows
   - script: choco install -y winpcap
   - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: choco install -y tapwindows
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
     env:
@@ -63,11 +65,11 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  - script: choco install -y tapwindows
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: choco install -y tapwindows
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
     env:
