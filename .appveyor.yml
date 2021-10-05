@@ -23,6 +23,7 @@ for:
       - image: Visual Studio 2017
   install:
     - choco install -y dotnet-sdk --version=5.0.400
+    - choco install -y tapwindows
     - ps: .\scripts\InstallNpcap.ps1
     - ps: .\scripts\install-winpkfilter.ps1
   build_script:
@@ -35,6 +36,7 @@ for:
     only:
       - image: Visual Studio 2019
   install:
+    - choco install -y tapwindows
     - ps: .\scripts\InstallNpcap.ps1
     - ps: .\scripts\install-winpkfilter.ps1
   build_script:
