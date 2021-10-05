@@ -22,7 +22,7 @@ namespace Test.WinTap
         {
             var nic = WinTapDevice.GetTapInterfaces().First();
             using var device = new WinTapDevice(nic);
-
+            device.Open();
             Assert.GreaterOrEqual(device.Version.Major, 9);
             Assert.IsNotNull(device.Name);
             Assert.IsNotNull(device.FriendlyName);
