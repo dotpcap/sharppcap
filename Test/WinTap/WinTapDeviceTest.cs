@@ -13,7 +13,7 @@ namespace Test.WinTap
 {
     [TestFixture]
     [Category("WinTap")]
-    [Platform("Win", Reason = "WinpkFilter driver is only available for Windows")]
+    [Platform("Win", Reason = "WinTap driver is only available for Windows")]
     public class WinTapDeviceTest
     {
 

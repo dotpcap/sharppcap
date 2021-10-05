@@ -66,7 +66,7 @@ namespace SharpPcap.WinTap
         public override void Close()
         {
             base.Close();
-            Stream.Close();
+            Stream?.Close();
             Handle.Close();
         }
 
