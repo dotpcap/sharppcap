@@ -26,7 +26,7 @@ namespace Test.WinTap
             Assert.GreaterOrEqual(device.Version.Major, 9);
             Assert.IsNotNull(device.Name);
             Assert.IsNotNull(device.FriendlyName);
-            Assert.IsNull(device.Description);
+            Assert.IsNotNull(device.Description);
             Assert.IsNull(device.LastError);
             Assert.IsNull(device.Filter);
             Assert.AreEqual(LinkLayers.Ethernet, device.LinkType);
@@ -57,7 +57,7 @@ namespace Test.WinTap
             var arp = new ARP(pcapDevice);
 
             var mac = arp.Resolve(tapIp, testIp, testMac);
-            Assert.AreEqual(mac, tapDevice.MacAddress);
+            Assert.AreEqual(tapDevice.MacAddress, mac);
 
             var retval = tapDevice.GetNextPacket(out var p);
             Assert.AreEqual(GetPacketStatus.PacketRead, retval);
