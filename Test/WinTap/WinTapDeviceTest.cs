@@ -61,7 +61,7 @@ namespace Test.WinTap
             PhysicalAddress mac = null;
 
             // Give interface some time to finish Gratuitous ARP
-            while (mac == null && sw.ElapsedMilliseconds < 5000)
+            while (mac == null && sw.ElapsedMilliseconds < 10000)
             {
                 mac = arp.Resolve(tapIp, testIp, testMac);
             }

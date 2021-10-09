@@ -12,7 +12,10 @@ namespace SharpPcap.WinTap
         private readonly NetworkInterface Interface;
         private FileStream Stream;
 
-        protected SafeFileHandle Handle { get; set; } = new SafeFileHandle(IntPtr.Zero, false);
+        protected FileStream GetFileStream()
+        {
+            return Stream ?? throw new DeviceNotReadyException("Device not open");
+        }
 
         public string Name => "wintap:" + Interface.Name;
 
@@ -24,7 +27,7 @@ namespace SharpPcap.WinTap
 
         public Version Version
         {
-            get => NativeMethods.GetVersion(Handle);
+            get => NativeMethods.GetVersion(GetFileStream().SafeFileHandle);
         }
 
         public PhysicalAddress MacAddress => Interface.GetPhysicalAddress();
@@ -43,11 +46,11 @@ namespace SharpPcap.WinTap
 
         public void Open(DeviceConfiguration configuration)
         {
-            if (!(Handle.IsClosed || Handle.IsInvalid))
+            if (Stream != null)
             {
                 return;
             }
-            this.Handle = NativeMethods.CreateFile(@"\\.\Global\" + Interface.Id + ".tap",
+            var handle = NativeMethods.CreateFile(@"\\.\Global\" + Interface.Id + ".tap",
                 WinFileAccess.GenericRead | WinFileAccess.GenericWrite,
                 0,
                 IntPtr.Zero,
@@ -55,26 +58,27 @@ namespace SharpPcap.WinTap
                 WinFileAttributes.System | WinFileAttributes.Overlapped,
                 IntPtr.Zero
             );
-            if (Handle.IsInvalid)
+            if (handle.IsInvalid)
             {
                 throw new PcapException("Failed to open device");
             }
-            NativeMethods.SetMediaStatus(Handle, true);
-            this.Stream = new FileStream(Handle, FileAccess.ReadWrite, 0x1000, true);
+            NativeMethods.SetMediaStatus(handle, true);
+            this.Stream = new FileStream(handle, FileAccess.ReadWrite, 0x1000, true);
         }
 
         public override void Close()
         {
             base.Close();
             Stream?.Close();
-            Handle.Close();
+            Stream = null;
         }
 
         private readonly byte[] ReadBuffer = new byte[0x4000];
         protected override GetPacketStatus GetUnfilteredPacket(out PacketCapture e, TimeSpan timeout)
         {
+            var fs = GetFileStream();
             var cts = new CancellationTokenSource(timeout);
-            var task = Stream.ReadAsync(ReadBuffer, 0, ReadBuffer.Length, cts.Token);
+            var task = fs.ReadAsync(ReadBuffer, 0, ReadBuffer.Length, cts.Token);
             task.Wait();
 
             if (!task.IsFaulted)
@@ -96,9 +100,10 @@ namespace SharpPcap.WinTap
 
         protected override void CaptureLoop(CancellationToken token)
         {
+            var fs = GetFileStream();
             while (!token.IsCancellationRequested)
             {
-                var task = Stream.ReadAsync(ReadBuffer, 0, ReadBuffer.Length, token);
+                var task = fs.ReadAsync(ReadBuffer, 0, ReadBuffer.Length, token);
                 task.Wait();
                 if (!task.IsFaulted)
                 {
@@ -112,8 +117,9 @@ namespace SharpPcap.WinTap
         public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
         {
             var data = p.ToArray();
-            Stream.Write(data, 0, data.Length);
-            Stream.Flush();
+            var fs = GetFileStream();
+            fs.Write(data, 0, data.Length);
+            fs.Flush();
         }
     }
 }
