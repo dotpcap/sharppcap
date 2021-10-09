@@ -3,6 +3,7 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using SharpPcap.WinTap;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -56,7 +57,14 @@ namespace Test.WinTap
             tapDevice.Filter = "arp dst host " + tapIp;
             var arp = new ARP(pcapDevice);
 
-            var mac = arp.Resolve(tapIp, testIp, testMac);
+            var sw = Stopwatch.StartNew();
+            PhysicalAddress mac = null;
+
+            // Give interface some time to finish Gratuitous ARP
+            while (mac == null && sw.ElapsedMilliseconds < 5000)
+            {
+                mac = arp.Resolve(tapIp, testIp, testMac);
+            }
             Assert.AreEqual(tapDevice.MacAddress, mac);
 
             var retval = tapDevice.GetNextPacket(out var p);
