@@ -18,6 +18,7 @@ jobs:
     vmImage: 'ubuntu-18.04'
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
+  - script: sudo -E bash scripts/install-tap.sh
   - script: sudo -E bash scripts/test.sh
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
@@ -28,7 +29,7 @@ jobs:
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
-  - script: sudo -E bash scripts/test.sh
+  - script: sudo -E bash scripts/test.sh --filter "TestCategory!=Tunneling"
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 
@@ -36,6 +37,7 @@ jobs:
   pool:
     vmImage: 'VS2017-Win2016'
   steps:
+  - script: choco install -y tapwindows
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
@@ -50,6 +52,9 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  # tap windows have to be installed before winpcap,
+  # otherwise winpcap will only pick it up after reboot
+  - script: choco install -y tapwindows
   - script: choco install -y winpcap
   - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
@@ -61,6 +66,7 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  - script: choco install -y tapwindows
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
