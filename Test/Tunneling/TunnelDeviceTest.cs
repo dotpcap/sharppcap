@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Threading;
 using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace Test.WinTap
@@ -15,6 +16,7 @@ namespace Test.WinTap
     [TestFixture]
     [Category("Tunneling")]
     [Platform(Exclude = "MacOSX", Reason = "Not tested yet")]
+    [NonParallelizable]
     public class TunnelDeviceTest
     {
 
@@ -49,7 +51,9 @@ namespace Test.WinTap
             using var tapDevice = new TunnelDevice(nic);
             // Open TAP device first to ensure the virtual device is connected
             tapDevice.Open();
-            var tapIp = IpHelper.EnsureIPv4Address(nic);
+            // Pick a range that no CI is likely to use
+            var tapIp = IPAddress.Parse("10.225.255.1");
+            IpHelper.SetIPv4Address(nic, tapIp);
             using var tester = new UdpTester(tapIp);
 
 
@@ -82,6 +86,8 @@ namespace Test.WinTap
             using var tapDevice = new TunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
             tapDevice.Open();
+            // Wait for interface to be fully up
+            Thread.Sleep(1000);
             using var pcapDevice = GetLibPcapDevice(nic);
             PcapDeviceTest.CheckExchange(tapDevice, pcapDevice);
         }

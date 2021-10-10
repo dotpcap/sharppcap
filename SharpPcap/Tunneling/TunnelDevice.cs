@@ -51,7 +51,9 @@ namespace SharpPcap.Tunneling
         public static NetworkInterface[] GetTunnelInterfaces()
         {
             var nics = NetworkInterface.GetAllNetworkInterfaces();
-            return nics.Where(IsTapInterface).ToArray();
+            return nics.Where(IsTapInterface)
+                .OrderBy(n => n.Id)
+                .ToArray();
         }
 
         private static bool IsTapInterface(NetworkInterface nic)
