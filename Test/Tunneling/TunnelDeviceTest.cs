@@ -88,9 +88,15 @@ namespace Test.WinTap
 
         private static LibPcapLiveDevice GetLibPcapDevice(NetworkInterface nic)
         {
+            var pcap_name = nic.Id;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                pcap_name = @"\Device\NPF_" + nic.Id;
+            }
             var pcapInterface = new PcapInterface(new pcap_if
             {
-                Name = @"\Device\NPF_" + nic.Id,
+                Name = pcap_name,
             }, nic, null);
             return new LibPcapLiveDevice(pcapInterface);
         }
