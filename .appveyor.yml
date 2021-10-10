@@ -23,6 +23,7 @@ for:
       - image: Visual Studio 2017
   install:
     - choco install -y dotnet-sdk --version=5.0.400
+    - choco install -y tapwindows
     - ps: .\scripts\InstallNpcap.ps1
     - ps: .\scripts\install-winpkfilter.ps1
   build_script:
@@ -35,6 +36,7 @@ for:
     only:
       - image: Visual Studio 2019
   install:
+    - choco install -y tapwindows
     - ps: .\scripts\InstallNpcap.ps1
     - ps: .\scripts\install-winpkfilter.ps1
   build_script:
@@ -48,6 +50,7 @@ for:
       - image: Ubuntu1804
   install:
     - sudo -E bash scripts/install-libpcap.sh
+    - sudo -E bash scripts/install-tap.sh
   test_script:
     - sudo -E bash scripts/test.sh
 
@@ -58,4 +61,4 @@ for:
   install:
     - sudo -E bash scripts/install-libpcap.sh
   test_script:
-    - sudo -E bash scripts/test.sh
+    - sudo -E bash scripts/test.sh --filter "TestCategory!=Tunneling"
