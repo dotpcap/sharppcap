@@ -50,6 +50,7 @@ for:
       - image: Ubuntu1804
   install:
     - sudo -E bash scripts/install-libpcap.sh
+    - sudo -E bash scripts/install-tap.sh
   test_script:
     - sudo -E bash scripts/test.sh
 
@@ -59,5 +60,6 @@ for:
       - image: macos
   install:
     - sudo -E bash scripts/install-libpcap.sh
+    - sudo -E bash scripts/install-tap.sh
   test_script:
     - sudo -E bash scripts/test.sh

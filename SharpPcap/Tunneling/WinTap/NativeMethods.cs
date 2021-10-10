@@ -3,11 +3,14 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap.WinTap
+namespace SharpPcap.Tunneling.WinTap
 {
+
+    /// <summary>
+    /// Helper methods to communicate with tap device file
+    /// </summary>
     internal static class NativeMethods
     {
-
         internal static Version GetVersion(SafeFileHandle handle)
         {
             Span<byte> inBuffer = stackalloc byte[0];
@@ -54,6 +57,9 @@ namespace SharpPcap.WinTap
         private const uint FILE_ANY_ACCESS = 0;
         private const uint FILE_DEVICE_UNKNOWN = 0x00000022;
 
+        /// <summary>
+        /// See https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d4drvif/nf-d4drvif-ctl_code
+        /// </summary>
         private static uint CTL_CODE(uint deviceType, uint function, uint method, uint access)
         {
             return ((deviceType << 16) | (access << 14) | (function << 2) | method);
@@ -72,12 +78,6 @@ namespace SharpPcap.WinTap
             WinFileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile
         );
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall,
-            SetLastError = true)]
-        internal static extern int GetFileAttributes(string lpFileName);
-
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

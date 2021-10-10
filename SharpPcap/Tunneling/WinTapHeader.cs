@@ -1,5 +1,5 @@
 ﻿
-namespace SharpPcap.WinTap
+namespace SharpPcap.Tunneling
 {
     public class WinTapHeader : ICaptureHeader
     {
