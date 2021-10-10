@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
@@ -257,6 +258,15 @@ namespace Test
         [Test]
         public void ReceivePacketsWithStartCapture()
         {
+            // We can't use the same device for async capturing and sending
+            var device = GetPcapDevice();
+            using var receiver = new LibPcapLiveDevice(device.Interface);
+            using var sender = new LibPcapLiveDevice(receiver.Interface);
+            CheckExchange(sender, receiver);
+
+        }
+        internal static void CheckExchange(IInjectionDevice sender, ICaptureDevice receiver)
+        {
             const int PacketsCount = 10;
             var packets = new List<RawCapture>();
             var statuses = new List<CaptureStoppedEventStatus>();
@@ -268,10 +278,6 @@ namespace Test
             {
                 statuses.Add(status);
             }
-            // We can't use the same device for async capturing and sending
-            var device = GetPcapDevice();
-            using var receiver = new LibPcapLiveDevice(device.Interface);
-            using var sender = new LibPcapLiveDevice(receiver.Interface);
 
             // Configure sender
             sender.Open();
@@ -285,6 +291,7 @@ namespace Test
 
             // Send the packets
             var packet = EthernetPacket.RandomPacket();
+            packet.DestinationHardwareAddress = PhysicalAddress.Parse("FFFFFFFFFFFF");
             packet.Type = (EthernetType)0x1234;
             for (var i = 0; i < PacketsCount; i++)
             {
