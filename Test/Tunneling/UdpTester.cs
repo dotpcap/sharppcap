@@ -20,7 +20,7 @@ namespace Test.WinTap
 
         public UdpTester(IPAddress localIp)
         {
-            LocalIp = Unscoped(localIp);
+            LocalIp = localIp;
             Client = new UdpClient(new IPEndPoint(localIp, Port));
             Client.EnableBroadcast = true;
             Task.Run(ReceiveLoop);
@@ -105,16 +105,6 @@ namespace Test.WinTap
             {
                 // end of connection
             }
-        }
-
-        /// <summary>
-        /// Returns IPAddress without ScopeId so that IPAddress.Equals works
-        /// </summary>
-        /// <param name="addr"></param>
-        /// <returns></returns>
-        private static IPAddress Unscoped(IPAddress addr)
-        {
-            return new IPAddress(addr.GetAddressBytes());
         }
     }
 

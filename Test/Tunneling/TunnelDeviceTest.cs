@@ -88,23 +88,10 @@ namespace Test.WinTap
             tapDevice.Open();
             // Wait for interface to be fully up
             Thread.Sleep(1000);
-            using var pcapDevice = GetLibPcapDevice(nic);
+            var pcapInterface = PcapInterface.GetAllPcapInterfaces()
+                .First(pIf => pIf.FriendlyName == nic.Name);
+            using var pcapDevice = new LibPcapLiveDevice(pcapInterface);
             PcapDeviceTest.CheckExchange(tapDevice, pcapDevice);
-        }
-
-        private static LibPcapLiveDevice GetLibPcapDevice(NetworkInterface nic)
-        {
-            var pcap_name = nic.Id;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                pcap_name = @"\Device\NPF_" + nic.Id;
-            }
-            var pcapInterface = new PcapInterface(new pcap_if
-            {
-                Name = pcap_name,
-            }, nic, null);
-            return new LibPcapLiveDevice(pcapInterface);
         }
 
 
