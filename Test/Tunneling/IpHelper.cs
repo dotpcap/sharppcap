@@ -3,16 +3,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
-namespace Test.WinTap
+namespace Test.Tunneling
 {
     class IpHelper
     {
-        internal static void SetIPv4Address(NetworkInterface networkInterface, IPAddress ip)
+        internal static void SetIPv4Address(NetworkInterface nic, IPAddress ip)
         {
-            var name = networkInterface.Name;
+            var name = nic.Name;
             Process p;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -28,9 +27,13 @@ namespace Test.WinTap
                 throw new NotSupportedException($"Failed to set interface '{name}' address. Exit code {p.ExitCode}");
             }
             // Update interface reference, since addresses could change after interface opened
-            var nic = NetworkInterface.GetAllNetworkInterfaces()
-                .First(n => n.Id.Equals(networkInterface.Id));
-
+            // Also wait for interface to be up again
+            var sw = Stopwatch.StartNew();
+            while (nic.OperationalStatus != OperationalStatus.Up && sw.ElapsedMilliseconds < 10000)
+            {
+                nic = NetworkInterface.GetAllNetworkInterfaces()
+                    .First(n => n.Id.Equals(nic.Id));
+            }
             foreach (UnicastIPAddressInformation info in nic.GetIPProperties().UnicastAddresses)
             {
                 if (ip.Equals(info.Address))

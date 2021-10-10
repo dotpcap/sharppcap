@@ -6,12 +6,10 @@ using SharpPcap.Tunneling;
 using System;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
-namespace Test.WinTap
+namespace Test.Tunneling
 {
     [TestFixture]
     [Category("Tunneling")]
@@ -54,10 +52,11 @@ namespace Test.WinTap
             // Pick a range that no CI is likely to use
             var tapIp = IPAddress.Parse("10.225.255.1");
             IpHelper.SetIPv4Address(nic, tapIp);
+
             using var tester = new UdpTester(tapIp);
 
 
-            tapDevice.Filter = "udp port 4444";
+            tapDevice.Filter = "udp port " + UdpTester.Port;
 
             // Send from OS, and receive in tunnel
             var seq1 = new byte[] { 1, 2, 3 };

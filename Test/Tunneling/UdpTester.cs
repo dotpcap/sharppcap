@@ -6,14 +6,14 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Test.WinTap
+namespace Test.Tunneling
 {
     class UdpTester : IDisposable
     {
         private readonly IPAddress LocalIp;
         private readonly UdpClient Client;
 
-        private static readonly ushort Port = 4444;
+        internal static readonly ushort Port = 4422;
         private static readonly PhysicalAddress BroadcastMac = PhysicalAddress.Parse("FFFFFFFFFFFF");
 
         public byte[] LastReceivedData { get; private set; }
@@ -52,8 +52,8 @@ namespace Test.WinTap
             Assert.IsNotNull(ip);
             Assert.IsNotNull(udp);
 
-            Assert.AreEqual(udp.SourcePort, 4444);
-            Assert.AreEqual(udp.DestinationPort, 4444);
+            Assert.AreEqual(udp.SourcePort, Port);
+            Assert.AreEqual(udp.DestinationPort, Port);
             Assert.AreEqual(LocalIp, ip.SourceAddress);
 
             CollectionAssert.AreEqual(data, udp.PayloadData);
