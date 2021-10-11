@@ -54,8 +54,17 @@ namespace Test.Tunneling
             using var tapDevice = new TunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
             tapDevice.Open(DeviceModes.Promiscuous);
+            PhysicalAddress mac = null;
+            for (int i = 0; i < 5; i++)
+            {
+                mac = ARP.Resolve(tapDevice, tapIp, testIp, testMac, TimeSpan.FromSeconds(1));
+                if (mac != null)
+                {
+                    break;
+                }
+                // Wait for interface to finish Gratuitous ARP
+            }
 
-            var mac = ARP.Resolve(tapDevice, tapIp, testIp, testMac, TimeSpan.FromSeconds(5));
 
             Assert.AreEqual(tapDevice.MacAddress, mac);
         }
