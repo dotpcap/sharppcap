@@ -1,11 +1,11 @@
 ﻿
-namespace SharpPcap.WinTap
+namespace SharpPcap.Tunneling
 {
-    public class WinTapHeader : ICaptureHeader
+    public class TunnelHeader : ICaptureHeader
     {
         public PosixTimeval Timeval { get; set; }
 
-        public WinTapHeader()
+        public TunnelHeader()
         {
             Timeval = new PosixTimeval();
         }

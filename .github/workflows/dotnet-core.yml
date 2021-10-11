@@ -21,6 +21,8 @@ jobs:
       run: dotnet restore
     - name: Install libpcap
       run: sudo -E bash scripts/install-libpcap.sh
+    - name: Install tap
+      run: sudo -E bash scripts/install-tap.sh
     - name: Build sharppcap assembly
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
