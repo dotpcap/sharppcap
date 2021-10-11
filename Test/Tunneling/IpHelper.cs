@@ -10,8 +10,23 @@ namespace Test.Tunneling
 {
     class IpHelper
     {
-        internal static void SetIPv4Address(NetworkInterface nic, IPAddress ip)
+
+        /// <summary>
+        /// Linux machines tend to create a tap that have no IPs
+        /// Windows usually auto assign an IP
+        /// </summary>
+        /// <param name="nic"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        internal static IPAddress EnsureIPv4Address(NetworkInterface nic)
         {
+            var ip = GetIPAddress(nic);
+            if (ip != null)
+            {
+                return ip;
+            }
+            // Pick a range that no CI is likely to use
+            ip = IPAddress.Parse("10.225.255.1");
             var name = nic.Name;
             Process p;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -35,12 +50,9 @@ namespace Test.Tunneling
                 nic = NetworkInterface.GetAllNetworkInterfaces()
                     .First(n => n.Id.Equals(nic.Id));
             }
-            foreach (UnicastIPAddressInformation info in nic.GetIPProperties().UnicastAddresses)
+            if (ip.Equals(GetIPAddress(nic)))
             {
-                if (ip.Equals(info.Address))
-                {
-                    return;
-                }
+                return ip;
             }
             throw new NotSupportedException($"Failed to set interface '{name}' address.");
         }

@@ -39,7 +39,6 @@ blocks:
         - commands:
             - checkout
             - sudo -E bash scripts/install-libpcap.sh
-            - sudo -E bash scripts/install-tap.sh
             - brew install --cask dotnet-sdk
             - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance"
           name: Test

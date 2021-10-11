@@ -43,9 +43,7 @@ namespace Test.Tunneling
         public void TestArpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
-            // Pick a range that no CI is likely to use
-            var tapIp = IPAddress.Parse("10.225.255.1");
-            IpHelper.SetIPv4Address(nic, tapIp);
+            var tapIp = IpHelper.EnsureIPv4Address(nic);
 
             // we need to provide our own IP and MAC, otherwise OS will ignore its own requests
             var ipBytes = tapIp.GetAddressBytes();
@@ -72,9 +70,7 @@ namespace Test.Tunneling
             using var tapDevice = new TunnelDevice(nic);
             // Open TAP device first to ensure the virtual device is connected
             tapDevice.Open();
-            // Pick a range that no CI is likely to use
-            var tapIp = IPAddress.Parse("10.225.255.1");
-            IpHelper.SetIPv4Address(nic, tapIp);
+            var tapIp = IpHelper.EnsureIPv4Address(nic);
 
             using var tester = new UdpTester(tapIp);
 
