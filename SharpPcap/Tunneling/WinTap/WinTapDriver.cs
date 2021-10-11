@@ -1,14 +1,45 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
-namespace SharpPcap.WinTap
+namespace SharpPcap.Tunneling.WinTap
 {
-    internal static class NativeMethods
-    {
 
-        internal static Version GetVersion(SafeFileHandle handle)
+    /// <summary>
+    /// Driver to communicate with tap device file
+    /// </summary>
+    class WinTapDriver : ITunnelDriver
+    {
+        internal static readonly ITunnelDriver Instance = new WinTapDriver();
+
+        public bool IsTunnelInterface(NetworkInterface networkInterface)
+        {
+            return networkInterface.Description.StartsWith("TAP-Windows Adapter");
+        }
+
+        public FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration)
+        {
+            var bufferSize = configuration.BufferSize ?? 4096;
+            var handle = CreateFile(@"\\.\Global\" + networkInterface.Id + ".tap",
+                WinFileAccess.GenericRead | WinFileAccess.GenericWrite,
+                0,
+                IntPtr.Zero,
+                WinFileCreation.OpenExisting,
+                WinFileAttributes.System | WinFileAttributes.Overlapped,
+                IntPtr.Zero
+            );
+            if (handle.IsInvalid)
+            {
+                throw new PcapException("Failed to open device");
+            }
+            SetMediaStatus(handle, true);
+            return new FileStream(handle, FileAccess.ReadWrite, bufferSize, true);
+        }
+
+        public Version GetVersion(NetworkInterface networkInterface, SafeFileHandle handle)
         {
             Span<byte> inBuffer = stackalloc byte[0];
             Span<byte> outBuffer = stackalloc byte[12];
@@ -54,6 +85,9 @@ namespace SharpPcap.WinTap
         private const uint FILE_ANY_ACCESS = 0;
         private const uint FILE_DEVICE_UNKNOWN = 0x00000022;
 
+        /// <summary>
+        /// See https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d4drvif/nf-d4drvif-ctl_code
+        /// </summary>
         private static uint CTL_CODE(uint deviceType, uint function, uint method, uint access)
         {
             return ((deviceType << 16) | (access << 14) | (function << 2) | method);
@@ -73,12 +107,6 @@ namespace SharpPcap.WinTap
             IntPtr hTemplateFile
         );
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall,
-            SetLastError = true)]
-        internal static extern int GetFileAttributes(string lpFileName);
-
-
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool DeviceIoControl(
@@ -91,5 +119,6 @@ namespace SharpPcap.WinTap
             out int lpBytesReturned,
             [In] IntPtr lpOverlapped
         );
+
     }
 }
