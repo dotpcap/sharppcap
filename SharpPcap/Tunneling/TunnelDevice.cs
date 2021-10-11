@@ -66,7 +66,11 @@ namespace SharpPcap.Tunneling
             {
                 return;
             }
+            
             Stream = Driver.Open(Interface, configuration);
+            ReadTimeout = TimeSpan.FromMilliseconds(configuration.ReadTimeout);
+            Snaplen = configuration.Snaplen;
+            
         }
 
         public override void Close()
@@ -76,6 +80,7 @@ namespace SharpPcap.Tunneling
             Stream = null;
         }
 
+        private int Snaplen = Pcap.MAX_PACKET_SIZE;
         private readonly byte[] ReadBuffer = new byte[0x4000];
         protected override GetPacketStatus GetUnfilteredPacket(out PacketCapture e, TimeSpan timeout)
         {
@@ -99,7 +104,7 @@ namespace SharpPcap.Tunneling
                 e = default;
                 return GetPacketStatus.NoRemainingPackets;
             }
-            var data = new Span<byte>(ReadBuffer).Slice(0, task.Result);
+            var data = new Span<byte>(ReadBuffer).Slice(0, Math.Min(task.Result, Snaplen));
             e = new PacketCapture(this, new TunnelHeader(), data);
             return GetPacketStatus.PacketRead;
         }

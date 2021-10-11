@@ -22,6 +22,7 @@ namespace SharpPcap.Tunneling.WinTap
 
         public FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration)
         {
+            var bufferSize = configuration.BufferSize ?? 4096;
             var handle = CreateFile(@"\\.\Global\" + networkInterface.Id + ".tap",
                 WinFileAccess.GenericRead | WinFileAccess.GenericWrite,
                 0,
@@ -35,7 +36,7 @@ namespace SharpPcap.Tunneling.WinTap
                 throw new PcapException("Failed to open device");
             }
             SetMediaStatus(handle, true);
-            return new FileStream(handle, FileAccess.ReadWrite, 0x1000, true);
+            return new FileStream(handle, FileAccess.ReadWrite, bufferSize, true);
         }
 
         public Version GetVersion(NetworkInterface networkInterface, SafeFileHandle handle)

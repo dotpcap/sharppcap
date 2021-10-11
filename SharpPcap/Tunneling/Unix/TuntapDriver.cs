@@ -16,11 +16,13 @@ namespace SharpPcap.Tunneling.Unix
         internal static readonly ITunnelDriver Instance = new TuntapDriver();
         public FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration)
         {
-            var stream = new FileStream("/dev/net/tun", FileMode.Open, FileAccess.ReadWrite);
+            var bufferSize = configuration.BufferSize ?? 4096;
+            var stream = new FileStream("/dev/net/tun", FileMode.Open, FileAccess.ReadWrite, default, bufferSize);
             try
             {
+                
                 SetIff(stream.SafeFileHandle, networkInterface.Id, IffFlags.Tap | IffFlags.NoPi);
-                BringUp(networkInterface.Id);
+                BringUp(networkInterface.Id, configuration.Mode.HasFlag(DeviceModes.Promiscuous));
             }
             catch (Exception)
             {
@@ -62,12 +64,16 @@ namespace SharpPcap.Tunneling.Unix
             IOControl(handle.DangerousGetHandle(), TUNSETIFF, ref ifr);
         }
 
-        internal static void BringUp(string ifr_name)
+        internal static void BringUp(string ifr_name, bool promiscuous)
         {
             const uint SIOCSIFFLAGS = 0x8914U;
             IfReq ifr = default;
             ifr.ifr_name = ifr_name;
             ifr.ifr_flags = (short)(NetDeviceFlags.Up | NetDeviceFlags.AllMulti | NetDeviceFlags.Running);
+            if (promiscuous)
+            {
+                ifr.ifr_flags |= (short)NetDeviceFlags.Promisc;
+            }
             using (var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP))
             {
                 IOControl(sock.Handle, SIOCSIFFLAGS, ref ifr);

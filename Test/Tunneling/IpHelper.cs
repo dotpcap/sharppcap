@@ -20,7 +20,7 @@ namespace Test.Tunneling
             }
             else
             {
-                p = Process.Start("ip", $"address set {ip}/24 dev {name}");
+                p = Process.Start("ip", $"address replace {ip}/24 dev {name}");
             }
             p.WaitForExit();
             if (p.ExitCode != 0)

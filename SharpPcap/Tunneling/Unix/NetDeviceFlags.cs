@@ -9,7 +9,7 @@
         PoinToPoint = 1 << 4,  /* volatile */
         NoTrailers = 1 << 5,  /* sysfs */
         Running = 1 << 6,  /* volatile */
-        NOArp = 1 << 7,  /* sysfs */
+        NoArp = 1 << 7,  /* sysfs */
         Promisc = 1 << 8,  /* sysfs */
         AllMulti = 1 << 9,  /* sysfs */
         Master = 1 << 10, /* volatile */
