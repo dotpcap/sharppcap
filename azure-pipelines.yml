@@ -18,6 +18,7 @@ jobs:
     vmImage: 'ubuntu-18.04'
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
+  - script: sudo -E bash scripts/install-tap.sh
   - script: sudo -E bash scripts/test.sh
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
@@ -28,7 +29,7 @@ jobs:
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
-  - script: sudo -E bash scripts/test.sh
+  - script: sudo -E bash scripts/test.sh --filter "TestCategory!=Tunneling"
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 

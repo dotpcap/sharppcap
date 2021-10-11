@@ -62,6 +62,8 @@ namespace Test
                 .Where(d => d.Name != "bluetooth-monitor")
                 // Semaphore CI have this interface, and it's always down
                 .Where(d => d.Name != "virbr0-nic")
+                // TAP interfaces, usually down until being used
+                .Where(d => !d.Name.StartsWith("tap"))
                 .Distinct();
         }
     }
