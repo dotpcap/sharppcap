@@ -43,7 +43,9 @@ namespace Test.Tunneling
         public void TestArpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
-            var tapIp = IpHelper.GetIPAddress(nic);
+            // Pick a range that no CI is likely to use
+            var tapIp = IPAddress.Parse("10.225.255.1");
+            IpHelper.SetIPv4Address(nic, tapIp);
 
             // we need to provide our own IP and MAC, otherwise OS will ignore its own requests
             var ipBytes = tapIp.GetAddressBytes();
