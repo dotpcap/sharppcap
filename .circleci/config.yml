@@ -25,6 +25,7 @@ jobs:
     steps:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-tap.sh
       # Download and compile latest libpcap
       - when:
           condition: { equal: [ libpcap-script, << parameters.libpcap >> ] }
