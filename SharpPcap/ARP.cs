@@ -111,79 +111,88 @@ namespace SharpPcap
             {
                 throw new InvalidOperationException("Unable to find local mac address");
             }
+            using (var device = new LibPcapLiveDevice(pcapInterface))
+            {
+                //open the device with 20ms timeout
+                device.Open(mode: DeviceModes.Promiscuous, read_timeout: 20);
+                return Resolve(device, destIP, localIP, localMAC, Timeout);
+            }
+        }
 
+        internal static PhysicalAddress Resolve(
+            ILiveDevice device,
+            System.Net.IPAddress destIP,
+            System.Net.IPAddress localIP,
+            PhysicalAddress localMAC,
+            TimeSpan timeout)
+        {
             //Build a new ARP request packet
             var request = BuildRequest(destIP, localMAC, localIP);
 
             //create a "tcpdump" filter for allowing only arp replies to be read
             String arpFilter = "arp and ether dst " + localMAC.ToString();
 
-            using (var device = new LibPcapLiveDevice(pcapInterface))
+            //set the filter
+            device.Filter = arpFilter;
+
+            // set a last request time that will trigger sending the
+            // arp request immediately
+            var lastRequestTime = DateTime.FromBinary(0);
+
+            var requestInterval = new TimeSpan(0, 0, 1);
+
+            PacketDotNet.ArpPacket arpPacket = null;
+
+            // attempt to resolve the address with the current timeout
+            var timeoutDateTime = DateTime.Now + timeout;
+            while (DateTime.Now < timeoutDateTime)
             {
-                //open the device with 20ms timeout
-                device.Open(mode: DeviceModes.Promiscuous, read_timeout: 20);
-
-                //set the filter
-                device.Filter = arpFilter;
-
-                // set a last request time that will trigger sending the
-                // arp request immediately
-                var lastRequestTime = DateTime.FromBinary(0);
-
-                var requestInterval = new TimeSpan(0, 0, 1);
-
-                PacketDotNet.ArpPacket arpPacket = null;
-
-                // attempt to resolve the address with the current timeout
-                var timeoutDateTime = DateTime.Now + Timeout;
-                while (DateTime.Now < timeoutDateTime)
+                if (requestInterval < (DateTime.Now - lastRequestTime))
                 {
-                    if (requestInterval < (DateTime.Now - lastRequestTime))
-                    {
-                        // inject the packet to the wire
-                        device.SendPacket(request);
-                        lastRequestTime = DateTime.Now;
-                    }
-
-                    //read the next packet from the network
-                    var retval = device.GetNextPacket(out PacketCapture e);
-                    if (retval != GetPacketStatus.PacketRead)
-                    {
-                        continue;
-                    }
-                    var reply = e.GetPacket();
-
-                    // parse the packet
-                    var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
-
-                    // is this an arp packet?
-                    arpPacket = packet.Extract<PacketDotNet.ArpPacket>();
-                    if (arpPacket == null)
-                    {
-                        continue;
-                    }
-
-                    //if this is the reply we're looking for, stop
-                    if (arpPacket.SenderProtocolAddress.Equals(destIP))
-                    {
-                        break;
-                    }
+                    // inject the packet to the wire
+                    device.SendPacket(request);
+                    lastRequestTime = DateTime.Now;
                 }
 
-                // the timeout happened
-                if (DateTime.Now >= timeoutDateTime)
+                //read the next packet from the network
+                var retval = device.GetNextPacket(out PacketCapture e);
+                if (retval != GetPacketStatus.PacketRead)
                 {
-                    return null;
+                    continue;
                 }
-                else
+                var reply = e.GetPacket();
+
+                // parse the packet
+                var packet = PacketDotNet.Packet.ParsePacket(reply.LinkLayerType, reply.Data);
+
+                // is this an arp packet?
+                arpPacket = packet.Extract<PacketDotNet.ArpPacket>();
+                if (arpPacket == null)
                 {
-                    //return the resolved MAC address
-                    return arpPacket.SenderHardwareAddress;
+                    continue;
                 }
+
+                //if this is the reply we're looking for, stop
+                if (arpPacket.SenderProtocolAddress.Equals(destIP))
+                {
+                    break;
+                }
+            }
+
+            // the timeout happened
+            if (DateTime.Now >= timeoutDateTime)
+            {
+                return null;
+            }
+            else
+            {
+                //return the resolved MAC address
+                return arpPacket.SenderHardwareAddress;
             }
         }
 
-        private PacketDotNet.Packet BuildRequest(System.Net.IPAddress destinationIP,
+
+        private static PacketDotNet.Packet BuildRequest(System.Net.IPAddress destinationIP,
                                                  PhysicalAddress localMac,
                                                  System.Net.IPAddress localIP)
         {
