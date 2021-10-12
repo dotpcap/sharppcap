@@ -256,10 +256,16 @@ namespace SharpPcap.LibPcap
             }
 
             // Below configurations must be done after the device gets activated
-            Configure(
-                configuration, nameof(configuration.KernelBufferSize),
-                LibPcapSafeNativeMethods.pcap_setbuff, configuration.KernelBufferSize
-            );
+            
+            // pcap_setbuff() defined for windows devices only
+            // https://github.com/the-tcpdump-group/libpcap/blob/fbcc461fbc2bd3b98de401cc04e6a4a10614e99f/pcap/pcap.h#L768
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Configure(
+                    configuration, nameof(configuration.KernelBufferSize),
+                    LibPcapSafeNativeMethods.pcap_setbuff, configuration.KernelBufferSize
+                );
+            }
 
             if (immediateMode == true && mintocopy_supported && !immediate_supported)
             {
