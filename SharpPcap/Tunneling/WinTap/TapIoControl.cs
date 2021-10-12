@@ -1,5 +1,8 @@
-﻿namespace SharpPcap.WinTap
+﻿namespace SharpPcap.Tunneling.WinTap
 {
+    /// <summary>
+    /// See https://github.com/OpenVPN/tap-windows6/blob/master/src/tap-windows.h
+    /// </summary>
     enum TapIoControl
     {
         /* Present in 8.1 */
