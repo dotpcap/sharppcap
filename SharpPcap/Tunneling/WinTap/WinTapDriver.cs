@@ -36,7 +36,7 @@ namespace SharpPcap.Tunneling.WinTap
             {
                 throw new PcapException("Failed to open device");
             }
-
+            /*
             ConfigureDhcp(
                 handle,
                 IPAddress.Parse("10.225.255.100"),
@@ -44,7 +44,7 @@ namespace SharpPcap.Tunneling.WinTap
                 IPAddress.Parse("10.225.255.1"),
                 TimeSpan.FromHours(24)
             );
-
+            */
             SetMediaStatus(handle, true);
             return new FileStream(handle, FileAccess.ReadWrite, bufferSize, true);
         }
