@@ -26,7 +26,7 @@ namespace Test.Tunneling
                 return ip;
             }
             // Pick a range that no CI is likely to use
-            ip = IPAddress.Parse("10.225.255.1");
+            ip = IPAddress.Parse("10.225.255.100");
             var name = nic.Name;
             Process p;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -59,6 +59,9 @@ namespace Test.Tunneling
 
         internal static IPAddress GetIPAddress(NetworkInterface nic)
         {
+            // Update interface reference, since addresses could change after interface opened
+            nic = NetworkInterface.GetAllNetworkInterfaces()
+                .First(n => n.Id.Equals(nic.Id));
             foreach (var ip in nic.GetIPProperties().UnicastAddresses)
             {
                 if (ip.Address.AddressFamily == AddressFamily.InterNetwork)

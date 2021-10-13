@@ -15,7 +15,7 @@
         SetMediaStatus = 6,
         ConfigDhcpMasq = 7,
         GetLogLine = 8,
-        config_dhcp_set_Opt = 9,
+        ConfigDhcpSetOpt = 9,
 
         /* Added in 8.2 */
 

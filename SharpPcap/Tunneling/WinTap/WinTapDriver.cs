@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
@@ -35,6 +36,15 @@ namespace SharpPcap.Tunneling.WinTap
             {
                 throw new PcapException("Failed to open device");
             }
+
+            ConfigureDhcp(
+                handle,
+                IPAddress.Parse("10.225.255.100"),
+                IPAddress.Parse("255.225.255.0"),
+                IPAddress.Parse("10.225.255.1"),
+                TimeSpan.FromHours(24)
+            );
+
             SetMediaStatus(handle, true);
             return new FileStream(handle, FileAccess.ReadWrite, bufferSize, true);
         }
@@ -43,13 +53,20 @@ namespace SharpPcap.Tunneling.WinTap
         {
             Span<byte> inBuffer = stackalloc byte[0];
             Span<byte> outBuffer = stackalloc byte[12];
-            var retval = TapControl(handle, TapIoControl.GetVersion, inBuffer, ref outBuffer);
-            if (!retval)
-            {
-                return null;
-            }
+            TapControl(handle, TapIoControl.GetVersion, inBuffer, ref outBuffer);
             var v = MemoryMarshal.Cast<byte, int>(outBuffer);
             return new Version(v[0], v[1], v[2]);
+        }
+
+        internal static void ConfigureDhcp(SafeFileHandle handle, IPAddress ip, IPAddress mask, IPAddress server, TimeSpan lease_time)
+        {
+            var inBuffer = new byte[16];
+            ip.GetAddressBytes().CopyTo(inBuffer, 0);
+            mask.GetAddressBytes().CopyTo(inBuffer, 4);
+            server.GetAddressBytes().CopyTo(inBuffer, 8);
+            BitConverter.GetBytes((int)lease_time.TotalSeconds).CopyTo(inBuffer, 12);
+            Span<byte> outBuffer = stackalloc byte[1];
+            TapControl(handle, TapIoControl.ConfigDhcpMasq, inBuffer, ref outBuffer);
         }
 
         internal static void SetMediaStatus(SafeFileHandle handle, bool connected)
@@ -58,14 +75,10 @@ namespace SharpPcap.Tunneling.WinTap
             Span<byte> inBuffer = stackalloc byte[4];
             Span<byte> outBuffer = stackalloc byte[4];
             MemoryMarshal.Write(inBuffer, ref value);
-            var retval = TapControl(handle, TapIoControl.SetMediaStatus, inBuffer, ref outBuffer);
-            if (!retval)
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
+            TapControl(handle, TapIoControl.SetMediaStatus, inBuffer, ref outBuffer);
         }
 
-        private static unsafe bool TapControl(SafeFileHandle handle, TapIoControl code, Span<byte> inBuffer, ref Span<byte> outBuffer)
+        private static unsafe void TapControl(SafeFileHandle handle, TapIoControl code, Span<byte> inBuffer, ref Span<byte> outBuffer)
         {
             fixed (byte* inPtr = inBuffer, outPtr = outBuffer)
             {
@@ -77,7 +90,10 @@ namespace SharpPcap.Tunneling.WinTap
                     IntPtr.Zero
                 );
                 outBuffer = outBuffer.Slice(0, returnedBytes);
-                return retval;
+                if (!retval)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
             }
         }
 

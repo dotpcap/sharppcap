@@ -40,10 +40,13 @@ namespace Test.Tunneling
         }
 
         [Test]
-        [Ignore("Not working in azure for some reason")]
         public void TestArpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
+            using var tapDevice = new TunnelDevice(nic);
+            // Open TAP device first to ensure the virutal device is connected
+            tapDevice.Open(DeviceModes.Promiscuous);
+            Thread.Sleep(1000);
             var tapIp = IpHelper.EnsureIPv4Address(nic);
 
             // we need to provide our own IP and MAC, otherwise OS will ignore its own requests
@@ -52,9 +55,6 @@ namespace Test.Tunneling
             var testIp = new IPAddress(ipBytes);
             var testMac = PhysicalAddress.Parse("001122334455");
 
-            using var tapDevice = new TunnelDevice(nic);
-            // Open TAP device first to ensure the virutal device is connected
-            tapDevice.Open(DeviceModes.Promiscuous);
             PhysicalAddress mac = null;
             for (int i = 0; i < 5; i++)
             {
@@ -78,8 +78,9 @@ namespace Test.Tunneling
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
             using var tapDevice = new TunnelDevice(nic);
-            // Open TAP device first to ensure the virtual device is connected
-            tapDevice.Open();
+            // Open TAP device first to ensure the virutal device is connected
+            tapDevice.Open(DeviceModes.Promiscuous);
+            Thread.Sleep(1000);
             var tapIp = IpHelper.EnsureIPv4Address(nic);
 
             using var tester = new UdpTester(tapIp);
