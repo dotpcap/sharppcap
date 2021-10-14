@@ -29,7 +29,7 @@ for:
   build_script:
     - dotnet build -c Release
   test_script:
-    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap&TestCategory!=WinDivert&TestCategory!=WinpkFilter&TestCategory!=WinTap"
+    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap&TestCategory!=WinDivert&TestCategory!=WinpkFilter"
 
 -
   matrix:
@@ -42,7 +42,7 @@ for:
   build_script:
     - dotnet build -c Release
   test_script:
-    - bash scripts/test.sh --filter "TestCategory!=RemotePcap&TestCategory!=WinDivert&TestCategory!=WinTap"
+    - bash scripts/test.sh --filter "TestCategory!=RemotePcap&TestCategory!=WinDivert"
 
 -
   matrix:
@@ -50,9 +50,8 @@ for:
       - image: Ubuntu1804
   install:
     - sudo -E bash scripts/install-libpcap.sh
-    - sudo -E bash scripts/install-tap.sh
   test_script:
-    - sudo -E bash scripts/test.sh
+    - sudo -E bash scripts/test.sh --filter "TestCategory!=Tunneling"
 
 -
   matrix:
