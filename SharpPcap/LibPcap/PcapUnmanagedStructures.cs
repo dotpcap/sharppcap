@@ -95,10 +95,9 @@ namespace SharpPcap.LibPcap
             //       understand way
 
             // pad the size of sockaddr_in out to 16 bytes
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             // Disable warnings around this unused field
 #pragma warning disable 0169
-            private readonly byte[] pad;
+            private readonly ulong pad;
 #pragma warning restore 0169
         };
 

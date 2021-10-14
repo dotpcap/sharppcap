@@ -1,5 +1,8 @@
-﻿namespace SharpPcap.WinTap
+﻿namespace SharpPcap.Tunneling.WinTap
 {
+    /// <summary>
+    /// See https://github.com/OpenVPN/tap-windows6/blob/master/src/tap-windows.h
+    /// </summary>
     enum TapIoControl
     {
         /* Present in 8.1 */
@@ -12,7 +15,7 @@
         SetMediaStatus = 6,
         ConfigDhcpMasq = 7,
         GetLogLine = 8,
-        config_dhcp_set_Opt = 9,
+        ConfigDhcpSetOpt = 9,
 
         /* Added in 8.2 */
 
