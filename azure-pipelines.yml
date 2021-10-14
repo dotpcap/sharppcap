@@ -18,6 +18,7 @@ jobs:
     vmImage: 'ubuntu-18.04'
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
+  - script: sudo -E bash scripts/install-tap.sh
   - script: sudo -E bash scripts/test.sh
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)

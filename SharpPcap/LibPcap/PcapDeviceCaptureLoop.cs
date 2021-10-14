@@ -66,7 +66,18 @@ namespace SharpPcap.LibPcap
                     throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
 
                 var cancellationToken = threadCancellationTokenSource.Token;
-                captureThread = new Thread(() => this.CaptureThread(cancellationToken));
+                captureThread = new Thread(() =>
+                {
+                    try
+                    {
+                        CaptureThread(cancellationToken);
+                    }
+                    catch
+                    {
+                        // a thread is not allowed to throw, otherwise it causes system crash
+                        // most common case is misuse of API or concurent access to device
+                    }
+                });
                 captureThread.Start();
             }
         }
