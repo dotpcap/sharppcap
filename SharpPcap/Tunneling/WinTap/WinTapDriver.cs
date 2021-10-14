@@ -21,7 +21,7 @@ namespace SharpPcap.Tunneling.WinTap
             return networkInterface.Description.StartsWith("TAP-Windows Adapter");
         }
 
-        public FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration)
+        public FileStream Open(NetworkInterface networkInterface, IPAddressConfiguration address, DeviceConfiguration configuration)
         {
             var bufferSize = configuration.BufferSize ?? 4096;
             var handle = CreateFile(@"\\.\Global\" + networkInterface.Id + ".tap",
@@ -36,15 +36,18 @@ namespace SharpPcap.Tunneling.WinTap
             {
                 throw new PcapException("Failed to open device");
             }
-            /*
-            ConfigureDhcp(
-                handle,
-                IPAddress.Parse("10.225.255.100"),
-                IPAddress.Parse("255.225.255.0"),
-                IPAddress.Parse("10.225.255.1"),
-                TimeSpan.FromHours(24)
-            );
-            */
+
+            if (address.Address != null)
+            {
+                ConfigureDhcp(
+                    handle,
+                    address.Address,
+                    address.IPv4Mask,
+                    IPAddress.Parse("0.0.0.0"),
+                    TimeSpan.FromHours(24)
+                );
+            }
+
             SetMediaStatus(handle, true);
             return new FileStream(handle, FileAccess.ReadWrite, bufferSize, true);
         }

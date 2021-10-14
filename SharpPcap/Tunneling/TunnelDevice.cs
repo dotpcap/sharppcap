@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using SharpPcap.Tunneling.Unix;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace SharpPcap.Tunneling
 {
@@ -25,6 +26,7 @@ namespace SharpPcap.Tunneling
         }
 
         private readonly NetworkInterface Interface;
+        private readonly IPAddressConfiguration AddressConfiguration;
         private FileStream Stream;
 
         protected FileStream GetFileStream()
@@ -32,7 +34,7 @@ namespace SharpPcap.Tunneling
             return Stream ?? throw new DeviceNotReadyException("Device not open");
         }
 
-        public string Name => "wintap:" + Interface.Name;
+        public string Name => "tap:" + Interface.Name;
 
         public string FriendlyName => Interface.Name;
 
@@ -47,9 +49,15 @@ namespace SharpPcap.Tunneling
 
         public PhysicalAddress MacAddress => Interface.GetPhysicalAddress();
 
-        public TunnelDevice(NetworkInterface networkInterface)
+        public TunnelDevice(NetworkInterface networkInterface, IPAddressConfiguration address = null)
         {
             this.Interface = networkInterface;
+            // Copy configuration
+            this.AddressConfiguration = new IPAddressConfiguration()
+            {
+                Address = address?.Address,
+                IPv4Mask = address?.IPv4Mask ?? new IPAddress(new byte[] { 255, 255, 255, 0 }),
+            };
         }
 
         public static NetworkInterface[] GetTunnelInterfaces()
@@ -66,11 +74,11 @@ namespace SharpPcap.Tunneling
             {
                 return;
             }
-            
-            Stream = Driver.Open(Interface, configuration);
+
+            Stream = Driver.Open(Interface, AddressConfiguration, configuration);
             ReadTimeout = TimeSpan.FromMilliseconds(configuration.ReadTimeout);
             Snaplen = configuration.Snaplen;
-            
+
         }
 
         public override void Close()

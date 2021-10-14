@@ -8,7 +8,7 @@ namespace SharpPcap.Tunneling
     internal interface ITunnelDriver
     {
         bool IsTunnelInterface(NetworkInterface networkInterface);
-        FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration);
+        FileStream Open(NetworkInterface networkInterface, IPAddressConfiguration address, DeviceConfiguration configuration);
         Version GetVersion(NetworkInterface networkInterface, SafeFileHandle handle);
     }
 

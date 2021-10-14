@@ -43,11 +43,10 @@ namespace Test.Tunneling
         public void TestArpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
-            using var tapDevice = new TunnelDevice(nic);
+            using var tapDevice = GetTunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
             tapDevice.Open(DeviceModes.Promiscuous);
-            Thread.Sleep(1000);
-            var tapIp = IpHelper.EnsureIPv4Address(nic);
+            var tapIp = IpHelper.GetIPAddress(nic);
 
             // we need to provide our own IP and MAC, otherwise OS will ignore its own requests
             var ipBytes = tapIp.GetAddressBytes();
@@ -77,11 +76,10 @@ namespace Test.Tunneling
         public void TestUdpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
-            using var tapDevice = new TunnelDevice(nic);
+            using var tapDevice = GetTunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
             tapDevice.Open(DeviceModes.Promiscuous);
-            Thread.Sleep(1000);
-            var tapIp = IpHelper.EnsureIPv4Address(nic);
+            var tapIp = IpHelper.GetIPAddress(nic);
 
             using var tester = new UdpTester(tapIp);
 
@@ -111,7 +109,7 @@ namespace Test.Tunneling
         public void TestPcapTapExchange()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();
-            using var tapDevice = new TunnelDevice(nic);
+            using var tapDevice = GetTunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
             tapDevice.Open();
             // Wait for interface to be fully up
@@ -120,6 +118,17 @@ namespace Test.Tunneling
                 .First(pIf => pIf.FriendlyName == nic.Name);
             using var pcapDevice = new LibPcapLiveDevice(pcapInterface);
             PcapDeviceTest.CheckExchange(tapDevice, pcapDevice);
+        }
+
+        private static TunnelDevice GetTunnelDevice(NetworkInterface nic)
+        {
+            var config = new IPAddressConfiguration
+            {
+                // Pick a range that no CI is likely to use
+                Address = IPAddress.Parse("10.225.255.100"),
+                IPv4Mask = IPAddress.Parse("255.255.255.0"),
+            };
+            return new TunnelDevice(nic, config);
         }
 
 

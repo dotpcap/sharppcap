@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
+using System.Buffers.Binary;
 using System.ComponentModel;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -14,14 +15,14 @@ namespace SharpPcap.Tunneling.Unix
     internal class TuntapDriver : ITunnelDriver
     {
         internal static readonly ITunnelDriver Instance = new TuntapDriver();
-        public FileStream Open(NetworkInterface networkInterface, DeviceConfiguration configuration)
+        public FileStream Open(NetworkInterface networkInterface, IPAddressConfiguration address, DeviceConfiguration configuration)
         {
             var bufferSize = configuration.BufferSize ?? 4096;
             var stream = new FileStream("/dev/net/tun", FileMode.Open, FileAccess.ReadWrite, default, bufferSize);
             try
             {
-                
                 SetIff(stream.SafeFileHandle, networkInterface.Id, IffFlags.Tap | IffFlags.NoPi);
+                SetAddress(networkInterface.Id, address);
                 BringUp(networkInterface.Id, configuration.Mode.HasFlag(DeviceModes.Promiscuous));
             }
             catch (Exception)
@@ -45,9 +46,9 @@ namespace SharpPcap.Tunneling.Unix
         [DllImport("libc", SetLastError = true)]
         private extern static int ioctl(int fd, uint request, ref IfReq data);
 
-        private static void IOControl(IntPtr handle, uint request, ref IfReq data)
+        private static void IOControl(IntPtr handle, SocketIoctl request, ref IfReq data)
         {
-            var retval = ioctl(handle.ToInt32(), request, ref data);
+            var retval = ioctl(handle.ToInt32(), (uint)request, ref data);
             if (retval != 0)
             {
                 var errno = Marshal.GetLastWin32Error();
@@ -61,12 +62,29 @@ namespace SharpPcap.Tunneling.Unix
             ifr.ifr_name = ifr_name;
             ifr.ifr_flags = (short)ifr_flags;
 
-            IOControl(handle.DangerousGetHandle(), TUNSETIFF, ref ifr);
+            IOControl(handle.DangerousGetHandle(), (SocketIoctl)TUNSETIFF, ref ifr);
+        }
+        private void SetAddress(string ifr_name, IPAddressConfiguration address)
+        {
+            if (address.Address == null)
+            {
+                return;
+            }
+            IfReq ifr = default;
+            ifr.ifr_name = ifr_name;
+            using (var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP))
+            {
+
+                ifr.ifr_addr.sa_family = (ushort)address.Address.AddressFamily;
+                ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.Address.GetAddressBytes(), 0);
+                IOControl(sock.Handle, SocketIoctl.SIOCSIFADDR, ref ifr);
+                ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.IPv4Mask.GetAddressBytes(), 0);
+                IOControl(sock.Handle, SocketIoctl.SIOCSIFNETMASK, ref ifr);
+            }
         }
 
         internal static void BringUp(string ifr_name, bool promiscuous)
         {
-            const uint SIOCSIFFLAGS = 0x8914U;
             IfReq ifr = default;
             ifr.ifr_name = ifr_name;
             ifr.ifr_flags = (short)(NetDeviceFlags.Up | NetDeviceFlags.AllMulti | NetDeviceFlags.Running);
@@ -76,7 +94,7 @@ namespace SharpPcap.Tunneling.Unix
             }
             using (var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP))
             {
-                IOControl(sock.Handle, SIOCSIFFLAGS, ref ifr);
+                IOControl(sock.Handle, SocketIoctl.SIOCSIFFLAGS, ref ifr);
             }
         }
 
