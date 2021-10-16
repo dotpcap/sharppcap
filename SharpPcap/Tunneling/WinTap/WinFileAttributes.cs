@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace SharpPcap.WinTap
+namespace SharpPcap.Tunneling.WinTap
 {
+    /// <summary>
+    /// See https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+    /// </summary>
     [Flags]
     enum WinFileAttributes
     {
