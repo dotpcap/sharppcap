@@ -1,5 +1,4 @@
-﻿using SharpPcap.WinpkFilter;
-using SharpPcap.Tunneling.WinTap;
+﻿using SharpPcap.Tunneling.WinTap;
 using System;
 using System.IO;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Threading;
 using SharpPcap.Tunneling.Unix;
 using System.Threading.Tasks;
 using System.Net;
+using Microsoft.Win32.SafeHandles;
 
 namespace SharpPcap.Tunneling
 {
@@ -27,11 +27,17 @@ namespace SharpPcap.Tunneling
 
         private readonly NetworkInterface Interface;
         private readonly IPAddressConfiguration AddressConfiguration;
-        private FileStream Stream;
+        private Stream Stream;
+        private SafeFileHandle FileHandle;
 
-        protected FileStream GetFileStream()
+        protected Stream GetFileStream()
         {
             return Stream ?? throw new DeviceNotReadyException("Device not open");
+        }
+
+        protected SafeFileHandle GetFileHandle()
+        {
+            return FileHandle ?? throw new DeviceNotReadyException("Device not open");
         }
 
         public string Name => "tap:" + Interface.Name;
@@ -44,7 +50,7 @@ namespace SharpPcap.Tunneling
 
         public Version Version
         {
-            get => Driver.GetVersion(Interface, GetFileStream().SafeFileHandle);
+            get => Driver.GetVersion(Interface, GetFileHandle());
         }
 
         public PhysicalAddress MacAddress => Interface.GetPhysicalAddress();
@@ -74,8 +80,9 @@ namespace SharpPcap.Tunneling
             {
                 return;
             }
-
-            Stream = Driver.Open(Interface, AddressConfiguration, configuration);
+            var fs = Driver.Open(Interface, AddressConfiguration, configuration);
+            Stream = Stream.Synchronized(fs);
+            FileHandle = fs.SafeFileHandle;
             ReadTimeout = TimeSpan.FromMilliseconds(configuration.ReadTimeout);
             Snaplen = configuration.Snaplen;
 
@@ -86,6 +93,7 @@ namespace SharpPcap.Tunneling
             base.Close();
             Stream?.Close();
             Stream = null;
+            FileHandle = null;
         }
 
         private int Snaplen = Pcap.MAX_PACKET_SIZE;
