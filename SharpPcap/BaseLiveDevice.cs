@@ -82,14 +82,16 @@ namespace SharpPcap
         public GetPacketStatus GetNextPacket(out PacketCapture e)
         {
             var sw = Stopwatch.StartNew();
-            do
+            var timeout = ReadTimeout - sw.Elapsed;
+            while (timeout.TotalMilliseconds > 0)
             {
-                var status = GetUnfilteredPacket(out e, ReadTimeout - sw.Elapsed);
+                var status = GetUnfilteredPacket(out e, timeout);
                 if (FilterProgram?.Matches(e.Data) ?? true)
                 {
                     return status;
                 }
-            } while (sw.Elapsed < ReadTimeout);
+                timeout = ReadTimeout - sw.Elapsed;
+            }
             e = default;
             return GetPacketStatus.ReadTimeout;
         }
