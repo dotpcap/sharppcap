@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SharpPcap.LibPcap
@@ -279,12 +280,30 @@ namespace SharpPcap.LibPcap
         /// </summary>
         protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
-            unsafe
+            var handle = Handle;
+            var gotRef = false;
+            try
             {
-                var pcapHeader = PcapHeader.FromPointer(header);
-                var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
-
-                SendPacketArrivalEvent(pcapHeader, dataSpan);
+                // Make sure that handle does not get closed until this function is done
+                // See https://github.com/chmorgan/sharppcap/issues/343
+                handle.DangerousAddRef(ref gotRef);
+                if (!gotRef)
+                {
+                    return;
+                }
+                unsafe
+                {
+                    var pcapHeader = PcapHeader.FromPointer(header);
+                    var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
+                    SendPacketArrivalEvent(pcapHeader, dataSpan);
+                }
+            }
+            finally
+            {
+                if (gotRef)
+                {
+                    handle.DangerousRelease();
+                }
             }
         }
 
