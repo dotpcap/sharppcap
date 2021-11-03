@@ -298,6 +298,11 @@ namespace SharpPcap.LibPcap
                     SendPacketArrivalEvent(pcapHeader, dataSpan);
                 }
             }
+            catch (ObjectDisposedException)
+            {
+                // If Dispose was called in another thread, DangerousAddRef will throw this
+                // Ignore
+            }
             finally
             {
                 if (gotRef)
