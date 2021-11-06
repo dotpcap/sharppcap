@@ -38,6 +38,7 @@ jobs:
     vmImage: 'VS2017-Win2016'
   steps:
   - script: choco install -y tapwindows
+  - script: choco install -y procdump
   - pwsh: ./scripts/InstallNpcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
@@ -55,6 +56,7 @@ jobs:
   # tap windows have to be installed before winpcap,
   # otherwise winpcap will only pick it up after reboot
   - script: choco install -y tapwindows
+  - script: choco install -y procdump
   - script: choco install -y winpcap
   - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
