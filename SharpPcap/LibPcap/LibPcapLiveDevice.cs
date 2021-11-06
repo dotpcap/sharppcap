@@ -120,6 +120,14 @@ namespace SharpPcap.LibPcap
 
             var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
+            // set the StopCaptureTimeout value to twice the read timeout to ensure that
+            // we wait long enough before considering the capture thread to be stuck when stopping
+            // a background capture via StopCapture()
+            //
+            // NOTE: Doesn't affect Mono if unix poll is available, doesn't affect Linux because
+            //       Linux devices have no timeout, they always block. Only affects Windows devices.
+            StopCaptureTimeout = new TimeSpan(0, 0, 0, 0, configuration.ReadTimeout * 2);
+
             // modes other than OpenFlags.Promiscuous require pcap_open()
             var otherModes = mode & ~DeviceModes.Promiscuous;
             if (immediate_supported || mintocopy_supported)

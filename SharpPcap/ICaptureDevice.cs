@@ -46,6 +46,12 @@ namespace SharpPcap
         bool Started { get; }
 
         /// <summary>
+        /// Maximum time within which the capture thread must join the main thread (on
+        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
+        /// </summary>
+        TimeSpan StopCaptureTimeout { get; set; }
+
+        /// <summary>
         /// Start the capture
         /// </summary>
         void StartCapture();
