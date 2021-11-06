@@ -299,7 +299,7 @@ namespace SharpPcap.WinDivert
             return addr;
         }
 
-        public bool Started => captureThread?.IsCompleted ?? false;
+        public bool Started => !(captureThread?.IsCompleted ?? true);
 
         public TimeSpan StopCaptureTimeout { get; set; } = new TimeSpan(0, 0, 1);
         public WinDivertLayer Layer { get; set; } = WinDivertLayer.Network;
