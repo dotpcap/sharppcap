@@ -4,6 +4,7 @@ using SharpPcap.LibPcap;
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Test
 {
@@ -59,9 +60,8 @@ namespace Test
             try
             {
                 var device = (LibPcapLiveDevice)sender;
-                var t = new Thread(new ParameterizedThreadStart((obj) =>
+                Task.Run(() =>
                 {
-                    var device = (LibPcapLiveDevice)obj;
                     try
                     {
                         device.Dispose();
@@ -72,8 +72,7 @@ namespace Test
                     {
                         Console.WriteLine($"Exception happened in thread:{ex}");
                     }
-                }));
-                t.Start(e.Device);
+                });
                 // Trigger the data to be read from the pcap_t memory
                 e.GetPacket();
             }

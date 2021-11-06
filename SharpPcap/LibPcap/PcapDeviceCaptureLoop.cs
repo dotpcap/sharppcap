@@ -22,6 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharpPcap.LibPcap
 {
@@ -30,7 +31,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Thread that is performing the background packet capture
         /// </summary>
-        protected Thread captureThread;
+        protected Task captureThread;
 
         /// <summary>
         /// Flag that indicates that a capture thread should stop
@@ -44,6 +45,12 @@ namespace SharpPcap.LibPcap
         {
             get { return (captureThread != null); }
         }
+
+        /// <summary>
+        /// Maximum time within which the capture thread must join the main thread (on 
+        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
+        /// </summary>
+        public TimeSpan StopCaptureTimeout { get; set; } = new TimeSpan(0, 0, 1);
 
         /// <summary>
         /// Starts the capturing process via a background thread
@@ -60,19 +67,7 @@ namespace SharpPcap.LibPcap
                     throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
 
                 var cancellationToken = threadCancellationTokenSource.Token;
-                captureThread = new Thread(() =>
-                {
-                    try
-                    {
-                        CaptureThread(cancellationToken);
-                    }
-                    catch
-                    {
-                        // a thread is not allowed to throw, otherwise it causes system crash
-                        // most common case is misuse of API or concurent access to device
-                    }
-                });
-                captureThread.Start();
+                captureThread = Task.Run(() => CaptureThread(cancellationToken), cancellationToken);
             }
         }
 
@@ -89,7 +84,8 @@ namespace SharpPcap.LibPcap
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
                 LibPcapSafeNativeMethods.pcap_breakloop(Handle);
-                captureThread = null; // otherwise we will always return true from PcapDevice.Started
+                Task.WaitAny(new[] { captureThread }, StopCaptureTimeout);
+                captureThread = null;
             }
         }
 
