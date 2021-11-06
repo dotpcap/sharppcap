@@ -46,12 +46,6 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
-        /// Maximum time within which the capture thread must join the main thread (on 
-        /// <see cref="StopCapture"/>) or else the thread is aborted and an exception thrown.
-        /// </summary>
-        public TimeSpan StopCaptureTimeout { get; set; } = new TimeSpan(0, 0, 1);
-
-        /// <summary>
         /// Starts the capturing process via a background thread
         /// OnPacketArrival() will be called for each captured packet
         /// </summary>
@@ -95,18 +89,6 @@ namespace SharpPcap.LibPcap
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
                 LibPcapSafeNativeMethods.pcap_breakloop(Handle);
-                if (!captureThread.Join(StopCaptureTimeout))
-                {
-                    try
-                    {
-                        captureThread.Abort();
-                    }
-                    catch (PlatformNotSupportedException)
-                    {
-                        // ignore exception, .net platforms lack support for Thread.Abort() and aborting threads
-                        // is a hack
-                    }
-                }
                 captureThread = null; // otherwise we will always return true from PcapDevice.Started
             }
         }

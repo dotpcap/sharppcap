@@ -7,6 +7,10 @@ using System.Threading;
 
 namespace Test
 {
+    /// <summary>
+    /// This is not about making PcapDevice 100% thread safe
+    /// this is about prevent memory access violation
+    /// </summary>
     [TestFixture]
     public class ThreadSafeTests
     {
@@ -15,36 +19,38 @@ namespace Test
         public void TestThreadSafety()
         {
             var pcapDevice = TestHelper.GetPcapDevice();
-            var devices = Enumerable.Range(0, 1000)
+            var devices = Enumerable.Range(0, Environment.ProcessorCount)
                 .Select(_ => new LibPcapLiveDevice(pcapDevice.Interface))
                 .ToArray();
 
             foreach (var device in devices)
             {
-                Initialize(device, 0);
+                Initialize(device);
             }
-            Thread.Sleep(5000);
+            Thread.Sleep(TimeSpan.FromMinutes(5));
             foreach (var device in devices)
             {
                 device.Dispose();
             }
         }
 
-        private static void Initialize(LibPcapLiveDevice device, int nr)
+        private static void Initialize(LibPcapLiveDevice device)
         {
-            if (nr == 5)
+            var retry = 0;
+            while (retry <= 7)
             {
-                return;
-            }
-            try
-            {
-                device.Open(DeviceModes.Promiscuous);
-                device.OnPacketArrival += Device_OnPacketArrival;
-                device.StartCapture();
-            }
-            catch (Exception)
-            {
-                Initialize(device, nr + 1);
+                try
+                {
+                    device.Open(DeviceModes.Promiscuous);
+                    device.OnPacketArrival += Device_OnPacketArrival;
+                    device.StartCapture();
+                    return;
+                }
+                catch (PcapException)
+                {
+                    // Race condition while closing/opening device, retry
+                    retry++;
+                }
             }
         }
 
@@ -59,8 +65,8 @@ namespace Test
                     try
                     {
                         device.Dispose();
-                        Thread.Sleep(10);
-                        Initialize(device, 0);
+                        Thread.Sleep(1);
+                        Initialize(device);
                     }
                     catch (Exception ex)
                     {
@@ -74,10 +80,6 @@ namespace Test
             catch (DeviceNotReadyException)
             {
                 // Pass, normal
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception happened:{ex}");
             }
         }
     }
