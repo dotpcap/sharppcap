@@ -16,7 +16,7 @@
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
     <PackageReference Include="SemanticVersion" Version="2.1.0" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpPcap\SharpPcap.csproj" />
