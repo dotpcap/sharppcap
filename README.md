@@ -2,7 +2,7 @@
 ![.NET Core](https://github.com/chmorgan/sharppcap/workflows/.NET%20Core/badge.svg)
 [![](https://img.shields.io/appveyor/ci/chmorgan/sharppcap/master.svg?label=AppVeyor&logo=appveyor)](https://ci.appveyor.com/project/chmorgan/sharppcap/branch/master)
 [![](https://dev.azure.com/chmorgan/chmorgan/_apis/build/status/chmorgan.sharppcap)](https://dev.azure.com/chmorgan/chmorgan/_build/latest?definitionId=1&branchName=master)
-[![](https://img.shields.io/circleci/build/gh/chmorgan/sharppcap?label=CircleCI&logo=circleci)](https://circleci.com/gh/chmorgan/sharppcap)
+[![](https://circleci.com/gh/dotpcap/sharppcap/tree/master.svg?style=svg)](https://circleci.com/gh/dotpcap/sharppcap/tree/master)
 [![](https://img.shields.io/travis/com/chmorgan/sharppcap/master?label=Travis%20CI&logo=travis)](https://travis-ci.com/chmorgan/sharppcap)
 [![](https://codecov.io/gh/dotpcap/sharppcap/branch/master/graph/badge.svg?token=znqv9q5lVA)](https://codecov.io/gh/dotpcap/sharppcap)
 [![](https://badges.gitter.im/SharpPcap/community.svg)](https://gitter.im/SharpPcap/community)
