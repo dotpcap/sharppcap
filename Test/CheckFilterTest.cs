@@ -33,7 +33,7 @@ namespace Test
 
             var f = "(dst host 192.168.42.1) and (arp or tcp dst port 40499)";
             // Make filter work with or without VLAN
-            using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, $"({f}) or (vlan and ({f})");
+            using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, $"({f}) or (vlan and ({f}))");
             Assert.IsFalse(bpfProgram.IsInvalid);
 
             device.GetNextPacket(out var packet);
