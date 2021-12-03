@@ -20,6 +20,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using Microsoft.Win32.SafeHandles;
+using PacketDotNet;
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -82,9 +83,9 @@ namespace SharpPcap.LibPcap
             return bpfProgram;
         }
 
-        public static BpfProgram TryCreate(int linktype, string filter, int optimize = 1, uint netmask = 0)
+        public static BpfProgram TryCreate(LinkLayers linktype, string filter, int optimize = 1, uint netmask = 0)
         {
-            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead(linktype, 65535))
+            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead((int)linktype, Pcap.MAX_PACKET_SIZE))
             {
                 return TryCreate(handle, filter, optimize, netmask);
             }
@@ -92,14 +93,12 @@ namespace SharpPcap.LibPcap
         }
 
 
-        public static BpfProgram Create(int linktype, string filter, int optimize = 1, uint netmask = 0)
+        public static BpfProgram Create(LinkLayers linktype, string filter, int optimize = 1, uint netmask = 0)
         {
-            var bpfProgram = TryCreate(linktype, filter, optimize, netmask);
-            if (bpfProgram == null)
+            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead((int)linktype, Pcap.MAX_PACKET_SIZE))
             {
-                throw new PcapException("Could not create bpf program using this linktype");
+                return Create(handle, filter, optimize, netmask);
             }
-            return bpfProgram;
         }
 
         private BpfProgram()
