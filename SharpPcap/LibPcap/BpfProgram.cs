@@ -82,6 +82,26 @@ namespace SharpPcap.LibPcap
             return bpfProgram;
         }
 
+        public static BpfProgram TryCreate(int linktype, string filter, int optimize = 1, uint netmask = 0)
+        {
+            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead(linktype, 65535))
+            {
+                return TryCreate(handle, filter, optimize, netmask);
+            }
+
+        }
+
+
+        public static BpfProgram Create(int linktype, string filter, int optimize = 1, uint netmask = 0)
+        {
+            var bpfProgram = TryCreate(linktype, filter, optimize, netmask);
+            if (bpfProgram == null)
+            {
+                throw new PcapException("Could not create bpf program using this linktype");
+            }
+            return bpfProgram;
+        }
+
         private BpfProgram()
             : base(true)
         {
