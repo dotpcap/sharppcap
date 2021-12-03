@@ -31,7 +31,9 @@ namespace Test
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile("arp_with_vlan.pcap"));
             device.Open();
 
-            using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, "((dst host 192.168.42.1) and (arp or icmp6 or tcp dst port 40499)) or ((vlan) and ((dst host 192.168.42.1) and (arp or icmp6 or tcp dst port 40499)))");
+            var f = "(dst host 192.168.42.1) and (arp or tcp dst port 40499)";
+            // Make filter work with or without VLAN
+            using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, $"({f}) or (vlan and ({f})");
             Assert.IsFalse(bpfProgram.IsInvalid);
 
             device.GetNextPacket(out var packet);
