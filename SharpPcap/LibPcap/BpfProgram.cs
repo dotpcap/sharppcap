@@ -89,7 +89,6 @@ namespace SharpPcap.LibPcap
             {
                 return TryCreate(handle, filter, optimize, netmask);
             }
-
         }
 
 
