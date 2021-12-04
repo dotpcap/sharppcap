@@ -1,7 +1,8 @@
-using System;
 using NUnit.Framework;
+using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
+using System;
 
 namespace Test
 {
@@ -26,6 +27,23 @@ namespace Test
         /// </summary>
         [Test]
         public void BpfProgramMatches()
+        {
+            using var device = new CaptureFileReaderDevice(TestHelper.GetFile("arp_with_vlan.pcap"));
+            device.Open();
+
+            var f = "(dst host 192.168.42.1) and (arp or tcp dst port 40499)";
+            // Make filter work with or without VLAN
+            using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, $"({f}) or (vlan and ({f}))");
+            Assert.IsFalse(bpfProgram.IsInvalid);
+
+            device.GetNextPacket(out var packet);
+            Assert.IsTrue(bpfProgram.Matches(packet.Data));
+        }
+        /// <summary>
+        /// Test BpfProgram.Matches() when creating BpfProgram without device
+        /// </summary>
+        [Test]
+        public void BpfProgramNoDeviceMatches()
         {
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile("tcp.pcap"));
             device.Open();
@@ -64,7 +82,7 @@ namespace Test
             var sw = System.Diagnostics.Stopwatch.StartNew();
             while (packetsToTry > 0)
             {
-                if(sw.ElapsedMilliseconds > 2000)
+                if (sw.ElapsedMilliseconds > 2000)
                 {
                     break;
                 }
