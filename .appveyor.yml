@@ -11,7 +11,6 @@ build: off
 skip_branch_with_pr: true
 
 image:
-  - Visual Studio 2017
   - Visual Studio 2019
   - Ubuntu1804
   - macos
@@ -20,26 +19,10 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2017
-  install:
-    - choco install -y dotnet-sdk --version=5.0.400
-    - choco install -y tapwindows
-    - choco install -y procdump
-    - ps: .\scripts\InstallNpcap.ps1
-    - ps: .\scripts\install-winpkfilter.ps1
-  build_script:
-    - dotnet build -c Release
-  test_script:
-    - bash scripts/test.sh --filter "TestCategory!=Performance&TestCategory!=RemotePcap&TestCategory!=WinDivert&TestCategory!=WinpkFilter"
-
--
-  matrix:
-    only:
       - image: Visual Studio 2019
   install:
-    - choco install -y tapwindows
-    - choco install -y procdump
-    - ps: .\scripts\InstallNpcap.ps1
+    - ps: .\scripts\install-windows.ps1
+    - ps: .\scripts\Install-npcap.ps1
     - ps: .\scripts\install-winpkfilter.ps1
   build_script:
     - dotnet build -c Release
