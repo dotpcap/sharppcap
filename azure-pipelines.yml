@@ -33,13 +33,27 @@ jobs:
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 
-- job: windows_2016_vs2017_npcap
+# NOTE: Remove when npcap has rpcapd support
+- job: windows_2019_winpcap
   pool:
-    vmImage: 'VS2017-Win2016'
+    vmImage: 'windows-2019'
   steps:
-  - script: choco install -y tapwindows
-  - script: choco install -y procdump
-  - pwsh: ./scripts/InstallNpcap.ps1
+  # tap windows have to be installed before winpcap,
+  # otherwise winpcap will only pick it up after reboot
+  - pwsh: .\scripts\install-windows.ps1
+  - script: choco install -y winpcap
+  - pwsh: .\scripts\install-winpkfilter.ps1
+  - script: dotnet restore -s https://api.nuget.org/v3/index.json
+  - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
+
+- job: windows_2019_npcap
+  pool:
+    vmImage: windows-2019
+  steps:
+  - pwsh: ./scripts/Install-windows.ps1
+  - pwsh: ./scripts/Install-npcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
@@ -48,28 +62,12 @@ jobs:
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 
-# NOTE: Remove when npcap has rpcapd support
-- job: windows_2019_vs2019_winpcap
+- job: windows_2022_npcap
   pool:
-    vmImage: 'windows-2019'
+    vmImage: windows-2022
   steps:
-  # tap windows have to be installed before winpcap,
-  # otherwise winpcap will only pick it up after reboot
-  - script: choco install -y tapwindows
-  - script: choco install -y procdump
-  - script: choco install -y winpcap
-  - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: dotnet restore -s https://api.nuget.org/v3/index.json
-  - script: bash scripts/test.sh --filter "TestCategory!=Timestamp"
-    env:
-      CODECOV_TOKEN: $(CODECOV_TOKEN)
-
-- job: windows_2019_vs2019_npcap
-  pool:
-    vmImage: 'windows-2019'
-  steps:
-  - script: choco install -y tapwindows
-  - pwsh: ./scripts/InstallNpcap.ps1
+  - pwsh: ./scripts/Install-windows.ps1
+  - pwsh: ./scripts/Install-npcap.ps1
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
