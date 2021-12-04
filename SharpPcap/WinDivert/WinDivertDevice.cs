@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using PacketDotNet;
 
 namespace SharpPcap.WinDivert
@@ -298,7 +299,7 @@ namespace SharpPcap.WinDivert
             return addr;
         }
 
-        public bool Started => captureThread?.IsAlive ?? false;
+        public bool Started => !(captureThread?.IsCompleted ?? true);
 
         public TimeSpan StopCaptureTimeout { get; set; } = new TimeSpan(0, 0, 1);
         public WinDivertLayer Layer { get; set; } = WinDivertLayer.Network;
@@ -311,7 +312,7 @@ namespace SharpPcap.WinDivert
         /// <summary>
         /// Thread that is performing the background packet capture
         /// </summary>
-        protected Thread captureThread;
+        protected Task captureThread;
         private CancellationTokenSource threadCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -328,8 +329,7 @@ namespace SharpPcap.WinDivert
                     throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
                 }
                 var cancellationToken = threadCancellationTokenSource.Token;
-                captureThread = new Thread(() => this.CaptureThread(cancellationToken));
-                captureThread.Start();
+                captureThread = Task.Run(() => CaptureThread(cancellationToken), cancellationToken);
             }
         }
 
@@ -376,18 +376,8 @@ namespace SharpPcap.WinDivert
             {
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
-                if (!captureThread.Join(StopCaptureTimeout))
-                {
-                    try
-                    {
-                        captureThread.Abort();
-                    }
-                    catch (PlatformNotSupportedException)
-                    {
-                        // ignore
-                    }
-                }
-                captureThread = null; // otherwise we will always return true from PcapDevice.Started
+                Task.WaitAny(new[] { captureThread }, StopCaptureTimeout);
+                captureThread = null;
             }
         }
 

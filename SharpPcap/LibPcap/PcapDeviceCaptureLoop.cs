@@ -22,6 +22,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SharpPcap.LibPcap
 {
@@ -30,7 +31,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Thread that is performing the background packet capture
         /// </summary>
-        protected Thread captureThread;
+        protected Task captureThread;
 
         /// <summary>
         /// Flag that indicates that a capture thread should stop
@@ -66,19 +67,7 @@ namespace SharpPcap.LibPcap
                     throw new DeviceNotReadyException("No delegates assigned to OnPacketArrival, no where for captured packets to go.");
 
                 var cancellationToken = threadCancellationTokenSource.Token;
-                captureThread = new Thread(() =>
-                {
-                    try
-                    {
-                        CaptureThread(cancellationToken);
-                    }
-                    catch
-                    {
-                        // a thread is not allowed to throw, otherwise it causes system crash
-                        // most common case is misuse of API or concurent access to device
-                    }
-                });
-                captureThread.Start();
+                captureThread = Task.Run(() => CaptureThread(cancellationToken), cancellationToken);
             }
         }
 
@@ -95,19 +84,8 @@ namespace SharpPcap.LibPcap
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
                 LibPcapSafeNativeMethods.pcap_breakloop(Handle);
-                if (!captureThread.Join(StopCaptureTimeout))
-                {
-                    try
-                    {
-                        captureThread.Abort();
-                    }
-                    catch (PlatformNotSupportedException)
-                    {
-                        // ignore exception, .net platforms lack support for Thread.Abort() and aborting threads
-                        // is a hack
-                    }
-                }
-                captureThread = null; // otherwise we will always return true from PcapDevice.Started
+                Task.WaitAny(new[] { captureThread }, StopCaptureTimeout);
+                captureThread = null;
             }
         }
 
