@@ -22,7 +22,6 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 
 using PacketDotNet;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using static SharpPcap.LibPcap.PcapUnmanagedStructures;
@@ -52,15 +51,17 @@ namespace SharpPcap.LibPcap
         }
 
         private byte[] buffer;
+        private readonly TimestampResolution TimeResolution;
 
         /// <summary>
         /// Number of bytes in the queue that are pending transmission
         /// </summary>
         public int CurrentLength { get; private set; }
 
-        public SendQueue(int memSize)
+        public SendQueue(int memSize, TimestampResolution timeResolution = TimestampResolution.Microsecond)
         {
             buffer = new byte[memSize];
+            TimeResolution = timeResolution;
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace SharpPcap.LibPcap
                 return false;
             }
             //Marshal header
-            IntPtr hdrPtr = header.MarshalToIntPtr();
+            IntPtr hdrPtr = header.MarshalToIntPtr(TimeResolution);
             Marshal.Copy(hdrPtr, buffer, CurrentLength, hdrSize);
             Marshal.FreeHGlobal(hdrPtr);
 
@@ -161,16 +162,16 @@ namespace SharpPcap.LibPcap
             fixed (byte* buf = buffer)
             {
                 var bufPtr = new IntPtr(buf);
-                var firstTimestamp = TimeSpan.FromTicks(PcapHeader.FromPointer(bufPtr).Date.Ticks);
+                var firstTimestamp = TimeSpan.FromTicks(PcapHeader.FromPointer(bufPtr, TimeResolution).Timeval.Date.Ticks);
                 while (position < CurrentLength)
                 {
                     // Extract packet from buffer
-                    var header = PcapHeader.FromPointer(bufPtr + position);
+                    var header = PcapHeader.FromPointer(bufPtr + position, TimeResolution);
                     var pktSize = (int)header.CaptureLength;
                     var p = new ReadOnlySpan<byte>(buffer, position + hdrSize, pktSize);
                     if (transmitMode == SendQueueTransmitModes.Synchronized)
                     {
-                        var timestamp = TimeSpan.FromTicks(header.Date.Ticks);
+                        var timestamp = TimeSpan.FromTicks(header.Timeval.Date.Ticks);
                         var remainingTime = timestamp.Subtract(firstTimestamp);
                         while (sw.Elapsed < remainingTime)
                         {
@@ -235,11 +236,7 @@ namespace SharpPcap.LibPcap
         /// <returns>True if success, else false</returns>
         public static bool Add(this SendQueue queue, byte[] packet)
         {
-            var header = new PcapHeader
-            {
-                PacketLength = (uint)packet.Length,
-                CaptureLength = (uint)packet.Length
-            };
+            var header = new PcapHeader(0, 0, (uint)packet.Length, (uint)packet.Length);
             return queue.Add(header, packet);
         }
 
