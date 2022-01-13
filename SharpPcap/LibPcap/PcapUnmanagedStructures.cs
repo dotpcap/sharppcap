@@ -181,43 +181,6 @@ namespace SharpPcap.LibPcap
         };
         #endregion
 
-        #region pcap_pkthdr
-        /// <summary>
-        /// Each packet in the dump file is prepended with this generic header.
-        /// This gets around the problem of different headers for different
-        /// packet interfaces.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_pkthdr_unix
-        {
-            public timeval_unix ts;             /* time stamp */
-            public UInt32 caplen;         /* length of portion present */
-            public UInt32 len;            /* length this packet (off wire) */
-        };
-
-        /// <summary>
-        /// Each packet in the dump file is prepended with this generic header.
-        /// This gets around the problem of different headers for different
-        /// packet interfaces.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_pkthdr_windows
-        {
-            public timeval_windows ts;             /* time stamp */
-            public UInt32 caplen;         /* length of portion present */
-            public UInt32 len;            /* length this packet (off wire) */
-        };
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_pkthdr_macosx
-        {
-            public timeval_macosx ts;             /* time stamp */
-            public UInt32 caplen;         /* length of portion present */
-            public UInt32 len;            /* length this packet (off wire) */
-        };
-
-        #endregion
-
         /// <summary>
         /// A BPF pseudo-assembly program for packet filtering
         /// </summary>
