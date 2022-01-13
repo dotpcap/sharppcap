@@ -129,7 +129,7 @@ namespace SharpPcap.LibPcap
         public bool Matches(ReadOnlySpan<byte> data)
         {
             var header = new PcapHeader(0, 0, (uint)data.Length, (uint)data.Length);
-            IntPtr hdrPtr = header.MarshalToIntPtr(TimestampResolution.Microsecond);
+            var hdrPtr = header.MarshalToIntPtr(TimestampResolution.Microsecond);
             int result;
             unsafe
             {
