@@ -8,4 +8,4 @@ dpkg -i packages-microsoft-prod.deb
 apt-get update
 
 # Install DotNet
-apt-get install -y dotnet-sdk-5.0
+apt-get install -y dotnet-sdk-6.0

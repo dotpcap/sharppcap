@@ -250,8 +250,7 @@ namespace SharpPcap.LibPcap
             {
                 //Get a packet from npcap
                 res = LibPcapSafeNativeMethods.pcap_next_ex(Handle, ref header, ref data);
-
-                var pcapHeader = PcapHeader.FromPointer(header);
+                var pcapHeader = PcapHeader.FromPointer(header, TimestampResolution);
                 var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
 
                 e = new PacketCapture(this, pcapHeader, dataSpan);
@@ -293,7 +292,7 @@ namespace SharpPcap.LibPcap
                 }
                 unsafe
                 {
-                    var pcapHeader = PcapHeader.FromPointer(header);
+                    var pcapHeader = PcapHeader.FromPointer(header, TimestampResolution);
                     var dataSpan = new Span<byte>(data.ToPointer(), (int)pcapHeader.CaptureLength);
                     SendPacketArrivalEvent(pcapHeader, dataSpan);
                 }
@@ -329,14 +328,12 @@ namespace SharpPcap.LibPcap
             RawCapture p;
 
             // marshal the header
-            var pcapHeader = PcapHeader.FromPointer(header);
+            var pcapHeader = PcapHeader.FromPointer(header, TimestampResolution);
 
             var pkt_data = new byte[pcapHeader.CaptureLength];
             Marshal.Copy(data, pkt_data, 0, (int)pcapHeader.CaptureLength);
 
-            p = new RawCapture(LinkType,
-                               new PosixTimeval(pcapHeader.Seconds,
-                                                pcapHeader.MicroSeconds),
+            p = new RawCapture(LinkType, pcapHeader.Timeval,
                                pkt_data, (int)pcapHeader.PacketLength);
 
             return p;
