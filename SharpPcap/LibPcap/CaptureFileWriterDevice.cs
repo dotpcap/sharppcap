@@ -163,7 +163,7 @@ namespace SharpPcap.LibPcap
                 throw new DeviceNotReadyException("Cannot dump packet, dump file is not opened");
 
             //Marshal header
-            IntPtr hdrPtr = h.MarshalToIntPtr();
+            IntPtr hdrPtr = h.MarshalToIntPtr(TimestampResolution);
 
             unsafe
             {

@@ -20,6 +20,9 @@ jobs:
       libpcap:
         description: How to install libpcap
         type: string
+      arch:
+        description: Architecture (x86 or x64)
+        type: string
     machine:
       image: << parameters.ubuntu >>:202010-01
     steps:
@@ -36,7 +39,7 @@ jobs:
           condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket --arch << parameters.arch >>
       - store_test_results:
           path: Test/TestResults
       - store_artifacts:
@@ -48,8 +51,9 @@ workflows:
     jobs:
       - test-windows
       - test-ubuntu:
-          name: << matrix.ubuntu >>-<< matrix.libpcap >>
+          name: << matrix.ubuntu >>-<< matrix.libpcap >>-<< matrix.arch >>
           matrix:
             parameters:
               ubuntu: [ "ubuntu-1604", "ubuntu-2004" ]
               libpcap: [ "libpcap-script", "libpcap-dev", "libpcap0.8" ]
+              arch: ['x86', 'x64']
