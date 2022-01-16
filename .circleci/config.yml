@@ -20,6 +20,9 @@ jobs:
       libpcap:
         description: How to install libpcap
         type: string
+      arch:
+        description: Architecture (x86 or x64)
+        type: string
     machine:
       image: << parameters.ubuntu >>:202010-01
     steps:
