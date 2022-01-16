@@ -24,26 +24,20 @@ namespace Test
         }
 
         [Category("Timestamp")]
-        [Test]
-        public void CaptureTimestampResolution()
+        [TestCase(TimestampResolution.Nanosecond, "1186341404.189852000s")]
+        [TestCase(TimestampResolution.Microsecond, "1186341404.189852s")]
+        public void CaptureTimestampResolution(TimestampResolution resolution, string timeval)
         {
             var filename = "ipv6_http.pcap";
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
-
-            // nanosecond configuration
             var configuration = new DeviceConfiguration
             {
-                TimestampResolution = TimestampResolution.Nanosecond
+                TimestampResolution = resolution
             };
             device.Open(configuration);
-            Assert.AreEqual(configuration.TimestampResolution, device.TimestampResolution);
-            device.Close();
-
-            // microsecond configuration
-            configuration.TimestampResolution = TimestampResolution.Microsecond;
-            device.Open(configuration);
-            Assert.AreEqual(configuration.TimestampResolution, device.TimestampResolution);
-            device.Close();
+            Assert.AreEqual(resolution, device.TimestampResolution);
+            device.GetNextPacket(out var packet);
+            Assert.AreEqual(timeval, packet.Header.Timeval.ToString());
         }
 
         [Test]
