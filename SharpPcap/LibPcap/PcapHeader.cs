@@ -30,8 +30,8 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public class PcapHeader : ICaptureHeader
     {
-        private static readonly bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         private static readonly bool isMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        private static readonly bool is32BitTs = IntPtr.Size == 4 || RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         internal static readonly int MemorySize = GetTimevalSize() + sizeof(uint) + sizeof(uint);
 
@@ -40,7 +40,7 @@ namespace SharpPcap.LibPcap
 
         private static int GetTimevalSize()
         {
-            if (isWindows)
+            if (is32BitTs)
             {
                 return Marshal.SizeOf<timeval_windows>();
             }
@@ -58,7 +58,7 @@ namespace SharpPcap.LibPcap
         {
             ulong tv_sec;
             ulong tv_usec;
-            if (isWindows)
+            if (is32BitTs)
             {
                 var ts = *(timeval_windows*)pcap_pkthdr;
                 tv_sec = (ulong)ts.tv_sec;
@@ -132,7 +132,7 @@ namespace SharpPcap.LibPcap
             var unit = resolution == TimestampResolution.Nanosecond ? 1e-9M : 1e-6M;
             var tv_usec = (ulong)((Timeval.Value % 1) * unit);
 
-            if (isWindows)
+            if (is32BitTs)
             {
                 // setup the structure to marshal
                 var timeval = new timeval_windows
