@@ -24,35 +24,35 @@ namespace SharpPcap
     /// <summary> POSIX.4 timeval</summary>
     public class PosixTimeval : IComparable<PosixTimeval>
     {
-        private static readonly DateTime epochDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
-        internal long microsecondsPerMillisecond = 1000;
+        private static readonly DateTime EpochDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         /// <value>
         /// Number of seconds in the timeval
         /// </value>
-        virtual public ulong Seconds
+        public ulong Seconds
         {
-            get;
-            set;
+            get => (ulong)Value;
+            set => Value = (Value % 1) + value;
         }
 
         /// <value>
         /// Number of microseconds in the timeval
         /// </value>
-        virtual public ulong MicroSeconds
+        public ulong MicroSeconds
         {
-            get;
-            set;
+            get => (ulong)((Value % 1) * 1e6M);
+            set => Value = Seconds + (value * 1e-6M);
         }
 
+        /// <summary>
+        /// Seconds since epoch
+        /// </summary>
+        public decimal Value { get; set; }
+
         /// <summary> The timeval as a DateTime in Utc </summary>
-        virtual public DateTime Date
+        public DateTime Date
         {
-            get
-            {
-                return UnixTimeValToDateTime(Seconds, MicroSeconds);
-            }
+            get => EpochDateTime.AddTicks((long)(Value * TimeSpan.TicksPerSecond));
         }
 
         /// <summary>
@@ -69,14 +69,7 @@ namespace SharpPcap
         /// </returns>
         public static bool operator <(PosixTimeval a, PosixTimeval b)
         {
-            if (a.Seconds < b.Seconds) return true;
-            if ((a.Seconds == b.Seconds) &&
-               (a.MicroSeconds < b.MicroSeconds))
-            {
-                return true;
-            }
-
-            return false;
+            return a.Value < b.Value;
         }
 
         /// <summary>
@@ -93,7 +86,7 @@ namespace SharpPcap
         /// </returns>
         public static bool operator >(PosixTimeval a, PosixTimeval b)
         {
-            return (b < a);
+            return a.Value > b.Value;
         }
 
         /// <summary>
@@ -110,15 +103,7 @@ namespace SharpPcap
         /// </returns>
         public static bool operator <=(PosixTimeval a, PosixTimeval b)
         {
-            if (a < b) return true;
-
-            if ((a.Seconds == b.Seconds) &&
-               (a.MicroSeconds <= b.MicroSeconds))
-            {
-                return true;
-            }
-
-            return false;
+            return a.Value <= b.Value;
         }
 
         /// <summary>
@@ -135,7 +120,7 @@ namespace SharpPcap
         /// </returns>
         public static bool operator >=(PosixTimeval a, PosixTimeval b)
         {
-            return (b <= a);
+            return a.Value >= b.Value;
         }
 
         /// <summary>
@@ -152,8 +137,8 @@ namespace SharpPcap
         /// </returns>
         public static bool operator ==(PosixTimeval a, PosixTimeval b)
         {
-            // Object.Equals() checks for null and then calls a.Equals(b)
-            return Object.Equals(a, b);
+            // object.Equals() checks for null and then calls a.Equals(b)
+            return Equals(a, b);
         }
 
         /// <summary>
@@ -190,7 +175,7 @@ namespace SharpPcap
 
             var pt = (PosixTimeval)obj;
 
-            return ((Seconds == pt.Seconds) && (MicroSeconds == pt.MicroSeconds));
+            return Value == pt.Value;
         }
 
         /// <summary>
@@ -201,44 +186,50 @@ namespace SharpPcap
         /// </returns>
         public override int GetHashCode()
         {
-            return Seconds.GetHashCode() + MicroSeconds.GetHashCode();
+            return Value.GetHashCode();
         }
 
-        private static void DateTimeToUnixTimeVal(DateTime dateTime,
-                                                  out UInt64 tvSec,
-                                                  out UInt64 tvUsec)
+        private static decimal GetUnixTimeVal(DateTime datetime)
         {
             // diff this with the dateTime value
             // NOTE: make sure the time is in universal time when performing
             //       the subtraction so we get the difference between epoch in utc
             //       which is the definition of the unix timeval
-            TimeSpan timeSpan = dateTime.ToUniversalTime().Subtract(epochDateTime);
-
-            tvSec = (UInt64)(timeSpan.TotalMilliseconds / 1000.0);
-            // find the milliseconds remainder and convert to microseconds
-            tvUsec = (UInt64)((timeSpan.TotalMilliseconds - (tvSec * 1000)) * 1000);
-        }
-
-        private static DateTime UnixTimeValToDateTime(UInt64 tvSec, UInt64 tvUsec)
-        {
-            ulong ticks = (tvUsec * (TimeSpan.TicksPerMillisecond / 1000)) +
-                         (tvSec * TimeSpan.TicksPerSecond);
-            return epochDateTime.AddTicks((long)ticks);
+            decimal ticks = datetime.ToUniversalTime().Subtract(EpochDateTime).Ticks;
+            return ticks / TimeSpan.TicksPerSecond;
         }
 
         /// <summary>
-        /// Constructor with Seconds and MicroSeconds fields
+        /// Constructor with seconds and microSeconds fields
         /// </summary>
-        /// <param name="Seconds">
+        /// <param name="seconds">
         /// A <see cref="ulong"/>
         /// </param>
-        /// <param name="MicroSeconds">
+        /// <param name="microseconds">
         /// A <see cref="ulong"/>
         /// </param>
-        public PosixTimeval(ulong Seconds, ulong MicroSeconds)
+        public PosixTimeval(ulong seconds, ulong microseconds)
         {
-            this.Seconds = Seconds;
-            this.MicroSeconds = MicroSeconds;
+            this.Seconds = seconds;
+            this.MicroSeconds = microseconds;
+        }
+
+        /// <summary>
+        /// Constructor with seconds and fractions fields
+        /// </summary>
+        /// <param name="seconds">
+        /// A <see cref="ulong"/>
+        /// </param>
+        /// <param name="fractions">
+        /// A <see cref="ulong"/>
+        /// </param>
+        /// <param name="resolution">
+        /// A <see cref="TimestampResolution"/>
+        /// </param>
+        public PosixTimeval(ulong seconds, ulong fractions, TimestampResolution resolution)
+        {
+            var unit = resolution == TimestampResolution.Nanosecond ? 1e-9M : 1e-6M;
+            Value = seconds + (fractions * unit);
         }
 
         /// <summary>
@@ -249,25 +240,14 @@ namespace SharpPcap
         /// </param>
         public PosixTimeval(DateTime time)
         {
-            DateTimeToUnixTimeVal(time.ToUniversalTime(),
-                                  out ulong seconds,
-                                  out ulong microseconds);
-
-            this.Seconds = seconds;
-            this.MicroSeconds = microseconds;
+            Value = GetUnixTimeVal(time);
         }
         /// <summary>
         /// Construct a PosixTimeval using the current UTC time
         /// </summary>
         public PosixTimeval()
         {
-
-            DateTimeToUnixTimeVal(DateTime.UtcNow,
-                                  out ulong seconds,
-                                  out ulong microseconds);
-
-            this.Seconds = seconds;
-            this.MicroSeconds = microseconds;
+            Value = GetUnixTimeVal(DateTime.UtcNow);
         }
 
         /// <summary>
@@ -276,15 +256,9 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="string"/>
         /// </returns>
-        public override System.String ToString()
+        public override string ToString()
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(Seconds);
-            sb.Append('.');
-            sb.AppendFormat("{0:000000}", MicroSeconds);
-            sb.Append('s');
-
-            return sb.ToString();
+            return Value + "s";
         }
 
         /// <summary>
@@ -298,12 +272,7 @@ namespace SharpPcap
         /// </returns>
         public int CompareTo(PosixTimeval that)
         {
-            if (this < that)
-                return -1;
-            else if (this > that)
-                return 1;
-            else
-                return 0;
+            return Value.CompareTo(that.Value);
         }
     }
 }
