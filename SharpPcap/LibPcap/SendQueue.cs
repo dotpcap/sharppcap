@@ -176,7 +176,8 @@ namespace SharpPcap.LibPcap
                         while (sw.Elapsed < remainingTime)
                         {
                             // Wait for packet time
-                            System.Threading.Thread.Sleep((int)remainingTime.TotalMilliseconds / 2);
+                            //System.Threading.Thread.Sleep((int)remainingTime.TotalMilliseconds / 2);
+                            continue;
                         }
                     }
                     // Send the packet
