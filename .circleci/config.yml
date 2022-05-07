@@ -56,7 +56,7 @@ jobs:
               </packageSources>
               <packageSourceCredentials>
                 <github>
-                  <add key='Username' value='LansweeperCloudDevelopment' />
+                  <add key='Username' value='env:GITHUB_USER' />
                   <add key='ClearTextPassword' value='$env:GITHUB_TOKEN' />
                 </github>
               </packageSourceCredentials>
