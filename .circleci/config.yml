@@ -14,9 +14,6 @@ jobs:
 
   test-ubuntu:
     parameters:
-      ubuntu:
-        description: Ubuntu version
-        type: string
       libpcap:
         description: How to install libpcap
         type: string
