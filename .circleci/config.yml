@@ -59,6 +59,7 @@ workflows:
   build:
     jobs:
       - test-windows
+      - test-arm
       - test-ubuntu:
           name: << matrix.libpcap >>
           matrix:
