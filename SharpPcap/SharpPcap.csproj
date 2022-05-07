@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>9.0.0</Version>
+    <PackageId>Lansweeper.SharpPcap</PackageId>
+    <Company>Lansweeper</Company>
+    <Title>Lansweeper SharpPcap</Title>
+    <Product>Lansweeper SharpPcap</Product>	  
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
