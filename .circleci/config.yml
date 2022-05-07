@@ -14,14 +14,11 @@ jobs:
 
   test-ubuntu:
     parameters:
-      ubuntu:
-        description: Ubuntu version
-        type: string
       libpcap:
         description: How to install libpcap
         type: string
     machine:
-      image: << parameters.ubuntu >>:202010-01
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
@@ -48,8 +45,7 @@ workflows:
     jobs:
       - test-windows
       - test-ubuntu:
-          name: << matrix.ubuntu >>-<< matrix.libpcap >>
+          name: << matrix.libpcap >>
           matrix:
             parameters:
-              ubuntu: [ "ubuntu-1604", "ubuntu-2004" ]
               libpcap: [ "libpcap-script", "libpcap-dev", "libpcap0.8" ]
