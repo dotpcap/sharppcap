@@ -9,7 +9,7 @@ parameters:
     default: "Lansweeper_sharppcap"
   nuget-output-file:
     type: string
-    default: "bin/Release/SharpPcap.nupkg"
+    default: "bin/Release/SharpPcap.9.0.0.nupkg"
 
 executors:
   node:
