@@ -1,55 +1,163 @@
 version: 2.1
 
+parameters:
+  csproj-file:
+    type: string
+    default: "SharpPcap/SharpPcap.csproj"
+  sonar-project:
+    type: string
+    default: "Lansweeper_SharpPcap"
+  nuget-output-file:
+    type: string
+    default: "bin/Release/netstandard2.0/SharpPcap.nupkg"
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:12
+
 orbs:
-  win: circleci/windows@2.4.1
+  win: circleci/windows@2.2.0
+  sonar-check: lansweeper/sonar@0.0.6
 
 jobs:
-  test-windows:
+  build:
+    executor: win/default
+
+    steps:
+      - checkout
+      - run:
+          name: Install SonarScanner for MSBuild .NET Core Global Tool
+          command: dotnet tool install --global dotnet-sonarscanner
+      - run:
+          name: Start SonarScanner
+          command: dotnet sonarscanner begin /k:"<< pipeline.parameters.sonar-project >>" /d:sonar.verbose=true /o:"lansweeper" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login=$Env:SONAR_TOKEN /d:sonar.language="cs"
+      - run: dotnet build << pipeline.parameters.csproj-file >> --configuration Release
+      - run:
+          name: Upload SonarScanner results
+          command: dotnet sonarscanner end /d:sonar.login=$Env:SONAR_TOKEN
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  nuget-prepare:
     executor:
       name: win/default
     steps:
-      - checkout
-      - run: dotnet build -c Release
-      - run: bash scripts/test.sh --filter "TestCategory=WinDivert"
+      - run:
+          name: Create local nuget config file
+          command: |
+            $xml = "<?xml version='1.0' encoding='utf-8'?>
+            <configuration>
+              <packageSources>
+                <add key='github' value='https://nuget.pkg.github.com/Lansweeper/index.json' />
+              </packageSources>
+              <packageSourceCredentials>
+                <github>
+                  <add key='Username' value='LansweeperCloudDevelopment' />
+                  <add key='ClearTextPassword' value='$env:GITHUB_TOKEN' />
+                </github>
+              </packageSourceCredentials>
+            </configuration>"
+            Out-File -FilePath nuget.config -InputObject $xml -Encoding ASCII
+      - run: type nuget.config
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
-  test-ubuntu:
-    parameters:
-      ubuntu:
-        description: Ubuntu version
-        type: string
-      libpcap:
-        description: How to install libpcap
-        type: string
-    machine:
-      image: << parameters.ubuntu >>:202010-01
+  nuget-publish:
+    executor:
+      name: win/default
     steps:
-      - checkout
-      - run: sudo -E bash scripts/install-dotnet.sh
-      - run: sudo -E bash scripts/install-tap.sh
-      # Download and compile latest libpcap
-      - when:
-          condition: { equal: [ libpcap-script, << parameters.libpcap >> ] }
-          steps:
-            - run: sudo -E bash scripts/install-libpcap.sh
-      # Install libpcap from apt-get
-      - when:
-          condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
-          steps:
-            - run: sudo apt-get install << parameters.libpcap >>
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
-      - store_test_results:
-          path: Test/TestResults
-      - store_artifacts:
-          path: Test/TestResults
+      - attach_workspace:
+          at: .
+      - run:
+          name: Set correct version in csproj file, build and pack it
+          command: |
+            $env:package_version = "9.0.0"
+
+            $file = Get-Item << pipeline.parameters.csproj-file >>
+            [xml]$cn = Get-Content $file
+            $cn.Project.PropertyGroup.Version="$env:package_version"
+            $cn.Save($file.FullName)
+            type ./<< pipeline.parameters.csproj-file >>
+      - run:
+          name: Pack the package
+          command: dotnet pack << pipeline.parameters.csproj-file >> --configuration Release
+      - run:
+          name: Publish the package
+          command: |
+            dotnet nuget push << pipeline.parameters.nuget-output-file >> --source "github" --api-key $env:GITHUB_TOKEN
+
+  sonar:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: .
+      - sonar-check/get_sonar_status:
+          report_file: "/home/circleci/project/.sonarqube/out/.sonar/report-task.txt"
 
 workflows:
   version: 2
-  build:
+
+  ci_on_pr:
     jobs:
-      - test-windows
-      - test-ubuntu:
-          name: << matrix.ubuntu >>-<< matrix.libpcap >>
-          matrix:
-            parameters:
-              ubuntu: [ "ubuntu-1604", "ubuntu-2004" ]
-              libpcap: [ "libpcap-script", "libpcap-dev", "libpcap0.8" ]
+      - build:
+          context:
+            - lec-github-packages-rw
+            - SonarCloud
+          filters:
+            branches:
+              ignore: master
+
+      - sonar:
+          context:
+            - SonarCloud
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: master
+
+  ci_and_release_master:
+    jobs:
+      - build:
+          context:
+            - lec-github-packages-rw
+            - SonarCloud
+          filters:
+            branches:
+              only: master
+      - nuget-prepare:
+          requires:
+            - build
+          context:
+            - lec-github-packages-rw
+          filters:
+            branches:
+              only: master
+      - nuget-publish:
+          requires:
+            - nuget-prepare
+          context:
+            - lec-github-packages-rw
+          filters:
+            branches:
+              only: master
+              
+  run-daily-tests:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only: master
+
+    jobs:
+      - build:
+          context:
+            - lec-github-packages-rw
+            - SonarCloud
