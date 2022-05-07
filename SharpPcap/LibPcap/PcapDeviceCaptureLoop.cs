@@ -165,7 +165,7 @@ namespace SharpPcap.LibPcap
                     continue;
                 }
 
-                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, Handle.DangerousGetHandle());
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative
