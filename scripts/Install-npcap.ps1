@@ -13,8 +13,7 @@ $npcap_oem_file = "npcap-1.55-oem.exe"
 if (Test-Path Env:npcap_oem_key){  # Key is here: on master
     # Unpack the key
     # The format of the environment variable should be 'username,password'
-    # Disabled for now, the configured credentials are not working
-    # $user, $pass = (Get-ChildItem Env:npcap_oem_key).Value.replace("`"", "").split(",")
+    $user, $pass = (Get-ChildItem Env:npcap_oem_key).Value.replace("`"", "").split(",")
 }
 if($user -And $pass){
     echo "Using Npcap OEM version"
