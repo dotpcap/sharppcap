@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -192,8 +193,12 @@ namespace SharpPcap.LibPcap
                         case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
                             SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                             return;
-                        default:    // This can only be triggered by a bug in libpcap.
-                            throw new PcapException("Unknown pcap_loop exit status.");
+                        default:
+                            // This can only be triggered by a bug in libpcap.
+                            // We can't throw here, sicne that would crash the application
+                            Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                            return;
                     }
                 }
                 else // res > 0
