@@ -6,7 +6,7 @@ parameters:
     default: "SharpPcap/SharpPcap.csproj"
   sonar-project:
     type: string
-    default: "Lansweeper_SharpPcap"
+    default: "Lansweeper_sharppcap"
   nuget-output-file:
     type: string
     default: "bin/Release/netstandard2.0/SharpPcap.nupkg"
