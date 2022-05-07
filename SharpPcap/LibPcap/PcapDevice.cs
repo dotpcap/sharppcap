@@ -277,9 +277,14 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Pcap_loop callback method.
         /// </summary>
-        protected virtual void PacketHandler(IntPtr param, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
+        protected virtual void PacketHandler(IntPtr handlePtr, IntPtr /* pcap_pkthdr* */ header, IntPtr data)
         {
             var handle = Handle;
+            if (handle.DangerousGetHandle() != handlePtr)
+            {
+                // The handle changed, we are being called from a soon to be dead thread.
+                return;
+            }
             var gotRef = false;
             try
             {
