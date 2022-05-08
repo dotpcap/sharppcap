@@ -16,7 +16,7 @@ namespace Test
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
-        private const int PacketCount = 8;
+        private const int PacketCount = 80;
         // Windows is usually able to simulate inter packet gaps down to 20µs
         // We test with 100µs to avoid flaky tests
         internal static readonly decimal DeltaTime = 100E-6M;
@@ -171,15 +171,49 @@ namespace Test
             var deltas = GetDeltaTimes(received);
             // Windows usually can not put a delta smaller than 20µs
             // We tolorate up to 100µs to avoid flaky tests
-            Assert.That(deltas.Average(), Is.LessThan(100e-6M));
+            // Ensure 95% of packets have delta < 100µs
+            Assert.That(Percentile(deltas, 0.95M), Is.LessThan(100e-6M));
         }
 
         private static void AssertGoodTransmitSync(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
             var deltas = GetDeltaTimes(received);
-            Assert.That(deltas.Min(), Is.GreaterThan(DeltaTime * 0.9M));
-            Assert.That(deltas.Max(), Is.LessThan(DeltaTime * 1.1M));
+            // Ensure 95% of packets have delta = DeltaTime +/- 10%
+            Assert.That(Percentile(deltas, 0.05M), Is.GreaterThan(DeltaTime * 0.9M));
+            Assert.That(Percentile(deltas, 0.95M), Is.LessThan(DeltaTime * 1.1M));
+            // Ensure all packets have delta = DeltaTime +/- 20%
+            Assert.That(Percentile(deltas, 0), Is.GreaterThan(DeltaTime * 0.8M));
+            Assert.That(Percentile(deltas, 1), Is.LessThan(DeltaTime * 1.2M));
+        }
+
+        /// <summary>
+        /// Statistical percentile
+        /// From https://stackoverflow.com/a/8137455
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="percentile"></param>
+        /// <returns></returns>
+        private static decimal Percentile(decimal[] sequence, decimal percentile)
+        {
+            Array.Sort(sequence);
+            var N = sequence.Length;
+            var n = (N - 1) * percentile + 1;
+            // Another method: double n = (N + 1) * excelPercentile;
+            if (n == 1)
+            {
+                return sequence[0];
+            }
+            else if (n == N)
+            {
+                return sequence[N - 1];
+            }
+            else
+            {
+                var k = (int)n;
+                var d = n - k;
+                return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+            }
         }
 
         [Test]
