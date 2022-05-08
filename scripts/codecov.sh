@@ -19,10 +19,10 @@ if [[ $arch == arm64 ]] || [ $arch == aarch64 ]
 then
   # Workaround until Codecov fix ARM support
   # See https://github.com/codecov/uploader/issues/523
-  dotnet tool install --tool-path . Codecov.Tool
+  curl -s https://codecov.io/bash > $fileamen
 else
   curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
-  chmod +x $filename
 fi
 
-./codecov "$@"
+chmod +x $fileamen
+./$fileamen "$@"
