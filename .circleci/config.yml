@@ -45,7 +45,7 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
-      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -c 5.0
       - run: sudo -E bash scripts/install-tap.sh
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
