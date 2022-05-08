@@ -17,7 +17,9 @@ namespace Test
     {
         private const string Filter = "ether proto 0x1234";
         private const int PacketCount = 8;
-        internal static readonly int DeltaMs = 10;
+        // Windows is usually able to simulate inter packet gaps down to 20µs
+        // We test with 100µs to avoid flaky tests
+        internal static readonly decimal DeltaTime = 100E-6M;
 
         /// <summary>
         /// Transmit with normal works correctly
@@ -153,16 +155,31 @@ namespace Test
             AssertGoodTransmitSync(received);
         }
 
+        private static decimal[] GetDeltaTimes(List<RawCapture> received)
+        {
+            // Skip the first two, those get penalized due to JIT
+            var times = received.Skip(2)
+                .Select(r => r.Timeval.Value).ToArray();
+            var times1 = times.Skip(1);
+            var times2 = times.Take(times.Length - 1);
+            return times1.Zip(times2, (t1, t2) => t1 - t2).ToArray();
+        }
+
         private static void AssertGoodTransmitNormal(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
-            var times = received.Select(r => r.Timeval.Date);
-            Assert.That(times.Max() - times.Min(), Is.LessThan(FromMilliseconds(10)));
+            var deltas = GetDeltaTimes(received);
+            // Windows usually can not put a delta smaller than 20µs
+            // We tolorate up to 100µs to avoid flaky tests
+            Assert.That(deltas.Average(), Is.LessThan(100e-6M));
         }
 
         private static void AssertGoodTransmitSync(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
+            var deltas = GetDeltaTimes(received);
+            Assert.That(deltas.Min(), Is.GreaterThan(DeltaTime * 0.9M));
+            Assert.That(deltas.Max(), Is.LessThan(DeltaTime * 1.1M));
         }
 
         [Test]
@@ -198,12 +215,14 @@ namespace Test
         /// <returns></returns>
         internal static SendQueueWrapper GetSendQueue(ushort ethertype = 0x1234)
         {
-            var queue = new SendQueueWrapper(1024);
+            var queue = new SendQueueWrapper((14 + PcapHeader.MemorySize) * PacketCount);
             var packet = EthernetPacket.RandomPacket();
             packet.Type = (EthernetType)ethertype;
+            var time = new PosixTimeval();
             for (var i = 0; i < PacketCount; i++)
             {
-                Assert.IsTrue(queue.Add(packet.Bytes, 123456, i * DeltaMs * 1000));
+                time.Value = 123456 + i * DeltaTime;
+                Assert.IsTrue(queue.Add(packet.Bytes, (int)time.Seconds, (int)time.MicroSeconds));
             }
             return queue;
         }
