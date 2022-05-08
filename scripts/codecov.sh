@@ -3,8 +3,8 @@
 # Logic for OS detection from https://circleci.com/developer/orbs/orb/codecov/codecov
 
 family=$(uname -s | tr '[:upper:]' '[:lower:]')
-
 os="windows"
+
 [[ $family == "darwin" ]] && os="macos"
 
 [[ $family == "linux" ]] && os="linux"
@@ -14,16 +14,15 @@ os="windows"
 filename="codecov"
 [[ $os == "windows" ]] && filename+=".exe"
 
-curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
-chmod +x $filename
-
-# Workaround until Codecov fix ARM support
-# See https://github.com/codecov/uploader/issues/523
 arch=$(uname -m)
 if [[ $arch == arm64 ]] || [ $arch == aarch64 ]
 then
+  # Workaround until Codecov fix ARM support
+  # See https://github.com/codecov/uploader/issues/523
   dotnet tool install --tool-path . Codecov.Tool
+else
+  curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
+  chmod +x $filename
 fi
-# end arm workaround
 
 ./codecov "$@"
