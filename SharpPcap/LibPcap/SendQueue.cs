@@ -24,6 +24,7 @@ using PacketDotNet;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
@@ -176,7 +177,13 @@ namespace SharpPcap.LibPcap
                         while (sw.Elapsed < remainingTime)
                         {
                             // Wait for packet time
-                            System.Threading.Thread.Sleep((int)remainingTime.TotalMilliseconds / 2);
+                            if (remainingTime.TotalMilliseconds > 50)
+                            {
+                                Thread.Yield();
+                            } else
+                            {
+                                Thread.SpinWait(1);
+                            }
                         }
                     }
                     // Send the packet
