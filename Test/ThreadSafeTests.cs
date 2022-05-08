@@ -80,6 +80,10 @@ namespace Test
             {
                 // Pass, normal
             }
+            catch (ObjectDisposedException)
+            {
+                // Pass, normal
+            }
         }
     }
 }
