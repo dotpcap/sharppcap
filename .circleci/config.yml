@@ -56,8 +56,9 @@ jobs:
       - run: sudo -E bash scripts/install-tap.sh
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
-      - run: sudo chmod -R +r Test/TestResults
-        when: always
+      - run: 
+          when: always
+          command: sudo chmod -R +r Test/TestResults
       - report
 
 workflows:
