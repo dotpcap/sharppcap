@@ -17,7 +17,7 @@ filename="codecov"
 curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
 chmod +x $filename
 
-if [[ $arch = arm* ]]
+if [[ $arch = arm* ]] || [ $arch = aarch* ]
 then
   # See https://github.com/codecov/uploader/issues/523
   dotnet tool install --global Codecov.Tool
