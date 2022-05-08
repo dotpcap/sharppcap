@@ -16,7 +16,7 @@ namespace Test
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
-        private const int PacketCount = 80;
+        private const int PacketCount = 100;
         // Windows is usually able to simulate inter packet gaps down to 20µs
         // We test with 100µs to avoid flaky tests
         internal static readonly decimal DeltaTime = 100E-6M;
@@ -179,12 +179,9 @@ namespace Test
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
             var deltas = GetDeltaTimes(received);
-            // Ensure 90% of packets have delta = DeltaTime +/- 20%
-            Assert.That(Percentile(deltas, 0.1M), Is.GreaterThan(DeltaTime * 0.8M));
-            Assert.That(Percentile(deltas, 0.9M), Is.LessThan(DeltaTime * 1.2M));
-            // Ensure all packets have delta = DeltaTime +/- 50%
-            Assert.That(Percentile(deltas, 0), Is.GreaterThan(DeltaTime * 0.5M));
-            Assert.That(Percentile(deltas, 1), Is.LessThan(DeltaTime * 1.5M));
+            // Ensure avg of packets delta = DeltaTime +/- 10%
+            Assert.That(deltas.Average(), Is.GreaterThan(DeltaTime * 0.9M));
+            Assert.That(deltas.Average(), Is.LessThan(DeltaTime * 1.1M));
         }
 
         /// <summary>
