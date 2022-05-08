@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Logic for OS detection from https://circleci.com/developer/orbs/orb/codecov/codecov
 
@@ -19,10 +19,10 @@ if [[ $arch == arm64 ]] || [ $arch == aarch64 ]
 then
   # Workaround until Codecov fix ARM support
   # See https://github.com/codecov/uploader/issues/523
-  curl -s https://codecov.io/bash > $fileamen
+  curl -s https://codecov.io/bash > $filename
 else
   curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
 fi
 
-chmod +x $fileamen
-./$fileamen "$@"
+chmod +x $filename
+./$filename "$@"
