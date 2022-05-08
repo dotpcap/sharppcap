@@ -29,19 +29,4 @@ then
     CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
 fi
 
-if [ -n "$SYSTEM_PULLREQUEST_SOURCECOMMITID" ] # Azure Pipelines
-then
-    CODECOV_ARGS+=( --sha "$SYSTEM_PULLREQUEST_SOURCECOMMITID" )
-    CODECOV_ARGS+=( --branch "$SYSTEM_PULLREQUEST_SOURCEBRANCH" )
-fi
-
-# Depending on CI, dotnet tool or bash should be used
-# This is temporary until codecov fixes CI detection in the dotnet tool
-
-if [ -n "$SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"  ]
-then
-    dotnet tool restore
-    dotnet codecov ${CODECOV_ARGS[@]}
-else
-    bash <(curl -s https://codecov.io/bash) "${CODECOV_ARGS[@]}"
-fi
+bash $(dirname $0)/codecov.sh "${CODECOV_ARGS[@]}"
