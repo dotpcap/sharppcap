@@ -23,10 +23,4 @@ dotnet test "${TEST_ARGS[@]}"
 
 # coverage
 
-CODECOV_ARGS=( -f '**/*.opencover.xml' )
-if [ -n "$SYSTEM_JOBDISPLAYNAME" ]
-then
-    CODECOV_ARGS+=( --flag "$SYSTEM_JOBDISPLAYNAME" )
-fi
-
-bash $(dirname $0)/codecov.sh "${CODECOV_ARGS[@]}"
+bash $(dirname $0)/codecov.sh -f '**/*.opencover.xml'
