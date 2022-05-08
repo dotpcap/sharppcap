@@ -33,7 +33,22 @@ jobs:
           condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      - run: sudo -E bash scripts/test.sh
+      - store_test_results:
+          path: Test/TestResults
+      - store_artifacts:
+          path: Test/TestResults
+
+  test-arm:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-tap.sh
+      - run: sudo apt-get install libpcap0.8
+      - run: sudo -E bash scripts/test.sh
       - store_test_results:
           path: Test/TestResults
       - store_artifacts:
@@ -44,6 +59,7 @@ workflows:
   build:
     jobs:
       - test-windows
+      - test-arm
       - test-ubuntu:
           name: << matrix.libpcap >>
           matrix:
