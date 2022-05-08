@@ -182,9 +182,9 @@ namespace Test
             // Ensure 95% of packets have delta = DeltaTime +/- 10%
             Assert.That(Percentile(deltas, 0.05M), Is.GreaterThan(DeltaTime * 0.9M));
             Assert.That(Percentile(deltas, 0.95M), Is.LessThan(DeltaTime * 1.1M));
-            // Ensure all packets have delta = DeltaTime +/- 20%
-            Assert.That(Percentile(deltas, 0), Is.GreaterThan(DeltaTime * 0.8M));
-            Assert.That(Percentile(deltas, 1), Is.LessThan(DeltaTime * 1.2M));
+            // Ensure all packets have delta = DeltaTime +/- 50%
+            Assert.That(Percentile(deltas, 0), Is.GreaterThan(DeltaTime * 0.5M));
+            Assert.That(Percentile(deltas, 1), Is.LessThan(DeltaTime * 1.5M));
         }
 
         /// <summary>
