@@ -33,7 +33,7 @@ jobs:
           condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      - run: sudo -E bash scripts/test.sh
       - store_test_results:
           path: Test/TestResults
       - store_artifacts:
