@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  win: circleci/windows@2.4.1
+  win: circleci/windows@4.1.1
 
 jobs:
   test-windows:
@@ -14,14 +14,11 @@ jobs:
 
   test-ubuntu:
     parameters:
-      ubuntu:
-        description: Ubuntu version
-        type: string
       libpcap:
         description: How to install libpcap
         type: string
     machine:
-      image: << parameters.ubuntu >>:202010-01
+      image: ubuntu-2004:202201-02
     steps:
       - checkout
       - run: sudo -E bash scripts/install-dotnet.sh
@@ -36,7 +33,22 @@ jobs:
           condition: {not: { equal: [ libpcap-script, << parameters.libpcap >> ] } }
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
-      - run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      - run: sudo -E bash scripts/test.sh
+      - store_test_results:
+          path: Test/TestResults
+      - store_artifacts:
+          path: Test/TestResults
+
+  test-arm:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-tap.sh
+      - run: sudo apt-get install libpcap0.8
+      - run: sudo -E bash scripts/test.sh
       - store_test_results:
           path: Test/TestResults
       - store_artifacts:
@@ -47,9 +59,9 @@ workflows:
   build:
     jobs:
       - test-windows
+      - test-arm
       - test-ubuntu:
-          name: << matrix.ubuntu >>-<< matrix.libpcap >>
+          name: << matrix.libpcap >>
           matrix:
             parameters:
-              ubuntu: [ "ubuntu-1604", "ubuntu-2004" ]
               libpcap: [ "libpcap-script", "libpcap-dev", "libpcap0.8" ]
