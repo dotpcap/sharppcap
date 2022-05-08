@@ -76,7 +76,7 @@ namespace Test
             var queue = SendQueueTest.GetSendQueue(0xDEAD);
             Task.Run(() =>
             {
-                Thread.Sleep(SendQueueTest.DeltaMs);
+                Thread.Sleep(TimeSpan.FromSeconds((double)SendQueueTest.DeltaTime));
                 device.Dispose();
             });
             try

@@ -16,8 +16,10 @@ namespace Test
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
-        private const int PacketCount = 8;
-        internal static readonly int DeltaMs = 10;
+        private const int PacketCount = 80;
+        // Windows is usually able to simulate inter packet gaps down to 20µs
+        // We test with 100µs to avoid flaky tests
+        internal static readonly decimal DeltaTime = 100E-6M;
 
         /// <summary>
         /// Transmit with normal works correctly
@@ -153,16 +155,65 @@ namespace Test
             AssertGoodTransmitSync(received);
         }
 
+        private static decimal[] GetDeltaTimes(List<RawCapture> received)
+        {
+            // Skip the first two, those get penalized due to JIT
+            var times = received.Skip(2)
+                .Select(r => r.Timeval.Value).ToArray();
+            var times1 = times.Skip(1);
+            var times2 = times.Take(times.Length - 1);
+            return times1.Zip(times2, (t1, t2) => t1 - t2).ToArray();
+        }
+
         private static void AssertGoodTransmitNormal(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
-            var times = received.Select(r => r.Timeval.Date);
-            Assert.That(times.Max() - times.Min(), Is.LessThan(FromMilliseconds(10)));
+            var deltas = GetDeltaTimes(received);
+            // Windows usually can not put a delta smaller than 20µs
+            // We tolorate up to 100µs to avoid flaky tests
+            // Ensure 90% of packets have delta < 100µs
+            Assert.That(Percentile(deltas, 0.9M), Is.LessThan(100e-6M));
         }
 
         private static void AssertGoodTransmitSync(List<RawCapture> received)
         {
             Assert.That(received, Has.Count.EqualTo(PacketCount));
+            var deltas = GetDeltaTimes(received);
+            // Ensure 90% of packets have delta = DeltaTime +/- 20%
+            Assert.That(Percentile(deltas, 0.1M), Is.GreaterThan(DeltaTime * 0.8M));
+            Assert.That(Percentile(deltas, 0.9M), Is.LessThan(DeltaTime * 1.2M));
+            // Ensure all packets have delta = DeltaTime +/- 50%
+            Assert.That(Percentile(deltas, 0), Is.GreaterThan(DeltaTime * 0.5M));
+            Assert.That(Percentile(deltas, 1), Is.LessThan(DeltaTime * 1.5M));
+        }
+
+        /// <summary>
+        /// Statistical percentile
+        /// From https://stackoverflow.com/a/8137455
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="percentile"></param>
+        /// <returns></returns>
+        private static decimal Percentile(decimal[] sequence, decimal percentile)
+        {
+            Array.Sort(sequence);
+            var N = sequence.Length;
+            var n = (N - 1) * percentile + 1;
+            // Another method: double n = (N + 1) * excelPercentile;
+            if (n == 1)
+            {
+                return sequence[0];
+            }
+            else if (n == N)
+            {
+                return sequence[N - 1];
+            }
+            else
+            {
+                var k = (int)n;
+                var d = n - k;
+                return sequence[k - 1] + d * (sequence[k] - sequence[k - 1]);
+            }
         }
 
         [Test]
@@ -198,12 +249,14 @@ namespace Test
         /// <returns></returns>
         internal static SendQueueWrapper GetSendQueue(ushort ethertype = 0x1234)
         {
-            var queue = new SendQueueWrapper(1024);
+            var queue = new SendQueueWrapper((14 + PcapHeader.MemorySize) * PacketCount);
             var packet = EthernetPacket.RandomPacket();
             packet.Type = (EthernetType)ethertype;
+            var time = new PosixTimeval();
             for (var i = 0; i < PacketCount; i++)
             {
-                Assert.IsTrue(queue.Add(packet.Bytes, 123456, i * DeltaMs * 1000));
+                time.Value = 123456 + i * DeltaTime;
+                Assert.IsTrue(queue.Add(packet.Bytes, (int)time.Seconds, (int)time.MicroSeconds));
             }
             return queue;
         }
