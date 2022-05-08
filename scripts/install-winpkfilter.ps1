@@ -1,6 +1,5 @@
 
-[System.IO.Directory]::CreateDirectory('bin')
-Push-Location bin
+Push-Location $env:TEMP
 
 $arch = If ([Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'}
 
