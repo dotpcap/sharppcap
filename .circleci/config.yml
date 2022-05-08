@@ -6,7 +6,6 @@ orbs:
 commands:
   report:
     steps:
-    - run: sudo chmod -R +r Test/TestResults
     - store_test_results:
         path: Test/TestResults
     - store_artifacts:
@@ -44,6 +43,7 @@ jobs:
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
       - run: sudo -E bash scripts/test.sh
+      - run: sudo chmod -R +r Test/TestResults
       - report
 
   test-arm:
@@ -56,6 +56,7 @@ jobs:
       - run: sudo -E bash scripts/install-tap.sh
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
+      - run: sudo chmod -R +r Test/TestResults
       - report
 
 workflows:
