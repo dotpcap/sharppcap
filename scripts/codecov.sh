@@ -26,4 +26,4 @@ then
 fi
 # end arm workaround
 
-./$codecov "$@"
+./codecov "$@"
