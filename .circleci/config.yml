@@ -57,6 +57,7 @@ jobs:
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
       - run: sudo chmod -R +r Test/TestResults
+        when: always
       - report
 
 workflows:
