@@ -129,7 +129,7 @@ namespace SharpPcap.LibPcap
         {
             var hdrPtr = Marshal.AllocHGlobal(MemorySize);
             var tv_sec = Timeval.Seconds;
-            var unit = resolution == TimestampResolution.Nanosecond ? 1e-9M : 1e-6M;
+            var unit = resolution == TimestampResolution.Nanosecond ? 1e9M : 1e6M;
             var tv_usec = (ulong)((Timeval.Value % 1) * unit);
 
             if (is32BitTs)
