@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>9.0.0</Version>
+    <Version>9.0.1</Version>
     <PackageId>Lansweeper.SharpPcap</PackageId>
     <Company>Lansweeper</Company>
     <Title>Lansweeper SharpPcap</Title>
