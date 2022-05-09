@@ -99,7 +99,7 @@ jobs:
           at: .
       - sonar-check/get_sonar_status:
           report_file: "/home/circleci/project/.sonarqube/out/.sonar/report-task.txt"
-
+          
 workflows:
   version: 2
 
