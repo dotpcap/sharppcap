@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 5.0.x
     - name: Install .net dependencies
@@ -26,10 +26,10 @@ jobs:
     - name: Build sharppcap assembly
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
-      run: sudo -E bash scripts/test.sh --filter TestCategory!=SendPacket
+      run: sudo -E bash scripts/test.sh
     - name: publish on version change
       id: publish_nuget
-      uses: alirezanet/publish-nuget@v3.0.0
+      uses: alirezanet/publish-nuget@v3.0.4
       with:
         # Filepath of the project to be packaged, relative to root of repository
         PROJECT_FILE_PATH: SharpPcap/SharpPcap.csproj
