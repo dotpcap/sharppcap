@@ -2,7 +2,8 @@
 Push-Location $env:TEMP
 
 $arch = If ([Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'}
-$url = "https://www.ntkernel.com/downloads/Windows Packet Filter 3.2.32.1 $arch.msi"
+$version = "3.2.32.1"
+$url = "https://github.com/wiresock/ndisapi/releases/download/v$version/Windows.Packet.Filter.$version.$arch.msi"
 
 echo "Downloading $url"
 Invoke-WebRequest $url -OutFile "WinpkFilter-$arch.msi"
