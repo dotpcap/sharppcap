@@ -7,7 +7,9 @@ $url = "https://github.com/wiresock/ndisapi/releases/download/v$version/Windows.
 
 echo "Downloading $url"
 Invoke-WebRequest $url -OutFile "WinpkFilter-$arch.msi"
-Start-Process "WinpkFilter-$arch.msi" -ArgumentList "/norestart /quiet /l WinpkFilter-$arch.log" -wait
+$process = Start-Process "WinpkFilter-$arch.msi" -ArgumentList "/norestart /quiet /l WinpkFilter-$arch.log" -PassThru -Wait
 type "WinpkFilter-$arch.log"
 
 Pop-Location
+
+exit $process.ExitCode
