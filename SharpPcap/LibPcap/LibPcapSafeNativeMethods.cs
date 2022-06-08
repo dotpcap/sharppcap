@@ -99,5 +99,21 @@ namespace SharpPcap.LibPcap
         }
 
         #endregion
+
+        /// <summary>
+        /// Wraps a Pcap handle around an existing file handle.
+        /// </summary>
+        /// <param name="handle">Native file handle. On non-Windows systems, this must be a pointer
+        /// to a C runtime <c>FILE</c> object.</param>
+        /// <param name="precision">Desired timestamp precision (micro/nano).</param>
+        /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
+        /// <returns></returns>
+        internal static PcapHandle pcap_open_handle_offline_with_tstamp_precision(
+            IntPtr handle, uint precision, StringBuilder errbuf)
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? _pcap_hopen_offline_with_tstamp_precision(handle, precision, errbuf)
+                : _pcap_fopen_offline_with_tstamp_precision(handle, precision, errbuf);
+        }
     }
 }
