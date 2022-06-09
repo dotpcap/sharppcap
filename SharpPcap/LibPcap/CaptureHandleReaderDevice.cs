@@ -22,6 +22,7 @@ namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Read a pcap capture from a file handle (e.g., a pipe).
+    /// NOTE: libpcap will take ownership of the handle. The handle will be closed when this device is closed.
     /// </summary>
     public class CaptureHandleReaderDevice : CaptureReaderDevice
     {
@@ -74,6 +75,13 @@ namespace SharpPcap.LibPcap
             Handle = adapterHandle;
 
             base.Open(configuration);
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            // libpcap closes the handle, so we mark it as invalid.
+            FileHandle.SetHandleAsInvalid();
         }
     }
 }
