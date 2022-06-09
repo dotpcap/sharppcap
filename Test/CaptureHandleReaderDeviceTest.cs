@@ -23,7 +23,11 @@ namespace Test
             }
 
             // On other platforms, libpcap is not very interop-friendly and expects a FILE*.
+#if !WINDOWS
             return SafeCFileHandle.Wrap(Mono.Unix.Native.Stdlib.fopen(filename, "rb"));
+#else
+            return null;
+#endif
         }
         
         [Category("Timestamp")]
@@ -148,6 +152,7 @@ namespace Test
         }
     }
 
+#if !WINDOWS
     internal class SafeCFileHandle : SafeHandle
     {
         private SafeCFileHandle(bool ownsHandle) : base(IntPtr.Zero, ownsHandle)
@@ -168,4 +173,5 @@ namespace Test
 
         public override bool IsInvalid => handle == IntPtr.Zero;
     }
+#endif
 }
