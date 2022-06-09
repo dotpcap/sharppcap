@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SharpPcap.LibPcap
@@ -28,7 +28,7 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// File handle the object was created with.
         /// </value>
-        public IntPtr FileHandle { get; }
+        public SafeHandle FileHandle { get; }
 
         /// <value>
         /// The name of the capture file.
@@ -46,7 +46,7 @@ namespace SharpPcap.LibPcap
         /// <param name="handle">
         /// On Windows, a native Windows handle. On other systems, a pointer to a C runtime <c>FILE</c> object.
         /// </param>
-        public CaptureHandleReaderDevice(IntPtr handle)
+        public CaptureHandleReaderDevice(SafeHandle handle)
         {
             FileHandle = handle;
         }
@@ -60,7 +60,8 @@ namespace SharpPcap.LibPcap
             StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
-            var adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(FileHandle, (uint)resolution, errbuf);
+            var adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(
+                FileHandle.DangerousGetHandle(), (uint)resolution, errbuf);
 
             // handle error
             if (adapterHandle.IsInvalid)
