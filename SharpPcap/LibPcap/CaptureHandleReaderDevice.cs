@@ -62,7 +62,7 @@ namespace SharpPcap.LibPcap
 
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
             var adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(
-                FileHandle.DangerousGetHandle(), (uint)resolution, errbuf);
+                FileHandle, (uint)resolution, errbuf);
 
             // handle error
             if (adapterHandle.IsInvalid)
