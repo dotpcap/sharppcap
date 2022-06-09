@@ -19,7 +19,9 @@ namespace Test
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // On Windows, we need an actual OS handle.
-                return File.OpenHandle(filename);
+                // The FileStream is not disposed, which is alright because we take care of its handle.
+                // On .NET 6+, this can be replaced with File.OpenHandle().
+                return File.Open(filename, FileMode.Open).SafeFileHandle;
             }
 
             // On other platforms, libpcap is not very interop-friendly and expects a FILE*.
