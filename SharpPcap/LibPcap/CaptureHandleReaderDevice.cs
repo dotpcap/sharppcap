@@ -23,7 +23,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Read a pcap capture from a file handle (e.g., a pipe).
     /// </summary>
-    public class CaptureHandleReaderDevice : PcapDevice
+    public class CaptureHandleReaderDevice : CaptureReaderDevice
     {
         /// <value>
         /// File handle the object was created with.
@@ -75,17 +75,6 @@ namespace SharpPcap.LibPcap
 
             base.Open(configuration);
         }
-
-        /// <summary>
-        /// Retrieves pcap statistics.
-        ///
-        /// Not supported for this device.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PcapStatistics"/>
-        /// </returns>
-        public override ICaptureStatistics Statistics => null;
-
     }
 }
 
