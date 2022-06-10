@@ -22,7 +22,10 @@ namespace SharpPcap.LibPcap
 {
     /// <summary>
     /// Read a pcap capture from a file handle (e.g., a pipe).
+    ///
     /// NOTE: libpcap will take ownership of the handle. The handle will be closed when this device is closed.
+    /// On non-Windows systems, the handle passed to this class MUST be opened by <c>fopen</c> or similar functions
+    /// that return a <c>FILE*</c> (e.g., via Mono.Posix.NETStandard).
     /// </summary>
     public class CaptureHandleReaderDevice : CaptureReaderDevice
     {
