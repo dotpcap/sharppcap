@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static Test.TestHelper;
 using static System.TimeSpan;
+using System.Threading;
 
 namespace Test
 {
@@ -164,6 +165,7 @@ namespace Test
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, SendQueueTransmitModes.Synchronized);
+                Thread.Sleep(1000);
             });
             AssertGoodTransmitSync(received);
         }
