@@ -3,6 +3,14 @@ version: 2.1
 orbs:
   win: circleci/windows@4.1.1
 
+commands:
+  report:
+    steps:
+    - store_test_results:
+        path: Test/TestResults
+    - store_artifacts:
+        path: Test/TestResults
+
 jobs:
   test-windows:
     executor:
@@ -11,6 +19,7 @@ jobs:
       - checkout
       - run: dotnet build -c Release
       - run: bash scripts/test.sh --filter "TestCategory=WinDivert"
+      - report
 
   test-ubuntu:
     parameters:
@@ -34,10 +43,8 @@ jobs:
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
       - run: sudo -E bash scripts/test.sh
-      - store_test_results:
-          path: Test/TestResults
-      - store_artifacts:
-          path: Test/TestResults
+      - run: sudo chmod -R +r Test/TestResults
+      - report
 
   test-arm:
     machine:
@@ -49,10 +56,10 @@ jobs:
       - run: sudo -E bash scripts/install-tap.sh
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
-      - store_test_results:
-          path: Test/TestResults
-      - store_artifacts:
-          path: Test/TestResults
+      - run: 
+          when: always
+          command: sudo chmod -R +r Test/TestResults
+      - report
 
 workflows:
   version: 2
