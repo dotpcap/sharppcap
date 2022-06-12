@@ -494,7 +494,7 @@ namespace SharpPcap.LibPcap
         /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_hopen_offline_with_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ _pcap_hopen_offline_with_tstamp_precision(
+        internal extern static IntPtr /* pcap_t* */ _pcap_hopen_offline_with_tstamp_precision(
             SafeHandle handle,
             uint precision,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
@@ -509,7 +509,7 @@ namespace SharpPcap.LibPcap
         /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
         /// <returns></returns>
         [DllImport(PCAP_DLL, EntryPoint = "pcap_fopen_offline_with_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ _pcap_fopen_offline_with_tstamp_precision(
+        internal extern static IntPtr /* pcap_t* */ _pcap_fopen_offline_with_tstamp_precision(
             SafeHandle fileObject,
             uint precision,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
