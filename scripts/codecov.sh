@@ -17,12 +17,12 @@ filename="codecov"
 arch=$(uname -m)
 if [[ $arch == arm64 ]] || [ $arch == aarch64 ]
 then
-  # Workaround until Codecov fix ARM support
+  # Skip until Codecov fix ARM support
+  # We won't lose coverage since we have no ARM specific code
   # See https://github.com/codecov/uploader/issues/523
-  dotnet tool restore
-  dotnet codecov "$@"
-else
-  curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
-  chmod +x $filename
-  ./$filename "$@"
+  return
 fi
+
+curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
+chmod +x $filename
+./$filename "$@"

@@ -17,6 +17,7 @@ jobs:
       name: win/default
     steps:
       - checkout
+      - run: ./scripts/install-windows.ps1
       - run: dotnet build -c Release
       - run: bash scripts/test.sh --filter "TestCategory=WinDivert"
       - report
@@ -30,7 +31,7 @@ jobs:
       image: ubuntu-2004:202201-02
     steps:
       - checkout
-      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-dotnet.sh --install-dir /usr/local/bin
       - run: sudo -E bash scripts/install-tap.sh
       # Download and compile latest libpcap
       - when:
@@ -52,7 +53,7 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
-      - run: sudo -E bash scripts/install-dotnet.sh
+      - run: sudo -E bash scripts/install-dotnet.sh --install-dir /usr/local/bin
       - run: sudo -E bash scripts/install-tap.sh
       - run: sudo apt-get install libpcap0.8
       - run: sudo -E bash scripts/test.sh
