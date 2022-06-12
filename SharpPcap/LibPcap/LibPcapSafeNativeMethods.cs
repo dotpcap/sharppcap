@@ -111,9 +111,14 @@ namespace SharpPcap.LibPcap
         internal static PcapHandle pcap_open_handle_offline_with_tstamp_precision(
             SafeHandle handle, uint precision, StringBuilder errbuf)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            var pointer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? _pcap_hopen_offline_with_tstamp_precision(handle, precision, errbuf)
                 : _pcap_fopen_offline_with_tstamp_precision(handle, precision, errbuf);
+            if (pointer == IntPtr.Zero)
+            {
+                return PcapHandle.Invalid;
+            }
+            return new PcapFileHandle(pointer, handle);
         }
     }
 }

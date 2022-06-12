@@ -5,6 +5,8 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Runtime.InteropServices;
+using Mono.Unix.Native;
+using Microsoft.Win32.SafeHandles;
 
 namespace Test
 {
@@ -23,15 +25,10 @@ namespace Test
                 // On .NET 6+, this can be replaced with File.OpenHandle().
                 return File.Open(filename, FileMode.Open).SafeFileHandle;
             }
-
             // On other platforms, libpcap is not very interop-friendly and expects a FILE*.
-#if !WINDOWS
-            return SafeCFileHandle.Wrap(Mono.Unix.Native.Stdlib.fopen(filename, "rb"));
-#else
-            return null;
-#endif
+            return new StdlibFileHandle(Stdlib.fopen(filename, "rb"), true);
         }
-        
+
         [Category("Timestamp")]
         [TestCase(TimestampResolution.Nanosecond, "1186341404.189852000s")]
         [TestCase(TimestampResolution.Microsecond, "1186341404.189852s")]
@@ -154,26 +151,20 @@ namespace Test
         }
     }
 
-#if !WINDOWS
-    internal class SafeCFileHandle : SafeHandle
-    {
-        private SafeCFileHandle(bool ownsHandle) : base(IntPtr.Zero, ownsHandle)
-        {
-        }
 
-        internal static SafeCFileHandle Wrap(IntPtr handleToWrap)
+    internal class StdlibFileHandle : SafeHandleZeroOrMinusOneIsInvalid
+    {
+        public StdlibFileHandle(IntPtr preexistingHandle, bool ownsHandle)
+            : base(ownsHandle)
         {
-            var result = new SafeCFileHandle(true);
-            result.SetHandle(handleToWrap);
-            return result;
+            SetHandle(preexistingHandle);
         }
 
         protected override bool ReleaseHandle()
         {
-            return Mono.Unix.Native.Stdlib.fclose(handle) == 0;
+            return Stdlib.fclose(handle) == 0;
         }
 
-        public override bool IsInvalid => handle == IntPtr.Zero;
     }
-#endif
+
 }
