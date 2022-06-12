@@ -20,7 +20,7 @@ then
   # Skip until Codecov fix ARM support
   # We won't lose coverage since we have no ARM specific code
   # See https://github.com/codecov/uploader/issues/523
-  return
+  exit
 fi
 
 curl -Os "https://uploader.codecov.io/latest/${os}/${filename}"
