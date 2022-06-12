@@ -27,6 +27,7 @@ jobs:
   pool:
     vmImage: 'macOS-10.15'
   steps:
+  - script: sudo -E bash scripts/install-dotnet.sh
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
   - script: sudo -E bash scripts/test.sh
@@ -34,9 +35,9 @@ jobs:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 # NOTE: Remove when npcap has rpcapd support
-- job: windows_2019_winpcap
+- job: windows_2022_winpcap
   pool:
-    vmImage: 'windows-2019'
+    vmImage: 'windows-2022'
   steps:
   # tap windows have to be installed before winpcap,
   # otherwise winpcap will only pick it up after reboot
@@ -48,9 +49,10 @@ jobs:
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
 
-- job: windows_2019_npcap
+  # This CI job is for testing of x86 architecture compatibility
+- job: windows_2022_x86
   pool:
-    vmImage: windows-2019
+    vmImage: windows-2022
   steps:
   - pwsh: ./scripts/Install-windows.ps1
   - pwsh: ./scripts/Install-npcap.ps1
@@ -58,8 +60,6 @@ jobs:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
   - script: dotnet restore -s https://api.nuget.org/v3/index.json
-  # This CI job doubles as test of backward compatibility with windows 2019
-  # and a cross architecture verification for x86
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap" -r win-x86
     env:
       CODECOV_TOKEN: $(CODECOV_TOKEN)
