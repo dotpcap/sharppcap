@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 namespace Test
 {
     [TestFixture]
+    [LibpcapVersion(">=1.5.0")]
     public class CaptureHandleReaderDeviceTest
     {
         private static int capturedPackets;

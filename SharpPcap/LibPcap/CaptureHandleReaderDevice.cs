@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -64,8 +65,16 @@ namespace SharpPcap.LibPcap
             StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
-            var adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(
-                FileHandle, (uint)resolution, errbuf);
+            PcapHandle adapterHandle;
+            try
+            {
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(
+                    FileHandle, (uint)resolution, errbuf);
+            }
+            catch (TypeLoadException ex)
+            {
+                throw new NotSupportedException("libpcap 1.5.0 or higher is required for opening captures by handle", ex);
+            }
 
             // handle error
             if (adapterHandle.IsInvalid)
