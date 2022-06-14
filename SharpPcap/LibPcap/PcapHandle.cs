@@ -57,8 +57,8 @@ namespace SharpPcap.LibPcap
         public PcapFileHandle(IntPtr pcapHandle, SafeHandle fileHandle)
         {
             bool gotRef = false;
-            /// The file handle must not be closed by the runtime until the pcap handle is also closed
-            /// Incrementing the ref count ensure this
+            // The file handle must not be closed by the runtime until the pcap handle is also closed
+            // Incrementing the ref count ensure this
             fileHandle.DangerousAddRef(ref gotRef);
             FileHandle = gotRef ? fileHandle : new SafeFileHandle(IntPtr.Zero, false);
             SetHandle(pcapHandle);

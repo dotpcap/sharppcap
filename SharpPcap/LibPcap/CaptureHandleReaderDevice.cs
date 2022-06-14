@@ -88,13 +88,6 @@ namespace SharpPcap.LibPcap
 
             base.Open(configuration);
         }
-
-        public override void Close()
-        {
-            base.Close();
-            // libpcap closes the handle, so we mark it as invalid.
-            FileHandle.SetHandleAsInvalid();
-        }
     }
 }
 
