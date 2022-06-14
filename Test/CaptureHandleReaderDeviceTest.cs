@@ -49,6 +49,20 @@ namespace Test
         }
 
         [Test]
+        public void FileHandleInvalidUponClose()
+        {
+            const string filename = "ipv6_http.pcap";
+            using var handle = GetTestFileHandle(filename);
+            Assert.IsFalse(handle.IsInvalid);
+            Assert.IsFalse(handle.IsClosed);
+            {
+                using var device = new CaptureHandleReaderDevice(handle);
+                device.Open();
+            }
+            Assert.IsTrue(handle.IsClosed);
+        }
+
+        [Test]
         public void CaptureProperties()
         {
             const string filename = "ipv6_http.pcap";
