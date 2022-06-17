@@ -165,7 +165,6 @@ namespace Test
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, SendQueueTransmitModes.Synchronized);
-                Thread.Sleep(1000);
             });
             AssertGoodTransmitSync(received);
         }
