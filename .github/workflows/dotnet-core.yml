@@ -34,6 +34,7 @@ jobs:
       with:
         report_paths: Test/TestResults/TestResults.xml
     - uses: actions/upload-artifact@v3
+      if: failure()
       with:
         name: artifacts
         path: Test/TestResults/
