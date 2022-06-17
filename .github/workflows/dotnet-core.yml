@@ -28,6 +28,8 @@ jobs:
     - name: Test
       run: sudo -E bash scripts/test.sh
 
+    - run: sudo chmod -R +r Test/TestResults
+      if: always()
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v3
       if: always()
