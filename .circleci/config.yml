@@ -44,7 +44,9 @@ jobs:
           steps:
             - run: sudo apt-get install << parameters.libpcap >>
       - run: sudo -E bash scripts/test.sh
-      - run: sudo chmod -R +r Test/TestResults
+      - run: 
+          when: always
+          command: sudo chmod -R +r Test/TestResults
       - report
 
   test-arm:
