@@ -17,7 +17,7 @@ namespace Test
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
-        private const int PacketCount = 5000;
+        private const int PacketCount = 500;
         // Windows is usually able to simulate inter packet gaps down to 20µs
         // We test with 100µs to avoid flaky tests
         internal static readonly decimal DeltaTime = 100E-6M;
