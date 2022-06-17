@@ -11,7 +11,7 @@ build: off
 skip_branch_with_pr: true
 
 image:
-  - Visual Studio 2019
+  - Visual Studio 2022
   - Ubuntu1804
   - macos
 
@@ -19,7 +19,7 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2019
+      - image: Visual Studio 2022
   install:
     - ps: .\scripts\install-windows.ps1
     - ps: .\scripts\Install-npcap.ps1

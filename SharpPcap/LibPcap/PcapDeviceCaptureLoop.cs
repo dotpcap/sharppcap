@@ -183,7 +183,7 @@ namespace SharpPcap.LibPcap
                                 //       from causing premature exiting from the capture loop we only consider
                                 //       exhausted events to cause an escape from the loop when they are from
                                 //       offline devices, ie. files read from disk
-                                if (this is CaptureFileReaderDevice)
+                                if (this is CaptureReaderDevice)
                                 {
                                     SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                                     return;
