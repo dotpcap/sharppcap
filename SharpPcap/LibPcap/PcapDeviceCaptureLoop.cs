@@ -21,6 +21,7 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -132,17 +133,35 @@ namespace SharpPcap.LibPcap
                 // Assume we have data to read
                 return true;
             }
-            var pollFds = new Posix.Pollfd[1];
-            pollFds[0].fd = FileDescriptor;
-            pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
+            var handle = Handle;
+            var gotRef = false;
+            try
+            {
+                // Make sure that handle does not get closed until this function is done
+                handle.DangerousAddRef(ref gotRef);
+                if (!gotRef)
+                {
+                    return false;
+                }
+                var pollFds = new Posix.Pollfd[1];
+                pollFds[0].fd = FileDescriptor;
+                pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
 
-            var result = Posix.Poll(pollFds, (uint)pollFds.Length, timeout);
+                var result = Posix.Poll(pollFds, (uint)pollFds.Length, timeout);
 
-            // if we have no poll results, we don't have anything to read
-            // -1 means error
-            // 0 means timeout
-            // non-negative means we got something
-            return result != 0;
+                // if we have no poll results, we don't have anything to read
+                // -1 means error
+                // 0 means timeout
+                // non-negative means we got something
+                return result != 0;
+            }
+            finally
+            {
+                if (gotRef)
+                {
+                    handle.DangerousRelease();
+                }
+            }
         }
 
         /// <summary>
@@ -165,7 +184,7 @@ namespace SharpPcap.LibPcap
                     continue;
                 }
 
-                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, IntPtr.Zero);
+                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, Handle.DangerousGetHandle());
 
                 // pcap_dispatch() returns the number of packets read or, a status value if the value
                 // is negative
@@ -192,8 +211,12 @@ namespace SharpPcap.LibPcap
                         case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
                             SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                             return;
-                        default:    // This can only be triggered by a bug in libpcap.
-                            throw new PcapException("Unknown pcap_loop exit status.");
+                        default:
+                            // This can only be triggered by a bug in libpcap.
+                            // We can't throw here, sicne that would crash the application
+                            Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
+                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                            return;
                     }
                 }
                 else // res > 0
