@@ -133,17 +133,35 @@ namespace SharpPcap.LibPcap
                 // Assume we have data to read
                 return true;
             }
-            var pollFds = new Posix.Pollfd[1];
-            pollFds[0].fd = FileDescriptor;
-            pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
+            var handle = Handle;
+            var gotRef = false;
+            try
+            {
+                // Make sure that handle does not get closed until this function is done
+                handle.DangerousAddRef(ref gotRef);
+                if (!gotRef)
+                {
+                    return false;
+                }
+                var pollFds = new Posix.Pollfd[1];
+                pollFds[0].fd = FileDescriptor;
+                pollFds[0].events = Posix.PollEvents.POLLPRI | Posix.PollEvents.POLLIN;
 
-            var result = Posix.Poll(pollFds, (uint)pollFds.Length, timeout);
+                var result = Posix.Poll(pollFds, (uint)pollFds.Length, timeout);
 
-            // if we have no poll results, we don't have anything to read
-            // -1 means error
-            // 0 means timeout
-            // non-negative means we got something
-            return result != 0;
+                // if we have no poll results, we don't have anything to read
+                // -1 means error
+                // 0 means timeout
+                // non-negative means we got something
+                return result != 0;
+            }
+            finally
+            {
+                if (gotRef)
+                {
+                    handle.DangerousRelease();
+                }
+            }
         }
 
         /// <summary>
