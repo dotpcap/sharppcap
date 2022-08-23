@@ -36,7 +36,7 @@ namespace SharpPcap.LibPcap
     ///       device memory is freed, so instead convert the unmanaged structure
     ///       to a managed one to avoid this issue
     /// </summary>
-    public class PcapInterface
+    public class PcapInterface : IPcapInterface
     {
         /// <value>
         /// Name of the interface. Used internally when passed to pcap_open_live()
