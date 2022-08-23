@@ -36,7 +36,16 @@ For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/
 
 * .NET Core 3 and .NET Framework support
 
+# Publishing to nuget package
 
+Change the following lines in the config.yml file to automatically trigger a publish of the nuget package:
+
+Change the version here => 
+	nuget-output-file:
+    type: string
+    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.*.*.*.nupkg"
+And here => 
+	$env:package_version = "*.*.*"
 # Examples
 
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of full example projects using SharpPcap
