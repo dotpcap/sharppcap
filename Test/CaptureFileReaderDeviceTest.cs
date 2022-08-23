@@ -5,6 +5,8 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 
 namespace Test
 {
@@ -28,6 +30,7 @@ namespace Test
         [TestCase(TimestampResolution.Microsecond, "1186341404.189852s")]
         public void CaptureTimestampResolution(TimestampResolution resolution, string timeval)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var filename = "ipv6_http.pcap";
             using var device = new CaptureFileReaderDevice(TestHelper.GetFile(filename));
             var configuration = new DeviceConfiguration
