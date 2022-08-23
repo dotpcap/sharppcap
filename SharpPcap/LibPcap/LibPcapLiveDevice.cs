@@ -30,7 +30,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class LibPcapLiveDevice : PcapDevice, ILiveDevice
+    public class LibPcapLiveDevice : PcapDevice, ILibPcapLiveDevice
     {
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
