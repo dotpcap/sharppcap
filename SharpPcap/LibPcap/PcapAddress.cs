@@ -27,7 +27,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Managed representation of the unmanaged pcap_addr structure
     /// </summary>
-    public class PcapAddress
+    public class PcapAddress : IPcapAddress
     {
         /// <summary>
         /// The address value of this PcapAddress, null if none is present
