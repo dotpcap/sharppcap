@@ -9,7 +9,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Addresses that represent this device
         /// </summary>
-        ReadOnlyCollection<PcapAddress> Addresses { get; }
+        ReadOnlyCollection<IPcapAddress> Addresses { get; }
 
         /// <summary>
         /// Interface flags, see pcap_findalldevs() man page for more info

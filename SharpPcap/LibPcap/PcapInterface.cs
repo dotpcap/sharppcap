@@ -62,7 +62,7 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Addresses associated with this device
         /// </value>
-        public List<PcapAddress> Addresses { get; set; }
+        public List<IPcapAddress> Addresses { get; set; }
 
         /// <summary>
         /// Credentials to use in case of remote pcap
@@ -84,7 +84,7 @@ namespace SharpPcap.LibPcap
             Name = pcapIf.Name;
             Description = pcapIf.Description;
             Flags = pcapIf.Flags;
-            Addresses = new List<PcapAddress>();
+            Addresses = new List<IPcapAddress>();
             GatewayAddresses = new List<IPAddress>();
             Credentials = credentials;
 
@@ -178,7 +178,7 @@ namespace SharpPcap.LibPcap
             }
 
             sb.AppendFormat("Description: {0}\n", Description);
-            foreach (PcapAddress addr in Addresses)
+            foreach (IPcapAddress addr in Addresses)
             {
                 sb.AppendFormat("Addresses:\n{0}\n", addr);
             }
