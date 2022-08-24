@@ -62,17 +62,17 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Addresses associated with this device
         /// </value>
-        public List<PcapAddress> Addresses { get; internal set; }
+        public List<PcapAddress> Addresses { get; set; }
 
         /// <summary>
         /// Credentials to use in case of remote pcap
         /// </summary>
-        internal RemoteAuthentication Credentials { get; }
+        public RemoteAuthentication Credentials { get; internal set; }
 
         /// <value>
         /// Pcap interface flags
         /// </value>
-        public uint Flags { get; internal set; }
+        public uint Flags { get; set; }
 
         /// <summary>
         /// MacAddress of the interface
@@ -134,8 +134,10 @@ namespace SharpPcap.LibPcap
                 PhysicalAddress mac = networkInterface.GetPhysicalAddress();
                 if (MacAddress == null && mac != null)
                 {
-                    PcapAddress pcapAddress = new PcapAddress();
-                    pcapAddress.Addr = new Sockaddr(mac);
+                    PcapAddress pcapAddress = new PcapAddress
+                    {
+                        Addr = new Sockaddr(mac)
+                    };
                     Addresses.Add(pcapAddress);
                     if (pcapAddress.Addr.hardwareAddress.GetAddressBytes().Length != 0)
                     {

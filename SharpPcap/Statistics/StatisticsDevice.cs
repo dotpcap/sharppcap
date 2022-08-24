@@ -40,7 +40,7 @@ namespace SharpPcap.Statistics
         /// </summary>
         /// <param name="pcapIf">A 'pcapIf' struct representing
         /// the pcap device</param>
-        public StatisticsDevice(PcapInterface pcapIf)
+        public StatisticsDevice(IPcapInterface pcapIf)
         {
             LiveDevice = new LibPcapLiveDevice(pcapIf);
         }

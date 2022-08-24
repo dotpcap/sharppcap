@@ -34,7 +34,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Low level interface object that contains device specific information
         /// </summary>
-        protected PcapInterface m_pcapIf;
+        protected IPcapInterface m_pcapIf;
 
         /// <summary>
         /// Number of packets that this adapter should capture
@@ -66,20 +66,14 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Low level pcap device values
         /// </value>
-        public PcapInterface Interface
-        {
-            get { return m_pcapIf; }
-        }
+        public IPcapInterface Interface => m_pcapIf;
 
         private PacketDotNet.LinkLayers linkType;
 
         /// <summary>
         /// Return a value indicating if this adapter is opened
         /// </summary>
-        public virtual bool Opened
-        {
-            get { return !(Handle.IsInvalid || Handle.IsClosed); }
-        }
+        public virtual bool Opened => !(Handle.IsInvalid || Handle.IsClosed);
 
         /// <summary>
         /// The file descriptor obtained from pcap_fileno
@@ -110,10 +104,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
-        public virtual string LastError
-        {
-            get { return GetLastError(Handle); }
-        }
+        public virtual string LastError => GetLastError(Handle);
 
         /// <summary>
         /// Link type in terms of PacketDotNet.LinkLayers
@@ -179,13 +170,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Mac address of the physical device
         /// </summary>
-        public virtual System.Net.NetworkInformation.PhysicalAddress MacAddress
-        {
-            get
-            {
-                return Interface.MacAddress;
-            }
-        }
+        public virtual System.Net.NetworkInformation.PhysicalAddress MacAddress => Interface.MacAddress;
 
         /// <summary>
         /// Notify the OnPacketArrival delegates about a newly captured packet
@@ -527,9 +512,9 @@ namespace SharpPcap.LibPcap
         /// <returns></returns>
         public static IEnumerable<RawCapture> GetSequence(ICaptureDevice dev, bool maskExceptions = true)
         {
+            PacketCapture e;
             try
             {
-                PacketCapture e;
                 dev.Open();
                 while (true)
                 {
