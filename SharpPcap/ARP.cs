@@ -30,7 +30,7 @@ namespace SharpPcap
     /// </summary>
     public class ARP
     {
-        private readonly PcapInterface pcapInterface;
+        private readonly IPcapInterface pcapInterface;
 
         /// <summary>
         /// Constructs a new ARP Resolver

@@ -29,7 +29,7 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Low level pcap device values
         /// </value>
-        PcapInterface Interface { get; }
+        IPcapInterface Interface { get; }
 
         /// <summary>
         /// Return a value indicating if this adapter is opened

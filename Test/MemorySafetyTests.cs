@@ -21,7 +21,7 @@ namespace Test
     public class MemorySafetyTests
     {
 
-        private readonly PcapInterface TestInterface = GetPcapDevice().Interface;
+        private readonly IPcapInterface TestInterface = GetPcapDevice().Interface;
 
         [Test]
         [Parallelizable(ParallelScope.Children)]

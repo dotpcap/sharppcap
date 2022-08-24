@@ -30,12 +30,12 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Addresses associated with this device
         /// </value>
-        List<PcapAddress> Addresses { get; }
+        List<PcapAddress> Addresses { get; set; }
 
         /// <value>
         /// Pcap interface flags
         /// </value>
-        uint Flags { get; }
+        uint Flags { get; set; }
 
         /// <summary>
         /// MacAddress of the interface
@@ -59,5 +59,10 @@ namespace SharpPcap.LibPcap
         /// A <see cref="string"/>
         /// </returns>
         string ToString();
+
+        /// <summary>
+        /// Credentials to use in case of remote pcap
+        /// </summary>
+        RemoteAuthentication Credentials { get; }
     }
 }
