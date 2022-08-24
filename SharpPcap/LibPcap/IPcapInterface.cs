@@ -30,7 +30,7 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Addresses associated with this device
         /// </value>
-        List<PcapAddress> Addresses { get; set; }
+        List<IPcapAddress> Addresses { get; set; }
 
         /// <value>
         /// Pcap interface flags

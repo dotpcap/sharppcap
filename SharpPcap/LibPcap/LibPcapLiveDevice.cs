@@ -60,42 +60,27 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Gets the pcap name of this network device
         /// </summary>
-        public override string Name
-        {
-            get { return m_pcapIf.Name; }
-        }
+        public override string Name => m_pcapIf.Name;
 
         /// <summary>
         /// Addresses that represent this device
         /// </summary>
-        public virtual ReadOnlyCollection<PcapAddress> Addresses
-        {
-            get { return new ReadOnlyCollection<PcapAddress>(m_pcapIf.Addresses); }
-        }
+        public virtual ReadOnlyCollection<IPcapAddress> Addresses => new ReadOnlyCollection<IPcapAddress>(m_pcapIf.Addresses);
 
         /// <summary>
         /// Gets the pcap description of this device
         /// </summary>
-        public override string Description
-        {
-            get { return m_pcapIf.Description; }
-        }
+        public override string Description => m_pcapIf.Description;
 
         /// <summary>
         /// Interface flags, see pcap_findalldevs() man page for more info
         /// </summary>
-        public virtual uint Flags
-        {
-            get { return m_pcapIf.Flags; }
-        }
+        public virtual uint Flags => m_pcapIf.Flags;
 
         /// <summary>
         /// True if device is a loopback interface, false if not
         /// </summary>
-        public virtual bool Loopback
-        {
-            get { return (Flags & Pcap.PCAP_IF_LOOPBACK) == 1; }
-        }
+        public virtual bool Loopback => (Flags & Pcap.PCAP_IF_LOOPBACK) == 1;
 
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function
