@@ -178,7 +178,7 @@ namespace SharpPcap.LibPcap
             }
 
             sb.AppendFormat("Description: {0}\n", Description);
-            foreach (PcapAddress addr in Addresses)
+            foreach (IPcapAddress addr in Addresses)
             {
                 sb.AppendFormat("Addresses:\n{0}\n", addr);
             }
