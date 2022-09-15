@@ -32,6 +32,7 @@ namespace SharpPcap.LibPcap
     public class CaptureFileWriterDevice : PcapDevice, IInjectionDevice
     {
         private readonly string m_pcapFile;
+        private readonly FileMode fileMode;
 
         /// <summary>
         /// Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
@@ -80,11 +81,11 @@ namespace SharpPcap.LibPcap
         public CaptureFileWriterDevice(string captureFilename, System.IO.FileMode mode = FileMode.OpenOrCreate)
         {
             m_pcapFile = captureFilename;
+            fileMode = mode;
 
-            // append isn't possible without some difficulty and not implemented yet
-            if (mode == FileMode.Append)
+            if (mode == FileMode.Append && Pcap.LibpcapVersion < new Version(1, 7, 2))
             {
-                throw new InvalidOperationException("FileMode.Append is not supported, please contact the developers if you are interested in helping to implementing it");
+                throw new InvalidOperationException("FileMode.Append is not supported");
             }
         }
 
@@ -134,7 +135,11 @@ namespace SharpPcap.LibPcap
                 Handle = LibPcapSafeNativeMethods.pcap_open_dead((int)configuration.LinkLayerType, configuration.Snaplen);
             }
 
-            m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(Handle, m_pcapFile);
+            if (fileMode == FileMode.Append)
+                m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open_append(Handle, m_pcapFile);
+            else
+                m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(Handle, m_pcapFile);
+
             if (m_pcapDumpHandle == IntPtr.Zero)
                 throw new PcapException("Error opening dump file '" + LastError + "'");
 
