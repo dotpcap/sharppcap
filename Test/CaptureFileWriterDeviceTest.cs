@@ -39,8 +39,8 @@ namespace Test
         public void TestCreationOptions()
         {
             // valid arguments results in the object being created
-            using var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
-            valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
+            using (var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open))
+                valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
 
             if (Pcap.LibpcapVersion < new Version(1, 7, 2))
             {
