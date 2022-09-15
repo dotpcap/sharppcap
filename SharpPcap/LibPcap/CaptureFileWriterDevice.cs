@@ -85,7 +85,7 @@ namespace SharpPcap.LibPcap
 
             if (mode == FileMode.Append && Pcap.LibpcapVersion < new Version(1, 7, 2))
             {
-                throw new InvalidOperationException("FileMode.Append is not supported");
+                throw new PlatformNotSupportedException("FileMode.Append is not supported");
             }
         }
 
@@ -136,9 +136,13 @@ namespace SharpPcap.LibPcap
             }
 
             if (fileMode == FileMode.Append)
+            {
                 m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open_append(Handle, m_pcapFile);
+            }
             else
+            {
                 m_pcapDumpHandle = LibPcapSafeNativeMethods.pcap_dump_open(Handle, m_pcapFile);
+            }
 
             if (m_pcapDumpHandle == IntPtr.Zero)
                 throw new PcapException("Error opening dump file '" + LastError + "'");

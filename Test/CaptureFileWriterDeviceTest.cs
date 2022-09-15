@@ -36,24 +36,33 @@ namespace Test
         }
 
         [Test]
+        [LibpcapVersion("<1.7.2")]
         public void TestCreationOptions()
         {
             // valid arguments results in the object being created
-            using (var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open))
-                valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
+            using var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open);
+            valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
 
-            if (Pcap.LibpcapVersion < new Version(1, 7, 2))
+            // file mode of append should throw
+            Assert.Throws<PlatformNotSupportedException>(() =>
             {
-                // file mode of append should throw
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    using var wd = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Append);
-                    wd.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
-                });
+                using var wd = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Append);
+                wd.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
+            });
+        }
+
+        [Test]
+        [LibpcapVersion(">=1.7.2")]
+        public void TestCreationOption2()
+        {
+            // valid arguments results in the object being created
+            using (var valid = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Open))
+            {
+                valid.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
             }
-            else
+
+            using (var validAppend = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Append))
             {
-                using var validAppend = new CaptureFileWriterDevice("somefilename.pcap", System.IO.FileMode.Append);
                 validAppend.Open(linkLayerType: PacketDotNet.LinkLayers.Ethernet);
             }
         }
