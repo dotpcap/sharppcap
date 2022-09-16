@@ -104,6 +104,13 @@ namespace SharpPcap.LibPcap
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*const char * */ fname
         );
 
+        /// <summary>Append a file to write packets. </summary>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_dumper_t * */ pcap_dump_open_append(
+            PcapHandle /*pcap_t * */adaptHandle,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*const char * */ fname
+        );
+
         /// <summary>
         ///  Save a packet to disk.  
         /// </summary>

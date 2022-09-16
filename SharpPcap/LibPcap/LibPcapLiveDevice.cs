@@ -21,9 +21,9 @@ along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Text;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpPcap.LibPcap
 {
@@ -149,6 +149,11 @@ namespace SharpPcap.LibPcap
                     Name, // name of the device
                     errbuf); // error buffer
 
+                if (Handle.IsInvalid)
+                {
+                    var err = $"Unable to open the adapter '{Name}'. {errbuf}";
+                    throw new PcapException(err);
+                }
                 // Those are configurations that pcap_open can handle differently
                 Configure(
                     configuration, nameof(configuration.Snaplen),
