@@ -13,7 +13,6 @@ namespace Test
     /// this is about prevent memory access violation
     /// </summary>
     [TestFixture]
-    [Platform(Exclude = "Linux")]
     public class ThreadSafeTests
     {
 
@@ -29,7 +28,7 @@ namespace Test
             {
                 Initialize(device);
             }
-            Thread.Sleep(TimeSpan.FromMinutes(1));
+            Thread.Sleep(TimeSpan.FromMinutes(5));
             foreach (var device in devices)
             {
                 device.Dispose();
