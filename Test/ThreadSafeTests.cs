@@ -28,7 +28,7 @@ namespace Test
             {
                 Initialize(device);
             }
-            Thread.Sleep(TimeSpan.FromMinutes(10));
+            Thread.Sleep(TimeSpan.FromMinutes(1));
             foreach (var device in devices)
             {
                 device.Dispose();
