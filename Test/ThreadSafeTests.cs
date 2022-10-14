@@ -13,7 +13,6 @@ namespace Test
     /// this is about prevent memory access violation
     /// </summary>
     [TestFixture]
-    [Platform(Exclude = "Linux")]
     public class ThreadSafeTests
     {
 
