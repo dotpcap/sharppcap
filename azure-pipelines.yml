@@ -15,7 +15,7 @@ pr:
 jobs:
 - job: linux
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu-20.04'
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo -E bash scripts/install-tap.sh
