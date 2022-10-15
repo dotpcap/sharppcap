@@ -15,7 +15,7 @@ pr:
 jobs:
 - job: linux
   pool:
-    vmImage: 'ubuntu-20.04'
+    vmImage: ubuntu-20.04
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo -E bash scripts/install-tap.sh
@@ -25,7 +25,7 @@ jobs:
 
 - job: macos
   pool:
-    vmImage: 'macOS-10.15'
+    vmImage: macOS-11
   steps:
   - script: sudo -E bash scripts/install-dotnet.sh
   - script: sudo -E bash scripts/install-libpcap.sh
@@ -37,7 +37,7 @@ jobs:
 # NOTE: Remove when npcap has rpcapd support
 - job: windows_2022_winpcap
   pool:
-    vmImage: 'windows-2022'
+    vmImage: windows-2022
   steps:
   # tap windows have to be installed before winpcap,
   # otherwise winpcap will only pick it up after reboot
