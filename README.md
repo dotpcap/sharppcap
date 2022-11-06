@@ -71,7 +71,7 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    using var device = new CaptureFileReaderDevice("filename.pcap");
    device.Open();
    device.OnPacketArrival += Device_OnPacketArrival;
-   device.StartCapture();
+   device.Capture();
    ```
 
 ## Writing to a capture file
