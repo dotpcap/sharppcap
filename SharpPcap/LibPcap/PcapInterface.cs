@@ -143,7 +143,13 @@ namespace SharpPcap.LibPcap
                     }
                 }
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            else if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
+            )
             {
                 FriendlyName = WindowsNativeMethods.GetInterfaceAlias(Name);
             }

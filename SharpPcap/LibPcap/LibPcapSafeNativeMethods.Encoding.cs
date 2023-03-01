@@ -37,7 +37,13 @@ namespace SharpPcap.LibPcap
 
         private static Encoding ConfigureStringEncoding()
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
+            )
             {
                 // libpcap always use UTF-8 when not on Windows
                 return Encoding.UTF8;

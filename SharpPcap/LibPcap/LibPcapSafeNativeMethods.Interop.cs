@@ -41,7 +41,7 @@ namespace SharpPcap.LibPcap
         //       This file is called $assembly_name.dll.config and is placed in the
         //       same directory as the assembly
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
-        private const string PCAP_DLL = "wpcap";
+        private const string PCAP_DLL = "pcap";
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
@@ -66,13 +66,15 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
+        /// <summary>
+        /// Open a generic source in order to capture / send (WinPcap only) traffic.
+        /// </summary>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ pcap_open(
+        internal extern static PcapHandle /* pcap_t* */ pcap_open_live(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
-            int packetLen,
-            int flags,
-            int read_timeout,
-            ref pcap_rmtauth rmtauth,
+            int snaplen,
+            int promisc,
+            int to_ms,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
         );
 

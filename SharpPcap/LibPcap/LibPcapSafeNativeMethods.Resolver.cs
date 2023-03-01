@@ -39,7 +39,13 @@ namespace SharpPcap.LibPcap
 
         static LibPcapSafeNativeMethods()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
+            )
             {
                 SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
             }
@@ -70,7 +76,13 @@ namespace SharpPcap.LibPcap
 
             var names = new List<string>();
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsLinux()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+#endif
+            )
             {
                 names.Add("libpcap.so");
                 names.Add("libpcap.so.0");
@@ -78,7 +90,13 @@ namespace SharpPcap.LibPcap
                 names.Add("libpcap.so.1");
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsMacOS()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+#endif
+            )
             {
                 names.Add("libpcap.dylib");
             }

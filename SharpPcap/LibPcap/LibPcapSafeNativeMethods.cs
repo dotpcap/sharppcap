@@ -37,13 +37,23 @@ namespace SharpPcap.LibPcap
 
         internal static PcapError pcap_setbuff(PcapHandle /* pcap_t */ adapter, int bufferSizeInBytes)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            return
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+# endif
                 ? _pcap_setbuff(adapter, bufferSizeInBytes)
                 : PcapError.PlatformNotSupported;
         }
         internal static PcapError pcap_setmintocopy(PcapHandle /* pcap_t */ adapter, int sizeInBytes)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            return
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
                 ? _pcap_setmintocopy(adapter, sizeInBytes)
                 : PcapError.PlatformNotSupported;
         }
@@ -111,7 +121,12 @@ namespace SharpPcap.LibPcap
         internal static PcapHandle pcap_open_handle_offline_with_tstamp_precision(
             SafeHandle handle, uint precision, StringBuilder errbuf)
         {
-            var pointer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            var pointer =
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+# endif
                 ? _pcap_hopen_offline_with_tstamp_precision(handle, precision, errbuf)
                 : _pcap_fopen_offline_with_tstamp_precision(handle, precision, errbuf);
             if (pointer == IntPtr.Zero)
