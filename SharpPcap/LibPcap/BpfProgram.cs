@@ -34,12 +34,7 @@ namespace SharpPcap.LibPcap
         // Requires calls to pcap_compile to be non-concurrent to avoid crashes due to known lack of thread-safety
         // See https://github.com/chmorgan/sharppcap/issues/311
         // Problem of thread safety does not affect Windows
-        private static readonly bool ThreadSafeCompile =
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsWindows()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-#endif
+        private static readonly bool ThreadSafeCompile = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             || Pcap.LibpcapVersion >= new Version(1, 8, 0);
         private static readonly object SyncCompile = new object();
 

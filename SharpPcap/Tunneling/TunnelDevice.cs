@@ -18,13 +18,7 @@ namespace SharpPcap.Tunneling
 
         private static ITunnelDriver GetDriver()
         {
-            if (
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsWindows()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-#endif
-            )
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return WinTapDriver.Instance;
             }

@@ -108,13 +108,7 @@ namespace SharpPcap
             // FIXME: need to resolve the discrepency at some point
             AF_PACKET = 17;
 
-            if (!
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsWindows()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-#endif
-            )
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 AF_INET6 = 10; // value for linux from socket.h
             }

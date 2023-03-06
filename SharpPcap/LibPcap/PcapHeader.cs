@@ -30,20 +30,8 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public class PcapHeader : ICaptureHeader
     {
-        private static readonly bool isMacOSX =
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsMacOS()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-#endif
-            ;
-        private static readonly bool is32BitTs = IntPtr.Size == 4 ||
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsWindows()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-#endif
-            ;
+        private static readonly bool isMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        private static readonly bool is32BitTs = IntPtr.Size == 4 || RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         internal static readonly int MemorySize = GetTimevalSize() + sizeof(uint) + sizeof(uint);
 

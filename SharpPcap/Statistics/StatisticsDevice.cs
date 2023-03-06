@@ -33,13 +33,7 @@ namespace SharpPcap.Statistics
     {
         private readonly LibPcapLiveDevice LiveDevice;
 
-        private static readonly bool IsWindows =
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsWindows()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-#endif
-            ;
+        private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         /// <summary>
         /// Constructs a new PcapDevice based on a 'pcapIf' struct
