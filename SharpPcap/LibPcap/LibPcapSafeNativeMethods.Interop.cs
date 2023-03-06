@@ -77,11 +77,12 @@ namespace SharpPcap.LibPcap
         /// Open a generic source in order to capture / send (WinPcap only) traffic.
         /// </summary>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ pcap_open_live(
+        internal extern static PcapHandle /* pcap_t* */ pcap_open(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
-            int snaplen,
-            int promisc,
-            int to_ms,
+            int packetLen,
+            int flags,
+            int read_timeout,
+            ref pcap_rmtauth rmtauth,
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
         );
 

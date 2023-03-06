@@ -176,6 +176,8 @@ namespace SharpPcap.LibPcap
             }
             else
             {
+                // We got authentication, so this is an rpcap device
+                var auth = RemoteAuthentication.CreateAuth(credentials);
                 // Immediate and MaxResponsiveness are the same thing
                 if (immediateMode == true)
                 {
@@ -185,11 +187,12 @@ namespace SharpPcap.LibPcap
                 immediateMode = null;
                 try
                 {
-                    Handle = LibPcapSafeNativeMethods.pcap_open_live(
+                    Handle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
                         configuration.Snaplen,              // portion of the packet to capture.
-                        (int)mode,                               // flags
-                        configuration.ReadTimeout,          // read timeout
+                        (short)mode,                        // flags
+                        (short)configuration.ReadTimeout,   // read timeout
+                        ref auth,                           // authentication
                         errbuf);                            // error buffer
                 }
                 catch (TypeLoadException)
