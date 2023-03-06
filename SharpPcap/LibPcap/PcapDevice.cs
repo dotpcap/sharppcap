@@ -541,10 +541,10 @@ namespace SharpPcap.LibPcap
                             break;
                         packet = e.GetPacket();
                     }
-                    catch (PcapException pe)
+                    catch (PcapException)
                     {
                         if (!maskExceptions)
-                            throw pe;
+                            throw;
                     }
 
                     if (packet == null)
