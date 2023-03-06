@@ -74,7 +74,7 @@ namespace SharpPcap.LibPcap
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
         /// <summary>
-        /// Open a generic source in order to capture / send (WinPcap only) traffic.
+        /// Open a generic source in order to capture / send traffic.
         /// </summary>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static PcapHandle /* pcap_t* */ pcap_open(
