@@ -6,15 +6,10 @@ namespace SharpPcap.LibPcap
 {
     class NativeLibraryHelper
     {
-
         public delegate IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath);
 
-        private static readonly Type NativeLibraryType;
-        static NativeLibraryHelper()
-        {
-            NativeLibraryType = typeof(DllImportSearchPath).Assembly
+        private static readonly Type NativeLibraryType = typeof(DllImportSearchPath).Assembly
                 .GetType("System.Runtime.InteropServices.NativeLibrary");
-        }
 
         public static void SetDllImportResolver(Assembly assembly, DllImportResolver resolver)
         {
@@ -23,6 +18,9 @@ namespace SharpPcap.LibPcap
                 return;
             }
 
+#if NET6_0_OR_GREATER
+            NativeLibrary.SetDllImportResolver(assembly, (lib, asm, path) => resolver(lib, asm, path));
+#else
             var dllImportResolverType = typeof(DllImportSearchPath).Assembly
                 .GetType("System.Runtime.InteropServices.DllImportResolver");
 
@@ -39,6 +37,7 @@ namespace SharpPcap.LibPcap
                 assembly,
                 Delegate.CreateDelegate(dllImportResolverType, resolver, "Invoke")
             });
+#endif
         }
 
         public static bool TryLoad(string libraryPath, out IntPtr handle)

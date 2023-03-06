@@ -48,9 +48,6 @@ namespace SharpPcap.LibPcap
             )
             {
                 SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
-            }
-            else
-            {
                 RegisterResolver();
             }
             StringEncoding = ConfigureStringEncoding();
@@ -74,42 +71,8 @@ namespace SharpPcap.LibPcap
                 return IntPtr.Zero;
             }
 
-            var names = new List<string>();
-
-            if (
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsLinux()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-#endif
-            )
-            {
-                names.Add("libpcap.so");
-                names.Add("libpcap.so.0");
-                names.Add("libpcap.so.0.8");
-                names.Add("libpcap.so.1");
-            }
-
-            if (
-#if NET6_0_OR_GREATER
-            OperatingSystem.IsMacOS()
-#else
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-#endif
-            )
-            {
-                names.Add("libpcap.dylib");
-            }
-
-            foreach (var name in names)
-            {
-                if (NativeLibraryHelper.TryLoad(name, out var handle))
-                {
-                    return handle;
-                }
-            }
-
-            return IntPtr.Zero;
+            return NativeLibraryHelper.TryLoad("wpcap.dll", out var library) 
+                ? library : IntPtr.Zero;
         }
     }
 }
