@@ -8,7 +8,7 @@ namespace Test
 {
     public static class TestUser
     {
-        public const string Username = "SharpPcap_Test_User";
+        public const string Username = "sharppcaptestuser";
         public const string Password = "password";
 
         public static bool Create()
