@@ -42,7 +42,21 @@ namespace Test
 
         private static void Bash(string cmd, params string[] args)
         {
-            var process = Process.Start(cmd, args);
+            var info = new ProcessStartInfo
+            {
+                FileName = cmd,
+                Arguments = string.Join(' ', args),
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            var process = Process.Start(info);
+
+            process.OutputDataReceived += (s, e) => Console.Out.WriteLine(e.Data);
+            process.ErrorDataReceived += (s, e) => Console.Error.WriteLine(e.Data);
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
             process.WaitForExit();
             Assert.AreEqual(process.ExitCode, 0);
         }
