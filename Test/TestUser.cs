@@ -45,7 +45,7 @@ namespace Test
             var info = new ProcessStartInfo
             {
                 FileName = cmd,
-                Arguments = string.Join(' ', args),
+                Arguments = string.Join(" ", args),
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
