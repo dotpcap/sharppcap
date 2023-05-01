@@ -43,7 +43,7 @@ jobs:
 
     - name: publish on version change
       id: publish_nuget
-      uses: alirezanet/publish-nuget@v3.0.4
+      uses: alirezanet/publish-nuget@v3.0.5
       with:
         # Filepath of the project to be packaged, relative to root of repository
         PROJECT_FILE_PATH: SharpPcap/SharpPcap.csproj
