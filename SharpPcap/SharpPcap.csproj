@@ -6,7 +6,6 @@
     <Company>Lansweeper</Company>
     <Title>Lansweeper SharpPcap</Title>
     <Product>Lansweeper SharpPcap</Product>	  
-    <Version>6.2.5</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
