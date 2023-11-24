@@ -64,6 +64,8 @@ namespace Test
                 .Where(d => d.Name != "virbr0-nic")
                 // TAP interfaces, usually down until being used
                 .Where(d => !d.Name.StartsWith("tap"))
+                // From AppVeyor
+                .Where(d => !d.Name.StartsWith("dbus"))
                 .Distinct();
         }
     }

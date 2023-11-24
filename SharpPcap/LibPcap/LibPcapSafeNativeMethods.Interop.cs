@@ -104,6 +104,13 @@ namespace SharpPcap.LibPcap
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*const char * */ fname
         );
 
+        /// <summary>Append a file to write packets. </summary>
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_dumper_t * */ pcap_dump_open_append(
+            PcapHandle /*pcap_t * */adaptHandle,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*const char * */ fname
+        );
+
         /// <summary>
         ///  Save a packet to disk.  
         /// </summary>
@@ -485,5 +492,34 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_setmode(PcapHandle /* pcap_t * */ p, int mode);
 
+        /// <summary>
+        /// Windows Only
+        /// Wraps a Pcap handle around an existing OS handle, e.g., a pipe.
+        /// </summary>
+        /// <param name="handle">Native Windows handle.</param>
+        /// <param name="precision">Desired timestamp precision (micro/nano).</param>
+        /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_hopen_offline_with_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_t* */ _pcap_hopen_offline_with_tstamp_precision(
+            SafeHandle handle,
+            uint precision,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+        );
+
+        /// <summary>
+        /// Non-Windows Only
+        /// Wraps a Pcap handle around a C runtime FILE object.
+        /// </summary>
+        /// <param name="fileObject">Pointer to FILE as returned by fopen, etc.</param>
+        /// <param name="precision">Desired timestamp precision (micro/nano).</param>
+        /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
+        /// <returns></returns>
+        [DllImport(PCAP_DLL, EntryPoint = "pcap_fopen_offline_with_tstamp_precision", CallingConvention = CallingConvention.Cdecl)]
+        internal extern static IntPtr /* pcap_t* */ _pcap_fopen_offline_with_tstamp_precision(
+            SafeHandle fileObject,
+            uint precision,
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+        );
     }
 }

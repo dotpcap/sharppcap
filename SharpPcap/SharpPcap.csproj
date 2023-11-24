@@ -6,6 +6,7 @@
     <Company>Lansweeper</Company>
     <Title>Lansweeper SharpPcap</Title>
     <Product>Lansweeper SharpPcap</Product>	  
+    <Version>6.2.5</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
@@ -24,10 +25,10 @@
 	<Deterministic>true</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="PacketDotNet" Version="1.4.0" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="PacketDotNet" Version="1.4.7" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

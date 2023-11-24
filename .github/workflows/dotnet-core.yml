@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Install .net dependencies
       run: dotnet restore
     - name: Install libpcap
@@ -27,9 +27,23 @@ jobs:
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
       run: sudo -E bash scripts/test.sh
+
+    - run: sudo chmod -R +r Test/TestResults
+      if: always()
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v4
+      if: always()
+      with:
+        report_paths: Test/TestResults/TestResults.xml
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: artifacts
+        path: Test/TestResults/
+
     - name: publish on version change
       id: publish_nuget
-      uses: alirezanet/publish-nuget@v3.0.4
+      uses: alirezanet/publish-nuget@v3.1.0
       with:
         # Filepath of the project to be packaged, relative to root of repository
         PROJECT_FILE_PATH: SharpPcap/SharpPcap.csproj

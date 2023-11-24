@@ -21,7 +21,7 @@ blocks:
             - checkout
             - sudo -E bash scripts/install-libpcap.sh
             - sudo -E bash scripts/install-tap.sh
-            - sudo -E bash scripts/install-dotnet.sh
+            - sudo -E bash scripts/install-dotnet.sh --install-dir /usr/local/bin
             - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance"
           name: Test
       agent:
@@ -39,6 +39,6 @@ blocks:
         - commands:
             - checkout
             - sudo -E bash scripts/install-libpcap.sh
-            - brew install --cask dotnet-sdk
+            - sudo -E bash scripts/install-dotnet.sh --install-dir /usr/local/bin
             - sudo -E bash scripts/test.sh --filter "TestCategory!=Performance"
           name: Test

@@ -27,7 +27,7 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Read a pcap capture file
     /// </summary>
-    public class CaptureFileReaderDevice : PcapDevice
+    public class CaptureFileReaderDevice : CaptureReaderDevice
     {
         private readonly string m_pcapFile;
 
@@ -128,17 +128,6 @@ namespace SharpPcap.LibPcap
 
             base.Open(configuration);
         }
-
-        /// <summary>
-        /// Retrieves pcap statistics
-        ///
-        /// Not currently supported for this device
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PcapStatistics"/>
-        /// </returns>
-        public override ICaptureStatistics Statistics => null;
-
     }
 }
 
