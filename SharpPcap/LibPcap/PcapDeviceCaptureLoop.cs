@@ -175,7 +175,7 @@ namespace SharpPcap.LibPcap
                         continue;
                     }
 
-                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, Handle.DangerousGetHandle());
+                    int res = LibPcapSafeNativeMethods.pcap_dispatch(handle, m_pcapPacketCount, Callback, handle.DangerousGetHandle());
 
                     // pcap_dispatch() returns the number of packets read or, a status value if the value
                     // is negative
@@ -200,16 +200,16 @@ namespace SharpPcap.LibPcap
                                     break;
                                 }
                                 break;
-                            }
-                        case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                            return;
-                        default:
-                            // This can only be triggered by a bug in libpcap.
-                            // We can't throw here, sicne that would crash the application
-                            Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                            return;
+                            case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                                return;
+                            default:
+                                // This can only be triggered by a bug in libpcap.
+                                // We can't throw here, sicne that would crash the application
+                                Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                                return;
+                        }
                     }
                     else // res > 0
                     {
