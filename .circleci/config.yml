@@ -9,7 +9,7 @@ parameters:
     default: "Lansweeper_sharppcap"
   nuget-output-file:
     type: string
-    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.9.0.6.nupkg"
+    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.9.0.7.nupkg"
 
 executors:
   node:
@@ -19,6 +19,14 @@ executors:
 orbs:
   win: circleci/windows@2.2.0
   sonar-check: lansweeper/sonar@0.0.6
+
+commands:
+  report:
+    steps:
+    - store_test_results:
+        path: Test/TestResults
+    - store_artifacts:
+        path: Test/TestResults
 
 jobs:
   build:
@@ -77,7 +85,7 @@ jobs:
       - run:
           name: Set correct version in csproj file, build and pack it
           command: |
-            $env:package_version = "9.0.6"
+            $env:package_version = "9.0.7"
 
             $file = Get-Item << pipeline.parameters.csproj-file >>
             [xml]$cn = Get-Content $file

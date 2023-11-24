@@ -11,8 +11,22 @@ Fully managed, cross platform (Windows, Mac, Linux) .NET library for capturing p
 
 The official SharpPcap repository.
 
+# Table of Contents
+1. [Features](#features)
+2. [Examples](#examples)
+   - [Listing Devices](#listing-devices)
+   - [Capturing Packets](#capturing-packets)
+   - [Reading from a Capture File](#reading-from-a-capture-file)
+   - [Writing to a Capture File](#writing-to-a-capture-file)
+3. [CI Support](#ci-support)
+4. [Releases](#releases)
+5. [Platform Specific Notes](#platform-specific-notes)
+6. [Migration from 5.x to 6.0](#migration-from-5x-to-60)
+
+<a name="features"></a>
+
 # Features
-For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/packetnet).
+For packet dissection and creation, see [Packet.Net](https://github.com/chmorgan/packetnet).
 
 * On Linux, support for [libpcap](http://www.tcpdump.org/manpages/pcap.3pcap.html)
 
@@ -24,14 +38,14 @@ For packet dissection and creation see [Packet.Net](https://github.com/chmorgan/
   * Live device lists
   * Statistics
   * Reading packets from Live Devices (actual network devices) and Offline Devices (Capture files)
-  * Support for [Berkley Packet Filters](https://www.tcpdump.org/manpages/pcap-filter.7.html)
+  * Support for [Berkeley Packet Filters](https://www.tcpdump.org/manpages/pcap-filter.7.html)
   * Dumping packets to Pcap files.
   * Pcap and pcap-ng format (when using libpcap >=1.1.0 or npcap)
   * ReadOnlySpan<> is used to avoid memory allocation and copying inside of SharpPcap and provide the best performance.
     * Helper methods are provided to convert to object instances if it is desired to persist captured packets in memory.
 
 * NativeLibrary support
-  * Capture library resolution works cleanly across Linux, OSX, and Windows
+  * Capture library resolution operates smoothly across Linux, OSX, and Windows
   * Cleanly loads libpcap on Linux whether the distro has a symlink to libpcap.so or not.
 
 * .NET Core 3 and .NET Framework support
@@ -50,12 +64,16 @@ And here =>
 
 See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) folder for a range of full example projects using SharpPcap
 
+<a name="listing-devices"></a>
+
 ## Listing devices
    ```cs
    var devices = CaptureDeviceList.Instance;
    foreach (var dev in devices)
        Console.WriteLine("{0}\n", dev.ToString());
    ```
+
+<a name="capturing-packets"></a>
 
 ## Capturing packets
    ```cs
@@ -70,6 +88,8 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    device.StartCapture();
    ```
 
+<a name="reading-from-a-capture-file"></a>
+
 ## Reading from a capture file
    ```cs
    void Device_OnPacketArrival(object s, PacketCapture e)
@@ -80,8 +100,10 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    using var device = new CaptureFileReaderDevice("filename.pcap");
    device.Open();
    device.OnPacketArrival += Device_OnPacketArrival;
-   device.StartCapture();
+   device.Capture();
    ```
+
+<a name="writing-to-a-capture-file"></a>
 
 ## Writing to a capture file
    ```cs
@@ -90,14 +112,20 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    device.Write(bytes);
    ```
 
+<a name="ci-support"></a>
+
 # CI support
 We have support for a number of CI systems for a few reasons:
 
 * Diversity of CI systems in case one of them shuts down
 * Examples in case you'd like to customize SharpPcap and make use of one of these CI systems for internal builds. Note that we assume you are following the license for the library.
 
+<a name="releases"></a>
+
 # Releases
 SharpPcap is released via nuget
+
+<a name="platform-specific-notes"></a>
 
 # Platform specific notes
 * OSX (at least as of 11.1) lacks libpcap with pcap_open
@@ -112,6 +140,8 @@ We are especially appreciative of a number of projects we build upon (as SharpPc
 * libpcap - thank you so much for releasing 1.10
 * npcap - for continuing packet capture support on Windows
 
+<a name="migration-from-5x-to-60"></a>
+
 # Migration from 5.x to 6.0
 
 We hope that you'll find the 6.x api to be cleaner and easier to use.
@@ -121,7 +151,7 @@ We hope that you'll find the 6.x api to be cleaner and easier to use.
 To aid with the migration from 5.x to 6.0 here is a list of some of the changes you'll have to make to your
 SharpPcap usage.
 
-The examples are also a great resource a they show working examples using the latest API.
+The examples are also a great resource as they show working examples using the latest API.
 
 * Packet data is returned via PacketCapture which makes use of ReadOnlySpan<>.
   * Conversion from ReadOnlySpan<> to RawCapture is performed by PacketCapture.GetPacket().
@@ -129,7 +159,7 @@ The examples are also a great resource a they show working examples using the la
   * By avoiding memory allocation and memory copying, raw capture performance may be up to 30% faster.
   * Span's are ideal for use cases where packets are being dumped to disk for later processing.
 * NativeLibrary is used for improved capture library resolution
-  * Improves library reosolution situation on Linux distros where there is a libpcap.so.X.Y symlink but no libpcap.so symlink
+  * Improves library resolution situation on Linux distros where there is a libpcap.so.X.Y symlink but no libpcap.so symlink
   * Support for Mono DllMap has been removed as Mono supports NativeLibrary. See https://www.mono-project.com/news/2020/08/24/native-loader-net5/
 * Devices are IDisposable
   * Remove calls to Close()
@@ -138,7 +168,7 @@ The examples are also a great resource a they show working examples using the la
 * Open() methods have been collapsed into fewer methods with default variables.
 * DeviceMode has been replaced by DeviceModes as DeviceMode was not able to cover all of the combinations of ways you could open a device.
 * NpcapDevice -> LibPcapLiveDevice
-  * If you are using NpcapDevice you should consider using LibPcapLiveDevice. The latest versions of Npcap come with
+  * If you are using NpcapDevice, you should consider using LibPcapLiveDevice. The latest versions of Npcap come with
 newer versions of libpcap that provide almost all of the functionality of Npcap native APIs.
   * The current gap here is statistics mode, currently only supported by Npcap.
   * There has been talk of a statistics mode wrapper that would provide similar functionality, albeit without

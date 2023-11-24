@@ -155,74 +155,94 @@ namespace SharpPcap.LibPcap
                 throw new DeviceNotReadyException("Capture called before PcapDevice.Open()");
 
             var Callback = new LibPcapSafeNativeMethods.pcap_handler(PacketHandler);
-
-            while (!cancellationToken.IsCancellationRequested)
+            var handle = Handle;
+            var gotRef = false;
+            try
             {
-                // TODO: This check can be removed once libpcap versions >= 1.10 has become in widespread use.
-                // libpcap 1.10 improves pcap_dispatch() to break out when pcap_breakloop() across threads
-                if (!PollFileDescriptor())
+                // Make sure that handle does not get closed until this function is done
+                handle.DangerousAddRef(ref gotRef);
+                if (!gotRef)
                 {
-                    // We don't have data to read, don't call pcap_dispatch() yet
-                    continue;
+                    return;
                 }
-
-                int res = LibPcapSafeNativeMethods.pcap_dispatch(Handle, m_pcapPacketCount, Callback, Handle.DangerousGetHandle());
-
-                // pcap_dispatch() returns the number of packets read or, a status value if the value
-                // is negative
-                if (res <= 0)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    switch (res)    // Check pcap loop status results and notify upstream.
+                    // TODO: This check can be removed once libpcap versions >= 1.10 has become in widespread use.
+                    // libpcap 1.10 improves pcap_dispatch() to break out when pcap_breakloop() across threads
+                    if (!PollFileDescriptor())
                     {
-                        case Pcap.LOOP_USER_TERMINATED:     // User requsted loop termination with StopCapture()
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
-                            return;
-                        case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
-                            {
-                                // NOTE: pcap_dispatch() returns 0 when a timeout occurrs so to prevent timeouts
-                                //       from causing premature exiting from the capture loop we only consider
-                                //       exhausted events to cause an escape from the loop when they are from
-                                //       offline devices, ie. files read from disk
-                                if (this is CaptureFileReaderDevice)
-                                {
-                                    SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
-                                    return;
-                                }
-                                break;
-                            }
-                        case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                            return;
-                        default:
-                            // This can only be triggered by a bug in libpcap.
-                            // We can't throw here, sicne that would crash the application
-                            Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
-                            return;
+                        // We don't have data to read, don't call pcap_dispatch() yet
+                        continue;
                     }
-                }
-                else // res > 0
-                {
-                    // if we aren't capturing infinitely we need to account for
-                    // the packets that we read
-                    if (m_pcapPacketCount != Pcap.InfinitePacketCount)
-                    {
-                        // take away for the packets read
-                        if (m_pcapPacketCount >= res)
-                            m_pcapPacketCount -= res;
-                        else
-                            m_pcapPacketCount = 0;
 
-                        // no more packets to capture, we are finished capturing
-                        if (m_pcapPacketCount == 0)
+                    #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
+                    int res = LibPcapSafeNativeMethods.pcap_dispatch(handle, m_pcapPacketCount, Callback, handle.DangerousGetHandle());
+                    #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
+
+                    // pcap_dispatch() returns the number of packets read or, a status value if the value
+                    // is negative
+                    if (res <= 0)
+                    {
+                        switch (res)    // Check pcap loop status results and notify upstream.
                         {
-                            SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
-                            return;
+                            case Pcap.LOOP_USER_TERMINATED:     // User requsted loop termination with StopCapture()
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
+                                return;
+                            case Pcap.LOOP_COUNT_EXHAUSTED:     // m_pcapPacketCount exceeded (successful exit)
+                                {
+                                    // NOTE: pcap_dispatch() returns 0 when a timeout occurrs so to prevent timeouts
+                                    //       from causing premature exiting from the capture loop we only consider
+                                    //       exhausted events to cause an escape from the loop when they are from
+                                    //       offline devices, ie. files read from disk
+                                    #pragma warning disable S3060
+                                    if (this is CaptureReaderDevice)
+                                    #pragma warning restore S3060
+                                    {
+                                        SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
+                                        return;
+                                    }
+                                    break;
+                                }
+                            case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                                return;
+                            default:
+                                // This can only be triggered by a bug in libpcap.
+                                // We can't throw here, sicne that would crash the application
+                                Trace.TraceError($"SharpPcap: Unknown pcap_loop exit status: {res}");
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
+                                return;
+                        }
+                    }
+                    else // res > 0
+                    {
+                        // if we aren't capturing infinitely we need to account for
+                        // the packets that we read
+                        if (m_pcapPacketCount != Pcap.InfinitePacketCount)
+                        {
+                            // take away for the packets read
+                            if (m_pcapPacketCount >= res)
+                                m_pcapPacketCount -= res;
+                            else
+                                m_pcapPacketCount = 0;
+
+                            // no more packets to capture, we are finished capturing
+                            if (m_pcapPacketCount == 0)
+                            {
+                                SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
+                                return;
+                            }
                         }
                     }
                 }
             }
-
+            finally
+            {
+                if (gotRef)
+                {
+                    handle.DangerousRelease();
+                }
+            }
             SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
         }
     }

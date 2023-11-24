@@ -448,9 +448,9 @@ SharpPcap represents a send queue using the `SendQueue` class which is construct
 
 Once the send queue is created, `SendQueue.Add()` can be called to add a packet to the send queue. This function takes a `PcapHeader` with the packet's timestamp and length and a buffer or a `Packet` object holding the data of the packet. These parameters are the same as those received by the `OnPacketArrival` event, therefore queuing a packet that was just captured or a read from a file is a matter of passing these parameters to `SendQueue.Add()`.
 
-To transmit a send queue, SharpPcap provides the `WinPcapDevice.SendQueue(SendQueue q, SendQueueTransmitModes transmitMode)` function. Note the second parameter: if `SendQueueTransmitModes.Synchronized`, the send will be _synchronized_, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).
+To transmit a send queue, SharpPcap provides the `SendQueue.Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)` function. Note the second parameter: if `SendQueueTransmitModes.Synchronized`, the send will be _synchronized_, i.e. the relative timestamps of the packets will be respected. This operation requires a remarkable amount of CPU, because the synchronization takes place in the kernel driver using "busy wait" loops. Although this operation is quite CPU intensive, it often results in very high precision packet transmissions (often around few microseconds or less).
 
-Note that transmitting a send queue with `WinPcapDevice.SendQueue()` is more efficient than performing a series of `ICaptureDevice.SendPacket()`, since the send queue buffered at kernel level drastically decreases the number of context switches.
+Note that transmitting a send queue with `SendQueue.Transmit()` is more efficient than performing a series of `ICaptureDevice.SendPacket()`, since the send queue buffered at kernel level drastically decreases the number of context switches.
 
 When a queue is no longer needed, it can be deleted with `SendQueue.Dispose()` that frees all the buffers associated with the send queue.
 
