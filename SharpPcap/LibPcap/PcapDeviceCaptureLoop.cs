@@ -199,7 +199,6 @@ namespace SharpPcap.LibPcap
                                     }
                                     break;
                                 }
-                                break;
                             case Pcap.LOOP_EXIT_WITH_ERROR:     // An error occurred whilst capturing.
                                 SendCaptureStoppedEvent(CaptureStoppedEventStatus.ErrorWhileCapturing);
                                 return;
