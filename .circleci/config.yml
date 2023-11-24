@@ -20,14 +20,6 @@ orbs:
   win: circleci/windows@2.2.0
   sonar-check: lansweeper/sonar@0.0.6
 
-commands:
-  report:
-    steps:
-    - store_test_results:
-        path: Test/TestResults
-    - store_artifacts:
-        path: Test/TestResults
-
 jobs:
   build:
     executor: win/default
