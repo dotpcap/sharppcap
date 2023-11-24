@@ -175,7 +175,9 @@ namespace SharpPcap.LibPcap
                         continue;
                     }
 
+                    #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
                     int res = LibPcapSafeNativeMethods.pcap_dispatch(handle, m_pcapPacketCount, Callback, handle.DangerousGetHandle());
+                    #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
 
                     // pcap_dispatch() returns the number of packets read or, a status value if the value
                     // is negative
@@ -192,7 +194,9 @@ namespace SharpPcap.LibPcap
                                     //       from causing premature exiting from the capture loop we only consider
                                     //       exhausted events to cause an escape from the loop when they are from
                                     //       offline devices, ie. files read from disk
+                                    #pragma warning disable S3060
                                     if (this is CaptureReaderDevice)
+                                    #pragma warning restore S3060
                                     {
                                         SendCaptureStoppedEvent(CaptureStoppedEventStatus.CompletedWithoutError);
                                         return;
