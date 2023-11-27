@@ -34,4 +34,9 @@
       <_Parameter1>Test</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+
+  <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'=='true'">
+	  <DefineConstants>OSX</DefineConstants>
+  </PropertyGroup>
+
 </Project>
