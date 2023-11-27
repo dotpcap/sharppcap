@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'=='true'">
-	  <DefineConstants>OSX</DefineConstants>
+    <DefineConstants>OSX</DefineConstants>
   </PropertyGroup>
 
 </Project>
