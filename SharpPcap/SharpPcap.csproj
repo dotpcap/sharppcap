@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
     <Version>9.0.1</Version>
     <PackageId>Lansweeper.SharpPcap</PackageId>
     <Company>Lansweeper</Company>
@@ -35,8 +36,8 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'=='true'">
-    <DefineConstants>OSX</DefineConstants>
+  <PropertyGroup>
+    <DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">OSX</DefineConstants>
   </PropertyGroup>
 
 </Project>
