@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition="'$(RuntimeIdentifier)'=='osx-x64'">OSX</DefineConstants>
+    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'osx-x64'">$(DefineConstants);OSX</DefineConstants>
   </PropertyGroup>
 
 </Project>
