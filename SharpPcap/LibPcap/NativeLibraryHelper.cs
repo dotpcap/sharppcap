@@ -35,7 +35,7 @@ namespace SharpPcap.LibPcap
                     null
                 );
 
-            setDllImportResolverMethod?.Invoke(null, new object[] {
+            setDllImportResolverMethod.Invoke(null, new object[] {
                 assembly,
                 Delegate.CreateDelegate(dllImportResolverType, resolver, "Invoke")
             });
