@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
     <Version>9.0.1</Version>
     <PackageId>Lansweeper.SharpPcap</PackageId>
     <Company>Lansweeper</Company>
@@ -23,7 +22,6 @@
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	<Deterministic>true</Deterministic>
-    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'osx-x64'">$(DefineConstants);OSX</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.4.7" />
