@@ -37,9 +37,9 @@ namespace Test
             foreach (var ver in versions)
             {
                 var version = Pcap.GetLibpcapVersion(ver);
-                Assert.GreaterOrEqual(version, new Version(1, 0));
+                Assert.That(version, Is.GreaterThanOrEqualTo(new Version(1, 0)));
             }
-            Assert.AreEqual(Pcap.GetLibpcapVersion("invalid"), new Version(0, 0));
+            Assert.That(new Version(0, 0), Is.EqualTo(Pcap.GetLibpcapVersion("invalid")));
         }
     }
 }

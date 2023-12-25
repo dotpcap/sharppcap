@@ -45,18 +45,18 @@ namespace Test.Tunneling
         /// <returns></returns>
         public void AssertMatches(Packet packet, byte[] data)
         {
-            Assert.IsNotNull(packet);
+            Assert.That(packet, Is.Not.Null);
             var ip = packet.Extract<IPv4Packet>();
             var udp = packet.Extract<UdpPacket>();
 
-            Assert.IsNotNull(ip);
-            Assert.IsNotNull(udp);
+            Assert.That(ip, Is.Not.Null);
+            Assert.That(udp, Is.Not.Null);
 
-            Assert.AreEqual(udp.SourcePort, Port);
-            Assert.AreEqual(udp.DestinationPort, Port);
-            Assert.AreEqual(LocalIp, ip.SourceAddress);
+            Assert.That(Port, Is.EqualTo(udp.SourcePort));
+            Assert.That(Port, Is.EqualTo(udp.DestinationPort));
+            Assert.That(ip.SourceAddress, Is.EqualTo(LocalIp));
 
-            CollectionAssert.AreEqual(data, udp.PayloadData);
+            Assert.That(udp.PayloadData, Is.EqualTo(data).AsCollection);
         }
 
         /// <summary>

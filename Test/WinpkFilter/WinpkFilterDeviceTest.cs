@@ -60,23 +60,23 @@ namespace Test.WinpkFilter
         {
             using var driver = WinpkFilterDriver.Open();
 
-            Assert.NotZero(driver.Version);
+            Assert.That(driver.Version, Is.Not.Zero);
 
             foreach (var device in driver.GetNetworkDevices())
             {
-                Assert.IsNotNull(device.Name);
-                Assert.IsNotNull(device.FriendlyName);
-                Assert.IsNull(device.Description);
-                Assert.IsNull(device.LastError);
-                Assert.IsNull(device.Filter);
-                Assert.AreEqual(LinkLayers.Ethernet, device.LinkType);
-                Assert.IsNotNull(device.MacAddress);
-                Assert.AreEqual(TimestampResolution.Microsecond, device.TimestampResolution);
-                Assert.IsNull(device.Statistics);
+                Assert.That(device.Name, Is.Not.Null);
+                Assert.That(device.FriendlyName, Is.Not.Null);
+                Assert.That(device.Description, Is.Null);
+                Assert.That(device.LastError, Is.Null);
+                Assert.That(device.Filter, Is.Null);
+                Assert.That(device.LinkType, Is.EqualTo(LinkLayers.Ethernet));
+                Assert.That(device.MacAddress, Is.Not.Null);
+                Assert.That(device.TimestampResolution, Is.EqualTo(TimestampResolution.Microsecond));
+                Assert.That(device.Statistics, Is.Null);
                 if (device.IsValid)
                 {
                     // unless explicitly changed by user, this is the default for Ethernet adapters
-                    Assert.AreEqual(1500, device.Mtu);
+                    Assert.That(device.Mtu, Is.EqualTo(1500));
 
                 }
             }
@@ -135,7 +135,7 @@ namespace Test.WinpkFilter
                 .Name;
             using var driver = WinpkFilterDriver.Open();
             using var device = driver.GetNetworkDevices().First(d => d.FriendlyName == name);
-            Assert.IsFalse(device.Started);
+            Assert.That(device.Started, Is.False);
             device.OnPacketArrival += check.OnPacketArrival;
 
             device.Open(DeviceModes.Promiscuous);
@@ -143,9 +143,9 @@ namespace Test.WinpkFilter
             device.StartCapture();
             // Wait for the capture thread to start
             Thread.Sleep(1000);
-            Assert.IsTrue(device.Started);
+            Assert.That(device.Started, Is.True);
             var status = WebHelper.WebFetch();
-            Assert.AreEqual(check.ExpectedStatus, status);
+            Assert.That(status, Is.EqualTo(check.ExpectedStatus));
         }
 
         public class FirewallCheck

@@ -15,7 +15,7 @@ namespace Test
             var arp = new ARP(d);
 
             // timeout should not be null
-            Assert.IsNotNull(arp.Timeout);
+            Assert.That(arp.Timeout.Ticks, Is.Not.Zero);
 
             // and we can set a timeout
             arp.Timeout = new TimeSpan(0, 0, 2);

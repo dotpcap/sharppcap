@@ -14,8 +14,8 @@ namespace Test
         public void CaptureDeviceListNew()
         {
             var deviceList = CaptureDeviceList.New();
-            Assert.IsNotNull(deviceList);
-            Assert.IsNotEmpty(deviceList);
+            Assert.That(deviceList, Is.Not.Null);
+            Assert.That(deviceList, Is.Not.Empty);
         }
     }
 }

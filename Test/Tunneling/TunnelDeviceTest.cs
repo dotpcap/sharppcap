@@ -26,17 +26,17 @@ namespace Test.Tunneling
             device.Open();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Assert.GreaterOrEqual(device.Version.Major, 9);
+                Assert.That(device.Version.Major, Is.GreaterThanOrEqualTo(9));
             }
-            Assert.IsNotNull(device.Name);
-            Assert.IsNotNull(device.FriendlyName);
-            Assert.IsNotNull(device.Description);
-            Assert.IsNull(device.LastError);
-            Assert.IsNull(device.Filter);
-            Assert.AreEqual(LinkLayers.Ethernet, device.LinkType);
-            Assert.IsNotNull(device.MacAddress);
-            Assert.AreEqual(TimestampResolution.Microsecond, device.TimestampResolution);
-            Assert.IsNull(device.Statistics);
+            Assert.That(device.Name, Is.Not.Null);
+            Assert.That(device.FriendlyName, Is.Not.Null);
+            Assert.That(device.Description, Is.Not.Null);
+            Assert.That(device.LastError, Is.Null);
+            Assert.That(device.Filter, Is.Null);
+            Assert.That(device.LinkType, Is.EqualTo(LinkLayers.Ethernet));
+            Assert.That(device.MacAddress, Is.Not.Null);
+            Assert.That(device.TimestampResolution, Is.EqualTo(TimestampResolution.Microsecond));
+            Assert.That(device.Statistics, Is.Null);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Test.Tunneling
             }
 
 
-            Assert.AreEqual(tapDevice.MacAddress, mac);
+            Assert.That(mac, Is.EqualTo(tapDevice.MacAddress));
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Test.Tunneling
             var seq1 = new byte[] { 1, 2, 3 };
             tester.Broadcast(seq1);
             var retval = tapDevice.GetNextPacket(out var p1);
-            Assert.AreEqual(GetPacketStatus.PacketRead, retval);
+            Assert.That(retval, Is.EqualTo(GetPacketStatus.PacketRead));
             tester.AssertMatches(p1.GetPacket().GetPacket(), seq1);
 
             // Send from tunnel, and receive in OS
@@ -98,8 +98,8 @@ namespace Test.Tunneling
             tapDevice.SendPacket(packet);
             retval = tapDevice.GetNextPacket(out var p2);
             // TAP don't receive its own traffic
-            Assert.AreEqual(GetPacketStatus.ReadTimeout, retval);
-            CollectionAssert.AreEqual(seq2, tester.LastReceivedData);
+            Assert.That(retval, Is.EqualTo(GetPacketStatus.ReadTimeout));
+            Assert.That(tester.LastReceivedData, Is.EqualTo(seq2).AsCollection);
         }
 
         /// <summary>
