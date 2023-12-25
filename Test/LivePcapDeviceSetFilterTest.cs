@@ -29,7 +29,7 @@ namespace Test
             }
             var filter = "tcp port 80";
             device.Filter = filter;
-            Assert.AreEqual(filter, device.Filter);
+            Assert.That(device.Filter, Is.EqualTo(filter));
         }
 
         /// <summary>
