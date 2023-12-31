@@ -1,3 +1,6 @@
+// Copyright 2009-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
 using System;
 using System.Linq;
 using NUnit.Framework;

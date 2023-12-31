@@ -1,4 +1,8 @@
-﻿using PacketDotNet;
+// Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
+// Copyright 2020-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;

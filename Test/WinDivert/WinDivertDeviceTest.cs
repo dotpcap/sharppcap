@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.WinDivert;

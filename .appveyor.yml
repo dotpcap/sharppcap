@@ -1,3 +1,5 @@
+# Copyright 2020-2021 Chris Morgan <chmorgan@gmail.com>
+# SPDX-License-Identifier: MIT
 
 environment:
   # This key is encrypted using secdev's appveyor private key,

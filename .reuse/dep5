@@ -1,0 +1,31 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: sharppcap
+Upstream-Contact: Chris Morgan <chmorgan@gmail.com>
+Source: https://github.com/dotpcap/sharppcap
+
+Files: Examples/*
+       SharpPcap.sln
+       Test/capture_files/10k_packets.pcap
+       Test/capture_files/arp_request_response.pcap
+       Test/capture_files/ipv6_http.pcap
+       Test/capture_files/ipv6_icmpv6_packet.pcap
+       Test/capture_files/ip_packet_bogus_length.pcap
+       Test/capture_files/README
+       Test/capture_files/tcp.pcap
+       Test/capture_files/tcp_with_extra_bytes.pcap
+       Test/capture_files/test_stream.pcap
+       Test/capture_files/udp_dns_request_response.pcap
+Copyright: Tamir Gal <tamir@tamirgal.com>
+           Chris Morgan <chmorgan@gmail.com>
+License: MIT
+
+Files: Tutorial/*
+       History.md
+       README.md
+       renovate.json
+Copyright: Chris Morgan <chmorgan@gmail.com>
+License: MIT
+
+Files: Test/capture_files/arp_with_vlan.pcap
+Copyright: Houcem Benali <justhoucem@gmail.com>
+License: MIT

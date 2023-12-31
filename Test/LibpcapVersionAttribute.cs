@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using System;

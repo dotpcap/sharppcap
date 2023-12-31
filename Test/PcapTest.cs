@@ -1,3 +1,7 @@
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
 using System;
 using NUnit.Framework;
 using SharpPcap;

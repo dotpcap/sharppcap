@@ -1,4 +1,8 @@
-﻿using PacketDotNet;
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using PacketDotNet;
 using System;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;

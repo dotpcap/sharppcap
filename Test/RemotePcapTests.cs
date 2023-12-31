@@ -1,3 +1,6 @@
+// Copyright 2020 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
 using System;
 using System.Diagnostics;
 using System.IO;

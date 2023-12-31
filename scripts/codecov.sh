@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright 2022 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
 
 # Logic for OS detection from https://circleci.com/developer/orbs/orb/codecov/codecov
 
