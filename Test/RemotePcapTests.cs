@@ -41,7 +41,7 @@ namespace Test
             using (new RemotePcapServer(NullAuthArgs))
             {
                 var list = PcapInterface.GetAllPcapInterfaces(LoopbackSource, credentials);
-                CollectionAssert.IsNotEmpty(list);
+                Assert.That(list, Is.Not.Empty);
             }
         }
 
@@ -53,8 +53,8 @@ namespace Test
             {
                 var auth = new RemoteAuthentication(AuthenticationTypes.Null, null, null);
                 var loopback = new IPEndPoint(IPAddress.Loopback, 2002);
-                CollectionAssert.IsNotEmpty(PcapInterface.GetAllPcapInterfaces(loopback, auth));
-                CollectionAssert.IsNotEmpty(PcapInterface.GetAllPcapInterfaces(loopback, null));
+                Assert.That(PcapInterface.GetAllPcapInterfaces(loopback, auth), Is.Not.Empty);
+                Assert.That(PcapInterface.GetAllPcapInterfaces(loopback, null), Is.Not.Empty);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Test
 
                     // repassing the auth to Open() should be optional
                     device.Open();
-                    Assert.IsTrue(device.Opened);
+                    Assert.That(device.Opened, Is.True);
                     device.Close();
 
                     Assert.Throws<PcapException>(

@@ -23,31 +23,34 @@ namespace Test.Misc
         [Test]
         public void OperatorTest()
         {
-            Assert.IsTrue(p1 < p2, "p1 < p2");
-            Assert.IsFalse(p2 < p1, "p2 < p1");
-            Assert.IsTrue(p2 < p3, "p2 < p3");
-            Assert.IsTrue(p1 < p3, "p1 < p3");
-            Assert.IsFalse(p1 < p5, "p1 < p5");
+            Assert.Multiple(() =>
+            {
+                Assert.That(p1 < p2, Is.True, "p1 < p2");
+                Assert.That(p2 < p1, Is.False, "p2 < p1");
+                Assert.That(p2 < p3, Is.True, "p2 < p3");
+                Assert.That(p1 < p3, Is.True, "p1 < p3");
+                Assert.That(p1 < p5, Is.False, "p1 < p5");
 
-            Assert.IsTrue(p2 > p1, "p2 > p1");
-            Assert.IsTrue(p3 > p2, "p3 > p2");
-            Assert.IsTrue(p3 > p1, "p3 > p1");
+                Assert.That(p2 > p1, Is.True, "p2 > p1");
+                Assert.That(p3 > p2, Is.True, "p3 > p2");
+                Assert.That(p3 > p1, Is.True, "p3 > p1");
 
-            Assert.IsTrue(p1 != p2, "p1 != p2");
+                Assert.That(p1 != p2, Is.True, "p1 != p2");
 
-            Assert.IsTrue(p1 == p4, "p1 == p4");
+                Assert.That(p1 == p4, Is.True, "p1 == p4");
 
-            Assert.IsTrue(p1 <= p2, "p1 <= p2");
-            Assert.IsTrue(p1 <= p3, "p1 <= p3");
-            Assert.IsFalse(p2 <= p1, "p2 <= p1");
-            Assert.IsTrue(p2 >= p1, "p2 >= p1");
+                Assert.That(p1 <= p2, Is.True, "p1 <= p2");
+                Assert.That(p1 <= p3, Is.True, "p1 <= p3");
+                Assert.That(p2 <= p1, Is.False, "p2 <= p1");
+                Assert.That(p2 >= p1, Is.True, "p2 >= p1");
 
-            Assert.AreEqual(p1.CompareTo(p4), 0);
-            Assert.AreEqual(p1.CompareTo(p2), -1);
-            Assert.AreEqual(p2.CompareTo(p1), 1);
+                Assert.That(p1.CompareTo(p4), Is.EqualTo(0));
+                Assert.That(p1.CompareTo(p2), Is.EqualTo(-1));
+                Assert.That(p2.CompareTo(p1), Is.EqualTo(1));
 
-            Assert.AreEqual(p1.Equals(p4), true);
-            Assert.AreEqual(p1.Equals(p2), false);
+                Assert.That(p1.Equals(p4), Is.EqualTo(true));
+                Assert.That(p1.Equals(p2), Is.EqualTo(false));
+            });
         }
 
         // Test string formatting output
@@ -56,14 +59,14 @@ namespace Test.Misc
         {
             var p1 = new PosixTimeval(123, 12345);
 
-            Assert.AreEqual("123.012345s", p1.ToString());
+            Assert.That(p1.ToString(), Is.EqualTo("123.012345s"));
         }
 
         [Test]
         public void HashTest()
         {
-            Assert.AreNotEqual(p1.GetHashCode(), p2.GetHashCode());
-            Assert.AreEqual(p1.GetHashCode(), p4.GetHashCode());
+            Assert.That(p2.GetHashCode(), Is.Not.EqualTo(p1.GetHashCode()));
+            Assert.That(p4.GetHashCode(), Is.EqualTo(p1.GetHashCode()));
         }
 
         [Test]
@@ -71,14 +74,14 @@ namespace Test.Misc
         {
             var now = DateTime.Now;
             var pX = new PosixTimeval(now);
-            Assert.AreEqual(pX.Date.Ticks, now.ToUniversalTime().Ticks, TimeSpan.TicksPerMillisecond * 1.0);
+            Assert.That(now.ToUniversalTime().Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
         }
 
         [Test]
         public void EmptyConstructor()
         {
             var pX = new PosixTimeval();
-            Assert.AreEqual(pX.Date.Ticks, DateTime.UtcNow.Ticks, TimeSpan.TicksPerMillisecond * 1.0);
+            Assert.That(DateTime.UtcNow.Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
         }
     }
 }

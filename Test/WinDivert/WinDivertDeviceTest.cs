@@ -109,28 +109,28 @@ namespace Test.WinDivert
             var targetValue = originalValue + 1000;
             device.SetParam(WinDivertParam.QueueLen, targetValue);
             var actualValue = device.GetParam(WinDivertParam.QueueLen);
-            Assert.AreEqual(targetValue, actualValue);
+            Assert.That(actualValue, Is.EqualTo(targetValue));
         }
 
         [Test]
         public void Properties()
         {
             using var device = new WinDivertDevice();
-            Assert.AreEqual("WinDivert", device.Name);
-            Assert.AreEqual("WinDivert Packet Driver", device.Description);
-            Assert.AreEqual(LinkLayers.Raw, device.LinkType);
-            Assert.AreEqual(null, device.MacAddress);
-            Assert.AreEqual(SharpPcap.TimestampResolution.Microsecond, device.TimestampResolution);
-            Assert.IsNull(device.Statistics);
+            Assert.That(device.Name, Is.EqualTo("WinDivert"));
+            Assert.That(device.Description, Is.EqualTo("WinDivert Packet Driver"));
+            Assert.That(device.LinkType, Is.EqualTo(LinkLayers.Raw));
+            Assert.That(device.MacAddress, Is.EqualTo(null));
+            Assert.That(device.TimestampResolution, Is.EqualTo(SharpPcap.TimestampResolution.Microsecond));
+            Assert.That(device.Statistics, Is.Null);
         }
 
         private void AssertTcp(RawCapture capture)
         {
-            Assert.NotNull(capture);
+            Assert.That(capture, Is.Not.Null);
             var packet = Packet.ParsePacket(capture.LinkLayerType, capture.Data);
-            Assert.IsInstanceOf<RawIPPacket>(packet);
-            Assert.IsInstanceOf<IPPacket>(packet.PayloadPacket);
-            Assert.IsInstanceOf<TcpPacket>(packet.PayloadPacket.PayloadPacket);
+            Assert.That(packet, Is.InstanceOf<RawIPPacket>());
+            Assert.That(packet.PayloadPacket, Is.InstanceOf<IPPacket>());
+            Assert.That(packet.PayloadPacket.PayloadPacket, Is.InstanceOf<TcpPacket>());
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Test.WinDivert
         {
             var dst = IPAddress.Parse("8.8.8.8");
             var nic = IpHelper.GetBestInterface(dst);
-            Assert.NotNull(nic, "No internet connected interface found");
+            Assert.That(nic, Is.Not.Null, "No internet connected interface found");
             var src = nic.GetIPProperties().UnicastAddresses
                 .Select(addr => addr.Address)
                 .FirstOrDefault(addr => addr.AddressFamily == AddressFamily.InterNetwork);

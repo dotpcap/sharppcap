@@ -36,7 +36,7 @@ namespace Test
                 device.SendPacket(packet.Bytes, packet.Bytes.Length);
             });
             Assert.That(received, Has.Count.EqualTo(4));
-            CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);
+            Assert.That(received[0].Data, Is.EquivalentTo(packet.Bytes));
         }
 
         [SetUp]

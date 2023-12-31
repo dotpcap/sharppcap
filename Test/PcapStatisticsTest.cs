@@ -50,7 +50,7 @@ namespace Test
                 dev = devices[0];
             }
 
-            Assert.IsNotNull(dev, "Unable to find a capture device");
+            Assert.That(dev, Is.Not.Null, "Unable to find a capture device");
 
             // open a device for capture
             dev.Open();

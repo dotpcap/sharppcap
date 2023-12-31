@@ -38,7 +38,7 @@ namespace Test
             };
             foreach (var list in lists)
             {
-                Assert.IsNotEmpty(list.Value, "{0} should not be empty", list.Key);
+                Assert.That(list.Value, Is.Not.Empty, $"{list.Key} should not be empty");
             }
             return lists.SelectMany(l => l.Value)
                 // The bluetooth-monitor break the tests on circleci

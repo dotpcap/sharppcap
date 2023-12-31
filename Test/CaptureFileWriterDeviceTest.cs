@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 using System;
+using System.IO;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -11,7 +12,7 @@ namespace Test
     [TestFixture]
     public class CaptureFileWriterDeviceTest
     {
-        static string filename = @"abc.pcap";
+        static string filename = "abc.pcap";
 
         public CaptureFileWriterDeviceTest()
         {
@@ -27,8 +28,8 @@ namespace Test
             using (var wd = new CaptureFileWriterDevice(filename))
             {
                 wd.Open();
-                Assert.AreEqual(filename, wd.Name);
-                Assert.IsNotEmpty(wd.Description);
+                Assert.That(wd.Name, Is.EqualTo(filename));
+                Assert.That(wd.Description, Is.Not.Empty);
                 var bytes = new byte[] { 1, 2, 3, 4 };
                 wd.Write(bytes);
 
@@ -103,7 +104,7 @@ namespace Test
             using (var wd = new CaptureFileWriterDevice(filename))
             {
                 wd.Open();
-                Assert.IsNull(wd.Statistics);
+                Assert.That(wd.Statistics, Is.Null);
             }
         }
 
@@ -113,8 +114,8 @@ namespace Test
             using (var wd = new CaptureFileWriterDevice(filename))
             {
                 wd.Open();
-                Assert.AreEqual(filename, wd.Name);
-                Assert.IsNotEmpty(wd.Description);
+                Assert.That(wd.Name, Is.EqualTo(filename));
+                Assert.That(wd.Description, Is.Not.Empty);
 
                 var bytes = new byte[] { 1, 2, 3, 4 };
 
@@ -126,7 +127,7 @@ namespace Test
                 var span = new ReadOnlySpan<byte>(bytes, 0, bytes.Length);
                 injectionDevice.SendPacket(span);
             }
-            System.IO.File.Delete(@"abc.pcap");
+            File.Delete(filename);
         }
 
     }

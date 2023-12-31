@@ -66,7 +66,7 @@ namespace Test
             sender.SendPacket(packet);
 
             // Wait for packets to arrive
-            Assert.IsTrue(waitHandle.WaitOne(5000));
+            Assert.That(waitHandle.WaitOne(5000), Is.True);
         }
 
 
