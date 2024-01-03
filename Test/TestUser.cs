@@ -42,10 +42,11 @@ namespace Test
 
         private static void Bash(string cmd, params string[] args)
         {
+            var arguments = string.Join(" ", args);
             var info = new ProcessStartInfo
             {
                 FileName = cmd,
-                Arguments = string.Join(" ", args),
+                Arguments = arguments,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
@@ -57,7 +58,10 @@ namespace Test
 
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            process.WaitForExit();
+            if (!process.WaitForExit(10000))
+            {
+                throw new TimeoutException($"Command '{cmd} {arguments}' timed out");
+            }
             Assert.AreEqual(process.ExitCode, 0);
         }
 
