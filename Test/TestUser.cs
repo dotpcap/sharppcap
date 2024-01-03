@@ -62,7 +62,7 @@ namespace Test
             {
                 throw new TimeoutException($"Command '{cmd} {arguments}' timed out");
             }
-            Assert.AreEqual(process.ExitCode, 0);
+            Assert.That(process.ExitCode, Is.Zero);
         }
 
         public static void Delete()
