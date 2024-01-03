@@ -36,6 +36,7 @@ for:
       only:
         - image: macos
     install:
+      - brew install --cask dotnet-sdk
       - sudo -E bash scripts/install-libpcap.sh
     test_script:
       - sudo -E bash scripts/test.sh

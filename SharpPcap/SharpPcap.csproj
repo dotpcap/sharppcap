@@ -25,6 +25,7 @@ SPDX-License-Identifier: MIT
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <LangVersion>7.3</LangVersion>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -33,6 +34,8 @@ SPDX-License-Identifier: MIT
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

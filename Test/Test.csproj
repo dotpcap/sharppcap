@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net48</TargetFrameworks>
     <CoverletOutputFormat>opencover</CoverletOutputFormat>
   </PropertyGroup>
@@ -25,7 +25,7 @@ SPDX-License-Identifier: MIT
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
     <PackageReference Include="SemanticVersion" Version="2.1.0" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpPcap\SharpPcap.csproj" />
