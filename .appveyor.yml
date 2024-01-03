@@ -1,4 +1,3 @@
-
 environment:
   # This key is encrypted using secdev's appveyor private key,
   # dissected only on master builds (not PRs) and is used during
@@ -15,37 +14,25 @@ branches:
 
 image:
   - Visual Studio 2022
-  - Ubuntu1804
   - macos
 
 for:
--
-  matrix:
-    only:
-      - image: Visual Studio 2022
-  install:
-    - ps: .\scripts\install-windows.ps1
-    - ps: .\scripts\Install-npcap.ps1
-    - ps: .\scripts\install-winpkfilter.ps1
-  build_script:
-    - dotnet build -c Release
-  test_script:
-    - bash scripts/test.sh --filter "TestCategory!=RemotePcap&TestCategory!=WinDivert"
+  - matrix:
+      only:
+        - image: Visual Studio 2022
+    install:
+      - ps: .\scripts\install-windows.ps1
+      - ps: .\scripts\Install-npcap.ps1
+      - ps: .\scripts\install-winpkfilter.ps1
+    build_script:
+      - dotnet build -c Release
+    test_script:
+      - bash scripts/test.sh --filter "TestCategory!=RemotePcap&TestCategory!=WinDivert"
 
--
-  matrix:
-    only:
-      - image: Ubuntu1804
-  install:
-    - sudo -E bash scripts/install-libpcap.sh
-  test_script:
-    - sudo -E bash scripts/test.sh --filter "TestCategory!=Tunneling"
-
--
-  matrix:
-    only:
-      - image: macos
-  install:
-    - sudo -E bash scripts/install-libpcap.sh
-  test_script:
-    - sudo -E bash scripts/test.sh
+  - matrix:
+      only:
+        - image: macos
+    install:
+      - sudo -E bash scripts/install-libpcap.sh
+    test_script:
+      - sudo -E bash scripts/test.sh
