@@ -84,7 +84,7 @@ namespace Test.Tunneling
             {
                 tapDevice.Open(DeviceModes.Promiscuous);
             }
-            catch (IOException ex)
+            catch (SystemException ex)
             {
                 Assert.Fail(ex.Message);
             }
