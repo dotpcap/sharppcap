@@ -4,6 +4,7 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using SharpPcap.Tunneling;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -79,7 +80,14 @@ namespace Test.Tunneling
             var nic = TunnelDevice.GetTunnelInterfaces().First();
             using var tapDevice = GetTunnelDevice(nic);
             // Open TAP device first to ensure the virutal device is connected
-            tapDevice.Open(DeviceModes.Promiscuous);
+            try
+            {
+                tapDevice.Open(DeviceModes.Promiscuous);
+            }
+            catch (IOException ex)
+            {
+                Assert.Fail(ex.Message);
+            }
             var tapIp = IpHelper.GetIPAddress(nic);
 
             using var tester = new UdpTester(tapIp);
