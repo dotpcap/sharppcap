@@ -32,8 +32,7 @@ namespace Test
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Bash("adduser", Username);
-                Bash("adduser", Username, "sudo");
+                Bash("useradd", Username, "--groups", "sudo");
                 Bash("bash", "-c", $"\"echo -e {Username}:{Password} | chpasswd\"");
             }
             // OS not supported
