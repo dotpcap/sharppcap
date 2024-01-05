@@ -1,5 +1,8 @@
+# Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+# SPDX-License-Identifier: MIT
+
 # Install Npcap on the machine.
-# Copied from https://github.com/secdev/scapy/blob/master/.config/appveyor/InstallNpcap.ps1
+# Based on https://github.com/secdev/scapy/blob/master/.config/appveyor/InstallNpcap.ps1
 
 # Config:
 $npcap_oem_file = "npcap-1.55-oem.exe"

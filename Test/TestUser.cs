@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using System.DirectoryServices.AccountManagement;
 using System.Runtime.Versioning;
 

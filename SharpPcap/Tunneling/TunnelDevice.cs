@@ -1,4 +1,8 @@
-﻿using SharpPcap.Tunneling.WinTap;
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using SharpPcap.Tunneling.WinTap;
 using System;
 using System.IO;
 using System.Linq;

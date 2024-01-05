@@ -1,4 +1,8 @@
-﻿using System.Net;
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using System.Net;
 using NUnit.Framework;
 using SharpPcap.WinDivert;
 

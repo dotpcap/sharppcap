@@ -1,4 +1,8 @@
-﻿using SharpPcap.LibPcap;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using SharpPcap.LibPcap;
 using System;
 using System.Runtime.InteropServices;
 

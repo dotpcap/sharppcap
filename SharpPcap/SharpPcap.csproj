@@ -1,4 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!--
+Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
+Copyright 2008-2011 Chris Morgan <chmorgan@gmail.com>
+
+SPDX-License-Identifier: MIT
+-->
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>6.2.5</Version>
@@ -16,6 +23,8 @@
       SharpPcap is a cross-platform(Windows, Mac, Linux) packet capture framework for the .NET environment.
       It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
     </Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <LangVersion>7.3</LangVersion>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
@@ -23,6 +32,8 @@
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.4.7" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
   </ItemGroup>

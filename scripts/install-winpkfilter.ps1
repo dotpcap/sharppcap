@@ -1,4 +1,7 @@
 
+# Copyright 2022 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 Push-Location $env:TEMP
 
 $arch = If ([Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'}

@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+// Copyright 2022 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;
