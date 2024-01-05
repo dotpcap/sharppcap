@@ -1,3 +1,6 @@
+// Copyright 2009-2017 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;

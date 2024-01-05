@@ -1,3 +1,6 @@
+# Copyright 2018 Jan Pluskal
+# SPDX-License-Identifier: MIT
+
 # Auto detect text files and perform LF normalization
 * text=auto
 

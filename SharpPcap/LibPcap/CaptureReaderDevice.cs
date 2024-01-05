@@ -1,3 +1,6 @@
+// Copyright 2022 Hendrik Eckardt
+// SPDX-License-Identifier: MIT
+
 namespace SharpPcap.LibPcap
 {
     /// <summary>

@@ -1,4 +1,8 @@
-﻿using System;
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;

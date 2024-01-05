@@ -1,6 +1,9 @@
+# Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 codecov:
   # Allow collecting coverage even if some CIs fail
-  require_ci_to_pass: no
+  require_ci_to_pass: false
   notify:
     # 3 for appveyor
     # 3 for azure pipelines
