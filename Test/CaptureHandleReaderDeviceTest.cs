@@ -1,3 +1,6 @@
+// Copyright 2022 Hendrik Eckardt
+// SPDX-License-Identifier: MIT
+
 using System;
 using NUnit.Framework;
 using SharpPcap;

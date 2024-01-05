@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright 2022 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 set -e
 
 TEST_ARGS=("$@")

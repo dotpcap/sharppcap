@@ -1,4 +1,8 @@
-﻿namespace SharpPcap.Tunneling.WinTap
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+namespace SharpPcap.Tunneling.WinTap
 {
     /// <summary>
     /// See https://github.com/OpenVPN/tap-windows6/blob/master/src/tap-windows.h

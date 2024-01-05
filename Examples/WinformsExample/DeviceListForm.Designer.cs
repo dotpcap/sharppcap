@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 namespace WinformsExample
 {
     partial class DeviceListForm

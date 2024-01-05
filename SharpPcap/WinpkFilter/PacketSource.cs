@@ -1,4 +1,8 @@
-﻿
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+
 namespace SharpPcap.WinpkFilter
 {
     /// <summary>

@@ -1,3 +1,6 @@
+# Copyright 2021-2022 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 version: v1.0
 name: Pipeline
 agent:

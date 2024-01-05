@@ -1,4 +1,8 @@
-﻿using System;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
