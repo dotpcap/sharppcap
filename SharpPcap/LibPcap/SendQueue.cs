@@ -1,6 +1,7 @@
 ﻿// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
 // Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
-// Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
+ Transmit
+
 //
 // SPDX-License-Identifier: MIT
 
@@ -102,7 +103,12 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int Transmit(PcapDevice device, bool synchronized)
         {
-            return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal);
+            Transmit(device, synchronized, null);
+        }
+
+        public int Transmit(PcapDevice device, bool synchronized, CancellationToken token)
+        {
+            return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal, token);
         }
 
         /// <summary>
@@ -118,7 +124,7 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// The number of bytes sent as an <see cref="int"/>
         /// </returns>
-        public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+        public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
         {
             if (buffer == null)
             {
@@ -132,10 +138,10 @@ namespace SharpPcap.LibPcap
             {
                 return NativeTransmit(device, transmitMode);
             }
-            return ManagedTransmit(device, transmitMode);
+            return ManagedTransmit(device, transmitMode, token);
         }
 
-        protected unsafe int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+        protected unsafe int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
         {
             if (CurrentLength == 0)
             {
@@ -148,7 +154,8 @@ namespace SharpPcap.LibPcap
             {
                 var bufPtr = new IntPtr(buf);
                 var firstTimestamp = TimeSpan.FromTicks(PcapHeader.FromPointer(bufPtr, TimeResolution).Timeval.Date.Ticks);
-                while (position < CurrentLength)
+                while ((position < CurrentLength) && !(token?.IsCancellationRequested ?? false))
+
                 {
                     // Extract packet from buffer
                     var header = PcapHeader.FromPointer(bufPtr + position, TimeResolution);
