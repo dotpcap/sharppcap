@@ -1,8 +1,6 @@
 ﻿// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
 // Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
- Transmit
-
-//
+ //
 // SPDX-License-Identifier: MIT
 
 using PacketDotNet;
