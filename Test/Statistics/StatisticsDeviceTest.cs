@@ -1,4 +1,8 @@
-﻿using System;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -29,14 +33,14 @@ namespace Test.Statistics
             sender.Open();
             device.Open(config);
 
-            Assert.AreEqual(sender.LinkType, device.LinkType);
+            Assert.That(device.LinkType, Is.EqualTo(sender.LinkType));
 
-            Assert.IsNotEmpty(device.Name);
-            Assert.AreEqual(device.Name, sender.Name);
-            Assert.AreEqual(device.Description, sender.Description);
-            Assert.AreEqual(device.MacAddress, sender.MacAddress);
+            Assert.That(device.Name, Is.Not.Empty);
+            Assert.That(sender.Name, Is.EqualTo(device.Name));
+            Assert.That(sender.Description, Is.EqualTo(device.Description));
+            Assert.That(sender.MacAddress, Is.EqualTo(device.MacAddress));
 
-            Assert.IsEmpty(device.LastError);
+            Assert.That(device.LastError, Is.Empty);
 
             var stats = new List<StatisticsEventArgs>();
             device.OnPcapStatistics += (s, e) =>
@@ -45,7 +49,7 @@ namespace Test.Statistics
             };
 
             device.Filter = Filter;
-            Assert.AreEqual(Filter, device.Filter);
+            Assert.That(device.Filter, Is.EqualTo(Filter));
             device.StartCapture();
 
             var packet = EthernetPacket.RandomPacket();
@@ -80,8 +84,8 @@ namespace Test.Statistics
 
             foreach(var s in stats)
             {
-                Assert.AreEqual(device, s.Device);
-                Assert.GreaterOrEqual(DateTime.UtcNow, s.Timeval.Date);
+                Assert.That(s.Device, Is.EqualTo(device));
+                Assert.That(DateTime.UtcNow, Is.GreaterThanOrEqualTo(s.Timeval.Date));
             }
 
             Assert.That(receivedPackets.Last(), Is.EqualTo(count));

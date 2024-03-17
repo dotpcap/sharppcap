@@ -1,3 +1,6 @@
+// Copyright 2009-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
 using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
@@ -36,7 +39,7 @@ namespace Test
             // test that we can look up devices by name
             foreach (var d in dl)
             {
-                Assert.IsNotNull(dl[d.Name]);
+                Assert.That(dl[d.Name], Is.Not.Null);
             }
         }
     }

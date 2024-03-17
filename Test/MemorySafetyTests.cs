@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -63,7 +66,7 @@ namespace Test
             sender.SendPacket(packet);
 
             // Wait for packets to arrive
-            Assert.IsTrue(waitHandle.WaitOne(5000));
+            Assert.That(waitHandle.WaitOne(5000), Is.True);
         }
 
 

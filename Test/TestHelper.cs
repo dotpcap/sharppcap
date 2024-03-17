@@ -1,4 +1,8 @@
-﻿using PacketDotNet;
+// Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
+// Copyright 2020-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;
@@ -142,8 +146,8 @@ namespace Test
                 // If test already failed, no point asserting here
                 if (status != TestStatus.Failed)
                 {
-                    Assert.IsFalse(isOpened, "Expected device to not to be Opened");
-                    Assert.IsFalse(isStarted, "Expected device to not be Started");
+                    Assert.That(isOpened, Is.False, "Expected device to not to be Opened");
+                    Assert.That(isStarted, Is.False, "Expected device to not be Started");
                 }
             }
         }

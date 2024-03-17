@@ -1,4 +1,8 @@
-﻿using System;
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using System;
 namespace SharpPcap.WinDivert
 {
     public class WinDivertHeader : ICaptureHeader

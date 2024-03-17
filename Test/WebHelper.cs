@@ -1,4 +1,7 @@
-﻿using System.Net;
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using System.Net;
 
 namespace Test
 {

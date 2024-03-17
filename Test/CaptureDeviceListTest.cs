@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using SharpPcap;
 using NUnit.Framework;
 
@@ -14,8 +17,8 @@ namespace Test
         public void CaptureDeviceListNew()
         {
             var deviceList = CaptureDeviceList.New();
-            Assert.IsNotNull(deviceList);
-            Assert.IsNotEmpty(deviceList);
+            Assert.That(deviceList, Is.Not.Null);
+            Assert.That(deviceList, Is.Not.Empty);
         }
     }
 }

@@ -1,22 +1,6 @@
-/*
-This file is part of SharpPcap
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/*
- *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using NUnit.Framework;
@@ -39,31 +23,34 @@ namespace Test.Misc
         [Test]
         public void OperatorTest()
         {
-            Assert.IsTrue(p1 < p2, "p1 < p2");
-            Assert.IsFalse(p2 < p1, "p2 < p1");
-            Assert.IsTrue(p2 < p3, "p2 < p3");
-            Assert.IsTrue(p1 < p3, "p1 < p3");
-            Assert.IsFalse(p1 < p5, "p1 < p5");
+            Assert.Multiple(() =>
+            {
+                Assert.That(p1 < p2, Is.True, "p1 < p2");
+                Assert.That(p2 < p1, Is.False, "p2 < p1");
+                Assert.That(p2 < p3, Is.True, "p2 < p3");
+                Assert.That(p1 < p3, Is.True, "p1 < p3");
+                Assert.That(p1 < p5, Is.False, "p1 < p5");
 
-            Assert.IsTrue(p2 > p1, "p2 > p1");
-            Assert.IsTrue(p3 > p2, "p3 > p2");
-            Assert.IsTrue(p3 > p1, "p3 > p1");
+                Assert.That(p2 > p1, Is.True, "p2 > p1");
+                Assert.That(p3 > p2, Is.True, "p3 > p2");
+                Assert.That(p3 > p1, Is.True, "p3 > p1");
 
-            Assert.IsTrue(p1 != p2, "p1 != p2");
+                Assert.That(p1 != p2, Is.True, "p1 != p2");
 
-            Assert.IsTrue(p1 == p4, "p1 == p4");
+                Assert.That(p1 == p4, Is.True, "p1 == p4");
 
-            Assert.IsTrue(p1 <= p2, "p1 <= p2");
-            Assert.IsTrue(p1 <= p3, "p1 <= p3");
-            Assert.IsFalse(p2 <= p1, "p2 <= p1");
-            Assert.IsTrue(p2 >= p1, "p2 >= p1");
+                Assert.That(p1 <= p2, Is.True, "p1 <= p2");
+                Assert.That(p1 <= p3, Is.True, "p1 <= p3");
+                Assert.That(p2 <= p1, Is.False, "p2 <= p1");
+                Assert.That(p2 >= p1, Is.True, "p2 >= p1");
 
-            Assert.AreEqual(p1.CompareTo(p4), 0);
-            Assert.AreEqual(p1.CompareTo(p2), -1);
-            Assert.AreEqual(p2.CompareTo(p1), 1);
+                Assert.That(p1.CompareTo(p4), Is.EqualTo(0));
+                Assert.That(p1.CompareTo(p2), Is.EqualTo(-1));
+                Assert.That(p2.CompareTo(p1), Is.EqualTo(1));
 
-            Assert.AreEqual(p1.Equals(p4), true);
-            Assert.AreEqual(p1.Equals(p2), false);
+                Assert.That(p1.Equals(p4), Is.EqualTo(true));
+                Assert.That(p1.Equals(p2), Is.EqualTo(false));
+            });
         }
 
         // Test string formatting output
@@ -72,14 +59,14 @@ namespace Test.Misc
         {
             var p1 = new PosixTimeval(123, 12345);
 
-            Assert.AreEqual("123.012345s", p1.ToString());
+            Assert.That(p1.ToString(), Is.EqualTo("123.012345s"));
         }
 
         [Test]
         public void HashTest()
         {
-            Assert.AreNotEqual(p1.GetHashCode(), p2.GetHashCode());
-            Assert.AreEqual(p1.GetHashCode(), p4.GetHashCode());
+            Assert.That(p2.GetHashCode(), Is.Not.EqualTo(p1.GetHashCode()));
+            Assert.That(p4.GetHashCode(), Is.EqualTo(p1.GetHashCode()));
         }
 
         [Test]
@@ -87,14 +74,14 @@ namespace Test.Misc
         {
             var now = DateTime.Now;
             var pX = new PosixTimeval(now);
-            Assert.AreEqual(pX.Date.Ticks, now.ToUniversalTime().Ticks, TimeSpan.TicksPerMillisecond * 1.0);
+            Assert.That(now.ToUniversalTime().Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
         }
 
         [Test]
         public void EmptyConstructor()
         {
             var pX = new PosixTimeval();
-            Assert.AreEqual(pX.Date.Ticks, DateTime.UtcNow.Ticks, TimeSpan.TicksPerMillisecond * 1.0);
+            Assert.That(DateTime.UtcNow.Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
         }
     }
 }

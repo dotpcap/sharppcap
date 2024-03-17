@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -12,9 +15,9 @@ namespace Test
         public void LibPcapLiveDeviceProperties()
         {
             var d = LibPcapLiveDeviceList.Instance[0];
-            Assert.IsNotNull(d);
+            Assert.That(d, Is.Not.Null);
 
-            Assert.IsNotNull(d.Addresses);
+            Assert.That(d.Addresses, Is.Not.Null);
             Console.WriteLine("Flags: {0}", d.Flags);
             Console.WriteLine("Loopback: {0}", d.Loopback);
         }
@@ -35,7 +38,7 @@ namespace Test
 
             var timestampTypes = liveDevice.Interface.TimestampsSupported;
 
-            Assert.IsNotEmpty(timestampTypes);
+            Assert.That(timestampTypes, Is.Not.Empty);
 
             // open the device with each of its supported timestamp types
             foreach (var pcapClock in timestampTypes)
@@ -44,7 +47,7 @@ namespace Test
                 configuration.TimestampType = pcapClock.TimestampType;
                 liveDevice.Open(configuration);
 
-                Assert.IsNotNull(liveDevice.Interface.TimestampsSupported);
+                Assert.That(liveDevice.Interface.TimestampsSupported, Is.Not.Null);
 
                 liveDevice.Close();
             }
@@ -54,7 +57,7 @@ namespace Test
         public void NonBlockingMode()
         {
             using var d = LibPcapLiveDeviceList.Instance[0];
-            Assert.IsNotNull(d);
+            Assert.That(d, Is.Not.Null);
 
             // assert that setting and getting non blocking mode
             // with a closed device
@@ -64,9 +67,9 @@ namespace Test
             // test that we can set the blocking mode on an open device
             d.Open();
             d.NonBlockingMode = true;
-            Assert.IsTrue(d.NonBlockingMode);
+            Assert.That(d.NonBlockingMode, Is.True);
             d.NonBlockingMode = false;
-            Assert.IsFalse(d.NonBlockingMode);
+            Assert.That(d.NonBlockingMode, Is.False);
         }
     }
 }
