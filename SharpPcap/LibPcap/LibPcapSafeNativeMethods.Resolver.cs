@@ -23,14 +23,17 @@ namespace SharpPcap.LibPcap
 
         static LibPcapSafeNativeMethods()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
+            )
             {
                 SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
             }
-            else
-            {
-                RegisterResolver();
-            }
+            RegisterResolver();
             StringEncoding = ConfigureStringEncoding();
         }
 
@@ -50,6 +53,12 @@ namespace SharpPcap.LibPcap
             {
                 // Use default resolver
                 return IntPtr.Zero;
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return NativeLibraryHelper.TryLoad("wpcap.dll", out var library)
+                    ? library : IntPtr.Zero;
             }
 
             var names = new List<string>();

@@ -100,7 +100,13 @@ namespace SharpPcap.LibPcap
             var immediate_supported = Pcap.LibpcapVersion >= new Version(1, 5, 0);
             // Check if we can do immediate by setting mintocopy to 0
             // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
-            var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            var mintocopy_supported =
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsWindows()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+#endif
+            ;
 
             var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
 
@@ -239,7 +245,13 @@ namespace SharpPcap.LibPcap
             }
             base.Open(configuration);
             // retrieve the file descriptor of the adapter for use with poll()
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (
+#if NET6_0_OR_GREATER
+            OperatingSystem.IsLinux()
+#else
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+#endif
+            )
             {
                 FileDescriptor = LibPcapSafeNativeMethods.pcap_get_selectable_fd(Handle);
             }
