@@ -1,43 +1,83 @@
 // Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
 // SPDX-License-Identifier: MIT
-
+﻿using NUnit.Framework;
 using System;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
-using System.Runtime.Versioning;
+using System.Runtime.InteropServices;
 
 namespace Test
 {
-#if NET
-    [SupportedOSPlatform("windows")]
-#endif
     public static class TestUser
     {
-        public const string Username = "SharpPcap.Test.User";
+        public const string Username = "sharppcaptestuser";
         public const string Password = "password";
 
         public static bool Create()
         {
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Delete();
-                var ctx = new PrincipalContext(ContextType.Machine);
-                using (var user = new UserPrincipal(ctx, Username, Password, true))
+                try
                 {
-                    user.Save();
+                    Delete();
+                    var ctx = new PrincipalContext(ContextType.Machine);
+                    using (var user = new UserPrincipal(ctx, Username, Password, true))
+                    {
+                        user.Save();
+                    }
+                    return true;
                 }
-                return true;
+                catch (PrincipalException)
+                {
+                    return false;
+                }
             }
-            catch (PrincipalException)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return false;
+                Bash("useradd", Username, "--groups", "sudo");
+                Bash("bash", "-c", $"\"echo -e {Username}:{Password} | chpasswd\"");
             }
+            // OS not supported
+            return false;
+        }
+
+        private static void Bash(string cmd, params string[] args)
+        {
+            var arguments = string.Join(" ", args);
+            var info = new ProcessStartInfo
+            {
+                FileName = cmd,
+                Arguments = arguments,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true
+            };
+            var process = Process.Start(info);
+
+            process.OutputDataReceived += (s, e) => Console.Out.WriteLine(e.Data);
+            process.ErrorDataReceived += (s, e) => Console.Error.WriteLine(e.Data);
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            if (!process.WaitForExit(10000))
+            {
+                throw new TimeoutException($"Command '{cmd} {arguments}' timed out");
+            }
+            Assert.That(process.ExitCode, Is.Zero);
         }
 
         public static void Delete()
         {
-            var ctx = new PrincipalContext(ContextType.Machine);
-            var user = UserPrincipal.FindByIdentity(ctx, Username);
-            user?.Delete();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var ctx = new PrincipalContext(ContextType.Machine);
+                var user = UserPrincipal.FindByIdentity(ctx, Username);
+                user?.Delete();
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Bash("userdel", Username);
+            }
         }
     }
 }
