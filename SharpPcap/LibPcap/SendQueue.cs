@@ -101,9 +101,22 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int Transmit(PcapDevice device, bool synchronized)
         {
-            Transmit(device, synchronized, null);
+            return Transmit(device, synchronized, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Send a queue of raw packets to the network. 
+        /// </summary>
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="synchronized">
+        /// Should the timestamps be respected
+        /// </param>
+        /// <returns>
+        /// The number of bytes sent as an <see cref="int"/>
+        /// </returns>
         public int Transmit(PcapDevice device, bool synchronized, CancellationToken token)
         {
             return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal, token);
@@ -122,6 +135,11 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// The number of bytes sent as an <see cref="int"/>
         /// </returns>
+         public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+         {
+            return Transmit(device, transmitMode, CancellationToken.None);
+         }
+         
         public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
         {
             if (buffer == null)
@@ -132,7 +150,7 @@ namespace SharpPcap.LibPcap
             {
                 throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");
             }
-            if (IsHardwareAccelerated)
+            if (IsHardwareAccelerated && token == CancellationToken.None)
             {
                 return NativeTransmit(device, transmitMode);
             }
@@ -152,8 +170,7 @@ namespace SharpPcap.LibPcap
             {
                 var bufPtr = new IntPtr(buf);
                 var firstTimestamp = TimeSpan.FromTicks(PcapHeader.FromPointer(bufPtr, TimeResolution).Timeval.Date.Ticks);
-                while ((position < CurrentLength) && !(token?.IsCancellationRequested ?? false))
-
+                while ((position < CurrentLength) && (!token.IsCancellationRequested))
                 {
                     // Extract packet from buffer
                     var header = PcapHeader.FromPointer(bufPtr + position, TimeResolution);
@@ -176,7 +193,7 @@ namespace SharpPcap.LibPcap
                         }
                     }
                     // Send the packet
-                    int res;
+                    int res;    
                     unsafe
                     {
                         fixed (byte* p_packet = p)
