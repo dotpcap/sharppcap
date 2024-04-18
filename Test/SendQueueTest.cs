@@ -13,6 +13,7 @@ using static Test.TestHelper;
 using static System.TimeSpan;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.NetworkInformation;
 
 namespace Test
 {
@@ -312,19 +313,22 @@ namespace Test
         {
             var queue = new SendQueue(1024*1024*64);
             int packages = 0;
-            while (queue.Add(Packet.RandomPacket()))
+            while (queue.Add(EthernetPacket.RandomPacket()))
             {
                 packages++;
             }
             var canceller = new CancellationTokenSource();
             int packagesSent = 0;
+            using (var testInterface = TestHelper.GetPcapDevice())
+            {
+                testInterface.Open();
             var snd = new Task(() => { packagesSent = queue.Transmit(testInterface, false, canceller.Token); } );
             snd.Start();
             Thread.Sleep(100);
             canceller.Cancel();
             snd.Wait();
-            Assert.That(packagesSent < packages))
-            Assert.Fail("Not implemented yet.");
+            }
+            Assert.That(packagesSent < packages);
         }
     }
 }
