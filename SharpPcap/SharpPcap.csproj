@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>6.2.5</Version>
+    <Version>6.3.0</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
@@ -25,7 +25,6 @@ SPDX-License-Identifier: MIT
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <LangVersion>7.3</LangVersion>
-    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
