@@ -81,7 +81,11 @@ namespace SharpPcap.Tunneling.WinTap
             int value = connected ? 1 : 0;
             Span<byte> inBuffer = stackalloc byte[4];
             Span<byte> outBuffer = stackalloc byte[4];
+#if NET8_0_OR_GREATER
             MemoryMarshal.Write(inBuffer, in value);
+#else
+            MemoryMarshal.Write(inBuffer, ref value);
+#endif
             TapControl(handle, TapIoControl.SetMediaStatus, inBuffer, ref outBuffer);
         }
 
