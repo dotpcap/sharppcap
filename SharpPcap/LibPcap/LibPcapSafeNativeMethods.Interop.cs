@@ -25,14 +25,7 @@ namespace SharpPcap.LibPcap
         //       This file is called $assembly_name.dll.config and is placed in the
         //       same directory as the assembly
         //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
-        private const string PCAP_DLL = 
-#if NET6_0_OR_GREATER
-            "pcap"
-#else
-            "wpcap"
-#endif
-        ;
-
+        private const string PCAP_DLL = "wpcap";
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
