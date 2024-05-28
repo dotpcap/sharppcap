@@ -306,10 +306,11 @@ namespace Test
             TestHelper.ConfirmIdleState();
         }
 
-        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
         [Author("Andreas Amereller <andreas.amereller@technica-engineering.de>")]
         [Retry(3)]
-        public void TestCancelSending()
+        public void TestCancelSending(bool synchronized)
         {
             var queue = new SendQueue(1024*1024*64);
             int packages = 0;
@@ -322,7 +323,7 @@ namespace Test
             using (var testInterface = TestHelper.GetPcapDevice())
             {
                 testInterface.Open();
-            var snd = new Task(() => { packagesSent = queue.Transmit(testInterface, false, canceller.Token); } );
+            var snd = new Task(() => { packagesSent = queue.Transmit(testInterface, synchronized, canceller.Token); } );
             snd.Start();
             Thread.Sleep(100);
             canceller.Cancel();

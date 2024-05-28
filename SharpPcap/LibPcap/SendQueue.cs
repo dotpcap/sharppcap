@@ -1,6 +1,7 @@
 ﻿// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
 // Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
- //
+// Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
+//
 // SPDX-License-Identifier: MIT
 
 using PacketDotNet;
@@ -101,7 +102,7 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int Transmit(PcapDevice device, bool synchronized)
         {
-            return Transmit(device, synchronized, CancellationToken.None);
+            return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal);
         }
 
         /// <summary>
@@ -113,6 +114,9 @@ namespace SharpPcap.LibPcap
         /// </param>
         /// <param name="synchronized">
         /// Should the timestamps be respected
+        /// </param>
+        /// <param name="token">
+        /// transmission cancellation token
         /// </param>
         /// <returns>
         /// The number of bytes sent as an <see cref="int"/>
@@ -140,6 +144,22 @@ namespace SharpPcap.LibPcap
             return Transmit(device, transmitMode, CancellationToken.None);
          }
          
+        /// <summary>
+        /// Send a queue of raw packets to the network.
+        /// </summary>
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="transmitMode">
+        /// Should the timestamps be respected
+        /// </param>
+        /// <param name="token">
+        /// transmission cancellation token
+        /// </param>
+        /// <returns>
+        /// The number of bytes sent as an <see cref="int"/>
+        /// </returns>
         public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
         {
             if (buffer == null)
