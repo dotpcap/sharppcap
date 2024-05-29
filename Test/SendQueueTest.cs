@@ -13,7 +13,6 @@ using static Test.TestHelper;
 using static System.TimeSpan;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.NetworkInformation;
 
 namespace Test
 {

@@ -139,10 +139,10 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// The number of bytes sent as an <see cref="int"/>
         /// </returns>
-         public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
-         {
+        public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+        {
             return Transmit(device, transmitMode, CancellationToken.None);
-         }
+        }
          
         /// <summary>
         /// Send a queue of raw packets to the network.
@@ -213,7 +213,7 @@ namespace SharpPcap.LibPcap
                         }
                     }
                     // Send the packet
-                    int res;    
+                    int res;
                     unsafe
                     {
                         fixed (byte* p_packet = p)
