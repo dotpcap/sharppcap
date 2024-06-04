@@ -106,6 +106,27 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
+        /// Send a queue of raw packets to the network. 
+        /// </summary>
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="synchronized">
+        /// Should the timestamps be respected
+        /// </param>
+        /// <param name="token">
+        /// transmission cancellation token
+        /// </param>
+        /// <returns>
+        /// The number of bytes sent as an <see cref="int"/>
+        /// </returns>
+        public int Transmit(PcapDevice device, bool synchronized, CancellationToken token)
+        {
+            return Transmit(device, (synchronized == true) ? SendQueueTransmitModes.Synchronized : SendQueueTransmitModes.Normal, token);
+        }
+
+        /// <summary>
         /// Send a queue of raw packets to the network.
         /// </summary>
         /// <param name="device">
@@ -120,6 +141,27 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode)
         {
+            return Transmit(device, transmitMode, CancellationToken.None);
+        }
+         
+        /// <summary>
+        /// Send a queue of raw packets to the network.
+        /// </summary>
+        /// <param name="device">
+        /// The device on which to send the queue
+        /// A <see cref="PcapDevice"/>
+        /// </param>
+        /// <param name="transmitMode">
+        /// Should the timestamps be respected
+        /// </param>
+        /// <param name="token">
+        /// transmission cancellation token
+        /// </param>
+        /// <returns>
+        /// The number of bytes sent as an <see cref="int"/>
+        /// </returns>
+        public int Transmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
+        {
             if (buffer == null)
             {
                 throw new ObjectDisposedException(nameof(SendQueue));
@@ -128,14 +170,14 @@ namespace SharpPcap.LibPcap
             {
                 throw new DeviceNotReadyException("Can't transmit queue, the pcap device is closed");
             }
-            if (IsHardwareAccelerated)
+            if (IsHardwareAccelerated && token == CancellationToken.None)
             {
                 return NativeTransmit(device, transmitMode);
             }
-            return ManagedTransmit(device, transmitMode);
+            return ManagedTransmit(device, transmitMode, token);
         }
 
-        protected unsafe int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+        protected unsafe int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode, CancellationToken token)
         {
             if (CurrentLength == 0)
             {
@@ -148,7 +190,7 @@ namespace SharpPcap.LibPcap
             {
                 var bufPtr = new IntPtr(buf);
                 var firstTimestamp = TimeSpan.FromTicks(PcapHeader.FromPointer(bufPtr, TimeResolution).Timeval.Date.Ticks);
-                while (position < CurrentLength)
+                while ((position < CurrentLength) && (!token.IsCancellationRequested))
                 {
                     // Extract packet from buffer
                     var header = PcapHeader.FromPointer(bufPtr + position, TimeResolution);

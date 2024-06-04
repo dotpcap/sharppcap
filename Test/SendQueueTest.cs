@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using static Test.TestHelper;
 using static System.TimeSpan;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Test
 {
@@ -285,9 +287,9 @@ namespace Test
                 return base.NativeTransmit(device, transmitMode);
             }
 
-            internal new int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
+            internal int ManagedTransmit(PcapDevice device, SendQueueTransmitModes transmitMode)
             {
-                return base.ManagedTransmit(device, transmitMode);
+                return base.ManagedTransmit(device, transmitMode, CancellationToken.None);
             }
         }
 
@@ -302,7 +304,31 @@ namespace Test
         {
             TestHelper.ConfirmIdleState();
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Author("Andreas Amereller <andreas.amereller@technica-engineering.de>")]
+        [Retry(3)]
+        public void TestCancelSending(bool synchronized)
+        {
+            var queue = new SendQueue(1024*1024*64);
+            int packages = 0;
+            while (queue.Add(EthernetPacket.RandomPacket()))
+            {
+                packages++;
+            }
+            var canceller = new CancellationTokenSource();
+            int packagesSent = 0;
+            using (var testInterface = TestHelper.GetPcapDevice())
+            {
+                testInterface.Open();
+            var snd = new Task(() => { packagesSent = queue.Transmit(testInterface, synchronized, canceller.Token); } );
+            snd.Start();
+            Thread.Sleep(100);
+            canceller.Cancel();
+            snd.Wait();
+            }
+            Assert.That(packagesSent < packages);
+        }
     }
-
-
 }
