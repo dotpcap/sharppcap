@@ -16,12 +16,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 6.0.x
-    - name: Install .net dependencies
-      run: dotnet restore
     - name: Install libpcap
       run: sudo -E bash scripts/install-libpcap.sh
     - name: Install tap
