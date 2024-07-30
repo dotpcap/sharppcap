@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Version>6.3.0</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
@@ -24,9 +24,11 @@ SPDX-License-Identifier: MIT
       It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+	<IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.4.7" />

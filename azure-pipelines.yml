@@ -29,7 +29,7 @@ jobs:
 
 - job: macos
   pool:
-    vmImage: macOS-11
+    vmImage: macOS-12
   steps:
   - script: sudo -E bash scripts/install-dotnet.sh
   - script: sudo -E bash scripts/install-libpcap.sh
