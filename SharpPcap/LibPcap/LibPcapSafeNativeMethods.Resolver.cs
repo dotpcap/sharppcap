@@ -41,7 +41,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         private static void RegisterResolver()
         {
-            NativeLibraryHelper.SetDllImportResolver(typeof(LibPcapSafeNativeMethods).Assembly, Resolver);
+            NativeLibrary.SetDllImportResolver(typeof(LibPcapSafeNativeMethods).Assembly, Resolver);
         }
 
         public static IntPtr Resolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
@@ -69,7 +69,7 @@ namespace SharpPcap.LibPcap
 
             foreach (var name in names)
             {
-                if (NativeLibraryHelper.TryLoad(name, out var handle))
+                if (NativeLibrary.TryLoad(name, out var handle))
                 {
                     return handle;
                 }

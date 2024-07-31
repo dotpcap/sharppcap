@@ -7,8 +7,8 @@ SPDX-License-Identifier: MIT
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>6.2.5</Version>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Version>6.3.0</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>
     <PackageProjectUrl>https://github.com/chmorgan/sharppcap</PackageProjectUrl>
@@ -24,18 +24,17 @@ SPDX-License-Identifier: MIT
       It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <LangVersion>7.3</LangVersion>
-    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+	<IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PacketDotNet" Version="1.4.7" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
