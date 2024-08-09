@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
     <PackageReference Include="NUnit" Version="4.1.0" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.2.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.3.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="JunitXml.TestLogger" Version="4.0.254" />
