@@ -49,6 +49,66 @@ namespace SharpPcap.LibPcap
         }
 
         /// <summary>
+        /// Helper class to marshall StringBuilder depending on encoding used by Libpcap
+        /// </summary>
+        private class PcapStringBuilderMarshaler : ICustomMarshaler
+        {
+
+            public static ICustomMarshaler GetInstance(string cookie)
+            {
+                return new PcapStringBuilderMarshaler();
+            }
+
+            public void CleanUpManagedData(object managedObj)
+            {
+                // Nothing to clean
+            }
+
+            public void CleanUpNativeData(IntPtr nativeData)
+            {
+                // Nothing to clean
+            }
+
+            public int GetNativeDataSize()
+            {
+                return -1;
+            }
+
+            public IntPtr MarshalManagedToNative(object managedObj)
+            {
+                var builder = (StringBuilder)managedObj;
+                var byteCount = builder.Capacity + 1;
+                var gcHandle = GCHandle.ToIntPtr(GCHandle.Alloc(managedObj));
+
+                // The problem is that we need a reference to the StringBuilder in MarshalNativeToManaged
+                // So we get a pointer to it with GCHandle, and put it as prefix of the pointer we return
+                var ptr = Marshal.AllocHGlobal(byteCount + IntPtr.Size);
+                Marshal.WriteIntPtr(ptr, gcHandle);
+                ptr += IntPtr.Size;
+                return ptr;
+            }
+
+            public unsafe object MarshalNativeToManaged(IntPtr nativeData)
+            {
+                var gcHandlePtr = Marshal.ReadIntPtr(nativeData - IntPtr.Size);
+                var bytes = (byte*)nativeData;
+                var nbBytes = 0;
+                while (*(bytes + nbBytes) != 0)
+                {
+                    nbBytes++;
+                }
+                var stringData = StringEncoding.GetString(bytes, nbBytes);
+
+                var gcHandle = GCHandle.FromIntPtr(gcHandlePtr);
+                var stringBuilder = (StringBuilder)gcHandle.Target;
+                gcHandle.Free();
+                stringBuilder.Append(stringData);
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Helper class to marshall string depending on encoding used by Libpcap
         /// </summary>
         private class PcapStringMarshaler : ICustomMarshaler
@@ -75,7 +135,7 @@ namespace SharpPcap.LibPcap
             {
                 if (FreeOnClean)
                 {
-                    Marshal.FreeHGlobal(nativeData - IntPtr.Size);
+                    Marshal.FreeHGlobal(nativeData);
                 }
             }
 
@@ -90,31 +150,11 @@ namespace SharpPcap.LibPcap
                 {
                     return IntPtr.Zero;
                 }
-                byte[] bytes = null;
-                var byteCount = 0;
-                IntPtr gcHandle = IntPtr.Zero;
-                if (managedObj is string str)
-                {
-                    bytes = StringEncoding.GetBytes(str);
-                    byteCount = bytes.Length + 1;
-                }
-
-                if (managedObj is StringBuilder builder)
-                {
-                    bytes = StringEncoding.GetBytes(builder.ToString());
-                    byteCount = Math.Max(bytes.Length, builder.Capacity) + 1;
-                    gcHandle = GCHandle.ToIntPtr(GCHandle.Alloc(managedObj));
-                }
-
-                if (bytes is null)
-                {
-                    throw new ArgumentException("The input argument is not a supported type.");
-                }
+                var str = (string)managedObj;
+                var bytes = StringEncoding.GetBytes(str);
                 // The problem is that we need a reference to the StringBuilder in MarshalNativeToManaged
                 // So we get a pointer to it with GCHandle, and put it as prefix of the pointer we return
-                var ptr = Marshal.AllocHGlobal(byteCount + IntPtr.Size);
-                Marshal.WriteIntPtr(ptr, gcHandle);
-                ptr += IntPtr.Size;
+                var ptr = Marshal.AllocHGlobal(bytes.Length + 1);
                 Marshal.Copy(bytes, 0, ptr, bytes.Length);
                 // Put zero string termination
                 Marshal.WriteByte(ptr + bytes.Length, 0);
@@ -127,22 +167,14 @@ namespace SharpPcap.LibPcap
                 {
                     return null;
                 }
-                var gcHandlePtr = Marshal.ReadIntPtr(nativeData - IntPtr.Size);
+                var gcHandlePtr = Marshal.ReadIntPtr(nativeData);
                 var bytes = (byte*)nativeData;
                 var nbBytes = 0;
                 while (*(bytes + nbBytes) != 0)
                 {
                     nbBytes++;
                 }
-                var stringData = StringEncoding.GetString(bytes, nbBytes);
-                if (gcHandlePtr != IntPtr.Zero)
-                {
-                    var gcHandle = GCHandle.FromIntPtr(gcHandlePtr);
-                    var stringBuilder = (StringBuilder)gcHandle.Target;
-                    gcHandle.Free();
-                    stringBuilder.Append(stringData);
-                }
-                return stringData;
+                return StringEncoding.GetString(bytes, nbBytes);
             }
         }
     }

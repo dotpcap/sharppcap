@@ -30,13 +30,13 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
             uint opts,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs(
             ref IntPtr /* pcap_if_t** */ alldevs,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -44,7 +44,7 @@ namespace SharpPcap.LibPcap
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*char **/source,
             ref pcap_rmtauth /*pcap_rmtauth **/auth,
             ref IntPtr /*pcap_if_t ** */alldevs,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /*char * */errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /*char * */errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -57,19 +57,19 @@ namespace SharpPcap.LibPcap
             int flags,
             int read_timeout,
             ref pcap_rmtauth rmtauth,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static PcapHandle /* pcap_t* */ pcap_create(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static PcapHandle /* pcap_t* */ pcap_open_offline(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string/*const char* */ fname,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder/* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder/* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -187,7 +187,7 @@ namespace SharpPcap.LibPcap
         internal extern static int pcap_setnonblock(
             PcapHandle /* pcap_if_t** */ adaptHandle,
             int nonblock,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_getnonblock(
             PcapHandle /* pcap_if_t** */ adaptHandle,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace SharpPcap.LibPcap
         internal extern static PcapHandle /* pcap_t* */ pcap_open_offline_with_tstamp_precision(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /* const char* */ fname,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace SharpPcap.LibPcap
         internal extern static IntPtr /* pcap_t* */ _pcap_hopen_offline_with_tstamp_precision(
             SafeHandle handle,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace SharpPcap.LibPcap
         internal extern static IntPtr /* pcap_t* */ _pcap_fopen_offline_with_tstamp_precision(
             SafeHandle fileObject,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringBuilderMarshaler))] StringBuilder /* char* */ errbuf
         );
     }
 }
