@@ -75,7 +75,7 @@ namespace SharpPcap.LibPcap
             {
                 if (FreeOnClean)
                 {
-                    Marshal.FreeHGlobal(nativeData);
+                    Marshal.FreeHGlobal(nativeData - IntPtr.Size);
                 }
             }
 
@@ -92,6 +92,7 @@ namespace SharpPcap.LibPcap
                 }
                 byte[] bytes = null;
                 var byteCount = 0;
+                IntPtr gcHandle = IntPtr.Zero;
                 if (managedObj is string str)
                 {
                     bytes = StringEncoding.GetBytes(str);
@@ -101,14 +102,19 @@ namespace SharpPcap.LibPcap
                 if (managedObj is StringBuilder builder)
                 {
                     bytes = StringEncoding.GetBytes(builder.ToString());
-                    byteCount = StringEncoding.GetMaxByteCount(builder.Capacity) + 1;
+                    byteCount = Math.Max(bytes.Length, builder.Capacity) + 1;
+                    gcHandle = GCHandle.ToIntPtr(GCHandle.Alloc(managedObj));
                 }
 
                 if (bytes is null)
                 {
                     throw new ArgumentException("The input argument is not a supported type.");
                 }
-                var ptr = Marshal.AllocHGlobal(byteCount);
+                // The problem is that we need a reference to the StringBuilder in MarshalNativeToManaged
+                // So we get a pointer to it with GCHandle, and put it as prefix of the pointer we return
+                var ptr = Marshal.AllocHGlobal(byteCount + IntPtr.Size);
+                Marshal.WriteIntPtr(ptr, gcHandle);
+                ptr += IntPtr.Size;
                 Marshal.Copy(bytes, 0, ptr, bytes.Length);
                 // Put zero string termination
                 Marshal.WriteByte(ptr + bytes.Length, 0);
@@ -121,13 +127,22 @@ namespace SharpPcap.LibPcap
                 {
                     return null;
                 }
+                var gcHandlePtr = Marshal.ReadIntPtr(nativeData - IntPtr.Size);
                 var bytes = (byte*)nativeData;
                 var nbBytes = 0;
                 while (*(bytes + nbBytes) != 0)
                 {
                     nbBytes++;
                 }
-                return StringEncoding.GetString(bytes, nbBytes);
+                var stringData = StringEncoding.GetString(bytes, nbBytes);
+                if (gcHandlePtr != IntPtr.Zero)
+                {
+                    var gcHandle = GCHandle.FromIntPtr(gcHandlePtr);
+                    var stringBuilder = (StringBuilder)gcHandle.Target;
+                    gcHandle.Free();
+                    stringBuilder.Append(stringData);
+                }
+                return stringData;
             }
         }
     }
