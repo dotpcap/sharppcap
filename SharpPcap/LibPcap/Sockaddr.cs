@@ -97,7 +97,8 @@ namespace SharpPcap.LibPcap
 
                 var saddr_ll = Marshal.PtrToStructure<sockaddr_ll>(sockaddrPtr);
 
-                var hwAddrBytes = new byte[saddr_ll.sll_halen];
+                var hwAddrBytesLength = Math.Min(saddr_ll.sll_halen,(byte)8); // allow max length of 8 bytes (for exotic hardware that doesn't follow the linux standard)
+                var hwAddrBytes = new byte[hwAddrBytesLength];
                 Buffer.BlockCopy(saddr_ll.sll_addr, 0, hwAddrBytes, 0, hwAddrBytes.Length);
                 hardwareAddress = new PhysicalAddress(hwAddrBytes); // copy into the PhysicalAddress class
             }
