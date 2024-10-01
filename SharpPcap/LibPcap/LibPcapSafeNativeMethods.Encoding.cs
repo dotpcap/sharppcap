@@ -131,7 +131,7 @@ namespace SharpPcap.LibPcap
             {
                 nbBytes++;
             }
-            return LibPcapSafeNativeMethods.StringEncoding.GetString(new Span<byte>(Data, 0, nbBytes));
+            return LibPcapSafeNativeMethods.StringEncoding.GetString(Data, 0, nbBytes);
         }
     }
 }
