@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>6.3.0</Version>
     <Description>A packet capture framework for .NET</Description>
     <Authors>Tamir Gal, Chris Morgan and others</Authors>

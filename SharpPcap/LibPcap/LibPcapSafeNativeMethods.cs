@@ -93,11 +93,11 @@ namespace SharpPcap.LibPcap
         /// <param name="errbuf">Buffer that will receive an error description if an error occurs.</param>
         /// <returns></returns>
         internal static PcapHandle pcap_open_handle_offline_with_tstamp_precision(
-            SafeHandle handle, uint precision, StringBuilder errbuf)
+            SafeHandle handle, uint precision, out ErrorBuffer errbuf)
         {
             var pointer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? _pcap_hopen_offline_with_tstamp_precision(handle, precision, errbuf)
-                : _pcap_fopen_offline_with_tstamp_precision(handle, precision, errbuf);
+                ? _pcap_hopen_offline_with_tstamp_precision(handle, precision, out errbuf)
+                : _pcap_fopen_offline_with_tstamp_precision(handle, precision, out errbuf);
             if (pointer == IntPtr.Zero)
             {
                 return PcapHandle.Invalid;
