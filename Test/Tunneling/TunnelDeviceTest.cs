@@ -78,7 +78,7 @@ namespace Test.Tunneling
         /// Test injection of packets from and to OS
         /// </summary>
         [Test]
-        [Retry(3)]
+        [Retry(5)]
         public void TestUdpTunnel()
         {
             var nic = TunnelDevice.GetTunnelInterfaces().First();

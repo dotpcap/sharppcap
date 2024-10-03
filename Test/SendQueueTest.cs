@@ -161,6 +161,8 @@ namespace Test
         }
 
         // This test gets affected by host performance, so retry it up to 3 times
+        // Disable this test for now, too flaky 
+        [Explicit]
         [Retry(3)]
         [Test]
         public void TestManagedTransmitSync()

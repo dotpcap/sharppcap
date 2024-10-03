@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Install libpcap
       run: sudo -E bash scripts/install-libpcap.sh
     - name: Install tap
@@ -24,6 +26,8 @@ jobs:
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
       run: sudo -E bash scripts/test.sh
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - run: sudo chmod -R +r Test/TestResults
       if: always()
