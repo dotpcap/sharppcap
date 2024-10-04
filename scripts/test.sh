@@ -25,5 +25,5 @@ fi
 dotnet test "${TEST_ARGS[@]}"
 
 # coverage
-
-bash $(dirname $0)/codecov.sh -f '**/*.opencover.xml'
+pip install codecov-cli || python3 -m pip install codecov-cli
+codecovcli upload-process
