@@ -15,7 +15,7 @@ namespace SharpPcap.LibPcap
     {
 
         /// <summary>
-        /// This defaul is good enough for .NET Framework and .NET Core on non Windows with Libpcap default config
+        /// This default is good enough for .NET Framework and .NET Core on non Windows with Libpcap default config
         /// </summary>
         internal static readonly Encoding StringEncoding = Encoding.Default;
 
@@ -30,7 +30,7 @@ namespace SharpPcap.LibPcap
             {
                 // Try to change Libpcap to UTF-8 mode
                 const uint PCAP_CHAR_ENC_UTF_8 = 1;
-                var res = pcap_init(PCAP_CHAR_ENC_UTF_8, out var _);
+                var res = pcap_init(PCAP_CHAR_ENC_UTF_8, out _);
                 if (res == 0)
                 {
                     // We made it
@@ -106,7 +106,6 @@ namespace SharpPcap.LibPcap
                 {
                     return null;
                 }
-                var gcHandlePtr = Marshal.ReadIntPtr(nativeData);
                 var bytes = (byte*)nativeData;
                 var nbBytes = 0;
                 while (*(bytes + nbBytes) != 0)
