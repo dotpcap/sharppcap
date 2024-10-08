@@ -72,8 +72,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override void Open(DeviceConfiguration configuration)
         {
-            // holds errors
-            StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+            ErrorBuffer errbuf; //will hold errors
 
             PcapHandle adapterHandle;
 
@@ -82,7 +81,7 @@ namespace SharpPcap.LibPcap
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
             if (has_offline_with_tstamp_precision_support)
             {
-                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, errbuf);
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, out errbuf);
             }
             else
             {
@@ -97,7 +96,7 @@ namespace SharpPcap.LibPcap
                     );
                 }
 
-                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, errbuf);
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, out errbuf);
             }
 
             // handle error

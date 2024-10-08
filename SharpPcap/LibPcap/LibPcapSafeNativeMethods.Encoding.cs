@@ -15,9 +15,9 @@ namespace SharpPcap.LibPcap
     {
 
         /// <summary>
-        /// This defaul is good enough for .NET Framework and .NET Core on non Windows with Libpcap default config
+        /// This default is good enough for .NET Framework and .NET Core on non Windows with Libpcap default config
         /// </summary>
-        private static readonly Encoding StringEncoding = Encoding.Default;
+        internal static readonly Encoding StringEncoding = Encoding.Default;
 
         private static Encoding ConfigureStringEncoding()
         {
@@ -29,9 +29,8 @@ namespace SharpPcap.LibPcap
             try
             {
                 // Try to change Libpcap to UTF-8 mode
-                var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
                 const uint PCAP_CHAR_ENC_UTF_8 = 1;
-                var res = pcap_init(PCAP_CHAR_ENC_UTF_8, errorBuffer);
+                var res = pcap_init(PCAP_CHAR_ENC_UTF_8, out _);
                 if (res == 0)
                 {
                     // We made it
@@ -90,25 +89,11 @@ namespace SharpPcap.LibPcap
                 {
                     return IntPtr.Zero;
                 }
-                byte[] bytes = null;
-                var byteCount = 0;
-                if (managedObj is string str)
-                {
-                    bytes = StringEncoding.GetBytes(str);
-                    byteCount = bytes.Length + 1;
-                }
-
-                if (managedObj is StringBuilder builder)
-                {
-                    bytes = StringEncoding.GetBytes(builder.ToString());
-                    byteCount = StringEncoding.GetMaxByteCount(builder.Capacity) + 1;
-                }
-
-                if (bytes is null)
-                {
-                    throw new ArgumentException("The input argument is not a supported type.");
-                }
-                var ptr = Marshal.AllocHGlobal(byteCount);
+                var str = (string)managedObj;
+                var bytes = StringEncoding.GetBytes(str);
+                // The problem is that we need a reference to the StringBuilder in MarshalNativeToManaged
+                // So we get a pointer to it with GCHandle, and put it as prefix of the pointer we return
+                var ptr = Marshal.AllocHGlobal(bytes.Length + 1);
                 Marshal.Copy(bytes, 0, ptr, bytes.Length);
                 // Put zero string termination
                 Marshal.WriteByte(ptr + bytes.Length, 0);
@@ -129,6 +114,23 @@ namespace SharpPcap.LibPcap
                 }
                 return StringEncoding.GetString(bytes, nbBytes);
             }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ErrorBuffer
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+        internal byte[] Data;
+
+        public override string ToString()
+        {
+            var nbBytes = 0;
+            while (Data[nbBytes] != 0)
+            {
+                nbBytes++;
+            }
+            return LibPcapSafeNativeMethods.StringEncoding.GetString(Data, 0, nbBytes);
         }
     }
 }

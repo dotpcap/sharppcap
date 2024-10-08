@@ -176,15 +176,14 @@ namespace SharpPcap.LibPcap
         static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(string source, RemoteAuthentication credentials)
         {
             var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
             var auth = RemoteAuthentication.CreateAuth(credentials);
 
             try
             {
-                var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, errorBuffer);
+                var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, out var errbuf);
                 if (result < 0)
                 {
-                    throw new PcapException(errorBuffer.ToString());
+                    throw new PcapException(errbuf.ToString());
                 }
             }
             catch (TypeLoadException ex)
@@ -206,12 +205,11 @@ namespace SharpPcap.LibPcap
         static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces()
         {
             var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
-            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
+            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, out var errbuf);
             if (result < 0)
             {
-                throw new PcapException(errorBuffer.ToString());
+                throw new PcapException(errbuf.ToString());
             }
             var pcapInterfaces = GetAllPcapInterfaces(devicePtr, null);
 
@@ -260,8 +258,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                using (var handle = LibPcapSafeNativeMethods.pcap_create(Name, errbuf))
+                using (var handle = LibPcapSafeNativeMethods.pcap_create(Name, out var errbuf))
                 {
 
                     IntPtr typePtr = IntPtr.Zero;
