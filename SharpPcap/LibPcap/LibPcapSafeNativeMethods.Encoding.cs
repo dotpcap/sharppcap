@@ -91,8 +91,6 @@ namespace SharpPcap.LibPcap
                 }
                 var str = (string)managedObj;
                 var bytes = StringEncoding.GetBytes(str);
-                // The problem is that we need a reference to the StringBuilder in MarshalNativeToManaged
-                // So we get a pointer to it with GCHandle, and put it as prefix of the pointer we return
                 var ptr = Marshal.AllocHGlobal(bytes.Length + 1);
                 Marshal.Copy(bytes, 0, ptr, bytes.Length);
                 // Put zero string termination
