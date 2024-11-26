@@ -1,11 +1,11 @@
-apiVersion: backstage.io/v1alpha1
-kind: Component
+apiVersion: lansweeper.com/v1alpha1
+kind: Repository
 metadata:
-  name: sharppcap
-  description: Official repository - Fully managed, cross platform (Windows, Mac, Linux) .NET library for capturing packets
   annotations:
     github.com/project-slug: Lansweeper/sharppcap
+  description: Official repository - Fully managed, cross platform (Windows, Mac,
+    Linux) .NET library for capturing packets
+  name: sharppcap
 spec:
-  type: github-repository
-  owner: unknown
   lifecycle: stable
+  owner: unknown
