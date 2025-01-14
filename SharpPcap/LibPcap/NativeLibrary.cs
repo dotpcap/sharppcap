@@ -1,16 +1,28 @@
-﻿using System;
+// Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+#if !NET8_0_OR_GREATER
 namespace SharpPcap.LibPcap
 {
-    class NativeLibraryHelper
+    /**
+     * Helper class that uses reflection to access System.Runtime.InteropServices.NativeLibrary
+     * This is needed in order to keep netstandard compatiblity
+     * 
+     * We compile two variants of the DLL, one trimmable but requires .NET 8 thus have NativeLibrary available directly
+     * and one that uses .NET standard, with no trimming support
+     * 
+     */
+    class NativeLibrary
     {
 
         public delegate IntPtr DllImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath);
 
         private static readonly Type NativeLibraryType;
-        static NativeLibraryHelper()
+        static NativeLibrary()
         {
             NativeLibraryType = typeof(DllImportSearchPath).Assembly
                 .GetType("System.Runtime.InteropServices.NativeLibrary");
@@ -63,3 +75,4 @@ namespace SharpPcap.LibPcap
         }
     }
 }
+#endif

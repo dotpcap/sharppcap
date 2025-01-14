@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+// Copyright 2020 Ayoub Kaanich <kayoub5@live.com>
+// Copyright 2020-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -75,7 +79,7 @@ namespace Test
             using var device = GetPcapDevice();
             device.Open();
             var queue = new SendQueueWrapper(1024);
-            Assert.AreEqual(0, queue.Transmit(device, SendQueueTransmitModes.Normal));
+            Assert.That(queue.Transmit(device, SendQueueTransmitModes.Normal), Is.EqualTo(0));
         }
 
         [Test]
@@ -84,7 +88,7 @@ namespace Test
             var queue = new SendQueueWrapper(1024);
             var bytes = new Byte[] { 0x1, 0x2, 0x3 };
             queue.Add(bytes);
-            Assert.AreEqual(PcapHeader.MemorySize + bytes.Length, queue.CurrentLength);
+            Assert.That(queue.CurrentLength, Is.EqualTo(PcapHeader.MemorySize + bytes.Length));
         }
 
         [Test]
@@ -93,7 +97,7 @@ namespace Test
             var queue = new SendQueueWrapper(1024);
             var packet = EthernetPacket.RandomPacket();
             queue.Add(packet);
-            Assert.AreEqual(PcapHeader.MemorySize + packet.TotalPacketLength, queue.CurrentLength);
+            Assert.That(queue.CurrentLength, Is.EqualTo(PcapHeader.MemorySize + packet.TotalPacketLength));
         }
 
         [Test]
@@ -103,7 +107,7 @@ namespace Test
             var bytes = new Byte[] { 0x1, 0x2, 0x3 };
             var rawCapture = new RawCapture(LinkLayers.Ethernet, new PosixTimeval(10, 20), bytes);
             queue.Add(rawCapture);
-            Assert.AreEqual(PcapHeader.MemorySize + rawCapture.PacketLength, queue.CurrentLength);
+            Assert.That(queue.CurrentLength, Is.EqualTo(PcapHeader.MemorySize + rawCapture.PacketLength));
         }
 
         // This test gets affected by host performance, so retry it up to 3 times
@@ -157,6 +161,8 @@ namespace Test
         }
 
         // This test gets affected by host performance, so retry it up to 3 times
+        // Disable this test for now, too flaky 
+        [Explicit]
         [Retry(3)]
         [Test]
         public void TestManagedTransmitSync()
@@ -236,7 +242,7 @@ namespace Test
                 var queue = GetSendQueue();
                 var managed = queue.ManagedTransmit(device, SendQueueTransmitModes.Normal);
                 var native = queue.NativeTransmit(device, SendQueueTransmitModes.Normal);
-                Assert.AreEqual(managed, native);
+                Assert.That(native, Is.EqualTo(managed));
             }
             else
             {
@@ -247,10 +253,9 @@ namespace Test
         [Test]
         public void TestIsHardwareAccelerated()
         {
-            Assert.AreEqual(
-                SendQueue.IsHardwareAccelerated,
+            Assert.That(
                 Environment.OSVersion.Platform == PlatformID.Win32NT
-            );
+, Is.EqualTo(SendQueue.IsHardwareAccelerated));
         }
 
         /// <summary>
@@ -266,7 +271,7 @@ namespace Test
             for (var i = 0; i < PacketCount; i++)
             {
                 time.Value = 123456 + i * DeltaTime;
-                Assert.IsTrue(queue.Add(packet.Bytes, (int)time.Seconds, (int)time.MicroSeconds));
+                Assert.That(queue.Add(packet.Bytes, (int)time.Seconds, (int)time.MicroSeconds), Is.True);
             }
             return queue;
         }

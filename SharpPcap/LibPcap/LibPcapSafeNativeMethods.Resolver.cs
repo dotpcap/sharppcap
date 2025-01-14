@@ -1,22 +1,6 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* 
- * Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
- */
+// Copyright 2020-2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +41,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         private static void RegisterResolver()
         {
-            NativeLibraryHelper.SetDllImportResolver(typeof(LibPcapSafeNativeMethods).Assembly, Resolver);
+            NativeLibrary.SetDllImportResolver(typeof(LibPcapSafeNativeMethods).Assembly, Resolver);
         }
 
         public static IntPtr Resolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
@@ -85,7 +69,7 @@ namespace SharpPcap.LibPcap
 
             foreach (var name in names)
             {
-                if (NativeLibraryHelper.TryLoad(name, out var handle))
+                if (NativeLibrary.TryLoad(name, out var handle))
                 {
                     return handle;
                 }

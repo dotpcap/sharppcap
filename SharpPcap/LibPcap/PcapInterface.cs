@@ -1,23 +1,7 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+// Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Collections.Generic;
@@ -194,15 +178,14 @@ namespace SharpPcap.LibPcap
         static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces(string source, RemoteAuthentication credentials)
         {
             var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
             var auth = RemoteAuthentication.CreateAuth(credentials);
 
             try
             {
-                var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, errorBuffer);
+                var result = LibPcapSafeNativeMethods.pcap_findalldevs_ex(source, ref auth, ref devicePtr, out var errbuf);
                 if (result < 0)
                 {
-                    throw new PcapException(errorBuffer.ToString());
+                    throw new PcapException(errbuf.ToString());
                 }
             }
             catch (TypeLoadException ex)
@@ -224,12 +207,11 @@ namespace SharpPcap.LibPcap
         static public IReadOnlyList<PcapInterface> GetAllPcapInterfaces()
         {
             var devicePtr = IntPtr.Zero;
-            var errorBuffer = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
 
-            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, errorBuffer);
+            int result = LibPcapSafeNativeMethods.pcap_findalldevs(ref devicePtr, out var errbuf);
             if (result < 0)
             {
-                throw new PcapException(errorBuffer.ToString());
+                throw new PcapException(errbuf.ToString());
             }
             var pcapInterfaces = GetAllPcapInterfaces(devicePtr, null);
 
@@ -278,8 +260,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                using (var handle = LibPcapSafeNativeMethods.pcap_create(Name, errbuf))
+                using (var handle = LibPcapSafeNativeMethods.pcap_create(Name, out var errbuf))
                 {
 
                     IntPtr typePtr = IntPtr.Zero;

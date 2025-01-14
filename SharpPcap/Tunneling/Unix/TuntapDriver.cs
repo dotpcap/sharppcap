@@ -1,4 +1,8 @@
-﻿using Microsoft.Win32.SafeHandles;
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Buffers.Binary;
 using System.ComponentModel;

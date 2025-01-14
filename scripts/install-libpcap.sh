@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright 2021 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 # the default installation of libpcap does not have remote pcap enabled
 # so we need to compile our own
 # see https://github.com/the-tcpdump-group/libpcap/issues/795 

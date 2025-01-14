@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+// Copyright 2020 Ayoub Kaanich <kayoub5@live.com>
+// Copyright 2020-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -32,7 +36,7 @@ namespace Test
                 device.SendPacket(packet.Bytes, packet.Bytes.Length);
             });
             Assert.That(received, Has.Count.EqualTo(4));
-            CollectionAssert.AreEquivalent(packet.Bytes, received[0].Data);
+            Assert.That(received[0].Data, Is.EquivalentTo(packet.Bytes));
         }
 
         [SetUp]

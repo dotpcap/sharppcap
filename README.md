@@ -79,7 +79,7 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    ```cs
    void Device_OnPacketArrival(object s, PacketCapture e)
    {
-       Console.WriteLine(e.Packet);
+       Console.WriteLine(e.GetPacket());
    }
 
    using var device = LibPcapLiveDeviceList.Instance[0];
@@ -94,7 +94,7 @@ See the [Examples](https://github.com/chmorgan/sharppcap/tree/master/Examples) f
    ```cs
    void Device_OnPacketArrival(object s, PacketCapture e)
    {
-       Console.WriteLine(e.Packet);
+       Console.WriteLine(e.GetPacket());
    }
 
    using var device = new CaptureFileReaderDevice("filename.pcap");

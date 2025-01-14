@@ -1,4 +1,7 @@
-﻿using SharpPcap;
+// Copyright 2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using SharpPcap;
 using NUnit.Framework;
 
 namespace Test

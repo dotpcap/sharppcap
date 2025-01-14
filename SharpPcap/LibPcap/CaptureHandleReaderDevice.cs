@@ -1,19 +1,5 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// Copyright 2022 Hendrik Eckardt
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Runtime.InteropServices;
@@ -62,14 +48,14 @@ namespace SharpPcap.LibPcap
         public override void Open(DeviceConfiguration configuration)
         {
             // holds errors
-            StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE);
+            ErrorBuffer errbuf;
 
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
             PcapHandle adapterHandle;
             try
             {
                 adapterHandle = LibPcapSafeNativeMethods.pcap_open_handle_offline_with_tstamp_precision(
-                    FileHandle, (uint)resolution, errbuf);
+                    FileHandle, (uint)resolution, out errbuf);
             }
             catch (TypeLoadException ex)
             {
