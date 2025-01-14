@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-    <Version>9.0.1</Version>
+    <Version>10.0.0-alpha</Version>
     <PackageId>Lansweeper.SharpPcap</PackageId>
     <Company>Lansweeper</Company>
     <Title>Lansweeper SharpPcap</Title>
