@@ -42,18 +42,18 @@ jobs:
         name: artifacts
         path: Test/TestResults/
 
-    - name: publish on version change
-      id: publish_nuget
-      uses: alirezanet/publish-nuget@v3.1.0
-      with:
-        # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: SharpPcap/SharpPcap.csproj
+    # - name: publish on version change
+    #   id: publish_nuget
+    #   uses: alirezanet/publish-nuget@v3.1.0
+    #   with:
+    #     # Filepath of the project to be packaged, relative to root of repository
+    #     PROJECT_FILE_PATH: SharpPcap/SharpPcap.csproj
 
-        # API key to authenticate with NuGet server
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+    #     # API key to authenticate with NuGet server
+    #     NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
-        # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
-        INCLUDE_SYMBOLS: true
+    #     # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
+    #     INCLUDE_SYMBOLS: true
 
   # license-check:
   #   # We use https://github.com/fsfe/reuse-tool to ensure EVERY file has correct license and copyright info
