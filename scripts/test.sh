@@ -24,6 +24,6 @@ fi
 
 dotnet test "${TEST_ARGS[@]}"
 
-# coverage
-pip install codecov-cli || python3 -m pip install codecov-cli
-codecovcli upload-process
+# # coverage
+# pip install codecov-cli || python3 -m pip install codecov-cli
+# codecovcli upload-process

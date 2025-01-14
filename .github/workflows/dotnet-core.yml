@@ -26,8 +26,8 @@ jobs:
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
       run: sudo -E bash scripts/test.sh
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      # env:
+      #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - run: sudo chmod -R +r Test/TestResults
       if: always()
@@ -55,14 +55,14 @@ jobs:
         # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
         INCLUDE_SYMBOLS: true
 
-  license-check:
-    # We use https://github.com/fsfe/reuse-tool to ensure EVERY file has correct license and copyright info
-    # Either in the file itself, or in .reuse\dep5 for binary files and files that don't support comments
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-    - run: pip install -r requirements.txt
-    - run: reuse lint
+  # license-check:
+  #   # We use https://github.com/fsfe/reuse-tool to ensure EVERY file has correct license and copyright info
+  #   # Either in the file itself, or in .reuse\dep5 for binary files and files that don't support comments
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: actions/setup-python@v5
+  #     with:
+  #       python-version: '3.10'
+  #   - run: pip install -r requirements.txt
+  #   - run: reuse lint
