@@ -1,4 +1,8 @@
-﻿using System.Net;
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using System.Net;
 using NUnit.Framework;
 using SharpPcap.WinDivert;
 
@@ -14,12 +18,12 @@ namespace Test.WinDivert
         {
             var localhost = IPAddress.Parse("127.0.0.1");
             var bestInterface = IpHelper.GetBestInterface(localhost);
-            Assert.IsNotNull(bestInterface);
+            Assert.That(bestInterface, Is.Not.Null);
 
             var external = IPAddress.Parse("8.8.8.8");
             var bestInterfaceIndex = IpHelper.GetBestInterfaceIndex(external);
-            Assert.IsFalse(IpHelper.IsOutbound(bestInterfaceIndex, external, localhost));
-            Assert.IsFalse(IpHelper.IsOutbound(bestInterfaceIndex, localhost, external));
+            Assert.That(IpHelper.IsOutbound(bestInterfaceIndex, external, localhost), Is.False);
+            Assert.That(IpHelper.IsOutbound(bestInterfaceIndex, localhost, external), Is.False);
         }
     }
 }

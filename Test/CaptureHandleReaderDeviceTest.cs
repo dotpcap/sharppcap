@@ -1,3 +1,6 @@
+// Copyright 2022 Hendrik Eckardt
+// SPDX-License-Identifier: MIT
+
 using System;
 using NUnit.Framework;
 using SharpPcap;
@@ -43,9 +46,9 @@ namespace Test
                 TimestampResolution = resolution
             };
             device.Open(configuration);
-            Assert.AreEqual(resolution, device.TimestampResolution);
+            Assert.That(device.TimestampResolution, Is.EqualTo(resolution));
             device.GetNextPacket(out var packet);
-            Assert.AreEqual(timeval, packet.Header.Timeval.ToString());
+            Assert.That(packet.Header.Timeval.ToString(), Is.EqualTo(timeval));
         }
 
         [Test]
@@ -53,13 +56,13 @@ namespace Test
         {
             const string filename = "ipv6_http.pcap";
             using var handle = GetTestFileHandle(filename);
-            Assert.IsFalse(handle.IsInvalid);
-            Assert.IsFalse(handle.IsClosed);
+            Assert.That(handle.IsInvalid, Is.False);
+            Assert.That(handle.IsClosed, Is.False);
             {
                 using var device = new CaptureHandleReaderDevice(handle);
                 device.Open();
             }
-            Assert.IsTrue(handle.IsClosed);
+            Assert.That(handle.IsClosed, Is.True);
         }
 
         [Test]
@@ -69,8 +72,8 @@ namespace Test
             using var handle = GetTestFileHandle(filename);
             using var device = new CaptureHandleReaderDevice(handle);
             device.Open();
-            Assert.IsNotEmpty(device.Description);
-            Assert.AreEqual(handle, device.FileHandle);
+            Assert.That(device.Description, Is.Not.Empty);
+            Assert.That(device.FileHandle, Is.EqualTo(handle));
         }
 
         /// <summary>
@@ -90,7 +93,7 @@ namespace Test
             capturedPackets = 0;
             device.Capture();
 
-            Assert.AreEqual(expectedPackets, capturedPackets);
+            Assert.That(capturedPackets, Is.EqualTo(expectedPackets));
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace Test
             capturedPackets = 0;
             device.Capture(expectedPackets);
 
-            Assert.AreEqual(expectedPackets, capturedPackets);
+            Assert.That(capturedPackets, Is.EqualTo(expectedPackets));
         }
 
         void HandleDeviceOnPacketArrival(object sender, PacketCapture e)
@@ -130,7 +133,7 @@ namespace Test
             using var handle = GetTestFileHandle(filename);
             using var device = new CaptureHandleReaderDevice(handle);
             device.Open();
-            Assert.IsNull(device.Statistics);
+            Assert.That(device.Statistics, Is.Null);
         }
 
         [Test]
@@ -155,14 +158,14 @@ namespace Test
                     rawPacket = e.GetPacket();
                     Packet p = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                     var udpPacket = p.Extract<UdpPacket>();
-                    Assert.IsNotNull(udpPacket);
+                    Assert.That(udpPacket, Is.Not.Null);
                     int dnsPort = 53;
-                    Assert.AreEqual(dnsPort, udpPacket.DestinationPort);
+                    Assert.That(udpPacket.DestinationPort, Is.EqualTo(dnsPort));
                     count++;
                 }
             } while (retval == GetPacketStatus.PacketRead);
 
-            Assert.AreEqual(1, count);
+            Assert.That(count, Is.EqualTo(1));
         }
     }
 

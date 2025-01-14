@@ -1,24 +1,8 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2010 Phillip Lemon <lucidcomms@gmail.com>
- * Copyright 2008-2021 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+// Copyright 2008-2010 Phillip Lemon <lucidcomms@gmail.com>
+// Copyright 2008-2021 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Collections.ObjectModel;
@@ -103,7 +87,7 @@ namespace SharpPcap.LibPcap
             // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
             var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+            ErrorBuffer errbuf; //will hold errors
 
             // set the StopCaptureTimeout value to twice the read timeout to ensure that
             // we wait long enough before considering the capture thread to be stuck when stopping
@@ -132,7 +116,7 @@ namespace SharpPcap.LibPcap
             {
                 Handle = LibPcapSafeNativeMethods.pcap_create(
                     Name, // name of the device
-                    errbuf); // error buffer
+                    out errbuf); // error buffer
 
                 if (Handle.IsInvalid)
                 {
@@ -172,7 +156,7 @@ namespace SharpPcap.LibPcap
                         (short)mode,                        // flags
                         (short)configuration.ReadTimeout,   // read timeout
                         ref auth,                           // authentication
-                        errbuf);                            // error buffer
+                        out errbuf);                            // error buffer
                 }
                 catch (TypeLoadException)
                 {
@@ -276,14 +260,12 @@ namespace SharpPcap.LibPcap
             get
             {
                 ThrowIfNotOpen("Can't get blocking mode, the device is closed");
-
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(Handle, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(Handle, out var errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
                 {
-                    string err = "Unable to set get blocking" + errbuf.ToString();
+                    string err = "Unable to get blocking mode. " + errbuf.ToString();
                     throw new PcapException(err);
                 }
 
@@ -295,18 +277,16 @@ namespace SharpPcap.LibPcap
             {
                 ThrowIfNotOpen("Can't set blocking mode, the device is closed");
 
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
                 int block = disableBlocking;
                 if (value)
                     block = enableBlocking;
 
-                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(Handle, block, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(Handle, block, out var errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
                 {
-                    string err = "Unable to set non blocking" + errbuf.ToString();
+                    string err = "Unable to set blocking mode. " + errbuf.ToString();
                     throw new PcapException(err);
                 }
             }

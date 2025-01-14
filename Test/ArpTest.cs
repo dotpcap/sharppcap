@@ -1,4 +1,7 @@
-﻿using System;
+// Copyright 2009-2021 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
+using System;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -15,7 +18,7 @@ namespace Test
             var arp = new ARP(d);
 
             // timeout should not be null
-            Assert.IsNotNull(arp.Timeout);
+            Assert.That(arp.Timeout.Ticks, Is.Not.Zero);
 
             // and we can set a timeout
             arp.Timeout = new TimeSpan(0, 0, 2);

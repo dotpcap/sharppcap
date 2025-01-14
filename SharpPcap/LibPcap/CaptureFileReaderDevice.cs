@@ -1,22 +1,6 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/*
- * Copyright 2011 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2011 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Text;
@@ -88,8 +72,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override void Open(DeviceConfiguration configuration)
         {
-            // holds errors
-            StringBuilder errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+            ErrorBuffer errbuf; //will hold errors
 
             PcapHandle adapterHandle;
 
@@ -98,7 +81,7 @@ namespace SharpPcap.LibPcap
             var resolution = configuration.TimestampResolution ?? TimestampResolution.Microsecond;
             if (has_offline_with_tstamp_precision_support)
             {
-                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, errbuf);
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline_with_tstamp_precision(m_pcapFile, (uint)resolution, out errbuf);
             }
             else
             {
@@ -113,7 +96,7 @@ namespace SharpPcap.LibPcap
                     );
                 }
 
-                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, errbuf);
+                adapterHandle = LibPcapSafeNativeMethods.pcap_open_offline(m_pcapFile, out errbuf);
             }
 
             // handle error

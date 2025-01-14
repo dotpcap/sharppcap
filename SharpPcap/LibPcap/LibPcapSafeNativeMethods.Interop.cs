@@ -1,31 +1,12 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
- * Copyright 2008-2011 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+// Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
+// Copyright 2008-2011 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
@@ -46,13 +27,13 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
             uint opts,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs(
             ref IntPtr /* pcap_if_t** */ alldevs,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -60,7 +41,7 @@ namespace SharpPcap.LibPcap
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*char **/source,
             ref pcap_rmtauth /*pcap_rmtauth **/auth,
             ref IntPtr /*pcap_if_t ** */alldevs,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /*char * */errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -73,19 +54,19 @@ namespace SharpPcap.LibPcap
             int flags,
             int read_timeout,
             ref pcap_rmtauth rmtauth,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static PcapHandle /* pcap_t* */ pcap_create(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static PcapHandle /* pcap_t* */ pcap_open_offline(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string/*const char* */ fname,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder/* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -203,7 +184,7 @@ namespace SharpPcap.LibPcap
         internal extern static int pcap_setnonblock(
             PcapHandle /* pcap_if_t** */ adaptHandle,
             int nonblock,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         /// <summary>
@@ -212,7 +193,7 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_getnonblock(
             PcapHandle /* pcap_if_t** */ adaptHandle,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         /// <summary>
@@ -438,7 +419,7 @@ namespace SharpPcap.LibPcap
         internal extern static PcapHandle /* pcap_t* */ pcap_open_offline_with_tstamp_precision(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /* const char* */ fname,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         /// <summary>
@@ -504,7 +485,7 @@ namespace SharpPcap.LibPcap
         internal extern static IntPtr /* pcap_t* */ _pcap_hopen_offline_with_tstamp_precision(
             SafeHandle handle,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
 
         /// <summary>
@@ -519,7 +500,7 @@ namespace SharpPcap.LibPcap
         internal extern static IntPtr /* pcap_t* */ _pcap_fopen_offline_with_tstamp_precision(
             SafeHandle fileObject,
             uint precision,
-            [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] StringBuilder /* char* */ errbuf
+            out ErrorBuffer /* char* */ errbuf
         );
     }
 }

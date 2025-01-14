@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright 2022 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+
 set -e
 
 TEST_ARGS=("$@")
@@ -21,6 +24,6 @@ fi
 
 dotnet test "${TEST_ARGS[@]}"
 
-# coverage
-
-bash $(dirname $0)/codecov.sh -f '**/*.opencover.xml'
+# # coverage
+# pip install codecov-cli || python3 -m pip install codecov-cli
+# codecovcli upload-process

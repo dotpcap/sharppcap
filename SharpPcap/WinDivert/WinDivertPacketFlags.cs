@@ -1,5 +1,12 @@
-﻿namespace SharpPcap.WinDivert
+// SPDX-FileCopyrightText: 2020 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+using System;
+
+namespace SharpPcap.WinDivert
 {
+    [Flags]
     public enum WinDivertPacketFlags : byte
     {
         Sniffed = 1 << 0,

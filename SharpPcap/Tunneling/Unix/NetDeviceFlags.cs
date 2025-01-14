@@ -1,4 +1,8 @@
-﻿namespace SharpPcap.Tunneling.Unix
+// SPDX-FileCopyrightText: 2021 Ayoub Kaanich <kayoub5@live.com>
+//
+// SPDX-License-Identifier: MIT
+
+namespace SharpPcap.Tunneling.Unix
 {
     internal enum NetDeviceFlags : ushort
     {

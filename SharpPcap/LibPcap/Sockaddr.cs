@@ -1,23 +1,7 @@
-/*
-This file is part of SharpPcap.
-
-SharpPcap is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SharpPcap is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SharpPcap.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* 
- * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
- * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
- */
+// Copyright 2005 Tamir Gal <tamir@tamirgal.com>
+// Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
+//
+// SPDX-License-Identifier: MIT
 
 using System;
 using System.Runtime.InteropServices;
@@ -113,7 +97,8 @@ namespace SharpPcap.LibPcap
 
                 var saddr_ll = Marshal.PtrToStructure<sockaddr_ll>(sockaddrPtr);
 
-                var hwAddrBytes = new byte[saddr_ll.sll_halen];
+                var hwAddrBytesLength = Math.Min(saddr_ll.sll_halen,(byte)8); // allow max length of 8 bytes (for exotic hardware that doesn't follow the linux standard)
+                var hwAddrBytes = new byte[hwAddrBytesLength];
                 Buffer.BlockCopy(saddr_ll.sll_addr, 0, hwAddrBytes, 0, hwAddrBytes.Length);
                 hardwareAddress = new PhysicalAddress(hwAddrBytes); // copy into the PhysicalAddress class
             }

@@ -1,3 +1,6 @@
+// Copyright 2009-2017 Chris Morgan <chmorgan@gmail.com>
+// SPDX-License-Identifier: MIT
+
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
@@ -13,13 +16,13 @@ namespace Test
         public void TestFilters()
         {
             // test a known failing filter
-            Assert.IsFalse(LibPcapLiveDevice.CheckFilter("some bogus filter", out string errorString));
-            Assert.IsNotNull(errorString);
-            Assert.IsNotEmpty(errorString);
+            Assert.That(LibPcapLiveDevice.CheckFilter("some bogus filter", out string errorString), Is.False);
+            Assert.That(errorString, Is.Not.Null);
+            Assert.That(errorString, Is.Not.Empty);
 
             // test a known working filter
-            Assert.IsTrue(LibPcapLiveDevice.CheckFilter("port 23", out errorString));
-            Assert.IsNull(errorString);
+            Assert.That(LibPcapLiveDevice.CheckFilter("port 23", out errorString), Is.True);
+            Assert.That(errorString, Is.Null);
         }
 
         /// <summary>
@@ -34,10 +37,10 @@ namespace Test
             var f = "(dst host 192.168.42.1) and (arp or tcp dst port 40499)";
             // Make filter work with or without VLAN
             using var bpfProgram = BpfProgram.Create(LinkLayers.Ethernet, $"({f}) or (vlan and ({f}))");
-            Assert.IsFalse(bpfProgram.IsInvalid);
+            Assert.That(bpfProgram.IsInvalid, Is.False);
 
             device.GetNextPacket(out var packet);
-            Assert.IsTrue(bpfProgram.Matches(packet.Data));
+            Assert.That(bpfProgram.Matches(packet.Data), Is.True);
         }
         /// <summary>
         /// Test BpfProgram.Matches() when creating BpfProgram without device
@@ -49,10 +52,10 @@ namespace Test
             device.Open();
 
             using var bpfProgram = BpfProgram.Create(device.Handle, "tcp");
-            Assert.IsFalse(bpfProgram.IsInvalid);
+            Assert.That(bpfProgram.IsInvalid, Is.False);
 
             device.GetNextPacket(out var packet);
-            Assert.IsTrue(bpfProgram.Matches(packet.Data));
+            Assert.That(bpfProgram.Matches(packet.Data), Is.True);
         }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace Test
 
             var filterExpression = "arp";
             using var bpfProgram = BpfProgram.Create(device.Handle, filterExpression);
-            Assert.IsFalse(bpfProgram.IsInvalid);
+            Assert.That(bpfProgram.IsInvalid, Is.False);
 
             var arp = new ARP(device);
             var destinationIP = new System.Net.IPAddress(new byte[] { 8, 8, 8, 8 });
@@ -93,8 +96,8 @@ namespace Test
                 {
                     packetsToTry--;
 
-                    Assert.AreNotEqual(IntPtr.Zero, header);
-                    Assert.AreNotEqual(IntPtr.Zero, data);
+                    Assert.That(header, Is.Not.EqualTo(IntPtr.Zero));
+                    Assert.That(data, Is.Not.EqualTo(IntPtr.Zero));
 
                     // and test it against the bpf filter to confirm an exception is not thrown
                     Assert.DoesNotThrow(() =>
@@ -109,7 +112,7 @@ namespace Test
                 }
             }
 
-            Assert.IsTrue(foundBpfMatch);
+            Assert.That(foundBpfMatch, Is.True);
         }
     }
 }

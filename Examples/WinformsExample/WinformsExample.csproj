@@ -9,47 +9,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="CaptureForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="CaptureForm.Designer.cs">
-      <DependentUpon>CaptureForm.cs</DependentUpon>
-    </Compile>
-    <Compile Update="DeviceListForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="DeviceListForm.Designer.cs">
-      <DependentUpon>DeviceListForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="CaptureForm.resx">
-      <DependentUpon>CaptureForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Update="DeviceListForm.resx">
-      <DependentUpon>DeviceListForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\play_icon_enabled.png" />
-    <Content Include="Resources\stop_icon_disabled.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\stop_icon_enabled.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
   </ItemGroup>
 </Project>
