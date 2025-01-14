@@ -9,7 +9,7 @@ parameters:
     default: "Lansweeper_sharppcap"
   nuget-output-file:
     type: string
-    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.9.0.9.nupkg"
+    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.10.0.0-alpha.nupkg"
 
 executors:
   node:
@@ -86,7 +86,7 @@ jobs:
           name: Set correct version in csproj file, build and pack it
           command: |
             $env:package_version = "10.0.0-alpha"
-            
+
             $file = Get-Item << pipeline.parameters.csproj-file >>
             [xml]$cn = Get-Content $file
             $cn.Project.PropertyGroup.Version="$env:package_version"
