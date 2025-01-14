@@ -17,7 +17,7 @@ executors:
       - image: circleci/node:12
 
 orbs:
-  win: circleci/windows@2.2.0
+  win: circleci/windows@5.0.0
   sonar-check: lansweeper/sonar@0.0.6
 
 commands:
