@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>10.0.0-alpha</Version>
+		<Version>10.0.0-beta</Version> <!--update manually, this is in sync with the Lansweeper On-Prem version-->
 		<PackageId>Lansweeper.SharpPcap</PackageId>
 		<Company>Lansweeper</Company>
 		<Title>Lansweeper SharpPcap</Title>
@@ -28,11 +28,20 @@ SPDX-License-Identifier: MIT
 			It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
 		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile><!-- Default README for Lansweeper.SharpPcap -->
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Deterministic>true</Deterministic>
 		<IsTrimmable>true</IsTrimmable>
 		<IsAotCompatible>true</IsAotCompatible>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'StaticLinking'">
+		<DefineConstants>STATIC_LINKING</DefineConstants>
+		<PackageId>Lansweeper.SharpPcap.StaticLinking</PackageId>
+		<Version>$(PackageVersion)</Version>
+		<PackageReadmeFile>README_StaticLinking.md</PackageReadmeFile><!-- README for Lansweeper.SharpPcap.StaticLinking -->
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="PacketDotNet" Version="1.4.7" />
 		<!-- to allow step into the source code, when using this SharpPcap as a NuGet package-->
