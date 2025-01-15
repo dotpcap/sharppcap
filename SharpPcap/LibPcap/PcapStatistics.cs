@@ -43,12 +43,12 @@ namespace SharpPcap.LibPcap
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_unix)));
+                stat = Marshal.AllocHGlobal(Marshal.SizeOf<PcapUnmanagedStructures.pcap_stat_unix>());
             }
             else
             {
                 // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_windows)));
+                stat = Marshal.AllocHGlobal(Marshal.SizeOf<PcapUnmanagedStructures.pcap_stat_windows>());
             }
 
             // retrieve the stats
@@ -73,28 +73,26 @@ namespace SharpPcap.LibPcap
             // marshal the unmanaged memory into an object of the proper type
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                var managedStat = (PcapUnmanagedStructures.pcap_stat_unix)Marshal.PtrToStructure(stat,
-                                                                                                 typeof(PcapUnmanagedStructures.pcap_stat_unix));
+                var managedStat = Marshal.PtrToStructure< PcapUnmanagedStructures.pcap_stat_unix>(stat);
 
                 // copy the values
-                this.ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
-                this.DroppedPackets = (uint)managedStat.ps_drop.ToInt64();
+                ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
+                DroppedPackets = (uint)managedStat.ps_drop.ToInt64();
                 //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             }
             else
             {
-                var managedStat = (PcapUnmanagedStructures.pcap_stat_windows)Marshal.PtrToStructure(stat,
-                                                                                                    typeof(PcapUnmanagedStructures.pcap_stat_windows));
+                var managedStat = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_stat_windows>(stat);
 
                 // copy the values
-                this.ReceivedPackets = (uint)managedStat.ps_recv;
-                this.DroppedPackets = (uint)managedStat.ps_drop;
+                ReceivedPackets = managedStat.ps_recv;
+                DroppedPackets = managedStat.ps_drop;
                 //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
             }
 
             // NOTE: Not supported on unix or npcap, no need to
             //       put a bogus value in this field
-            this.InterfaceDroppedPackets = 0;
+            InterfaceDroppedPackets = 0;
 
             // free the stats
             Marshal.FreeHGlobal(stat);
