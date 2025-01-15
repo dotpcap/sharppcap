@@ -48,7 +48,7 @@ namespace SharpPcap.LibPcap
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ pcap_open(
+        internal extern static PcapHandle /* pcap_t* */ pcap_open_live(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
             int packetLen,
             int flags,
