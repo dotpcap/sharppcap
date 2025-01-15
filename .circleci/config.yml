@@ -167,9 +167,9 @@ workflows:
             - nuget-prepare
           context:
             - lec-github-packages-rw
-          filters:
-            branches:
-              only: master
+          # filters:
+          #   branches:
+          #     only: master
 
   run-daily-tests:
     triggers:
