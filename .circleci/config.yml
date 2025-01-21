@@ -7,9 +7,9 @@ parameters:
   sonar-project:
     type: string
     default: "Lansweeper_sharppcap"
-  nuget-output-file:
+  nuget-output-folder:
     type: string
-    default: "SharpPcap/bin/Release/Lansweeper.SharpPcap.10.0.0-alpha.nupkg"
+    default: "SharpPcap/bin/Release"
 
 executors:
   node:
@@ -31,7 +31,6 @@ commands:
 jobs:
   build:
     executor: win/default
-
     steps:
       - checkout
       - run:
@@ -44,7 +43,6 @@ jobs:
       - run:
           name: Upload SonarScanner results
           command: dotnet sonarscanner end /d:sonar.login=$Env:SONAR_TOKEN
-
       - persist_to_workspace:
           root: .
           paths:
@@ -54,6 +52,8 @@ jobs:
     executor:
       name: win/default
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: Create local nuget config file
           command: |
@@ -83,22 +83,15 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Set correct version in csproj file, build and pack it
-          command: |
-            $env:package_version = "10.0.0-alpha"
-
-            $file = Get-Item << pipeline.parameters.csproj-file >>
-            [xml]$cn = Get-Content $file
-            $cn.Project.PropertyGroup.Version="$env:package_version"
-            $cn.Save($file.FullName)
-            type ./<< pipeline.parameters.csproj-file >>
-      - run:
-          name: Pack the package
+          name: Pack the default package
           command: dotnet pack << pipeline.parameters.csproj-file >> --configuration Release
       - run:
-          name: Publish the package
+          name: Publish the default package
+          shell: bash
           command: |
-            dotnet nuget push << pipeline.parameters.nuget-output-file >> --source "github" --api-key $env:GITHUB_TOKEN
+            version=$(grep -o "<Version>[^<]*" << pipeline.parameters.csproj-file >> | sed 's/<Version>//' | head -n 1)
+            packageid=$(grep -o "<PackageId>[^<]*" << pipeline.parameters.csproj-file >> | sed 's/<PackageId>//' | head -n 1)
+            dotnet nuget push << pipeline.parameters.nuget-output-folder >>/$packageid.$version.nupkg --source "github" --api-key $GITHUB_TOKEN
 
   sonar:
     executor: node
@@ -107,7 +100,7 @@ jobs:
           at: .
       - sonar-check/get_sonar_status:
           report_file: "/home/circleci/project/.sonarqube/out/.sonar/report-task.txt"
-          
+
 workflows:
   version: 2
 
@@ -155,17 +148,3 @@ workflows:
           filters:
             branches:
               only: master
-              
-  run-daily-tests:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only: master
-
-    jobs:
-      - build:
-          context:
-            - lec-github-packages-rw
-            - SonarCloud

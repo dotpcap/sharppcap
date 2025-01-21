@@ -6,43 +6,51 @@ Copyright 2008-2011 Chris Morgan <chmorgan@gmail.com>
 SPDX-License-Identifier: MIT
 -->
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-    <Version>10.0.0-alpha</Version>
-    <PackageId>Lansweeper.SharpPcap</PackageId>
-    <Company>Lansweeper</Company>
-    <Title>Lansweeper SharpPcap</Title>
-    <Product>Lansweeper SharpPcap</Product>	  
-    <Description>A packet capture framework for .NET</Description>
-    <Authors>Tamir Gal, Chris Morgan and others</Authors>
-    <PackageProjectUrl>https://github.com/Lansweeper/sharppcap</PackageProjectUrl>
-	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-	<RepositoryUrl>https://github.com/Lansweeper/sharppcap</RepositoryUrl>
-	<PublishRepositoryUrl>true</PublishRepositoryUrl>
-	<EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Copyright>Tamir Gal, Chris Morgan and others</Copyright>
-    <Description>
-      SharpPcap is a cross-platform(Windows, Mac, Linux) packet capture framework for the .NET environment.
-      It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
-    </Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-	<IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="PacketDotNet" Version="1.4.7" />
-    <PackageReference Include="System.Memory" Version="4.6.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
-  </ItemGroup>
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>Test</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>10.0.0-beta.1</Version> <!--update manually, this is in sync with the Lansweeper On-Prem version-->
+		<PackageId>Lansweeper.SharpPcap</PackageId>
+		<Company>Lansweeper</Company>
+		<Title>Lansweeper SharpPcap</Title>
+		<Product>Lansweeper SharpPcap</Product>
+		<Description>A packet capture framework for .NET</Description>
+		<Authors>Tamir Gal, Chris Morgan and others</Authors>
+		<PackageProjectUrl>https://github.com/Lansweeper/sharppcap</PackageProjectUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<RepositoryUrl>https://github.com/Lansweeper/sharppcap</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Copyright>Tamir Gal, Chris Morgan and others</Copyright>
+		<Description>
+			SharpPcap is a cross-platform(Windows, Mac, Linux) packet capture framework for the .NET environment.
+			It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
+		</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile><!-- README for Lansweeper.SharpPcap NuGet -->
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Deterministic>true</Deterministic>
+		<IsTrimmable>true</IsTrimmable>
+		<IsAotCompatible>true</IsAotCompatible>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PacketDotNet" Version="1.4.7" />
+		<!-- to allow step into the source code, when using this SharpPcap as a NuGet package-->
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>Test</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="README.md">
+			<Pack>true</Pack>
+			<PackagePath>README.md</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

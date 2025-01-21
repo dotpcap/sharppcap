@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace SharpPcap.LibPcap
 {
@@ -23,14 +22,11 @@ namespace SharpPcap.LibPcap
 
         static LibPcapSafeNativeMethods()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 SetDllDirectory(Path.Combine(Environment.SystemDirectory, "Npcap"));
             }
-            else
-            {
-                RegisterResolver();
-            }
+            RegisterResolver();
             StringEncoding = ConfigureStringEncoding();
         }
 
@@ -54,7 +50,7 @@ namespace SharpPcap.LibPcap
 
             var names = new List<string>();
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (OperatingSystem.IsLinux())
             {
                 names.Add("libpcap.so");
                 names.Add("libpcap.so.0");
@@ -62,7 +58,12 @@ namespace SharpPcap.LibPcap
                 names.Add("libpcap.so.1");
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (OperatingSystem.IsWindows())
+            {
+                names.Add("wpcap.dll");
+            }
+
+            else if (OperatingSystem.IsMacOS())
             {
                 names.Add("libpcap.dylib");
             }

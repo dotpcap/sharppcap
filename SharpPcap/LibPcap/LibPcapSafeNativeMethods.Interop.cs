@@ -17,12 +17,7 @@ namespace SharpPcap.LibPcap
     [SuppressUnmanagedCodeSecurity]
     internal static partial class LibPcapSafeNativeMethods
     {
-        // NOTE: For mono users on non-windows platforms a .config file is used to map
-        //       the windows dll name to the unix/mac library name
-        //       This file is called $assembly_name.dll.config and is placed in the
-        //       same directory as the assembly
-        //       See http://www.mono-project.com/Interop_with_Native_Libraries#Library_Names
-        private const string PCAP_DLL = "wpcap";
+        private const string PCAP_DLL = "libpcap";
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_init(
@@ -48,7 +43,7 @@ namespace SharpPcap.LibPcap
         internal extern static void pcap_freealldevs(IntPtr /* pcap_if_t * */ alldevs);
 
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static PcapHandle /* pcap_t* */ pcap_open(
+        internal extern static PcapHandle /* pcap_t* */ pcap_open_live(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string dev,
             int packetLen,
             int flags,

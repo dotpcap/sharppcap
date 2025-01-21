@@ -7,7 +7,7 @@ set -e
 
 TEST_ARGS=("$@")
 
-TEST_ARGS+=( -p:CollectCoverage=true )
+# TEST_ARGS+=( -p:CollectCoverage=false )
 TEST_ARGS+=( --blame-crash )
 
 # select logger based on CI server
@@ -22,7 +22,7 @@ else
     TEST_ARGS+=( --logger:junit --test-adapter-path:. )
 fi
 
-dotnet test "${TEST_ARGS[@]}"
+dotnet test "${TEST_ARGS[@]}" Test/Test.csproj
 
 # # coverage
 # pip install codecov-cli || python3 -m pip install codecov-cli

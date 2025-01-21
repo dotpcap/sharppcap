@@ -7,6 +7,5 @@ SPDX-License-Identifier: MIT
    <Deterministic>true</Deterministic>
    <DebugType>full</DebugType>
    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-   <LangVersion>8.0</LangVersion>
  </PropertyGroup>
 </Project>
