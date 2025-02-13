@@ -33,6 +33,12 @@ namespace SharpPcap.LibPcap
         {
         }
 
+        /// <inheritdoc/>
+        public ILibPcapLiveDevice Clone(ILibPcapLiveDevice device)
+        {
+            return new LibPcapLiveDevice(device.Interface);
+        }
+
         /// <summary>
         /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
         /// </summary>
