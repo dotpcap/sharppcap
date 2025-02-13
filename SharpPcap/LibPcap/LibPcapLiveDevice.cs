@@ -7,7 +7,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace SharpPcap.LibPcap
 {
@@ -34,9 +33,9 @@ namespace SharpPcap.LibPcap
         }
 
         /// <inheritdoc/>
-        public ILibPcapLiveDevice Clone(ILibPcapLiveDevice device)
+        public ILibPcapLiveDevice Clone()
         {
-            return new LibPcapLiveDevice(device.Interface);
+            return new LibPcapLiveDevice(Interface);
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="device">The original device</param>
         /// <returns>The cloned device</returns>
-        ILibPcapLiveDevice Clone(ILibPcapLiveDevice device);
+        ILibPcapLiveDevice Clone();
 
 
         /// <summary>
