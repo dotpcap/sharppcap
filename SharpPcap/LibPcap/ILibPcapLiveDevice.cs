@@ -42,6 +42,16 @@ namespace SharpPcap.LibPcap
         PcapHandle Handle { get; }
 
         /// <summary>
+        /// Returns a clone of the current device.
+        /// This clone can then be opened and used to capture packets independently of the original device.
+        /// You can set the <see cref="Filter"/> without interfering with the original.
+        /// </summary>
+        /// <param name="device">The original device</param>
+        /// <returns>The cloned device</returns>
+        ILibPcapLiveDevice Clone();
+
+
+        /// <summary>
         /// Override the default ToString() implementation
         /// </summary>
         /// <returns>
@@ -68,6 +78,5 @@ namespace SharpPcap.LibPcap
         /// See https://www.tcpdump.org/manpages/pcap_next_ex.3pcap.html
         /// </returns>
         int GetNextPacketPointers(ref IntPtr header, ref IntPtr data);
-        
     }
 }
