@@ -49,6 +49,11 @@ namespace Test
                     // OperationalStatus does not detect it correctly
                     continue;
                 }
+                if (friendlyName == "en0")
+                {
+                    // Azure CI have this interface, only in macOS
+                    continue;
+                }
                 var nic = nics.FirstOrDefault(ni => ni.Name == friendlyName);
                 if (nic?.OperationalStatus != OperationalStatus.Up)
                 {
