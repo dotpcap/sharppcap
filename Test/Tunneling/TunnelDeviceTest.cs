@@ -8,7 +8,6 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using SharpPcap.Tunneling;
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;

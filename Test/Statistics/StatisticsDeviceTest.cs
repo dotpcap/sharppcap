@@ -10,7 +10,6 @@ using System.Threading;
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
-using SharpPcap.LibPcap;
 using SharpPcap.Statistics;
 
 namespace Test.Statistics

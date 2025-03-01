@@ -4,9 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 using PacketDotNet;
@@ -17,7 +15,6 @@ using static Test.TestHelper;
 namespace Test
 {
     [TestFixture]
-    [NonParallelizable]
     public class PcapDeviceTest
     {
         /// <summary>
