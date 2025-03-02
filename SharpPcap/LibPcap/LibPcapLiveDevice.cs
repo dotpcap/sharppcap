@@ -171,7 +171,7 @@ namespace SharpPcap.LibPcap
                         (short)mode,                        // flags
                         (short)configuration.ReadTimeout,   // read timeout
                         ref auth,                           // authentication
-                        out errbuf);                            // error buffer
+                        out errbuf);                        // error buffer
                 }
                 catch (TypeLoadException)
                 {
