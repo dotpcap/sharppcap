@@ -135,7 +135,7 @@ namespace SharpPcap.LibPcap
 
                 if (Handle.IsInvalid)
                 {
-                    var err = $"Unable to open the adapter '{Name}'. {errbuf}";
+                    var err = $"Unable to open the adapter '{Name}' using pcap_create. {errbuf}";
                     throw new PcapException(err);
                 }
                 // Those are configurations that pcap_open can handle differently
@@ -179,12 +179,12 @@ namespace SharpPcap.LibPcap
                     var err = $"Unable to open the adapter '{Name}'. {reason} is not supported";
                     throw new PcapException(err, PcapError.PlatformNotSupported);
                 }
-            }
 
-            if (Handle.IsInvalid)
-            {
-                var err = $"Unable to open the adapter '{Name}'. {errbuf}";
-                throw new PcapException(err);
+                if (Handle.IsInvalid)
+                {
+                    var err = $"Unable to open the adapter '{Name}' using pcap_open. {errbuf}";
+                    throw new PcapException(err);
+                }
             }
 
             ConfigureIfCompatible(use_pcap_create,
