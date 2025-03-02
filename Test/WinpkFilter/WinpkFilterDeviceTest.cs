@@ -70,7 +70,7 @@ namespace Test.WinpkFilter
             {
                 Assert.That(device.Name, Is.Not.Null);
                 Assert.That(device.FriendlyName, Is.Not.Null);
-                Assert.That(device.Description, Is.Null);
+                Assert.That(device.Description, Is.Empty);
                 Assert.That(device.LastError, Is.Null);
                 Assert.That(device.Filter, Is.Null);
                 Assert.That(device.LinkType, Is.EqualTo(LinkLayers.Ethernet));
