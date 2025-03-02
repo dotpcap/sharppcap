@@ -43,12 +43,12 @@ namespace SharpPcap.LibPcap
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
                 // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_unix)));
+                stat = Marshal.AllocHGlobal(Marshal.SizeOf<PcapUnmanagedStructures.pcap_stat_unix>());
             }
             else
             {
                 // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_windows)));
+                stat = Marshal.AllocHGlobal(Marshal.SizeOf<PcapUnmanagedStructures.pcap_stat_windows>());
             }
 
             // retrieve the stats

@@ -87,7 +87,7 @@ namespace SharpPcap.LibPcap
         private BpfProgram()
             : base(true)
         {
-            var bpfProgram = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.bpf_program)));
+            var bpfProgram = Marshal.AllocHGlobal(Marshal.SizeOf<PcapUnmanagedStructures.bpf_program>());
             SetHandle(bpfProgram);
         }
 
