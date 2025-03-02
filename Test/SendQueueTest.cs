@@ -11,10 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using static Test.TestHelper;
+using static System.TimeSpan;
 
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     [Category("SendPacket")]
     public class SendQueueTest
     {

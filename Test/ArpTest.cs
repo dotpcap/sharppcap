@@ -4,6 +4,7 @@
 using System;
 using NUnit.Framework;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test
 {

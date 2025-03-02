@@ -16,6 +16,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Net;
 
 namespace Test
 {

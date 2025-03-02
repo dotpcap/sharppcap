@@ -10,6 +10,7 @@ using SharpPcap.LibPcap;
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     public class PcapStatisticsTest
     {
         /// <summary>

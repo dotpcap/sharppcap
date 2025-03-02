@@ -176,7 +176,7 @@ namespace SharpPcap.LibPcap
                 catch (TypeLoadException)
                 {
                     var reason = credentials != null ? "Remote PCAP" : "Requested DeviceModes";
-                    var err = $"Unable to open the adapter '{Name}'. {reason} not supported";
+                    var err = $"Unable to open the adapter '{Name}'. {reason} is not supported";
                     throw new PcapException(err, PcapError.PlatformNotSupported);
                 }
             }

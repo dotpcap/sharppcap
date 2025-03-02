@@ -10,6 +10,7 @@ using SharpPcap;
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     public class LivePcapDeviceSetFilterTest
     {
         [Test]

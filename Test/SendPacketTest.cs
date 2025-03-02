@@ -5,11 +5,17 @@
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
+using SharpPcap.LibPcap;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static Test.TestHelper;
+using static System.TimeSpan;
 
 namespace Test
 {
     [TestFixture]
+    [NonParallelizable]
     [Category("SendPacket")]
     public class SendPacketTest
     {
