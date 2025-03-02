@@ -14,24 +14,8 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class LibPcapLiveDevice : PcapDevice, ILiveDevice
+    public class LibPcapLiveDevice(PcapInterface pcapInterface) : PcapDevice(pcapInterface), ILiveDevice
     {
-        /// <summary>
-        /// Constructs a new PcapDevice based on a 'pcapIf' struct
-        /// </summary>
-        /// <param name="pcapIf">A 'pcapIf' struct representing
-        /// the pcap device</param>
-        public LibPcapLiveDevice(PcapInterface pcapIf)
-        {
-            m_pcapIf = pcapIf;
-        }
-
-        /// <summary>
-        /// Default contructor for subclasses
-        /// </summary>
-        protected LibPcapLiveDevice()
-        {
-        }
 
         /// <summary>
         /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
@@ -46,7 +30,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override string Name
         {
-            get { return m_pcapIf.Name; }
+            get { return pcapInterface.Name; }
         }
 
         /// <summary>
@@ -54,7 +38,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual ReadOnlyCollection<PcapAddress> Addresses
         {
-            get { return new ReadOnlyCollection<PcapAddress>(m_pcapIf.Addresses); }
+            get { return new ReadOnlyCollection<PcapAddress>(pcapInterface.Addresses); }
         }
 
         /// <summary>
@@ -62,7 +46,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override string Description
         {
-            get { return m_pcapIf.Description; }
+            get { return pcapInterface.Description; }
         }
 
         /// <summary>
@@ -70,7 +54,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual uint Flags
         {
-            get { return m_pcapIf.Flags; }
+            get { return pcapInterface.Flags; }
         }
 
         /// <summary>
@@ -93,7 +77,7 @@ namespace SharpPcap.LibPcap
             {
                 return;
             }
-            var credentials = configuration.Credentials ?? Interface.Credentials;
+            var credentials = configuration.Credentials ?? pcapInterface.Credentials;
             var mode = configuration.Mode;
 
             // Check if immediate is supported
@@ -102,7 +86,7 @@ namespace SharpPcap.LibPcap
             // See https://www.tcpdump.org/manpages/pcap_set_immediate_mode.3pcap.html
             var mintocopy_supported = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-            var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
+            ErrorBuffer errbuf; //will hold errors
 
             // set the StopCaptureTimeout value to twice the read timeout to ensure that
             // we wait long enough before considering the capture thread to be stuck when stopping
@@ -131,11 +115,11 @@ namespace SharpPcap.LibPcap
             {
                 Handle = LibPcapSafeNativeMethods.pcap_create(
                     Name, // name of the device
-                    errbuf); // error buffer
+                    out errbuf); // error buffer
 
                 if (Handle.IsInvalid)
                 {
-                    var err = $"Unable to open the adapter '{Name}'. {errbuf}";
+                    var err = $"Unable to open the adapter '{Name}' using pcap_create. {errbuf}";
                     throw new PcapException(err);
                 }
                 // Those are configurations that pcap_open can handle differently
@@ -171,20 +155,20 @@ namespace SharpPcap.LibPcap
                         (short)mode,                        // flags
                         (short)configuration.ReadTimeout,   // read timeout
                         ref auth,                           // authentication
-                        errbuf);                            // error buffer
+                        out errbuf);                        // error buffer
                 }
                 catch (TypeLoadException)
                 {
                     var reason = credentials != null ? "Remote PCAP" : "Requested DeviceModes";
-                    var err = $"Unable to open the adapter '{Name}'. {reason} not supported";
+                    var err = $"Unable to open the adapter '{Name}'. {reason} is not supported";
                     throw new PcapException(err, PcapError.PlatformNotSupported);
                 }
-            }
 
-            if (Handle.IsInvalid)
-            {
-                var err = $"Unable to open the adapter '{Name}'. {errbuf}";
-                throw new PcapException(err);
+                if (Handle.IsInvalid)
+                {
+                    var err = $"Unable to open the adapter '{Name}' using pcap_open. {errbuf}";
+                    throw new PcapException(err);
+                }
             }
 
             ConfigureIfCompatible(use_pcap_create,
@@ -267,6 +251,7 @@ namespace SharpPcap.LibPcap
         private const int disableBlocking = 0;
         private const int enableBlocking = 1;
 
+
         /// <summary>
         /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
         /// </summary>
@@ -275,14 +260,12 @@ namespace SharpPcap.LibPcap
             get
             {
                 ThrowIfNotOpen("Can't get blocking mode, the device is closed");
-
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(Handle, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_getnonblock(Handle, out var errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
                 {
-                    string err = "Unable to set get blocking" + errbuf.ToString();
+                    string err = "Unable to get blocking mode. " + errbuf.ToString();
                     throw new PcapException(err);
                 }
 
@@ -294,18 +277,16 @@ namespace SharpPcap.LibPcap
             {
                 ThrowIfNotOpen("Can't set blocking mode, the device is closed");
 
-                var errbuf = new StringBuilder(Pcap.PCAP_ERRBUF_SIZE); //will hold errors
-
                 int block = disableBlocking;
                 if (value)
                     block = enableBlocking;
 
-                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(Handle, block, errbuf);
+                int ret = LibPcapSafeNativeMethods.pcap_setnonblock(Handle, block, out var errbuf);
 
                 // Errorbuf is only filled when ret = -1
                 if (ret == -1)
                 {
-                    string err = "Unable to set non blocking" + errbuf.ToString();
+                    string err = "Unable to set blocking mode. " + errbuf.ToString();
                     throw new PcapException(err);
                 }
             }
@@ -315,7 +296,7 @@ namespace SharpPcap.LibPcap
         /// Sends a raw packet through this device
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
-        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header = null)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
             int res;

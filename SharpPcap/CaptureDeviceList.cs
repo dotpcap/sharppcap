@@ -13,7 +13,7 @@ namespace SharpPcap
     /// </summary>
     public class CaptureDeviceList : ReadOnlyCollection<ILiveDevice>
     {
-        private static CaptureDeviceList instance;
+        private static CaptureDeviceList? instance;
 
         private LibPcap.LibPcapLiveDeviceList libPcapDeviceList;
 

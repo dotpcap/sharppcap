@@ -12,7 +12,7 @@ namespace SharpPcap.Tunneling
     public class IPAddressConfiguration
     {
         // property names based on UnicastIPAddressInformation
-        public IPAddress Address { get; set; }
-        public IPAddress IPv4Mask { get; set; }
+        public IPAddress? Address { get; set; }
+        public IPAddress? IPv4Mask { get; set; }
     }
 }

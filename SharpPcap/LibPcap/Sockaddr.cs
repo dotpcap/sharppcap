@@ -46,12 +46,12 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// If type == AF_INET_AF_INET6
         /// </summary>
-        public IPAddress ipAddress;
+        public IPAddress? ipAddress;
 
         /// <summary>
         /// If type == HARDWARE
         /// </summary>
-        public PhysicalAddress hardwareAddress;
+        public PhysicalAddress? hardwareAddress;
 
         /// <summary>
         /// Address family
@@ -97,7 +97,8 @@ namespace SharpPcap.LibPcap
 
                 var saddr_ll = Marshal.PtrToStructure<sockaddr_ll>(sockaddrPtr);
 
-                var hwAddrBytes = new byte[saddr_ll.sll_halen];
+                var hwAddrBytesLength = Math.Min(saddr_ll.sll_halen,(byte)8); // allow max length of 8 bytes (for exotic hardware that doesn't follow the linux standard)
+                var hwAddrBytes = new byte[hwAddrBytesLength];
                 Buffer.BlockCopy(saddr_ll.sll_addr, 0, hwAddrBytes, 0, hwAddrBytes.Length);
                 hardwareAddress = new PhysicalAddress(hwAddrBytes); // copy into the PhysicalAddress class
             }
@@ -126,18 +127,18 @@ namespace SharpPcap.LibPcap
         {
             if (type == AddressTypes.AF_INET_AF_INET6)
             {
-                return ipAddress.ToString();
+                return ipAddress?.ToString() ?? string.Empty;
             }
             else if (type == AddressTypes.HARDWARE)
             {
-                return "HW addr: " + hardwareAddress.ToString();
+                return "HW addr: " + hardwareAddress?.ToString();
             }
             else if (type == AddressTypes.UNKNOWN)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

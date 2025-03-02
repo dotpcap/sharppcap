@@ -19,7 +19,7 @@ pr:
 jobs:
 - job: linux
   pool:
-    vmImage: ubuntu-20.04
+    vmImage: ubuntu-24.04
   steps:
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo -E bash scripts/install-tap.sh
@@ -29,9 +29,8 @@ jobs:
 
 - job: macos
   pool:
-    vmImage: macOS-11
+    vmImage: macOS-14
   steps:
-  - script: sudo -E bash scripts/install-dotnet.sh
   - script: sudo -E bash scripts/install-libpcap.sh
   - script: sudo sysctl -w net.inet.udp.maxdgram=65535
   - script: sudo -E bash scripts/test.sh
@@ -48,7 +47,6 @@ jobs:
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: dotnet restore -s https://api.nuget.org/v3/index.json
   # NOTE: Remove filter when npcap has rpcapd support
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap" -r win-x86
     env:
@@ -63,7 +61,6 @@ jobs:
     env:
       npcap_oem_key: $(npcap_oem_key)
   - pwsh: .\scripts\install-winpkfilter.ps1
-  - script: dotnet restore -s https://api.nuget.org/v3/index.json
   # NOTE: Remove filter when npcap has rpcapd support
   - script: bash scripts/test.sh --filter "TestCategory!=RemotePcap"
     env:

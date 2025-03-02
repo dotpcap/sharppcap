@@ -15,7 +15,7 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public class LibPcapLiveDeviceList : ReadOnlyCollection<LibPcapLiveDevice>
     {
-        private static LibPcapLiveDeviceList instance;
+        private static LibPcapLiveDeviceList? instance;
 
         /// <summary>
         /// Method to retrieve this classes singleton instance
@@ -24,10 +24,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new LibPcapLiveDeviceList();
-                }
+                instance ??= new LibPcapLiveDeviceList();
 
                 return instance;
             }
@@ -90,8 +87,7 @@ namespace SharpPcap.LibPcap
                         if (newItem.Name == existingItem.Name)
                         {
                             // copy the flags and addresses over
-                            existingItem.Interface.Flags = newItem.Interface.Flags;
-                            existingItem.Interface.Addresses = newItem.Interface.Addresses;
+                            existingItem.Interface = newItem.Interface;
 
                             break; // break out of the foreach(existingItem)
                         }

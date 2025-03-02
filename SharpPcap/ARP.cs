@@ -22,7 +22,7 @@ namespace SharpPcap
         /// <param name="device">The network device on which this resolver sends its ARP packets</param>
         public ARP(LibPcapLiveDevice device)
         {
-            pcapInterface = device.Interface;
+            pcapInterface = device.Interface ?? throw new ArgumentException();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SharpPcap
         /// <param name="destIP">The IP address to resolve</param>
         /// <returns>The MAC address that matches to the given IP address or
         /// null if there was a timeout</returns>
-        public PhysicalAddress Resolve(System.Net.IPAddress destIP)
+        public PhysicalAddress? Resolve(System.Net.IPAddress destIP)
         {
             return Resolve(destIP, null, null);
         }
@@ -50,9 +50,9 @@ namespace SharpPcap
         /// <param name="localMAC">The localMAC address to use, if null the local mac will be discovered</param>
         /// <returns>The MAC address that matches to the given IP address or
         /// null if there was a timeout</returns>
-        public PhysicalAddress Resolve(System.Net.IPAddress destIP,
-                                       System.Net.IPAddress localIP,
-                                       PhysicalAddress localMAC)
+        public PhysicalAddress? Resolve(System.Net.IPAddress destIP,
+                                       System.Net.IPAddress? localIP,
+                                       PhysicalAddress? localMAC)
         {
             // if no local ip address is specified attempt to find one from the adapter
             if (localIP == null)
@@ -61,10 +61,10 @@ namespace SharpPcap
                 // ARP is ipv4, NDP is used for ipv6
                 foreach (var address in pcapInterface.Addresses)
                 {
-                    if (address.Addr.type == Sockaddr.AddressTypes.AF_INET_AF_INET6)
+                    if (address.Addr?.type == Sockaddr.AddressTypes.AF_INET_AF_INET6)
                     {
                         // make sure the address is ipv4
-                        if (address.Addr.ipAddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        if (address.Addr?.ipAddress?.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                         {
                             localIP = address.Addr.ipAddress;
                             break; // break out of the foreach
@@ -84,7 +84,7 @@ namespace SharpPcap
             {
                 foreach (var address in pcapInterface.Addresses)
                 {
-                    if (address.Addr.type == Sockaddr.AddressTypes.HARDWARE)
+                    if (address.Addr?.type == Sockaddr.AddressTypes.HARDWARE)
                     {
                         localMAC = address.Addr.hardwareAddress;
                     }
@@ -103,7 +103,7 @@ namespace SharpPcap
             }
         }
 
-        internal static PhysicalAddress Resolve(
+        internal static PhysicalAddress? Resolve(
             ILiveDevice device,
             System.Net.IPAddress destIP,
             System.Net.IPAddress localIP,
@@ -125,7 +125,7 @@ namespace SharpPcap
 
             var requestInterval = new TimeSpan(0, 0, 1);
 
-            PacketDotNet.ArpPacket arpPacket = null;
+            PacketDotNet.ArpPacket? arpPacket = null;
 
             // attempt to resolve the address with the current timeout
             var timeoutDateTime = DateTime.Now + timeout;
@@ -171,7 +171,7 @@ namespace SharpPcap
             else
             {
                 //return the resolved MAC address
-                return arpPacket.SenderHardwareAddress;
+                return arpPacket?.SenderHardwareAddress;
             }
         }
 

@@ -151,7 +151,7 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="bool"/>
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -254,9 +254,9 @@ namespace SharpPcap
         /// <returns>
         /// A <see cref="int"/>
         /// </returns>
-        public int CompareTo(PosixTimeval that)
+        public int CompareTo(PosixTimeval? that)
         {
-            return Value.CompareTo(that.Value);
+            return Value.CompareTo(that?.Value);
         }
     }
 }

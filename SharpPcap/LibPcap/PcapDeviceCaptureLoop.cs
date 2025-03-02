@@ -16,7 +16,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Thread that is performing the background packet capture
         /// </summary>
-        protected Task captureThread;
+        protected Task? captureThread;
 
         /// <summary>
         /// Flag that indicates that a capture thread should stop
@@ -69,7 +69,10 @@ namespace SharpPcap.LibPcap
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
                 LibPcapSafeNativeMethods.pcap_breakloop(Handle);
-                Task.WaitAny(new[] { captureThread }, StopCaptureTimeout);
+                if (captureThread != null)
+                {
+                    Task.WaitAny([captureThread], StopCaptureTimeout);
+                }
                 captureThread = null;
             }
         }

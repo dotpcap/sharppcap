@@ -34,7 +34,9 @@ namespace SharpPcap
         /// Data as a class field vs. a virtual property improves performance
         /// significantly. ~2.5% when parsing the packet with Packet.Net and
         /// ~20% when reading each byte of the packet
+
         public byte[] Data;
+
 
         /// <summary>
         /// The length of the packet on the line
@@ -73,6 +75,7 @@ namespace SharpPcap
             this.PacketLength = packetLength ?? Data?.Length ?? 0;
         }
 
+#pragma warning disable CS8618 // Possible null reference return.
         public RawCapture(ICaptureDevice device, ICaptureHeader header, System.ReadOnlySpan<byte> data)
         {
             this.LinkLayerType = device.LinkType;
@@ -80,6 +83,7 @@ namespace SharpPcap
             this.Data = data.ToArray();
             this.PacketLength = Data?.Length ?? 0;
         }
+#pragma warning restore CS8618 // Possible null reference return.
 
         /// <summary>Output this packet as a readable string</summary>
         public override System.String ToString()

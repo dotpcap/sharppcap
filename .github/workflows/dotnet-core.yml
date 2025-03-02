@@ -16,12 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
-    - name: Install .net dependencies
-      run: dotnet restore
+        fetch-depth: 0
     - name: Install libpcap
       run: sudo -E bash scripts/install-libpcap.sh
     - name: Install tap
@@ -30,11 +26,13 @@ jobs:
       run: dotnet build SharpPcap/SharpPcap.csproj
     - name: Test
       run: sudo -E bash scripts/test.sh
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - run: sudo chmod -R +r Test/TestResults
       if: always()
     - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v4
+      uses: mikepenz/action-junit-report@v5
       if: always()
       with:
         report_paths: Test/TestResults/TestResults.xml

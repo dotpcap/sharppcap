@@ -40,9 +40,9 @@ namespace SharpPcap.WinpkFilter
         /// </summary>
         public string FriendlyName { get; }
 
-        public string Description => null;
+        public string Description => string.Empty;
 
-        public string LastError => null;
+        public string? LastError => null;
 
         private readonly DriverHandle DriverHandle;
 
@@ -72,7 +72,7 @@ namespace SharpPcap.WinpkFilter
             MacAddress = new PhysicalAddress(address);
 
             Name = GetPrivateName(nameBytes);
-            FriendlyName = ConvertAdapterName(nameBytes);
+            FriendlyName = ConvertAdapterName(nameBytes) ?? Name;
         }
 
         /// <summary>
@@ -109,11 +109,11 @@ namespace SharpPcap.WinpkFilter
         /// </summary>
         /// <param name="adapterNameBytes">Bytes of the adapter name.</param>
         /// <returns><see cref="string"/>.</returns>
-        private static string ConvertAdapterName(byte[] adapterNameBytes)
+        private static string? ConvertAdapterName(byte[] adapterNameBytes)
         {
 
             var friendlyNameBytes = new byte[NativeMethods.ADAPTER_NAME_SIZE];
-            string friendlyName = null;
+            string? friendlyName = null;
 
             var success = NativeMethods.ConvertWindows2000AdapterName(adapterNameBytes, friendlyNameBytes, (uint)friendlyNameBytes.Length);
 
@@ -205,7 +205,7 @@ namespace SharpPcap.WinpkFilter
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="header">The packet header</param>
-        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header = null)
         {
             if (p.Length > NativeMethods.MAX_ETHER_FRAME)
             {

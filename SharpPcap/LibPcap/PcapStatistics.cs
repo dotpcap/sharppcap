@@ -73,8 +73,7 @@ namespace SharpPcap.LibPcap
             // marshal the unmanaged memory into an object of the proper type
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                var managedStat = (PcapUnmanagedStructures.pcap_stat_unix)Marshal.PtrToStructure(stat,
-                                                                                                 typeof(PcapUnmanagedStructures.pcap_stat_unix));
+                var managedStat = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_stat_unix>(stat);
 
                 // copy the values
                 this.ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
@@ -83,8 +82,7 @@ namespace SharpPcap.LibPcap
             }
             else
             {
-                var managedStat = (PcapUnmanagedStructures.pcap_stat_windows)Marshal.PtrToStructure(stat,
-                                                                                                    typeof(PcapUnmanagedStructures.pcap_stat_windows));
+                var managedStat = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_stat_windows>(stat);
 
                 // copy the values
                 this.ReceivedPackets = (uint)managedStat.ps_recv;

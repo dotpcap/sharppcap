@@ -24,7 +24,7 @@ namespace SharpPcap
 
         public int? KernelBufferSize { get; set; }
 
-        public RemoteAuthentication Credentials { get; set; }
+        public RemoteAuthentication? Credentials { get; set; }
 
         public bool? Immediate { get; set; }
 
@@ -41,7 +41,7 @@ namespace SharpPcap
 
         public TimestampType? TimestampType { get; set; }
 
-        public event EventHandler<ConfigurationFailedEventArgs> ConfigurationFailed;
+        public event EventHandler<ConfigurationFailedEventArgs>? ConfigurationFailed;
 
         internal void RaiseConfigurationFailed(string property, PcapError error, string message)
         {
@@ -69,8 +69,8 @@ namespace SharpPcap
 
     public class ConfigurationFailedEventArgs : EventArgs
     {
-        public PcapError Error { get; internal set; }
-        public string Property { get; internal set; }
-        public string Message { get; internal set; }
+        public PcapError Error { get; internal init; }
+        public required string Property { get; init; }
+        public required string Message { get; init; }
     }
 }

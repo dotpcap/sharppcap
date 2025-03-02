@@ -16,22 +16,22 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// The address value of this PcapAddress, null if none is present
         /// </summary>
-        public Sockaddr Addr { get; internal set; }
+        public Sockaddr? Addr { get; internal set; }
 
         /// <summary>
         /// Netmask of this PcapAddress, null if none is present
         /// </summary>
-        public Sockaddr Netmask { get; internal set; }
+        public Sockaddr? Netmask { get; internal set; }
 
         /// <summary>
         /// Broadcast address of this PcapAddress, null if none is present
         /// </summary>
-        public Sockaddr Broadaddr { get; internal set; }
+        public Sockaddr? Broadaddr { get; internal set; }
 
         /// <summary>
         /// Destination address, null if the interface isn't a point-to-point interface
         /// </summary>
-        public Sockaddr Dstaddr { get; internal set; }
+        public Sockaddr? Dstaddr { get; internal set; }
 
         internal PcapAddress()
         { }

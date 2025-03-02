@@ -214,7 +214,7 @@ namespace SharpPcap.LibPcap
 
         public void Dispose()
         {
-            buffer = null;
+            buffer = [];
         }
     }
 
@@ -250,8 +250,8 @@ namespace SharpPcap.LibPcap
         {
             var data = packet.Data;
             var timeval = packet.Timeval;
-            var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds,
-                                        (uint)data.Length, (uint)data.Length);
+            var length = (uint)data.Length;
+            var header = new PcapHeader((uint)timeval.Seconds, (uint)timeval.MicroSeconds, length, length);
             return queue.Add(header, data);
         }
 

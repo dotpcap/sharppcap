@@ -21,7 +21,6 @@ namespace SharpPcap
         /* interface is loopback */
         internal const uint PCAP_IF_LOOPBACK = 0x00000001;
         internal const int MAX_PACKET_SIZE = 65536;
-        internal const int PCAP_ERRBUF_SIZE = 256;
 
         // Constants for address families
         // These are set in a Pcap static initializer because the values
@@ -54,7 +53,7 @@ namespace SharpPcap
             }
         }
 
-        private static Version _libpcapVersion;
+        private static Version? _libpcapVersion;
         public static Version LibpcapVersion
         {
             get
@@ -68,7 +67,7 @@ namespace SharpPcap
         {
             get
             {
-                return typeof(Pcap).Assembly.GetName().Version;
+                return typeof(Pcap).Assembly.GetName().Version ?? new();
             }
         }
 

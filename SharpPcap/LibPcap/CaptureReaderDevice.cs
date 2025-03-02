@@ -8,6 +8,11 @@ namespace SharpPcap.LibPcap
     /// </summary>
     public abstract class CaptureReaderDevice : PcapDevice
     {
+        protected CaptureReaderDevice() 
+            : base(null)
+        {
+        }
+
         /// <summary>
         /// Retrieves pcap statistics.
         ///
@@ -16,6 +21,6 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public override ICaptureStatistics Statistics => null;
+        public override ICaptureStatistics? Statistics => null;
     }
 }

@@ -18,35 +18,39 @@ namespace SharpPcap
     public abstract class BaseLiveDevice : IDisposable
     {
 
-        private CancellationTokenSource TokenSource;
-        private Task CaptureTask;
+        private CancellationTokenSource? TokenSource;
+        private Task? CaptureTask;
         public bool Started => CaptureTask?.IsCompleted == false;
 
         protected TimeSpan ReadTimeout { get; set; } = TimeSpan.FromSeconds(1);
 
         public TimeSpan StopCaptureTimeout { get; set; } = TimeSpan.FromSeconds(1);
 
-        public ICaptureStatistics Statistics => null;
+        public ICaptureStatistics? Statistics => null;
 
         public TimestampResolution TimestampResolution => TimestampResolution.Microsecond;
 
         public virtual LinkLayers LinkType => LinkLayers.Ethernet;
 
-        public event PacketArrivalEventHandler OnPacketArrival;
-        public event CaptureStoppedEventHandler OnCaptureStopped;
+        public event PacketArrivalEventHandler? OnPacketArrival;
+        public event CaptureStoppedEventHandler? OnCaptureStopped;
 
-        protected BpfProgram FilterProgram;
-        private string FilterValue;
-        public string Filter
+        protected BpfProgram? FilterProgram;
+        private string? FilterValue;
+        public string? Filter
         {
             get => FilterValue;
             set
             {
-                using (var pcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)LinkType, Pcap.MAX_PACKET_SIZE))
+                if (value == null)
                 {
-                    FilterProgram = BpfProgram.Create(pcapHandle, value);
-                    FilterValue = value;
+                    FilterValue = null;
+                    FilterProgram = null;
+                    return;
                 }
+                using var pcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)LinkType, Pcap.MAX_PACKET_SIZE);
+                FilterProgram = BpfProgram.Create(pcapHandle, value);
+                FilterValue = value;
             }
         }
 

@@ -98,7 +98,7 @@ namespace CreatingCaptureFile
 
             if (rawPacket.LinkLayerType == PacketDotNet.LinkLayers.Ethernet)
             {
-                var packet = PacketDotNet.Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
+                var packet = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
                 var ethernetPacket = (EthernetPacket)packet;
 
                 Console.WriteLine("{0} At: {1}:{2}: MAC:{3} -> MAC:{4}",

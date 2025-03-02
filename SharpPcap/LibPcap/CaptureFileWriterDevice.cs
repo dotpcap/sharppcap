@@ -63,6 +63,7 @@ namespace SharpPcap.LibPcap
         /// Constructor
         /// </summary>
         public CaptureFileWriterDevice(string captureFilename, System.IO.FileMode mode = FileMode.OpenOrCreate)
+            : base(null)
         {
             m_pcapFile = captureFilename;
             fileMode = mode;
@@ -142,7 +143,7 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public override ICaptureStatistics Statistics => null;
+        public override ICaptureStatistics? Statistics => null;
 
         /// <summary>
         /// Writes a packet to the pcap dump file associated with this device.
@@ -192,7 +193,7 @@ namespace SharpPcap.LibPcap
             Write(data, ref header);
         }
 
-        void IInjectionDevice.SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header)
+        void IInjectionDevice.SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header)
         {
             Write(p);
         }

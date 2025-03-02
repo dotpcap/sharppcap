@@ -1,0 +1,40 @@
+# Copyright 2023-2024 Ayoub Kaanich <kayoub5@live.com>
+# SPDX-License-Identifier: MIT
+version = 1
+SPDX-PackageName = "sharppcap"
+SPDX-PackageSupplier = "Chris Morgan <chmorgan@gmail.com>"
+SPDX-PackageDownloadLocation = "https://github.com/dotpcap/sharppcap"
+
+[[annotations]]
+path = [
+    "Examples/**",
+    "SharpPcap.sln",
+    "Test/capture_files/10k_packets.pcap",
+    "Test/capture_files/arp_request_response.pcap",
+    "Test/capture_files/ipv6_http.pcap",
+    "Test/capture_files/ipv6_icmpv6_packet.pcap",
+    "Test/capture_files/ip_packet_bogus_length.pcap",
+    "Test/capture_files/README",
+    "Test/capture_files/tcp.pcap",
+    "Test/capture_files/tcp_with_extra_bytes.pcap",
+    "Test/capture_files/test_stream.pcap",
+    "Test/capture_files/udp_dns_request_response.pcap",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+    "Tamir Gal <tamir@tamirgal.com>",
+    "Chris Morgan <chmorgan@gmail.com>",
+]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["Tutorial/**", "History.md", "README.md", "renovate.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Chris Morgan <chmorgan@gmail.com>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "Test/capture_files/arp_with_vlan.pcap"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Houcem Benali <justhoucem@gmail.com>"
+SPDX-License-Identifier = "MIT"

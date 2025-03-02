@@ -22,7 +22,7 @@ namespace SharpPcap.LibPcap
             || Pcap.LibpcapVersion >= new Version(1, 8, 0);
         private static readonly object SyncCompile = new object();
 
-        public static BpfProgram TryCreate(PcapHandle pcapHandle, string filter, int optimize = 1, uint netmask = 0)
+        public static BpfProgram? TryCreate(PcapHandle pcapHandle, string filter, int optimize = 1, uint netmask = 0)
         {
             var bpfProgram = new BpfProgram();
             int result;
@@ -67,12 +67,10 @@ namespace SharpPcap.LibPcap
             return bpfProgram;
         }
 
-        public static BpfProgram TryCreate(LinkLayers linktype, string filter, int optimize = 1, uint netmask = 0)
+        public static BpfProgram? TryCreate(LinkLayers linktype, string filter, int optimize = 1, uint netmask = 0)
         {
-            using (var handle = LibPcapSafeNativeMethods.pcap_open_dead((int)linktype, Pcap.MAX_PACKET_SIZE))
-            {
-                return TryCreate(handle, filter, optimize, netmask);
-            }
+            using var handle = LibPcapSafeNativeMethods.pcap_open_dead((int)linktype, Pcap.MAX_PACKET_SIZE);
+            return TryCreate(handle, filter, optimize, netmask);
         }
 
 
