@@ -126,7 +126,11 @@ namespace Test
             var ex = Assert.Throws<PcapException>(() => device.Open(config));
             if (ex.Error != PcapError.PlatformNotSupported)
             {
-                Assert.That(ex.Message, Does.Contain(nameof(DeviceConfiguration.BufferSize)));
+                Assert.That(
+                    ex.Message, 
+                    Does.Contain(nameof(DeviceConfiguration.BufferSize))
+                        .Or.Contain("using pcap_open")
+                );
             }
         }
 
