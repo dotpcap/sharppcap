@@ -74,14 +74,14 @@ namespace Test.Misc
         {
             var now = DateTime.Now;
             var pX = new PosixTimeval(now);
-            Assert.That(now.ToUniversalTime().Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
+            Assert.That(now.ToUniversalTime(), Is.EqualTo(pX.Date).Within(TimeSpan.FromMilliseconds(1)));
         }
 
         [Test]
         public void EmptyConstructor()
         {
             var pX = new PosixTimeval();
-            Assert.That(DateTime.UtcNow.Ticks, Is.EqualTo(pX.Date.Ticks).Within(TimeSpan.TicksPerMillisecond * 1.0));
+            Assert.That(DateTime.UtcNow, Is.EqualTo(pX.Date).Within(TimeSpan.FromMilliseconds(1)));
         }
     }
 }
