@@ -14,24 +14,8 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Capture live packets from a network device
     /// </summary>
-    public class LibPcapLiveDevice : PcapDevice, ILiveDevice
+    public class LibPcapLiveDevice(PcapInterface pcapInterface) : PcapDevice(pcapInterface), ILiveDevice
     {
-        /// <summary>
-        /// Constructs a new PcapDevice based on a 'pcapIf' struct
-        /// </summary>
-        /// <param name="pcapIf">A 'pcapIf' struct representing
-        /// the pcap device</param>
-        public LibPcapLiveDevice(PcapInterface pcapIf)
-        {
-            m_pcapIf = pcapIf;
-        }
-
-        /// <summary>
-        /// Default contructor for subclasses
-        /// </summary>
-        protected LibPcapLiveDevice()
-        {
-        }
 
         /// <summary>
         /// PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
@@ -46,7 +30,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override string Name
         {
-            get { return m_pcapIf.Name; }
+            get { return pcapInterface.Name; }
         }
 
         /// <summary>
@@ -54,7 +38,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual ReadOnlyCollection<PcapAddress> Addresses
         {
-            get { return new ReadOnlyCollection<PcapAddress>(m_pcapIf.Addresses); }
+            get { return new ReadOnlyCollection<PcapAddress>(pcapInterface.Addresses); }
         }
 
         /// <summary>
@@ -62,7 +46,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public override string Description
         {
-            get { return m_pcapIf.Description; }
+            get { return pcapInterface.Description; }
         }
 
         /// <summary>
@@ -70,7 +54,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public virtual uint Flags
         {
-            get { return m_pcapIf.Flags; }
+            get { return pcapInterface.Flags; }
         }
 
         /// <summary>
@@ -93,7 +77,7 @@ namespace SharpPcap.LibPcap
             {
                 return;
             }
-            var credentials = configuration.Credentials ?? Interface.Credentials;
+            var credentials = configuration.Credentials ?? pcapInterface.Credentials;
             var mode = configuration.Mode;
 
             // Check if immediate is supported
@@ -267,6 +251,7 @@ namespace SharpPcap.LibPcap
         private const int disableBlocking = 0;
         private const int enableBlocking = 1;
 
+
         /// <summary>
         /// Set/Get Non-Blocking Mode. returns allways false for savefiles.
         /// </summary>
@@ -311,7 +296,7 @@ namespace SharpPcap.LibPcap
         /// Sends a raw packet through this device
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
-        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header = null)
         {
             ThrowIfNotOpen("Can't send packet, the device is closed");
             int res;

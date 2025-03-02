@@ -26,6 +26,9 @@ SPDX-License-Identifier: MIT
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <LangVersion>13.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
 	<IsTrimmable>true</IsTrimmable>
@@ -35,6 +38,10 @@ SPDX-License-Identifier: MIT
     <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

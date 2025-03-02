@@ -61,7 +61,7 @@ namespace SharpPcap.WinDivert
         /// </summary>
         /// <param name="destinationAddress"></param>
         /// <returns></returns>
-        public static NetworkInterface GetBestInterface(IPAddress destinationAddress)
+        public static NetworkInterface? GetBestInterface(IPAddress destinationAddress)
         {
             var interfaceIndex = GetBestInterfaceIndex(destinationAddress);
 

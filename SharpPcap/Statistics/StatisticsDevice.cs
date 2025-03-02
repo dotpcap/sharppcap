@@ -33,7 +33,7 @@ namespace SharpPcap.Statistics
         /// Fires whenever a new pcap statistics is available for this Pcap Device.<br/>
         /// For network captured packets this event is invoked only when working in "PcapMode.Statistics" mode.
         /// </summary>
-        public event EventHandler<StatisticsEventArgs> OnPcapStatistics;
+        public event EventHandler<StatisticsEventArgs>? OnPcapStatistics;
 
         /// <summary>
         /// Starts the capturing process via a background thread
@@ -83,8 +83,9 @@ namespace SharpPcap.Statistics
             var packet = e.GetPacket();
             if (IsWindows)
             {
-                ReceivedPackets += BitConverter.ToInt64(packet.Data, 0);
-                ReceivedBytes += BitConverter.ToInt64(packet.Data, 8);
+                var data = packet.Data ?? [];
+                ReceivedPackets += BitConverter.ToInt64(data, 0);
+                ReceivedBytes += BitConverter.ToInt64(data, 8);
             }
             else
             {
@@ -107,7 +108,7 @@ namespace SharpPcap.Statistics
 
         public string LastError => LiveDevice.LastError;
 
-        public string Filter
+        public string? Filter
         {
             get => LiveDevice.Filter;
             set => LiveDevice.Filter = value;
@@ -121,7 +122,7 @@ namespace SharpPcap.Statistics
         /// </returns>
         public ICaptureStatistics Statistics => LiveDevice.Statistics;
 
-        public PhysicalAddress MacAddress => LiveDevice.MacAddress;
+        public PhysicalAddress? MacAddress => LiveDevice.MacAddress;
 
         public LinkLayers LinkType => LiveDevice.LinkType;
 

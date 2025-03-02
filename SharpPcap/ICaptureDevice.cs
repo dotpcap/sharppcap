@@ -64,7 +64,7 @@ namespace SharpPcap
         ///
         /// Devices that lack statistics support return null
         /// </summary>
-        ICaptureStatistics Statistics { get; }
+        ICaptureStatistics? Statistics { get; }
 
         #region Timestamp
         /// <summary>

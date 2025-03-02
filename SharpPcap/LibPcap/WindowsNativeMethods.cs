@@ -49,7 +49,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         /// <param name="pcapName"></param>
         /// <returns></returns>
-        internal static string GetInterfaceAlias(string pcapName)
+        internal static string? GetInterfaceAlias(string pcapName)
         {
             if (Environment.OSVersion.Version < WindowsVistaVersion)
             {

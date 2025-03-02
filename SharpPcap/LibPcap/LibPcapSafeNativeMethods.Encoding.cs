@@ -102,7 +102,9 @@ namespace SharpPcap.LibPcap
             {
                 if (nativeData == IntPtr.Zero)
                 {
+#pragma warning disable CS8603 // Possible null reference return.
                     return null;
+#pragma warning restore CS8603 // Possible null reference return.
                 }
                 var bytes = (byte*)nativeData;
                 var nbBytes = 0;

@@ -33,28 +33,29 @@ namespace SharpPcap.WinDivert
 
         public LinkLayers LinkType => LinkLayers.Raw;
 
-        public PhysicalAddress MacAddress => null;
+        public PhysicalAddress? MacAddress => null;
 
         /// <summary>
         /// Not currently supported for this device
         /// </summary>
-        public ICaptureStatistics Statistics => null;
+        public ICaptureStatistics? Statistics => null;
 
-        public string LastError { get; private set; }
+        public string? LastError { get; private set; }
 
-        private string filter;
+        private string? filter;
 
         /// <summary>
         /// See https://www.reqrypt.org/windivert-doc.html#filter_language for filter language details
         /// </summary>
-        public string Filter
+        public string? Filter
         {
             get
             {
-                return string.IsNullOrEmpty(filter) ? "true" : filter;
+                return string.IsNullOrEmpty(filter) ? "true" : filter ?? "";
             }
             set
             {
+                value ??= "true";
                 var ret = WinDivertNative.WinDivertHelperCompileFilter(value, WinDivertLayer.Network, IntPtr.Zero, 0, out IntPtr errStrPtr, out uint errPos);
                 if (!ret)
                 {
@@ -200,7 +201,7 @@ namespace SharpPcap.WinDivert
 
         public void Open(DeviceConfiguration configuration)
         {
-            var handle = WinDivertNative.WinDivertOpen(Filter, Layer, Priority, Flags);
+            var handle = WinDivertNative.WinDivertOpen(Filter ?? "true", Layer, Priority, Flags);
             if (handle == IntPtr.Zero || handle == new IntPtr(-1))
             {
                 ThrowLastWin32Error("Failed to open");
@@ -246,7 +247,7 @@ namespace SharpPcap.WinDivert
         /// </summary>
         /// <param name="p"></param>
         /// <param name="header"></param>
-        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader captureHeader)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? captureHeader)
         {
             ThrowIfNotOpen();
             bool res;
@@ -259,9 +260,9 @@ namespace SharpPcap.WinDivert
             else
             {
                 var header = captureHeader as WinDivertHeader;
-                addr.IfIdx = header.InterfaceIndex;
-                addr.SubIfIdx = header.SubInterfaceIndex;
-                addr.Flags = header.Flags;
+                addr.IfIdx = header?.InterfaceIndex ?? 0;
+                addr.SubIfIdx = header?.SubInterfaceIndex ?? 0;
+                addr.Flags = header?.Flags ?? 0;
             }
 
             unsafe
@@ -310,13 +311,13 @@ namespace SharpPcap.WinDivert
         public short Priority { get; set; }
         public ulong Flags { get; set; } = 1;
 
-        public event PacketArrivalEventHandler OnPacketArrival;
-        public event CaptureStoppedEventHandler OnCaptureStopped;
+        public event PacketArrivalEventHandler? OnPacketArrival;
+        public event CaptureStoppedEventHandler? OnCaptureStopped;
 
         /// <summary>
         /// Thread that is performing the background packet capture
         /// </summary>
-        protected Task captureThread;
+        protected Task? captureThread;
         private CancellationTokenSource threadCancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -380,7 +381,10 @@ namespace SharpPcap.WinDivert
             {
                 threadCancellationTokenSource.Cancel();
                 threadCancellationTokenSource = new CancellationTokenSource();
-                Task.WaitAny(new[] { captureThread }, StopCaptureTimeout);
+                if (captureThread != null)
+                {
+                    Task.WaitAny([captureThread], StopCaptureTimeout);
+                }
                 captureThread = null;
             }
         }

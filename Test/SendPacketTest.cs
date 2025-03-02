@@ -30,7 +30,7 @@ namespace Test
             {
                 // test all forms of SendPacket()
                 device.SendPacket(packet);
-                var rawCapture = new RawCapture(PacketDotNet.LinkLayers.Ethernet, new PosixTimeval(), packet.Bytes);
+                var rawCapture = new RawCapture(LinkLayers.Ethernet, new PosixTimeval(), packet.Bytes);
                 device.SendPacket(rawCapture);
                 device.SendPacket(packet, packet.TotalPacketLength);
                 device.SendPacket(packet.Bytes, packet.Bytes.Length);

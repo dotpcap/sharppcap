@@ -37,7 +37,7 @@ namespace SharpPcap.Tunneling.Unix
             return stream;
         }
 
-        public Version GetVersion(NetworkInterface networkInterface, SafeFileHandle handle)
+        public Version? GetVersion(NetworkInterface networkInterface, SafeFileHandle handle)
         {
             return null;
         }
@@ -70,21 +70,19 @@ namespace SharpPcap.Tunneling.Unix
         }
         private void SetAddress(string ifr_name, IPAddressConfiguration address)
         {
-            if (address.Address == null)
+            if (address.Address == null || address.IPv4Mask == null)
             {
                 return;
             }
             IfReq ifr = default;
             ifr.ifr_name = ifr_name;
-            using (var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP))
-            {
+            using var sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.IP);
 
-                ifr.ifr_addr.sa_family = (ushort)address.Address.AddressFamily;
-                ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.Address.GetAddressBytes(), 0);
-                IOControl(sock.Handle, SocketIoctl.SIOCSIFADDR, ref ifr);
-                ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.IPv4Mask.GetAddressBytes(), 0);
-                IOControl(sock.Handle, SocketIoctl.SIOCSIFNETMASK, ref ifr);
-            }
+            ifr.ifr_addr.sa_family = (ushort)address.Address.AddressFamily;
+            ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.Address.GetAddressBytes(), 0);
+            IOControl(sock.Handle, SocketIoctl.SIOCSIFADDR, ref ifr);
+            ifr.ifr_addr.sin_addr.s_addr = BitConverter.ToUInt32(address.IPv4Mask.GetAddressBytes(), 0);
+            IOControl(sock.Handle, SocketIoctl.SIOCSIFNETMASK, ref ifr);
         }
 
         internal static void BringUp(string ifr_name, bool promiscuous)

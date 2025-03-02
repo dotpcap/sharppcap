@@ -12,7 +12,7 @@ namespace SharpPcap
         /// </summary>
         /// <param name="p">The packet bytes to send</param>
         /// <param name="size">The number of bytes to send</param>
-        void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null);
+        void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header = null);
     }
 }
 

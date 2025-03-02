@@ -30,7 +30,7 @@ namespace SharpPcap.LibPcap
         /// <value>
         /// Human readable interface name derived from System.Net.NetworkInformation.NetworkInterface.Name
         /// </value>
-        public string FriendlyName { get; internal set; }
+        public string? FriendlyName { get; internal set; }
 
         /// <value>
         /// Text description of the interface as given by pcap/npcap
@@ -51,7 +51,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Credentials to use in case of remote pcap
         /// </summary>
-        internal RemoteAuthentication Credentials { get; }
+        internal RemoteAuthentication? Credentials { get; }
 
         /// <value>
         /// Pcap interface flags
@@ -61,9 +61,9 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// MacAddress of the interface
         /// </summary>
-        public PhysicalAddress MacAddress { get; }
+        public PhysicalAddress? MacAddress { get; }
 
-        internal PcapInterface(pcap_if pcapIf, NetworkInterface networkInterface, RemoteAuthentication credentials)
+        internal PcapInterface(pcap_if pcapIf, NetworkInterface? networkInterface, RemoteAuthentication? credentials)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
@@ -92,8 +92,9 @@ namespace SharpPcap.LibPcap
                     }
                     else if (!MacAddress.Equals(newAddress.Addr.hardwareAddress))
                     {
-                        throw new InvalidOperationException("found multiple hardware addresses, existing addr "
-                                                                   + MacAddress.ToString() + ", new address " + newAddress.Addr.hardwareAddress.ToString());
+                        throw new InvalidOperationException(
+                            $"found multiple hardware addresses, existing addr {MacAddress}, new address {newAddress.Addr.hardwareAddress}"
+                        );
                     }
                 }
 
@@ -121,7 +122,7 @@ namespace SharpPcap.LibPcap
                     PcapAddress pcapAddress = new PcapAddress();
                     pcapAddress.Addr = new Sockaddr(mac);
                     Addresses.Add(pcapAddress);
-                    if (pcapAddress.Addr.hardwareAddress.GetAddressBytes().Length != 0)
+                    if (pcapAddress.Addr.hardwareAddress?.GetAddressBytes().Length != 0)
                     {
                         MacAddress = pcapAddress.Addr.hardwareAddress;
                     }
@@ -218,7 +219,7 @@ namespace SharpPcap.LibPcap
 
             return pcapInterfaces;
         }
-        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, RemoteAuthentication credentials)
+        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, RemoteAuthentication? credentials)
         {
             var list = new List<PcapInterface>();
             var nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -227,7 +228,7 @@ namespace SharpPcap.LibPcap
             {
                 // Marshal pointer into a struct
                 var pcap_if_unmanaged = Marshal.PtrToStructure<pcap_if>(nextDevPtr);
-                NetworkInterface networkInterface = null;
+                NetworkInterface? networkInterface = null;
                 foreach (var nic in nics)
                 {
                     // if the name and id match then we have found the NetworkInterface

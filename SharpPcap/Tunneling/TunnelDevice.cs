@@ -31,8 +31,8 @@ namespace SharpPcap.Tunneling
 
         private readonly NetworkInterface Interface;
         private readonly IPAddressConfiguration AddressConfiguration;
-        private Stream Stream;
-        private SafeFileHandle FileHandle;
+        private Stream? Stream;
+        private SafeFileHandle? FileHandle;
 
         protected Stream GetFileStream()
         {
@@ -50,23 +50,23 @@ namespace SharpPcap.Tunneling
 
         public string Description => Interface.Description;
 
-        public string LastError => null;
+        public string? LastError => null;
 
-        public Version Version
+        public Version? Version
         {
             get => Driver.GetVersion(Interface, GetFileHandle());
         }
 
         public PhysicalAddress MacAddress => Interface.GetPhysicalAddress();
 
-        public TunnelDevice(NetworkInterface networkInterface, IPAddressConfiguration address = null)
+        public TunnelDevice(NetworkInterface networkInterface, IPAddressConfiguration? address = null)
         {
             this.Interface = networkInterface;
             // Copy configuration
             this.AddressConfiguration = new IPAddressConfiguration()
             {
                 Address = address?.Address,
-                IPv4Mask = address?.IPv4Mask ?? new IPAddress(new byte[] { 255, 255, 255, 0 }),
+                IPv4Mask = address?.IPv4Mask ?? new IPAddress([255, 255, 255, 0]),
             };
         }
 
@@ -145,7 +145,7 @@ namespace SharpPcap.Tunneling
             }
         }
 
-        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader header = null)
+        public void SendPacket(ReadOnlySpan<byte> p, ICaptureHeader? header = null)
         {
             var data = p.ToArray();
             var fs = GetFileStream();

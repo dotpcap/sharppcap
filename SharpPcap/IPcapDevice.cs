@@ -23,19 +23,19 @@ namespace SharpPcap
         /// <summary>
         /// The last pcap error associated with this pcap device
         /// </summary>
-        string LastError { get; }
+        string? LastError { get; }
 
         /// <summary>
         /// Kernel level filtering expression associated with this device.
         /// For more info on filter expression syntax, see:
         /// https://www.winpcap.org/docs/docs_412/html/group__language.html
         /// </summary>
-        string Filter { get; set; }
+        string? Filter { get; set; }
 
         /// <summary>
         /// Mac address of the physical device
         /// </summary>
-        System.Net.NetworkInformation.PhysicalAddress MacAddress { get; }
+        System.Net.NetworkInformation.PhysicalAddress? MacAddress { get; }
 
         /// <summary>
         /// Open the device. To start capturing call the 'StartCapture' function

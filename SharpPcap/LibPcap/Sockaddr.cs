@@ -46,12 +46,12 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// If type == AF_INET_AF_INET6
         /// </summary>
-        public IPAddress ipAddress;
+        public IPAddress? ipAddress;
 
         /// <summary>
         /// If type == HARDWARE
         /// </summary>
-        public PhysicalAddress hardwareAddress;
+        public PhysicalAddress? hardwareAddress;
 
         /// <summary>
         /// Address family
@@ -127,18 +127,18 @@ namespace SharpPcap.LibPcap
         {
             if (type == AddressTypes.AF_INET_AF_INET6)
             {
-                return ipAddress.ToString();
+                return ipAddress?.ToString() ?? string.Empty;
             }
             else if (type == AddressTypes.HARDWARE)
             {
-                return "HW addr: " + hardwareAddress.ToString();
+                return "HW addr: " + hardwareAddress?.ToString();
             }
             else if (type == AddressTypes.UNKNOWN)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
     }
 }

@@ -13,12 +13,8 @@ namespace SharpPcap.LibPcap
     /// <summary>
     /// Base class for all pcap devices
     /// </summary>
-    public abstract partial class PcapDevice : ICaptureDevice
+    public abstract partial class PcapDevice(PcapInterface? pcapInterface) : ICaptureDevice
     {
-        /// <summary>
-        /// Low level interface object that contains device specific information
-        /// </summary>
-        protected PcapInterface m_pcapIf;
 
         /// <summary>
         /// Number of packets that this adapter should capture
@@ -40,20 +36,17 @@ namespace SharpPcap.LibPcap
         /// from the network device or when the packet is read from the on-disk file.<br/>
         /// For network captured packets this event is invoked only when working in "PcapMode.Capture" mode.
         /// </summary>
-        public event PacketArrivalEventHandler OnPacketArrival;
+        public event PacketArrivalEventHandler? OnPacketArrival;
 
         /// <summary>
         /// Fired when the capture process of this pcap device is stopped
         /// </summary>
-        public event CaptureStoppedEventHandler OnCaptureStopped;
+        public event CaptureStoppedEventHandler? OnCaptureStopped;
 
         /// <value>
         /// Low level pcap device values
         /// </value>
-        public PcapInterface Interface
-        {
-            get { return m_pcapIf; }
-        }
+        public PcapInterface? Interface { get; internal set; } = pcapInterface;
 
         private PacketDotNet.LinkLayers linkType;
 
@@ -158,16 +151,16 @@ namespace SharpPcap.LibPcap
         /// <returns>
         /// A <see cref="PcapStatistics"/>
         /// </returns>
-        public abstract ICaptureStatistics Statistics { get; }
+        public abstract ICaptureStatistics? Statistics { get; }
 
         /// <summary>
         /// Mac address of the physical device
         /// </summary>
-        public virtual System.Net.NetworkInformation.PhysicalAddress MacAddress
+        public virtual System.Net.NetworkInformation.PhysicalAddress? MacAddress
         {
             get
             {
-                return Interface.MacAddress;
+                return Interface?.MacAddress;
             }
         }
 
@@ -362,14 +355,14 @@ namespace SharpPcap.LibPcap
             }
         }
 
-        private string _filterString;
+        private string? _filterString;
 
         /// <summary>
         /// Kernel level filtering expression associated with this device.
         /// For more info on filter expression syntax, see:
         /// https://www.tcpdump.org/manpages/pcap-filter.7.html
         /// </summary>
-        public virtual string Filter
+        public virtual string? Filter
         {
             get
             {
@@ -378,7 +371,7 @@ namespace SharpPcap.LibPcap
 
             set
             {
-                SetFilter(value);
+                SetFilter(value ?? string.Empty);
             }
         }
 
@@ -387,22 +380,20 @@ namespace SharpPcap.LibPcap
         /// program without errors
         /// </summary>
         public static bool CheckFilter(string filterExpression,
-                                       out string errorString)
+                                       out string? errorString)
         {
             errorString = null;
-            using (var pcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE))
+            using var pcapHandle = LibPcapSafeNativeMethods.pcap_open_dead((int)PacketDotNet.LinkLayers.Ethernet, Pcap.MAX_PACKET_SIZE);
+            var bpfProgram = BpfProgram.TryCreate(pcapHandle, filterExpression);
+            if (bpfProgram == null)
             {
-                var bpfProgram = BpfProgram.TryCreate(pcapHandle, filterExpression);
-                if (bpfProgram == null)
-                {
-                    errorString = GetLastError(pcapHandle);
-                    return false;
-                }
-                else
-                {
-                    bpfProgram.Dispose();
-                    return true;
-                }
+                errorString = GetLastError(pcapHandle);
+                return false;
+            }
+            else
+            {
+                bpfProgram.Dispose();
+                return true;
             }
         }
         #endregion
@@ -501,7 +492,7 @@ namespace SharpPcap.LibPcap
         /// </returns>
         public override string ToString()
         {
-            return "interface: " + m_pcapIf.ToString() + "\n";
+            return $"interface: {Interface}";
         }
 
 
@@ -517,7 +508,7 @@ namespace SharpPcap.LibPcap
                 dev.Open();
                 while (true)
                 {
-                    RawCapture packet = null;
+                    RawCapture? packet = null;
                     try
                     {
                         var retval = dev.GetNextPacket(out e);

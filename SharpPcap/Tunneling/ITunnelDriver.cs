@@ -13,7 +13,7 @@ namespace SharpPcap.Tunneling
     {
         bool IsTunnelInterface(NetworkInterface networkInterface);
         FileStream Open(NetworkInterface networkInterface, IPAddressConfiguration address, DeviceConfiguration configuration);
-        Version GetVersion(NetworkInterface networkInterface, SafeFileHandle handle);
+        Version? GetVersion(NetworkInterface networkInterface, SafeFileHandle handle);
     }
 
 }

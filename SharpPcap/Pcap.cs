@@ -53,7 +53,7 @@ namespace SharpPcap
             }
         }
 
-        private static Version _libpcapVersion;
+        private static Version? _libpcapVersion;
         public static Version LibpcapVersion
         {
             get
@@ -67,7 +67,7 @@ namespace SharpPcap
         {
             get
             {
-                return typeof(Pcap).Assembly.GetName().Version;
+                return typeof(Pcap).Assembly.GetName().Version ?? new();
             }
         }
 

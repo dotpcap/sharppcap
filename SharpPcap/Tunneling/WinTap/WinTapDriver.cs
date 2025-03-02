@@ -42,7 +42,7 @@ namespace SharpPcap.Tunneling.WinTap
                 throw new PcapException("Failed to open device");
             }
 
-            if (address.Address != null)
+            if (address.Address != null && address.IPv4Mask != null)
             {
                 ConfigureDhcp(
                     handle,
