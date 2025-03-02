@@ -109,8 +109,11 @@ namespace SharpPcap.LibPcap
                 immediateMode = true;
             }
 
+            var remote_pcap = pcapInterface.Name.StartsWith("rpcap://") 
+                || pcapInterface.Name.StartsWith("rpcaps://")
+                || credentials != null;
             // Some configurations can only be used with pcap_create
-            var use_pcap_create = credentials == null && (short)otherModes == 0;
+            var use_pcap_create = !remote_pcap && (short)otherModes == 0;
             if (use_pcap_create)
             {
                 Handle = LibPcapSafeNativeMethods.pcap_create(
