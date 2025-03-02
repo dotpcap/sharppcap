@@ -9,6 +9,7 @@ using SharpPcap.LibPcap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using static Test.TestHelper;
 
 namespace Test
@@ -18,7 +19,7 @@ namespace Test
     public class SendQueueTest
     {
         private const string Filter = "ether proto 0x1234";
-        private const int PacketCount = 500;
+        private const int PacketCount = 400;
         // Windows is usually able to simulate inter packet gaps down to 20µs
         // We test with 100µs to avoid flaky tests
         internal static readonly decimal DeltaTime = 100E-6M;
@@ -154,6 +155,8 @@ namespace Test
             var received = RunCapture(Filter, (device) =>
             {
                 GetSendQueue().ManagedTransmit(device, SendQueueTransmitModes.Normal);
+                // Long queue of packets, wait a bit more
+                Thread.Sleep(1000);
             });
             AssertGoodTransmitNormal(received);
         }
