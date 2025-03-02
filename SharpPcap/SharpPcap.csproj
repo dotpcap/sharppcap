@@ -28,7 +28,7 @@ SPDX-License-Identifier: MIT
     <Deterministic>true</Deterministic>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
-    <LangVersion>13.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
 	<IsTrimmable>true</IsTrimmable>
