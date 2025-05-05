@@ -1,64 +1,67 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using SharpPcap;
-using SharpPcap.LibPcap;
 
 namespace SharpPcap.LibPcap
 {
-    public class CaptureQueue
+    public class CaptureQueue : IDisposable
     {
-        /// Object that is used to prevent concurrent writting or partial reading of PacketQueue
-        private static readonly object QueueLock = new object();
-
         /// The queue that the callback thread puts packets in
-        private static List<RawCapture> PacketQueue = new List<RawCapture>();
+        private BlockingCollection<RawCapture> PacketQueue = [];
 
-        /// Creation of the capture queue
-        public static void CreateCaptureQueue(LibPcapLiveDevice device)
+        /// The timeout if the queue is full
+        private readonly Int32 MillisecondsTimeout = 0;
+
+        /// The bounded capacity of the queue
+        private readonly int BoundedCapacity = 100;
+
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="millisecondsTimeout"></param>
+        /// <param name="boundedCapacity"></param>
+        public CaptureQueue(Int32 millisecondsTimeout, int boundedCapacity)
         {
-            // Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += new PacketArrivalEventHandler(device_OnPacketArrival);
+            MillisecondsTimeout = millisecondsTimeout;
+            BoundedCapacity = boundedCapacity;
+            PacketQueue = new BlockingCollection<RawCapture>(BoundedCapacity);
+        }
+
+        /// Multiple device can register to the callback
+        public void RegisterDevice(ICaptureDevice device)
+        {
+            // For this device, register the handler function to the 'packet arrival' event
+            device.OnPacketArrival += device_OnPacketArrival;
         }
 
         /// The famous OnPacketArrival callback
-        private static void device_OnPacketArrival(object sender, PacketCapture e)
+        private void device_OnPacketArrival(object sender, PacketCapture e)
         {
-            // lock PacketQueue
-            lock (QueueLock)
-            {
-                PacketQueue.Add(e.GetPacket());
-            }
+            PacketQueue.TryAdd(e.GetPacket(), MillisecondsTimeout);
         }
 
-        /// Checks for queued packets. If any exist it locks the QueueLock, saves a
-        /// reference of the current queue for itself, puts a new queue back into
-        /// place into PacketQueue and unlocks QueueLock. This is a minimal amount of
-        /// work done while the queue is locked. The caller can then process queue that it saved without holding
+        /// Checks for queued packets. If any exist it saves a
+        /// reference of the current queue for itself and puts a new queue back into
+        /// place into PacketQueue. The caller can then process queue that it saved without holding
         /// the queue lock.
-        public static void FlushCaptureQueue(out List<RawCapture> CaptureQueue)
+        public void FlushCaptureQueue(out List<RawCapture> CaptureQueue)
         {
-            CaptureQueue = new List<RawCapture>();
+            CaptureQueue = [];
             
-            // lock PacketQueue
-            lock (QueueLock)
+            if (PacketQueue.Count > 0)
             {
-                if (PacketQueue.Count != 0)
-                {
-                    // swap queues, giving the capture callback a new one
-                    CaptureQueue = PacketQueue;
-                    PacketQueue = new List<RawCapture>();
-                }
+                // swap queues, giving the capture callback a new one
+                CaptureQueue = [.. PacketQueue];
+                PacketQueue = new BlockingCollection<RawCapture>(BoundedCapacity);
             }
         }
 
         /// Destroy the capture queue
-        public static void DestroyCaptureQueue()
+        public void Dispose()
         {
-            lock (QueueLock)
-            {
-                // Clear the queue
-                PacketQueue.Clear();
-            }
+            // Clear the queue
+            PacketQueue.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
