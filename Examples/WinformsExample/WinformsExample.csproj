@@ -12,6 +12,6 @@
     <ProjectReference Include="..\..\SharpPcap\SharpPcap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Resources.Extensions" Version="9.0.6" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.7" />
   </ItemGroup>
 </Project>
