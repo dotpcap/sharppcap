@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 using System;
+using System.Runtime.Versioning;
 
 namespace SharpPcap
 {
@@ -28,16 +29,19 @@ namespace SharpPcap
         /// Defines if the data trasfer (in case of a remote capture)
         /// has to be done with UDP protocol. 
         /// </summary>
+        [SupportedOSPlatform("windows")]
         DataTransferUdp = 2,
 
         /// <summary>
         /// Defines if the remote probe will capture its own generated traffic. 
         /// </summary>
+        [SupportedOSPlatform("windows")]
         NoCaptureRemote = 4,
 
         /// <summary>
         /// Defines if the local adapter will capture its own generated traffic. 
         /// </summary>
+        [SupportedOSPlatform("windows")]
         NoCaptureLocal = 8,
 
         /// <summary>

@@ -155,7 +155,7 @@ namespace SharpPcap.LibPcap
                 immediateMode = null;
                 try
                 {
-                    Handle = LibPcapSafeNativeMethods.pcap_open_live(
+                    Handle = LibPcapSafeNativeMethods.pcap_open(
                         Name,                               // name of the device
                         configuration.Snaplen,              // portion of the packet to capture.
                         (short)mode,                        // flags
