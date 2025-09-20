@@ -334,14 +334,16 @@ To write packets to a capture file create a CaptureFileWriterDevice. In this cas
 
 ```cs
 // open the output file
-captureFileWriter = new CaptureFileWriterDevice(device, capFile);
+captureFileWriter = new CaptureFileWriterDevice(capFile);
+captureFileWriter.Open(new DeviceConfiguration());
 ```
 
 Now that the captureFileWriter exists we can look at the OnPacketArrival handler to see how simple it is to write them to disk:
 
 ```cs
 // write the packet to the file
-captureFileWriter.Write(e.Packet);
+var rawPacket = e.GetPacket();
+captureFileWriter.Write(rawPacket);
 Console.WriteLine("Packet dumped to file.");
 ```
 
