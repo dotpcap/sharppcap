@@ -36,7 +36,7 @@ jobs:
       if: always()
       with:
         report_paths: Test/TestResults/TestResults.xml
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: failure()
       with:
         name: artifacts
