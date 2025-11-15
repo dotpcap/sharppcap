@@ -55,7 +55,7 @@ namespace SharpPcap.LibPcap
         {
             get
             {
-                return "Capture file reader device";
+                return "Capture file writer device";
             }
         }
 
