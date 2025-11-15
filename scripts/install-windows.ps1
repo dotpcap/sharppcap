@@ -3,4 +3,3 @@
 # SPDX-License-Identifier: MIT
 
 choco install -y tapwindows
-choco install -y procdump
