@@ -33,8 +33,8 @@ if($user -And $pass){
 } else {  # No key: PRs
     echo "Using backup 0.96"
     $file = $PSScriptRoot+"\npcap-0.96.exe"
-    # Download the 0.96 file from nmap servers
-    Invoke-WebRequest -uri "https://nmap.org/npcap/dist/npcap-0.96.exe" -OutFile $file
+    # Download the 0.96 file from a copy :/ It was taken down from official servers.
+    Invoke-WebRequest "https://github.com/secdev/secdev.github.io/raw/refs/heads/master/public/ci/npcap-0.96.exe" -UseBasicParsing -OutFile $file
     # Now let's check its checksum
     $_chksum = $(CertUtil -hashfile $file SHA256)[1] -replace " ",""
     if ($_chksum -ne "83667e1306fdcf7f9967c10277b36b87e50ee8812e1ee2bb9443bdd065dc04a1"){
