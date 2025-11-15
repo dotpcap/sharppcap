@@ -17,7 +17,7 @@ branches:
 
 image:
   - Visual Studio 2022
-  - macos
+  - macos-ventura
 
 for:
   - matrix:
@@ -34,7 +34,7 @@ for:
 
   - matrix:
       only:
-        - image: macos
+        - image: macos-ventura
     install:
       - brew install --cask dotnet-sdk
       - sudo -E bash scripts/install-libpcap.sh
