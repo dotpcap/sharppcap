@@ -63,7 +63,7 @@ namespace SharpPcap.LibPcap
         /// </summary>
         public PhysicalAddress? MacAddress { get; }
 
-        internal PcapInterface(pcap_if pcapIf, NetworkInterface? networkInterface, RemoteAuthentication? credentials)
+        internal unsafe PcapInterface(PcapIf pcapIf, NetworkInterface? networkInterface, RemoteAuthentication? credentials)
         {
             Name = pcapIf.Name;
             Description = pcapIf.Description;
@@ -77,9 +77,9 @@ namespace SharpPcap.LibPcap
             while (address != IntPtr.Zero)
             {
                 // Marshal memory pointer into a sockaddr struct
-                var addr = Marshal.PtrToStructure<pcap_addr>(address);
+                var addr = (PcapAddr*)address;
 
-                PcapAddress newAddress = new PcapAddress(addr);
+                PcapAddress newAddress = new PcapAddress(*addr);
                 Addresses.Add(newAddress);
 
                 // is this a hardware address?
@@ -98,7 +98,7 @@ namespace SharpPcap.LibPcap
                     }
                 }
 
-                address = addr.Next; // move to the next address
+                address = addr->Next; // move to the next address
             }
 
             // attempt to populate the mac address,
@@ -227,7 +227,7 @@ namespace SharpPcap.LibPcap
             while (nextDevPtr != IntPtr.Zero)
             {
                 // Marshal pointer into a struct
-                var pcap_if_unmanaged = Marshal.PtrToStructure<pcap_if>(nextDevPtr);
+                var pcap_if_unmanaged = Marshal.PtrToStructure<PcapIf>(nextDevPtr);
                 NetworkInterface? networkInterface = null;
                 foreach (var nic in nics)
                 {

@@ -49,7 +49,7 @@ namespace SharpPcap
             this.Password = Password;
         }
 
-        internal static pcap_rmtauth CreateAuth(RemoteAuthentication? credentials)
+        internal static PcapRmtAuth CreateAuth(RemoteAuthentication? credentials)
         {
             if (credentials == null)
             {
@@ -58,11 +58,11 @@ namespace SharpPcap
 
             var auth_type = (int)credentials.Type;
 
-            return new pcap_rmtauth
+            return new PcapRmtAuth
             {
-                type = new IntPtr(auth_type),
-                username = credentials.Username,
-                password = credentials.Password,
+                Type = new IntPtr(auth_type),
+                Username = credentials.Username,
+                Password = credentials.Password,
             };
         }
     }

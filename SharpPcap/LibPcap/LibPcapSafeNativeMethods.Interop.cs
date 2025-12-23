@@ -39,7 +39,7 @@ namespace SharpPcap.LibPcap
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
         internal extern static int pcap_findalldevs_ex(
             [MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(PcapStringMarshaler))] string /*char **/source,
-            ref pcap_rmtauth /*pcap_rmtauth **/auth,
+            ref PcapRmtAuth /*pcap_rmtauth **/auth,
             ref IntPtr /*pcap_if_t ** */alldevs,
             out ErrorBuffer /* char* */ errbuf
         );
@@ -53,7 +53,7 @@ namespace SharpPcap.LibPcap
             int packetLen,
             int flags,
             int read_timeout,
-            ref pcap_rmtauth rmtauth,
+            ref PcapRmtAuth rmtauth,
             out ErrorBuffer /* char* */ errbuf
         );
 
@@ -235,7 +235,9 @@ namespace SharpPcap.LibPcap
         /// A <see cref="int"/>
         /// </returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_stats(PcapHandle /* pcap_t* */ adapter, IntPtr /* struct pcap_stat* */ stat);
+        internal extern static int pcap_stats(PcapHandle /* pcap_t* */ adapter, ref PcapStatUnix stat);
+        [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
+        internal extern static int pcap_stats(PcapHandle /* pcap_t* */ adapter, ref PcapStatWindows stat);
 
         /// <summary>
         /// Returns the snapshot length
@@ -336,7 +338,7 @@ namespace SharpPcap.LibPcap
         /// during the send. The error can be caused by a driver/adapter 
         /// problem or by an inconsistent/bogus send queue.</returns>
         [DllImport(PCAP_DLL, CallingConvention = CallingConvention.Cdecl)]
-        internal extern static int pcap_sendqueue_transmit(PcapHandle /*pcap_t * */p, ref pcap_send_queue queue, int sync);
+        internal extern static int pcap_sendqueue_transmit(PcapHandle /*pcap_t * */p, ref PcapSendQueue queue, int sync);
         #endregion
 
         #region Timestamp related functions

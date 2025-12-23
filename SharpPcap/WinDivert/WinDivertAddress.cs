@@ -11,7 +11,6 @@ namespace SharpPcap.WinDivert
     /// The WinDivertAddress structure represents the "address" of a captured or injected packet. The
     /// address includes the packet's timestamp, network interfaces, direction and other information.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
     struct WinDivertAddress
     {
         public long Timestamp;
