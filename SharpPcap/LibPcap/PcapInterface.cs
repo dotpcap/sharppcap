@@ -219,7 +219,7 @@ namespace SharpPcap.LibPcap
 
             return pcapInterfaces;
         }
-        static private unsafe IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, RemoteAuthentication? credentials)
+        static private IReadOnlyList<PcapInterface> GetAllPcapInterfaces(IntPtr devicePtr, RemoteAuthentication? credentials)
         {
             var list = new List<PcapInterface>();
             var nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -227,20 +227,20 @@ namespace SharpPcap.LibPcap
             while (nextDevPtr != IntPtr.Zero)
             {
                 // Marshal pointer into a struct
-                var pcap_if_unmanaged = (PcapIf*)nextDevPtr;
+                var pcap_if_unmanaged = Marshal.PtrToStructure<PcapIf>(nextDevPtr);
                 NetworkInterface? networkInterface = null;
                 foreach (var nic in nics)
                 {
                     // if the name and id match then we have found the NetworkInterface
                     // that matches the PcapDevice
-                    if (pcap_if_unmanaged->Name.EndsWith(nic.Id))
+                    if (pcap_if_unmanaged.Name.EndsWith(nic.Id))
                     {
                         networkInterface = nic;
                     }
                 }
-                var pcap_if = new PcapInterface(*pcap_if_unmanaged, networkInterface, credentials);
+                var pcap_if = new PcapInterface(pcap_if_unmanaged, networkInterface, credentials);
                 list.Add(pcap_if);
-                nextDevPtr = pcap_if_unmanaged->Next;
+                nextDevPtr = pcap_if_unmanaged.Next;
             }
 
             return list;

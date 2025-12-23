@@ -42,7 +42,6 @@ namespace SharpPcap.LibPcap
         /// Look at the sa_family value to determine which specific structure to use
         /// 'struct sockaddr'
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         public struct Sockaddr
         {
             public UInt16 sa_family;      /* address family */
@@ -63,7 +62,6 @@ namespace SharpPcap.LibPcap
         /// Structure that holds an ipv4 address
         /// 'struct sockaddr'
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         public struct SockaddrIn
         {
             public UInt16 sa_family;      /* address family */
@@ -85,7 +83,6 @@ namespace SharpPcap.LibPcap
         /// NOTE: we cast the 'struct sockaddr*' to this structure based on the sa_family type
         /// 'struct sockaddr_in6'
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         internal struct SockaddrIn6
         {
             public UInt16 sin6_family;    /* address family */
@@ -99,7 +96,6 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Structure to represent a low level address, like a hardware address
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
         internal struct SockaddrLl
         {
             public UInt16 sll_family;
