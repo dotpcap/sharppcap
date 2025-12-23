@@ -117,7 +117,6 @@ namespace SharpPcap.LibPcap
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
     internal struct ErrorBuffer
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
