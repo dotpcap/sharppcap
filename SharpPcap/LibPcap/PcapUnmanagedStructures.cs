@@ -16,8 +16,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Item in a list of interfaces.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_if
+        public struct PcapIf
         {
             public IntPtr /* pcap_if* */    Next;
             public string Name;           /* name to hand to "pcap_open_live()" */
@@ -29,8 +28,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Representation of an interface address.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct pcap_addr
+        public struct PcapAddr
         {
             public IntPtr /* pcap_addr* */  Next;
             public IntPtr /* sockaddr * */  Addr;       /* address */
@@ -45,16 +43,13 @@ namespace SharpPcap.LibPcap
         /// 'struct sockaddr'
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct sockaddr
+        public struct Sockaddr
         {
             public UInt16 sa_family;      /* address family */
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 14)]
             public byte[] sa_data;        /* 14 bytes of protocol address */
         };
 
-        // silence a warning about uninitialized in_addr, this value is assigned in unmanaged mode
-        // so the compiler isn't aware of its assignment
-#pragma warning disable 0649
         /// <summary>
         /// Structure that holds an ipv4 address
         /// </summary>
@@ -69,7 +64,7 @@ namespace SharpPcap.LibPcap
         /// 'struct sockaddr'
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct sockaddr_in
+        public struct SockaddrIn
         {
             public UInt16 sa_family;      /* address family */
             public UInt16 sa_port;        /* port */
@@ -91,7 +86,7 @@ namespace SharpPcap.LibPcap
         /// 'struct sockaddr_in6'
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal struct sockaddr_in6
+        internal struct SockaddrIn6
         {
             public UInt16 sin6_family;    /* address family */
             public UInt16 sin6_port;      /* Transport layer port # */
@@ -105,7 +100,7 @@ namespace SharpPcap.LibPcap
         /// Structure to represent a low level address, like a hardware address
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        internal struct sockaddr_ll
+        internal struct SockaddrLl
         {
             public UInt16 sll_family;
             public UInt16 sll_protocol;
@@ -116,7 +111,6 @@ namespace SharpPcap.LibPcap
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             public byte[] sll_addr;
         };
-
         #region timeval
         /// <summary>
         /// Windows and Unix differ in their memory models and make it difficult to
@@ -132,8 +126,7 @@ namespace SharpPcap.LibPcap
         /// Thanks to Jon Pryor for his help in figuring out both the issue with Linux
         /// 32/64bit and the issue between Windows and Unix
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct timeval_unix
+        public struct TimevalUnix
         {
             // NOTE: The use of IntPtr here is due to the issue with the timeval structure
             //       The timeval structure contains long values, which differ between 32 bit and
@@ -147,8 +140,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Windows version of struct timeval, the longs are 32bit even on 64-bit versions of Windows
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct timeval_windows
+        public struct TimevalWindows
         {
             public Int32 tv_sec;
             public Int32 tv_usec;
@@ -157,8 +149,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// MacOSX version of struct timeval
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct timeval_macosx
+        public struct TimevalMacosx
         {
             public IntPtr tv_sec;
             public Int32 tv_usec;
@@ -168,8 +159,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// A BPF pseudo-assembly program for packet filtering
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct bpf_program
+        internal struct BpfProgram
         {
             public uint bf_len;
             public IntPtr /* bpf_insn **/ bf_insns;
@@ -178,8 +168,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// A queue of raw packets that will be sent to the network with pcap_sendqueue_transmit()
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct pcap_send_queue
+        internal struct PcapSendQueue
         {
             public uint maxlen;
             public uint len;
@@ -199,8 +188,7 @@ namespace SharpPcap.LibPcap
         /// Unix version of 'struct pcap_stat'
         /// Uses the same trick as timeval_unix
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct pcap_stat_unix
+        internal struct PcapStatUnix
         {
             /// <summary>
             /// Packets received
@@ -221,8 +209,7 @@ namespace SharpPcap.LibPcap
         /// <summary>
         /// Windows version of 'struct pcap_stat'
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct pcap_stat_windows
+        internal struct PcapStatWindows
         {
             /// <summary>
             /// Packets received
@@ -251,8 +238,7 @@ namespace SharpPcap.LibPcap
         /// Declared as class instead of struct, to allow passing null value
         /// See https://stackoverflow.com/a/47997943/1438522
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)] //Note: Pack =1 cause problems with Win 7 64b
-        public struct pcap_rmtauth
+        public struct PcapRmtAuth
         {
             /// <summary>
             /// NOTE: IntPtr used to ensure that the correct data size is used depending on
@@ -260,16 +246,16 @@ namespace SharpPcap.LibPcap
             ///
             /// Auth Type, 0=Null, 1= Password
             /// </summary>
-            public IntPtr type;
+            public IntPtr Type;
             /// <summary>
             /// Username
             /// </summary>
-            public string username;
+            public string Username;
 
             /// <summary>
             /// Password
             /// </summary>
-            public string password;
+            public string Password;
         }
         #endregion Unmanaged Structs Implementation
 

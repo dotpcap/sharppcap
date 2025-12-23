@@ -26,13 +26,13 @@ namespace SharpPcap.LibPcap
         {
             if (is32BitTs)
             {
-                return Marshal.SizeOf<timeval_windows>();
+                return Marshal.SizeOf<TimevalWindows>();
             }
             if (isMacOSX)
             {
-                return Marshal.SizeOf<timeval_macosx>();
+                return Marshal.SizeOf<TimevalMacosx>();
             }
-            return Marshal.SizeOf<timeval_unix>();
+            return Marshal.SizeOf<TimevalUnix>();
         }
 
         /// <summary>
@@ -44,19 +44,19 @@ namespace SharpPcap.LibPcap
             ulong tv_usec;
             if (is32BitTs)
             {
-                var ts = *(timeval_windows*)pcap_pkthdr;
+                var ts = *(TimevalWindows*)pcap_pkthdr;
                 tv_sec = (ulong)ts.tv_sec;
                 tv_usec = (ulong)ts.tv_usec;
             }
             else if (isMacOSX)
             {
-                var ts = *(timeval_macosx*)pcap_pkthdr;
+                var ts = *(TimevalMacosx*)pcap_pkthdr;
                 tv_sec = (ulong)ts.tv_sec;
                 tv_usec = (ulong)ts.tv_usec;
             }
             else
             {
-                var ts = *(timeval_unix*)pcap_pkthdr;
+                var ts = *(TimevalUnix*)pcap_pkthdr;
                 tv_sec = (ulong)ts.tv_sec;
                 tv_usec = (ulong)ts.tv_usec;
             }
@@ -119,7 +119,7 @@ namespace SharpPcap.LibPcap
             if (is32BitTs)
             {
                 // setup the structure to marshal
-                var timeval = new timeval_windows
+                var timeval = new TimevalWindows
                 {
                     tv_sec = (int)tv_sec,
                     tv_usec = (int)tv_usec
@@ -128,7 +128,7 @@ namespace SharpPcap.LibPcap
             }
             else if (isMacOSX)
             {
-                var timeval = new timeval_macosx
+                var timeval = new TimevalMacosx
                 {
                     tv_sec = (IntPtr)tv_sec,
                     tv_usec = (int)tv_usec
@@ -137,7 +137,7 @@ namespace SharpPcap.LibPcap
             }
             else
             {
-                var timeval = new timeval_unix
+                var timeval = new TimevalUnix
                 {
                     tv_sec = (IntPtr)tv_sec,
                     tv_usec = (IntPtr)tv_usec

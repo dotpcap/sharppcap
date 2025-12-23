@@ -2,11 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-using SharpPcap.LibPcap;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
@@ -38,7 +34,7 @@ namespace SharpPcap.Tunneling.Unix
         internal IntPtr ifr_data;
 
         [FieldOffset(16)]
-        public sockaddr_in ifr_addr;
+        public SockaddrIn ifr_addr;
 
         // force total struct size to 40
         [FieldOffset(32)]

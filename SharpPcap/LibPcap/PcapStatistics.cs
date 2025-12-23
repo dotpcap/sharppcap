@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using static SharpPcap.LibPcap.PcapUnmanagedStructures;
 
 namespace SharpPcap.LibPcap
 {
@@ -36,36 +37,31 @@ namespace SharpPcap.LibPcap
         /// pcap_t* for the adapter
         /// A <see cref="IntPtr"/>
         /// </param>
-        internal PcapStatistics(PcapHandle pcap_t)
+        internal unsafe PcapStatistics(PcapHandle pcap_t)
         {
-            IntPtr stat;
+            PcapStatUnix statUnix = new();
+            PcapStatWindows statWindows = new();
+            int result;
 
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_unix)));
+                result = LibPcapSafeNativeMethods.pcap_stats(pcap_t, ref statUnix);
             }
             else
             {
-                // allocate memory for the struct
-                stat = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(PcapUnmanagedStructures.pcap_stat_windows)));
+                result = LibPcapSafeNativeMethods.pcap_stats(pcap_t, ref statWindows);
             }
 
             // retrieve the stats
-            var result = (PcapUnmanagedStructures.PcapStatReturnValue)LibPcapSafeNativeMethods.pcap_stats(pcap_t, stat);
 
             // process the return value
-            switch (result)
+            switch ((PcapStatReturnValue)result)
             {
-                case PcapUnmanagedStructures.PcapStatReturnValue.Error:
+                case PcapStatReturnValue.Error:
                     // retrieve the error information
                     var error = LibPcapLiveDevice.GetLastError(pcap_t);
-
-                    // free the stats memory so we don't leak before we throw
-                    Marshal.FreeHGlobal(stat);
-
                     throw new StatisticsException(error);
-                case PcapUnmanagedStructures.PcapStatReturnValue.Success:
+                case PcapStatReturnValue.Success:
                     // nothing to do upon success
                     break;
             }
@@ -73,29 +69,20 @@ namespace SharpPcap.LibPcap
             // marshal the unmanaged memory into an object of the proper type
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                var managedStat = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_stat_unix>(stat);
-
                 // copy the values
-                this.ReceivedPackets = (uint)managedStat.ps_recv.ToInt64();
-                this.DroppedPackets = (uint)managedStat.ps_drop.ToInt64();
-                //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
+                this.ReceivedPackets = (uint)statUnix.ps_recv;
+                this.DroppedPackets = (uint)statUnix.ps_drop;
             }
             else
             {
-                var managedStat = Marshal.PtrToStructure<PcapUnmanagedStructures.pcap_stat_windows>(stat);
-
                 // copy the values
-                this.ReceivedPackets = (uint)managedStat.ps_recv;
-                this.DroppedPackets = (uint)managedStat.ps_drop;
-                //                this.InterfaceDroppedPackets = (uint)managedStat.ps_ifdrop;
+                this.ReceivedPackets = statWindows.ps_recv;
+                this.DroppedPackets = statWindows.ps_drop;
             }
 
             // NOTE: Not supported on unix or npcap, no need to
             //       put a bogus value in this field
             this.InterfaceDroppedPackets = 0;
-
-            // free the stats
-            Marshal.FreeHGlobal(stat);
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace SharpPcap.LibPcap
         internal PcapAddress()
         { }
 
-        internal PcapAddress(PcapUnmanagedStructures.pcap_addr pcap_addr)
+        internal PcapAddress(PcapUnmanagedStructures.PcapAddr pcap_addr)
         {
             if (pcap_addr.Addr != IntPtr.Zero)
                 Addr = new Sockaddr(pcap_addr.Addr);

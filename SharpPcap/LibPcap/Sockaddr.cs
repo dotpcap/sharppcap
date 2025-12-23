@@ -74,7 +74,7 @@ namespace SharpPcap.LibPcap
         internal Sockaddr(IntPtr sockaddrPtr)
         {
             // Marshal memory pointer into a struct
-            var saddr = Marshal.PtrToStructure<sockaddr>(sockaddrPtr);
+            var saddr = Marshal.PtrToStructure<PcapUnmanagedStructures.Sockaddr>(sockaddrPtr);
 
             // record the sa_family for informational purposes
             sa_family = saddr.sa_family;
@@ -82,20 +82,20 @@ namespace SharpPcap.LibPcap
             if (saddr.sa_family == Pcap.AF_INET)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
-                var saddr_in = Marshal.PtrToStructure<sockaddr_in>(sockaddrPtr);
+                var saddr_in = Marshal.PtrToStructure<SockaddrIn>(sockaddrPtr);
                 ipAddress = new IPAddress(saddr_in.sin_addr.s_addr);
             }
             else if (saddr.sa_family == Pcap.AF_INET6)
             {
                 type = AddressTypes.AF_INET_AF_INET6;
-                var sin6 = Marshal.PtrToStructure<sockaddr_in6>(sockaddrPtr);
+                var sin6 = Marshal.PtrToStructure<SockaddrIn6>(sockaddrPtr);
                 ipAddress = new IPAddress(sin6.sin6_addr, sin6.sin6_scope_id);
             }
             else if (saddr.sa_family == Pcap.AF_PACKET)
             {
                 type = AddressTypes.HARDWARE;
 
-                var saddr_ll = Marshal.PtrToStructure<sockaddr_ll>(sockaddrPtr);
+                var saddr_ll = Marshal.PtrToStructure<SockaddrLl>(sockaddrPtr);
 
                 var hwAddrBytesLength = Math.Min(saddr_ll.sll_halen,(byte)8); // allow max length of 8 bytes (for exotic hardware that doesn't follow the linux standard)
                 var hwAddrBytes = new byte[hwAddrBytesLength];

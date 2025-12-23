@@ -23,7 +23,7 @@ namespace SharpPcap.LibPcap
             {
                 try
                 {
-                    pcap_send_queue queue = default;
+                    PcapSendQueue queue = default;
                     LibPcapSafeNativeMethods.pcap_sendqueue_transmit(handle, ref queue, 0);
                     return true;
                 }
@@ -202,7 +202,7 @@ namespace SharpPcap.LibPcap
             int sync = (transmitMode == SendQueueTransmitModes.Synchronized) ? 1 : 0;
             fixed (byte* buf = buffer)
             {
-                var pcap_queue = new pcap_send_queue
+                var pcap_queue = new PcapSendQueue
                 {
                     maxlen = (uint)buffer.Length,
                     len = (uint)CurrentLength,
