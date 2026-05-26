@@ -38,7 +38,7 @@ SPDX-License-Identifier: MIT
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.3" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All"/>
-    <PackageReference Include="PolySharp" Version="1.15.0">
+    <PackageReference Include="PolySharp" Version="1.16.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
