@@ -264,11 +264,11 @@ namespace SharpPcap.WinpkFilter
                         // We got a cancellation request
                         return;
                     }
+                    manualResetEvent.Reset();
                     while (GetNextPacket(out var capture) == GetPacketStatus.PacketRead)
                     {
                         RaiseOnPacketArrival(capture);
                     }
-                    manualResetEvent.Reset();
                 }
             }
         }
